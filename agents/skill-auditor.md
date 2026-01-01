@@ -50,6 +50,7 @@ During audits, prioritize evaluation of:
 8. Evaluate against best practices from steps 1-5
 
 **Use ACTUAL patterns from references, not memory.**
+**Start by checking ~/.claude/skills folder and then .claude/skills folder if skills not found**
 </critical_workflow>
 
 <evaluation_areas>
