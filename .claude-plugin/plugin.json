@@ -1,7 +1,7 @@
 {
   "name": "taches-cc-resources",
-  "description": "Curated Claude Code skills and commands for prompt engineering, MCP servers, subagents, hooks, and productivity workflows",
-  "version": "1.1.0",
+  "description": "Comprehensive Claude Code workflow toolkit with orchestration agents, code review, debugging, security auditing, testing, architecture patterns, productivity commands, and automation hooks",
+  "version": "2.0.0",
   "author": {
     "name": "Lex Christopherson",
     "email": "lex@glittercowboy.com"
@@ -17,6 +17,12 @@
     "hooks",
     "slash-commands",
     "prompt-engineering",
-    "meta-prompting"
+    "meta-prompting",
+    "orchestration",
+    "code-review",
+    "security",
+    "testing",
+    "architecture",
+    "debugging"
   ]
 }

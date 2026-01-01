@@ -1,6 +1,6 @@
 # TÂCHES Claude Code Resources
 
-A growing collection of custom Claude Code resources built for real workflows.
+A comprehensive collection of custom Claude Code resources built for real workflows.
 
 ## Philosophy
 
@@ -14,25 +14,26 @@ Dream big. Happy building.
 
 ## What's Inside
 
-**[Commands](#commands)** (27 total) - Slash commands that expand into structured workflows
+**[Commands](#commands)** (31 total) - Slash commands that expand into structured workflows
 - **Meta-Prompting**: Separate planning from execution with staged prompts
 - **Todo Management**: Capture context mid-work, resume later with full state
 - **Thinking Models**: Mental frameworks (first principles, inversion, 80/20, etc.)
 - **Deep Analysis**: Systematic debugging methodology with evidence and hypothesis testing
+- **Output Modes**: Architect, rapid, mentor, and review modes
 
-**[Skills](#skills)** (7 total) - Autonomous workflows that research, generate, and self-heal
-- **Create Plans**: Hierarchical project planning for solo developer + Claude workflows
-- **Create Agent Skills**: Build new skills by describing what you want
-- **Create Meta-Prompts**: Generate staged workflow prompts with dependency detection
-- **Create Slash Commands**: Build custom commands with proper structure
-- **Create Subagents**: Build specialized Claude instances for isolated contexts
-- **Create Hooks**: Build event-driven automation
-- **Debug Like Expert**: Systematic debugging with evidence gathering and hypothesis testing
+**[Skills](#skills)** (13 total) - Autonomous workflows that research, generate, and self-heal
+- **Workflow Creation**: Create plans, meta-prompts, slash commands, subagents, hooks
+- **Knowledge Domains**: Project analysis, architecture patterns, testing, performance, git workflow, API design
+- **Specialized**: Debug like expert, prompt engineering patterns
 
-**[Agents](#agents)** (3 total) - Specialized subagents for validation and quality
-- **skill-auditor**: Reviews skills for best practices compliance
-- **slash-command-auditor**: Reviews commands for proper structure
-- **subagent-auditor**: Reviews agent configurations for effectiveness
+**[Agents](#agents)** (10 total) - Specialized subagents for various workflows
+- **Operational**: Orchestrator, code-reviewer, debugger, docs-writer, security-auditor, refactorer, test-architect
+- **Quality Assurance**: skill-auditor, slash-command-auditor, subagent-auditor
+
+**[Hooks](#hooks)** (3 total) - Automation triggers
+- **File Protection**: Block edits to sensitive files (lock files, .env, .git)
+- **Security Check**: Scan for potential secrets before writes
+- **Auto-Format**: Format files on edit (Python with ruff, JS/TS with prettier)
 
 ## Installation
 
@@ -131,9 +132,34 @@ Systematic debugging with methodical investigation.
 
 - [`/debug`](./commands/debug.md) - Apply expert debugging methodology to investigate issues
 
+### Output Modes
+
+Switch Claude's behavior for different workflows.
+
+- [`/architect`](./commands/architect.md) - System design mode - focuses on architecture before code
+- [`/rapid`](./commands/rapid.md) - Fast development mode - ship quickly, iterate
+- [`/mentor`](./commands/mentor.md) - Learning mode - explains the "why"
+- [`/review`](./commands/review.md) - Code review mode - strict quality standards
+
 ## Agents
 
-Specialized subagents used by the audit commands.
+Specialized subagents for various workflows.
+
+### Operational Agents
+
+Active agents that perform specific tasks during development.
+
+- [`orchestrator`](./agents/orchestrator.md) - Master coordinator for complex multi-step tasks (uses Opus)
+- [`code-reviewer`](./agents/code-reviewer.md) - Expert code review specialist for quality, security, and performance
+- [`debugger`](./agents/debugger.md) - Systematic bug investigation and fixing with 6-phase protocol
+- [`docs-writer`](./agents/docs-writer.md) - Technical documentation specialist
+- [`security-auditor`](./agents/security-auditor.md) - Security vulnerability detection specialist
+- [`refactorer`](./agents/refactorer.md) - Code structure improvements and technical debt reduction
+- [`test-architect`](./agents/test-architect.md) - Comprehensive test strategy design
+
+### Quality Assurance Agents
+
+Specialized auditors for validation and quality.
 
 - [`skill-auditor`](./agents/skill-auditor.md) - Expert skill auditor for best practices compliance
 - [`slash-command-auditor`](./agents/slash-command-auditor.md) - Expert slash command auditor
@@ -202,6 +228,54 @@ Commands: `/create-hook`
 Deep analysis debugging mode for complex issues. Activates methodical investigation protocol with evidence gathering, hypothesis testing, and rigorous verification. Use when standard troubleshooting fails or when issues require systematic root cause analysis.
 
 Commands: `/debug`
+
+### [Prompt Engineering Patterns](./skills/prompt-engineering-patterns/)
+
+Master advanced prompt engineering techniques to maximize LLM performance, reliability, and controllability in production. Covers few-shot learning, chain-of-thought prompting, prompt optimization, template systems, and system prompt design.
+
+---
+
+## Knowledge Domain Skills
+
+Specialized skills for specific technical domains and best practices.
+
+### [Project Analysis](./skills/project-analysis/)
+
+Understand any codebase structure and patterns. Essential for onboarding to new projects or analyzing unfamiliar codebases.
+
+### [Architecture Patterns](./skills/architecture-patterns/)
+
+System design guidance with patterns like Layered Architecture, Clean Architecture, Hexagonal Architecture, Event-Driven Architecture, and CQRS. Includes trade-off analysis templates.
+
+### [Testing Strategy](./skills/testing-strategy/)
+
+Design comprehensive test approaches covering unit tests, integration tests, and E2E testing.
+
+### [Performance Optimization](./skills/performance-optimization/)
+
+Speed up applications and identify bottlenecks with systematic performance analysis techniques.
+
+### [Git Workflow](./skills/git-workflow/)
+
+Version control best practices and conventional commits for professional development workflows.
+
+### [API Design](./skills/api-design/)
+
+REST and GraphQL API patterns, best practices, and design principles.
+
+---
+
+## Hooks
+
+### [Automation Hooks](./hooks/)
+
+Event-driven automation that triggers during Claude Code operations:
+
+- **PreToolUse (Edit/Write)**: File protection and security checks
+  - `protect-files.py` - Blocks edits to lock files, .env, .git
+  - `security-check.py` - Scans for potential secrets
+- **PostToolUse (Edit/Write)**: Auto-formatting
+  - `format-on-edit.py` - Formats files on edit (Python with ruff, JS/TS with prettier)
 
 ---
 
