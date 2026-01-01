@@ -1,470 +1,1148 @@
-# Prompt Template Systems
+# Prompt Template Patterns
 
-## Template Architecture
+Reusable template patterns for effective prompts.
 
-### Basic Template Structure
-```python
-class PromptTemplate:
-    def __init__(self, template_string, variables=None):
-        self.template = template_string
-        self.variables = variables or []
+## Template Structure
 
-    def render(self, **kwargs):
-        missing = set(self.variables) - set(kwargs.keys())
-        if missing:
-            raise ValueError(f"Missing required variables: {missing}")
+Basic components:
 
-        return self.template.format(**kwargs)
-
-# Usage
-template = PromptTemplate(
-    template_string="Translate {text} from {source_lang} to {target_lang}",
-    variables=['text', 'source_lang', 'target_lang']
-)
-
-prompt = template.render(
-    text="Hello world",
-    source_lang="English",
-    target_lang="Spanish"
-)
+```
+[Role/Context] - Who the AI should be
+[Task/Instruction] - What the AI should do
+[Examples] - How to approach the task (optional)
+[Input Data] - The specific content to process
+[Output Format] - Expected structure
 ```
 
-### Conditional Templates
-```python
-class ConditionalTemplate(PromptTemplate):
-    def render(self, **kwargs):
-        # Process conditional blocks
-        result = self.template
+**Example Template:**
+```
+You are an expert {role} specializing in {domain}.
 
-        # Handle if-blocks: {{#if variable}}content{{/if}}
-        import re
-        if_pattern = r'\{\{#if (\w+)\}\}(.*?)\{\{/if\}\}'
+Task: {task_description}
 
-        def replace_if(match):
-            var_name = match.group(1)
-            content = match.group(2)
-            return content if kwargs.get(var_name) else ''
+{optional_examples}
 
-        result = re.sub(if_pattern, replace_if, result, flags=re.DOTALL)
+Input: {user_input}
 
-        # Handle for-loops: {{#each items}}{{this}}{{/each}}
-        each_pattern = r'\{\{#each (\w+)\}\}(.*?)\{\{/each\}\}'
-
-        def replace_each(match):
-            var_name = match.group(1)
-            content = match.group(2)
-            items = kwargs.get(var_name, [])
-            return '\\n'.join(content.replace('{{this}}', str(item)) for item in items)
-
-        result = re.sub(each_pattern, replace_each, result, flags=re.DOTALL)
-
-        # Finally, render remaining variables
-        return result.format(**kwargs)
-
-# Usage
-template = ConditionalTemplate("""
-Analyze the following text:
-{text}
-
-{{#if include_sentiment}}
-Provide sentiment analysis.
-{{/if}}
-
-{{#if include_entities}}
-Extract named entities.
-{{/if}}
-
-{{#if examples}}
-Reference examples:
-{{#each examples}}
-- {{this}}
-{{/each}}
-{{/if}}
-""")
+{output_format_specification}
 ```
 
-### Modular Template Composition
-```python
-class ModularTemplate:
-    def __init__(self):
-        self.components = {}
+## Template Types
 
-    def register_component(self, name, template):
-        self.components[name] = template
+### 1. Classification Template
 
-    def render(self, structure, **kwargs):
-        parts = []
-        for component_name in structure:
-            if component_name in self.components:
-                component = self.components[component_name]
-                parts.append(component.format(**kwargs))
+Classify input into predefined categories:
 
-        return '\\n\\n'.join(parts)
-
-# Usage
-builder = ModularTemplate()
-
-builder.register_component('system', "You are a {role}.")
-builder.register_component('context', "Context: {context}")
-builder.register_component('instruction', "Task: {task}")
-builder.register_component('examples', "Examples:\\n{examples}")
-builder.register_component('input', "Input: {input}")
-builder.register_component('format', "Output format: {format}")
-
-# Compose different templates for different scenarios
-basic_prompt = builder.render(
-    ['system', 'instruction', 'input'],
-    role='helpful assistant',
-    instruction='Summarize the text',
-    input='...'
-)
-
-advanced_prompt = builder.render(
-    ['system', 'context', 'examples', 'instruction', 'input', 'format'],
-    role='expert analyst',
-    context='Financial analysis',
-    examples='...',
-    instruction='Analyze sentiment',
-    input='...',
-    format='JSON'
-)
 ```
+Classify the {content_type} into one of these categories: {categories}
 
-## Common Template Patterns
-
-### Classification Template
-```python
-CLASSIFICATION_TEMPLATE = """
-Classify the following {content_type} into one of these categories: {categories}
-
-{{#if description}}
-Category descriptions:
-{description}
-{{/if}}
-
-{{#if examples}}
-Examples:
+{if_examples: Here are some examples:
 {examples}
-{{/if}}
+}
 
-{content_type}: {input}
+{content_type}: {user_input}
 
-Category:"""
+Category:
 ```
 
-### Extraction Template
-```python
-EXTRACTION_TEMPLATE = """
-Extract structured information from the {content_type}.
+**Usage Example:**
+```
+Classify the email into one of these categories: Urgent, Important, Normal, Low Priority
+
+Examples:
+Email: "Server is down, production affected!"
+Category: Urgent
+
+Email: "Meeting reminder for tomorrow"
+Category: Normal
+
+Email: {user_email}
+
+Category:
+```
+
+### 2. Extraction Template
+
+Extract structured information from text:
+
+```
+Extract {information_type} from the {content_type}.
 
 Required fields:
-{field_definitions}
+{field_list}
 
-{{#if examples}}
-Example extraction:
+{if_examples: Example extractions:
 {examples}
-{{/if}}
+}
 
-{content_type}: {input}
+{content_type}: {user_input}
 
-Extracted information (JSON):"""
+Extracted information:
 ```
 
-### Generation Template
-```python
-GENERATION_TEMPLATE = """
-Generate {output_type} based on the following {input_type}.
+**Usage Example:**
+```
+Extract event details from the text.
 
-Requirements:
-{requirements}
+Required fields:
+- Event name
+- Date
+- Time
+- Location
+- Organizer
 
-{{#if style}}
-Style: {style}
-{{/if}}
+Example:
+Text: "Join us for the Annual Tech Summit on March 15th at 9 AM in the Grand Hall, hosted by TechCorp."
+Extracted:
+- Event name: Annual Tech Summit
+- Date: March 15th
+- Time: 9 AM
+- Location: Grand Hall
+- Organizer: TechCorp
 
-{{#if constraints}}
-Constraints:
-{constraints}
-{{/if}}
+Text: {user_text}
 
-{{#if examples}}
-Examples:
-{examples}
-{{/if}}
-
-{input_type}: {input}
-
-{output_type}:"""
+Extracted:
 ```
 
-### Transformation Template
-```python
-TRANSFORMATION_TEMPLATE = """
-Transform the input {source_format} to {target_format}.
+### 3. Transformation Template
+
+Transform input from one format to another:
+
+```
+Transform the {source_format} to {target_format}.
 
 Transformation rules:
 {rules}
 
-{{#if examples}}
-Example transformations:
+{if_examples: Example transformations:
 {examples}
-{{/if}}
+}
 
 Input {source_format}:
-{input}
+{user_input}
 
-Output {target_format}:"""
+Output {target_format}:
 ```
 
-## Advanced Features
+**Usage Example:**
+```
+Transform casual text to professional email.
 
-### Template Inheritance
-```python
-class TemplateRegistry:
-    def __init__(self):
-        self.templates = {}
+Transformation rules:
+- Use formal greetings and closings
+- Complete abbreviations
+- Remove emojis
+- Use proper grammar and punctuation
 
-    def register(self, name, template, parent=None):
-        if parent and parent in self.templates:
-            # Inherit from parent
-            base = self.templates[parent]
-            template = self.merge_templates(base, template)
+Example:
+Input: "hey, can u send me the files asap? thx!"
+Output: "Dear [Name], Could you please send me the files at your earliest convenience? Thank you."
 
-        self.templates[name] = template
+Input: {user_input}
 
-    def merge_templates(self, parent, child):
-        # Child overwrites parent sections
-        return {**parent, **child}
-
-# Usage
-registry = TemplateRegistry()
-
-registry.register('base_analysis', {
-    'system': 'You are an expert analyst.',
-    'format': 'Provide analysis in structured format.'
-})
-
-registry.register('sentiment_analysis', {
-    'instruction': 'Analyze sentiment',
-    'format': 'Provide sentiment score from -1 to 1.'
-}, parent='base_analysis')
+Output:
 ```
 
-### Variable Validation
-```python
-class ValidatedTemplate:
-    def __init__(self, template, schema):
-        self.template = template
-        self.schema = schema
+### 4. Generation Template
 
-    def validate_vars(self, **kwargs):
-        for var_name, var_schema in self.schema.items():
-            if var_name in kwargs:
-                value = kwargs[var_name]
+Generate new content based on specifications:
 
-                # Type validation
-                if 'type' in var_schema:
-                    expected_type = var_schema['type']
-                    if not isinstance(value, expected_type):
-                        raise TypeError(f"{var_name} must be {expected_type}")
+```
+Generate {output_type} based on the {input_type}.
 
-                # Range validation
-                if 'min' in var_schema and value < var_schema['min']:
-                    raise ValueError(f"{var_name} must be >= {var_schema['min']}")
+Requirements:
+{requirements}
 
-                if 'max' in var_schema and value > var_schema['max']:
-                    raise ValueError(f"{var_name} must be <= {var_schema['max']}")
+{if_style: Style: {style}}
+{if_constraints: Constraints:
+{constraints}}
+{if_examples: Examples:
+{examples}}
 
-                # Enum validation
-                if 'choices' in var_schema and value not in var_schema['choices']:
-                    raise ValueError(f"{var_name} must be one of {var_schema['choices']}")
+{input_type}: {user_input}
 
-    def render(self, **kwargs):
-        self.validate_vars(**kwargs)
-        return self.template.format(**kwargs)
-
-# Usage
-template = ValidatedTemplate(
-    template="Summarize in {length} words with {tone} tone",
-    schema={
-        'length': {'type': int, 'min': 10, 'max': 500},
-        'tone': {'type': str, 'choices': ['formal', 'casual', 'technical']}
-    }
-)
+{output_type}:
 ```
 
-### Template Caching
-```python
-class CachedTemplate:
-    def __init__(self, template):
-        self.template = template
-        self.cache = {}
+**Usage Example:**
+```
+Generate a social media post based on the product description.
 
-    def render(self, use_cache=True, **kwargs):
-        if use_cache:
-            cache_key = self.get_cache_key(kwargs)
-            if cache_key in self.cache:
-                return self.cache[cache_key]
+Requirements:
+- Length: 100-150 characters
+- Tone: Enthusiastic and professional
+- Include relevant hashtags
+- Highlight key benefit
 
-        result = self.template.format(**kwargs)
+Style: Concise and engaging
 
-        if use_cache:
-            self.cache[cache_key] = result
+Product description: {user_product}
 
-        return result
+Social media post:
+```
 
-    def get_cache_key(self, kwargs):
-        return hash(frozenset(kwargs.items()))
+### 5. Question Answering Template
 
-    def clear_cache(self):
-        self.cache = {}
+Answer questions based on provided context:
+
+```
+Answer the question based on the context below.
+
+Context:
+{context}
+
+{if_examples: Examples:
+Q: {example_question}
+A: {example_answer}
+}
+
+Question: {user_question}
+
+Answer:
+```
+
+**Usage Example:**
+```
+Answer the question based on the company policy below.
+
+Context:
+"Vacation Policy: Full-time employees accrue 2.5 vacation days per month. Requests must be submitted 2 weeks in advance. Maximum 2 consecutive weeks during peak season."
+
+Q: How many vacation days do I get per year?
+A: Full-time employees accrue 30 vacation days per year (2.5 days × 12 months).
+
+Question: {user_question}
+
+Answer:
+```
+
+## Conditional Components
+
+### Optional Sections
+
+Include sections only when relevant:
+
+```
+You are a {role}.
+
+{if_context: Context: {context}}
+
+Task: {task}
+
+{if_examples: Reference examples:
+{examples}}
+
+{if_constraints: Constraints:
+{constraints}}
+
+Input: {user_input}
+
+Output:
+```
+
+### Adaptive Complexity
+
+Add complexity based on task difficulty:
+
+```
+Task: {task}
+
+{if_complex: For this complex task:
+- Break it into steps
+- Show your reasoning
+- Verify your answer}
+
+{if_simple: Provide a direct answer}
+
+Input: {user_input}
+```
+
+## Modular Template Design
+
+### Component-Based Structure
+
+Create reusable prompt components:
+
+```
+[COMPONENT: Role]
+You are an expert {role} with {experience_level} experience.
+You specialize in {specialization}.
+
+[COMPONENT: Task Analysis]
+Task: {task}
+Goal: {goal}
+Audience: {audience}
+
+[COMPONENT: Guidelines]
+- {guideline_1}
+- {guideline_2}
+- {guideline_3}
+
+[COMPONENT: Output Format]
+Format: {format}
+Structure: {structure}
+```
+
+### Composing Templates
+
+Combine components for different use cases:
+
+**Simple Prompt:**
+```
+[Role]
+
+[Task Analysis - simplified]
+
+Input: {input}
+```
+
+**Detailed Prompt:**
+```
+[Role]
+[Task Analysis - full]
+[Guidelines]
+[Output Format]
+[Examples]
+Input: {input}
 ```
 
 ## Multi-Turn Templates
 
 ### Conversation Template
-```python
-class ConversationTemplate:
-    def __init__(self, system_prompt):
-        self.system_prompt = system_prompt
-        self.history = []
 
-    def add_user_message(self, message):
-        self.history.append({'role': 'user', 'content': message})
+For back-and-forth interactions:
 
-    def add_assistant_message(self, message):
-        self.history.append({'role': 'assistant', 'content': message})
+```
+System: You are a helpful {role} specializing in {domain}.
 
-    def render_for_api(self):
-        messages = [{'role': 'system', 'content': self.system_prompt}]
-        messages.extend(self.history)
-        return messages
+Conversation so far:
+{conversation_history}
 
-    def render_as_text(self):
-        result = f"System: {self.system_prompt}\\n\\n"
-        for msg in self.history:
-            role = msg['role'].capitalize()
-            result += f"{role}: {msg['content']}\\n\\n"
-        return result
+User: {current_message}
+
+{agent_name}:
 ```
 
-### State-Based Templates
-```python
-class StatefulTemplate:
-    def __init__(self):
-        self.state = {}
-        self.templates = {}
+### Progressive Workflow
 
-    def set_state(self, **kwargs):
-        self.state.update(kwargs)
+For multi-step processes:
 
-    def register_state_template(self, state_name, template):
-        self.templates[state_name] = template
+```
+Stage {current_stage} of {total_stages}: {stage_name}
 
-    def render(self):
-        current_state = self.state.get('current_state', 'default')
-        template = self.templates.get(current_state)
+Previous stages completed:
+{completed_stages}
 
-        if not template:
-            raise ValueError(f"No template for state: {current_state}")
+Current task:
+{current_task}
 
-        return template.format(**self.state)
+{if_next: Next stages:
+{upcoming_stages}}
 
-# Usage for multi-step workflows
-workflow = StatefulTemplate()
+Output for this stage:
+```
 
-workflow.register_state_template('init', """
-Welcome! Let's {task}.
-What is your {first_input}?
-""")
+**Usage Example:**
+```
+Stage 1 of 3: Information Gathering
 
-workflow.register_state_template('processing', """
-Thanks! Processing {first_input}.
-Now, what is your {second_input}?
-""")
+Previous stages completed: None
 
-workflow.register_state_template('complete', """
-Great! Based on:
-- {first_input}
-- {second_input}
+Current task:
+Identify the key stakeholders for this project.
 
-Here's the result: {result}
-""")
+Output for this stage:
+List the stakeholders with their roles and influence level.
+```
+
+## AI-to-AI Prompt Templates
+
+Templates for when one AI agent creates prompts for another AI agent.
+
+### Task Delegation Template
+
+```
+As the {receiving_agent_type}, please {task}.
+
+Context:
+- Delegating from: {sending_agent_type}
+- Task purpose: {why_this_task}
+- Dependencies: {what_this_depends_on}
+- Output will be used by: {next_agent_or_purpose}
+
+{task_details}
+```
+
+**Usage Example:**
+```
+As the code reviewer agent, please review these recent changes.
+
+Context:
+- Delegating from: Orchestrator agent
+- Task purpose: Ensure code quality before merging
+- Dependencies: Changes are in src/auth/* directory
+- Output will be used by: Documentation agent to update API docs
+
+Files changed:
+- src/auth/login.js
+- src/auth/oauth.js
+
+Focus on security vulnerabilities and code quality issues.
+```
+
+### Inter-Agent Workflow Template
+
+```
+This prompt initiates a multi-agent workflow.
+
+Step 1 of {total_steps}: {step_description}
+
+Your role: {agent_role}
+Your task: {specific_task}
+
+When complete, provide output in this format:
+{structured_output_format}
+
+The next agent will use your output to: {next_step_description}
+```
+
+**Usage Example:**
+```
+This prompt initiates a multi-agent workflow.
+
+Step 1 of 3: Code Analysis
+
+Your role: Code analyzer agent
+Your task: Identify the main components and dependencies in this codebase.
+
+When complete, provide output in this format:
+{
+  "components": [{"name": "...", "file": "..."}],
+  "dependencies": [{"from": "...", "to": "..."}]
+}
+
+The next agent will use your output to generate architecture diagrams.
+```
+
+### Meta-Prompt Template
+
+```
+Generate a prompt that will {target_task}.
+
+The generated prompt should be for: {target_agent_type}
+
+Required elements in the generated prompt:
+- {element_1}
+- {element_2}
+
+Context: {context_information}
+
+Generate the prompt:
+```
+
+**Usage Example:**
+```
+Generate a prompt that will extract product features from user reviews.
+
+The generated prompt should be for: A data extraction agent
+
+Required elements in the generated prompt:
+- Clear task definition
+- Output format specification (JSON)
+- Example of desired extraction
+
+Context: We have 10,000 customer reviews to process. Features can be positive or negative mentions.
+
+Generate the prompt:
+```
+
+### Skill Creation Template
+
+```
+Create a skill for {skill_name}.
+
+Skill purpose: {what_skill_does}
+
+The skill should include:
+- Clear role definition
+- Core capabilities (3-5 items)
+- When to use the skill
+- Example prompts
+
+Output format: SKILL.md structure
+```
+
+**Usage Example:**
+```
+Create a skill for database-query-review.
+
+Skill purpose: Analyze SQL queries for performance and security issues
+
+The skill should include:
+- Clear role definition
+- Core capabilities (3-5 items)
+- When to use the skill
+- Example prompts
+
+Output format: SKILL.md structure
+```
+
+### Context Propagation Template
+
+```
+{main_task}
+
+Context from previous agent:
+{previous_context}
+
+Continuing from:
+{previous_stage_summary}
+
+Your task:
+{specific_task}
+
+Ensure output maintains:
+{consistency_requirements}
+```
+
+**Usage Example:**
+```
+Review this code for security issues.
+
+Context from previous agent:
+The analyzer agent identified this file as handling authentication.
+It uses OAuth 2.0 and stores sessions in Redis.
+
+Continuing from:
+Analysis complete - authentication flow uses industry-standard OAuth.
+
+Your task:
+Review for security vulnerabilities including:
+- Token handling
+- Session management
+- Input validation
+
+Ensure output maintains:
+Focus on OAuth-specific vulnerabilities
+```
+
+### Agent Handoff Template
+
+```
+{task_description}
+
+You are agent {N} of {total_agents}.
+
+Your responsibility: {specific_responsibility}
+
+Input from previous agent:
+{previous_agent_output}
+
+Your output should:
+{output_requirements}
+
+Next agent will:
+{next_agent_role}
+```
+
+**Usage Example:**
+```
+Analyze this bug report.
+
+You are agent 2 of 4.
+
+Your responsibility: Categorize the bug severity and type.
+
+Input from previous agent:
+Bug reported in checkout flow. Users unable to complete payment after adding items to cart.
+
+Your output should:
+- Provide severity rating (Critical/High/Medium/Low)
+- Categorize bug type (Functional/UI/Performance/Security)
+- Include reasoning
+
+Next agent will:
+Investigate root cause by examining checkout code.
 ```
 
 ## Best Practices
 
 1. **Keep It DRY**: Use templates to avoid repetition
-2. **Validate Early**: Check variables before rendering
-3. **Version Templates**: Track changes like code
+2. **Validate Early**: Ensure all variables have appropriate values
+3. **Version Templates**: Track changes like any other content
 4. **Test Variations**: Ensure templates work with diverse inputs
 5. **Document Variables**: Clearly specify required/optional variables
-6. **Use Type Hints**: Make variable types explicit
-7. **Provide Defaults**: Set sensible default values where appropriate
-8. **Cache Wisely**: Cache static templates, not dynamic ones
+6. **Provide Defaults**: Set sensible default values where appropriate
+7. **Use Clear Placeholders**: Make variable names self-explanatory
+8. **Group Related Elements**: Keep related information together
 
-## Template Libraries
+## Template Library
 
-### Question Answering
-```python
-QA_TEMPLATES = {
-    'factual': """Answer the question based on the context.
+### Analysis Templates
 
-Context: {context}
-Question: {question}
-Answer:""",
+**SWOT Analysis:**
+```
+Perform a SWOT analysis for {subject}.
 
-    'multi_hop': """Answer the question by reasoning across multiple facts.
+Strengths:
+- Identify internal advantages
+- List key capabilities
 
-Facts: {facts}
-Question: {question}
+Weaknesses:
+- Identify internal limitations
+- List areas for improvement
 
-Reasoning:""",
+Opportunities:
+- Identify external possibilities
+- List potential growth areas
 
-    'conversational': """Continue the conversation naturally.
+Threats:
+- Identify external risks
+- List potential challenges
 
-Previous conversation:
-{history}
-
-User: {question}
-Assistant:"""
-}
+Subject: {input}
 ```
 
-### Content Generation
-```python
-GENERATION_TEMPLATES = {
-    'blog_post': """Write a blog post about {topic}.
+**Cost-Benefit Analysis:**
+```
+Analyze the costs and benefits of {proposal}.
+
+Costs:
+- Direct costs: {consider_direct_costs}
+- Indirect costs: {consider_indirect_costs}
+- Opportunity costs: {consider_opportunity_costs}
+
+Benefits:
+- Tangible benefits: {consider_tangible_benefits}
+- Intangible benefits: {consider_intangible_benefits}
+- Long-term value: {consider_long_term_value}
+
+Conclusion:
+Provide recommendation based on the analysis.
+```
+
+### Content Creation Templates
+
+**Blog Post:**
+```
+Write a blog post about {topic}.
 
 Requirements:
 - Length: {word_count} words
+- Target audience: {audience}
 - Tone: {tone}
-- Include: {key_points}
+- Key points to cover: {key_points}
 
-Blog post:""",
+Structure:
+1. Engaging title
+2. Introduction (hook + thesis)
+3. Main body (3-5 sections)
+4. Conclusion with call-to-action
 
-    'product_description': """Write a product description for {product}.
+Topic: {topic}
 
-Features: {features}
-Benefits: {benefits}
-Target audience: {audience}
+Blog post:
+```
 
-Description:""",
+**Product Description:**
+```
+Write a compelling product description for {product}.
 
-    'email': """Write a {type} email.
+Product details:
+- Features: {features}
+- Benefits: {benefits}
+- Target audience: {audience}
+- Price point: {price}
 
-To: {recipient}
-Context: {context}
-Key points: {key_points}
+Requirements:
+- Highlight unique value proposition
+- Address customer pain points
+- Include social proof if available
+- End with clear call-to-action
 
-Email:"""
+Product: {product}
+
+Description:
+```
+
+### Problem-Solving Templates
+
+**Troubleshooting:**
+```
+Help troubleshoot: {problem_description}
+
+System information:
+{system_info}
+
+Error messages:
+{error_messages}
+
+Recent changes:
+{recent_changes}
+
+Provide:
+1. Most likely cause
+2. Diagnostic steps
+3. Solution options
+4. Prevention recommendations
+```
+
+**Decision Framework:**
+```
+Help make a decision about {decision}.
+
+Options:
+{options}
+
+Criteria for evaluation:
+{criteria}
+
+Provide:
+1. Comparison of options against criteria
+2. Pros and cons of each option
+3. Risk assessment
+4. Recommendation with rationale
+```
+
+## Code Prompting Templates
+
+### Code Generation
+
+Generate new code based on specifications:
+
+```
+Generate {code_type} code to {task_description}.
+
+Requirements:
+- Language: {programming_language}
+- Style: {style_guide}
+- Error handling: {yes/no}
+- Comments: {comment_level}
+- Testing: {test_requirements}
+
+{if_examples: Reference implementation:
+```{language}
+{code_example}
+```
+}}
+
+Generate code:
+```
+
+**Usage example:**
+```
+Generate backend API code to handle user authentication.
+
+Requirements:
+- Language: Python
+- Style: PEP-8 compliant
+- Error handling: Yes (handle all exceptions)
+- Comments: Docstrings for all functions
+- Testing: Include pytest test cases
+
+Reference implementation:
+```python
+def hash_password(password: str) -> str:
+    """Hash a password using bcrypt."""
+    import bcrypt
+    return bcrypt.hashpw(password.encode(), bcrypt.gensalt()).decode()
+```
+
+Generate code:
+```
+
+### Code Explanation
+
+Explain what existing code does:
+
+```
+Explain what this {code_type} code does:
+
+```{language}
+{code_to_explain}
+```
+
+Focus on:
+- Overall purpose
+- Key functions/methods
+- Data flow
+- Notable patterns or anti-patterns
+- {specific_focus}
+
+Explanation:
+```
+
+**Usage example:**
+```
+Explain what this Python code does:
+
+```python
+from functools import reduce
+
+def factorial(n):
+    return reduce(lambda x, y: x * y, range(1, n + 1), 1)
+```
+
+Focus on:
+- Overall purpose
+- How reduce() is used
+- Lambda function behavior
+- Edge cases
+
+Explanation:
+```
+
+### Code Translation
+
+Translate code from one language to another:
+
+```
+Translate this {source_language} code to {target_language}:
+
+```{source_language}
+{source_code}
+```
+
+Preserve:
+- Functionality
+- Variable naming conventions
+- Comments
+- Error handling
+
+Translated code:
+```
+
+**Usage example:**
+```
+Translate this JavaScript code to Python:
+
+```javascript
+function formatDate(date) {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
 }
 ```
 
-## Performance Considerations
+Preserve:
+- Functionality
+- Parameter names
+- Documentation
 
-- Pre-compile templates for repeated use
-- Cache rendered templates when variables are static
-- Minimize string concatenation in loops
-- Use efficient string formatting (f-strings, .format())
-- Profile template rendering for bottlenecks
+Translated code:
+```
+
+### Code Debugging
+
+Debug and fix broken code:
+
+```
+This code has an error:
+{error_message}
+
+```{language}
+{code_with_error}
+```
+
+Debug what's wrong and provide:
+1. Root cause explanation
+2. Fixed code
+3. How to prevent similar issues
+
+Debug:
+```
+
+**Usage example:**
+```
+This code has an error:
+IndexError: list index out of range
+
+```python
+def get_middle(items):
+    return items[len(items) // 2]
+
+items = [1, 2, 3, 4]
+print(get_middle(items))  # Works
+
+items = [1, 2]
+print(get_middle(items))  # Fails
+```
+
+Debug what's wrong and provide:
+1. Root cause explanation
+2. Fixed code
+3. How to prevent similar issues
+
+Debug:
+```
+
+## JSON Schema Templates
+
+### Input Schema
+
+Define expected JSON input structure:
+
+```
+I need you to process {data_type} with this structure:
+
+Schema:
+```json
+{
+    "type": "object",
+    "properties": {
+        "field1": {"type": "string", "description": "..."},
+        "field2": {"type": "number", "description": "..."},
+        "field3": {
+            "type": "array",
+            "items": {"type": "string"},
+            "description": "..."
+        }
+    },
+    "required": ["field1", "field2"]
+}
+```
+
+Input data conforming to schema:
+{user_input}
+
+Process the data:
+```
+
+**Usage example:**
+```
+I need you to analyze sales data with this structure:
+
+Schema:
+```json
+{
+    "type": "object",
+    "properties": {
+        "period": {"type": "string", "description": "Time period (e.g., 'Q1 2024')"},
+        "revenue": {"type": "number", "description": "Total revenue"},
+        "region": {"type": "string", "description": "Sales region"}
+    },
+    "required": ["period", "revenue", "region"]
+}
+```
+
+Input data:
+```json
+{"period": "Q1 2024", "revenue": 150000, "region": "North America"}
+```
+
+Analyze the data:
+```
+
+### Output with Schema
+
+Request JSON output with specific structure:
+
+```
+Extract {information_type} from the text.
+
+Return JSON following this schema:
+```json
+{
+    "field1": "description",
+    "field2": "description",
+    "field3": ["array", "of", "items"]
+}
+```
+
+Text: {user_input}
+
+JSON Output:
+```
+
+**Usage example:**
+```
+Extract event details from the text.
+
+Return JSON following this schema:
+```json
+{
+    "event_name": "Name of the event",
+    "date": "ISO format date (YYYY-MM-DD)",
+    "time": "Time in HH:MM format",
+    "location": "Venue name",
+    "attendees": ["List", "of", "attendees"]
+}
+```
+
+Text: "The annual Tech Summit will be held on March 15th, 2024 at 9 AM in the Grand Hall. Confirmed attendees include Alice Johnson and Bob Smith from TechCorp."
+
+JSON Output:
+```
+
+### JSON Repair
+
+Fix malformed JSON:
+
+```
+This JSON is invalid:
+{invalid_json}
+
+Fix the JSON and return a valid version:
+```
+
+**Best practices for JSON outputs:**
+- Always specify "Return JSON only, no additional text"
+- Provide example of expected structure
+- Use specific field names and types
+- Specify if fields are required or optional
+- Handle edge cases (empty arrays, null values)
+
+## Variables in Prompts
+
+Use variable placeholders for dynamic, reusable prompts:
+
+### Simple Variables
+
+```
+Analyze the sentiment of customer reviews for {product_name}.
+
+Review: {review_text}
+
+Sentiment analysis:
+```
+
+**Usage:**
+- Replace `{product_name}` with "Acme Widgets"
+- Replace `{review_text}` with the actual review
+
+### Multiple Variables
+
+```
+VARIABLES:
+{city} = "Amsterdam"
+{category} = "museums"
+{count} = 3
+
+PROMPT:
+As a travel guide for {city}, recommend {count} {category}.
+Include:
+- Name of each location
+- Brief description
+- Why it's worth visiting
+
+Recommendations:
+```
+
+### Variable Groups
+
+Group related variables:
+
+```
+## Customer Context
+{customer_name}
+{customer_tier}
+{purchase_history}
+
+## Product Context
+{product_name}
+{product_category}
+{product_price}
+
+## Request
+Draft a personalized email for {customer_name} about {product_name}.
+```
+
+### Optional Variables
+
+```
+Summarize the {document_type}.
+
+{if_context: Context: {context}}
+
+{if_requirements: Requirements:
+- {requirements}}
+
+{if_length_constraint: Length constraint: {length_constraint}}
+
+Document: {document_text}
+
+Summary:
+```
+
+### Benefits of Variables
+
+1. **Reusability:** Use same template with different inputs
+2. **Maintainability:** Easy to update template structure
+3. **Clarity:** Clear what needs to be filled in
+4. **Automation:** Can be dynamically replaced in applications
+5. **Documentation:** Variables self-document the template
+
+### Best Practices
+
+1. **Use descriptive names:** `{customer_email}` not `{email}` or `{e}`
+2. **Provide defaults:** `{language = "English"}`
+3. **Document required vs optional:** Mark which variables must be filled
+4. **Group related variables:** Organize by context or category
+5. **Use consistent format:** Stick to `{variable_name}` style
+6. **Validate inputs:** Check that variables contain valid values
+
+## Quick Reference
+
+### Template Variables
+Use clear, descriptive placeholders:
+- `{role}` - Who the AI should be
+- `{task}` - What to do
+- `{input}` - User-provided content
+- `{format}` - Expected output structure
+- `{constraints}` - Limitations and requirements
+- `{examples}` - Demonstration examples
+
+### Code Prompt Templates
+
+| Task | Template Pattern |
+|------|------------------|
+| **Generate** | "Generate {language} code to {task}. Requirements: ..." |
+| **Explain** | "Explain what this {language} code does. Focus on: ..." |
+| **Translate** | "Translate this {source} code to {target}. Preserve: ..." |
+| **Debug** | "This code has error: {message}. Debug and provide: 1) Root cause 2) Fixed code 3) Prevention" |
+
+### JSON Schema Templates
+
+| Purpose | Pattern |
+|---------|---------|
+| **Input schema** | "Process data with this structure: ```json {...}```" |
+| **Output schema** | "Return JSON following this schema: ```json {...}```" |
+| **JSON repair** | "This JSON is invalid: {...}. Fix and return valid version." |
+
+**Best practice:** Always specify "Return JSON only, no additional text"
+
+### Variable Best Practices
+
+1. **Descriptive names:** `{customer_email}` not `{e}`
+2. **Group related variables:** Organize by context/category
+3. **Document defaults:** `{language = "English"}`
+4. **Mark required:** Indicate which variables must be filled
+5. **Consistent format:** Use `{variable_name}` style
+
+### Common Structures
+
+**Simple:**
+```
+[Role] + [Task] + [Input] + [Output]
+```
+
+**With Examples:**
+```
+[Role] + [Task] + [Examples] + [Input] + [Output]
+```
+
+**Comprehensive:**
+```
+[Role] + [Context] + [Task] + [Guidelines] + [Examples] + [Input] + [Format] + [Constraints]
+```
+
+### When to Use Templates
+- Repetitive tasks with consistent structure
+- Multi-step processes
+- Standardized outputs
+- Team collaboration (shared prompts)
+- A/B testing variations
+- Dynamic variable replacement
+- Code generation and analysis
+- Structured data extraction
+

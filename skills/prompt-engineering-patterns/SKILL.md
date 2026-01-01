@@ -1,201 +1,241 @@
 ---
 name: prompt-engineering-patterns
-description: Master advanced prompt engineering techniques to maximize LLM performance, reliability, and controllability in production. Use when optimizing prompts, improving LLM outputs, or designing production prompt templates.
+description: Create effective prompts for AI-to-AI communication through Web UI. Covers meta-prompts, constraint structuring, example-based learning, chain-of-thought, and skill creation patterns.
 ---
 
 # Prompt Engineering Patterns
 
-Master advanced prompt engineering techniques to maximize LLM performance, reliability, and controllability.
+Create effective prompts for AI-to-AI communication through Web UI.
+
+## Core Principles
+
+### CONCISE IS KEY
+
+Every token competes with conversation history. Challenge each piece:
+- "Does Claude already know this?"
+- "Is this explanation necessary?"
+- "Does this justify its token cost?"
+
+Default assumption: Claude is already smart. Only add what it doesn't have.
+
+### CONTROL DEGREES OF FREEDOM
+
+Match specificity to task fragility:
+
+| Freedom Level | When to Use | Pattern |
+|--------------|-------------|---------|
+| **High** | Multiple valid approaches, context-dependent | Text-based heuristics |
+| **Medium** | Preferred pattern exists, some variation OK | Pseudocode with parameters |
+| **Low** | Error-prone operations, consistency critical | Exact scripts with no parameters |
+
+Example: Database migration = low freedom (one safe path). Code review = high freedom (context determines approach).
 
 ## When to Use This Skill
 
-- Designing complex prompts for production LLM applications
-- Optimizing prompt performance and consistency
-- Implementing structured reasoning patterns (chain-of-thought, tree-of-thought)
-- Building few-shot learning systems with dynamic example selection
-- Creating reusable prompt templates with variable interpolation
-- Debugging and refining prompts that produce inconsistent outputs
-- Implementing system prompts for specialized AI assistants
+- Creating prompts for other AI agents/assistants
+- Designing meta-prompts that generate prompts
+- Structuring constraints, goals, objectives
+- Building skills for other agents
+- Optimizing prompt performance across agent workflows
+
+## Quick Patterns
+
+### Prompt Structure Hierarchy
+
+```
+[Task Instruction] → [Examples (optional)] → [Input] → [Output Format]
+```
+
+### Role-Defining Prompt Template
+
+Use when setting up assistants or defining recurring behavior:
+
+```
+You are a {role} assistant specializing in {domain}.
+
+Task: {task_description}
+
+{examples (optional)}
+
+Input: {user_input}
+
+Output format: {format_specification}
+```
+
+### Task-Based Prompt Template
+
+Use when working with pre-configured agents or one-off tasks:
+
+```
+{task_instruction}
+
+{examples (optional)}
+
+Input: {user_input}
+
+Output format: {format_specification}
+```
+
+### Progressive Disclosure Pattern
+
+Start simple, add complexity only when needed:
+
+**Level 1:** Direct instruction → `"Summarize this article"`
+
+**Level 2:** Add constraints → `"Summarize in 3 bullet points"`
+
+**Level 3:** Add reasoning → `"Identify findings, then summarize in 3 bullets"`
+
+**Level 4:** Add examples → Include 2-3 examples showing desired format
 
 ## Core Capabilities
 
-### 1. Few-Shot Learning
-- Example selection strategies (semantic similarity, diversity sampling)
-- Balancing example count with context window constraints
-- Constructing effective demonstrations with input-output pairs
-- Dynamic example retrieval from knowledge bases
-- Handling edge cases through strategic example selection
+### Example-Based Learning
+- **Zero-shot**: Direct requests without examples
+- **One-shot**: Single demonstration
+- **Few-shot**: 3-8 examples for complex patterns
+- **Best practices**: Mix class order for classification, start with 6 examples
+- Detailed guide: [references/few-shot-learning.md](references/few-shot-learning.md)
 
-### 2. Chain-of-Thought Prompting
-- Step-by-step reasoning elicitation
-- Zero-shot CoT with "Let's think step by step"
-- Few-shot CoT with reasoning traces
-- Self-consistency techniques (sampling multiple reasoning paths)
-- Verification and validation steps
+### Chain-of-Thought Reasoning
+- Zero-shot CoT with triggers ("Let's think step by step")
+- Step-back prompting (principles before specifics)
+- Tree-of-Thought (multiple reasoning branches)
+- Least-to-Most (break into subproblems)
+- Verification and self-consistency
+- Detailed guide: [references/chain-of-thought.md](references/chain-of-thought.md)
 
-### 3. Prompt Optimization
-- Iterative refinement workflows
-- A/B testing prompt variations
-- Measuring prompt performance metrics (accuracy, consistency, latency)
-- Reducing token usage while maintaining quality
-- Handling edge cases and failure modes
+### Meta-Prompting
+- Creating prompts that generate prompts
+- Structuring constraints, goals, objectives
+- Skill creation patterns
+- Pattern: `"Generate a prompt that will {task}..."`
+- Detailed guide: [references/advanced-techniques.md](references/advanced-techniques.md)
 
-### 4. Template Systems
-- Variable interpolation and formatting
-- Conditional prompt sections
-- Multi-turn conversation templates
-- Role-based prompt composition
-- Modular prompt components
+### Agent Interaction
+- Working with pre-configured agents (don't redefine roles)
+- Task delegation: `"As the {agent}, help me {task}"`
+- Multi-agent workflows (sequential, parallel, iterative)
+- Context propagation across agent boundaries
+- Detailed guide: [references/agent-interaction.md](references/agent-interaction.md)
 
-### 5. System Prompt Design
-- Setting model behavior and constraints
-- Defining output formats and structure
-- Establishing role and expertise
-- Safety guidelines and content policies
-- Context setting and background information
+### Prompt Templates
+- Reusable template patterns
+- AI-to-AI specific templates
+- Code prompting patterns
+- JSON schema templates
+- Complete library: [references/prompt-templates.md](references/prompt-templates.md)
 
-## Quick Start
+### Optimization
+- Systematic refinement workflows
+- A/B testing framework
+- Documentation (table-based format)
+- Failure analysis and fixes
+- Detailed guide: [references/prompt-optimization.md](references/prompt-optimization.md)
 
-```python
-from prompt_optimizer import PromptTemplate, FewShotSelector
+## Common Templates
 
-# Define a structured prompt template
-template = PromptTemplate(
-    system="You are an expert SQL developer. Generate efficient, secure SQL queries.",
-    instruction="Convert the following natural language query to SQL:\n{query}",
-    few_shot_examples=True,
-    output_format="SQL code block with explanatory comments"
-)
+### Constraint Structuring
 
-# Configure few-shot learning
-selector = FewShotSelector(
-    examples_db="sql_examples.jsonl",
-    selection_strategy="semantic_similarity",
-    max_examples=3
-)
+```
+Task: {task_description}
 
-# Generate optimized prompt
-prompt = template.render(
-    query="Find all users who registered in the last 30 days",
-    examples=selector.select(query="user registration date filter")
-)
+Constraints:
+- Must NOT: {prohibited_actions}
+- Must: {required_actions}
+- Limit: {specific_limits}
+- Format: {output_format}
+
+{task_input}
 ```
 
-## Key Patterns
+### Goal and Objective Framework
 
-### Progressive Disclosure
-Start with simple prompts, add complexity only when needed:
-
-1. **Level 1**: Direct instruction
-   - "Summarize this article"
-
-2. **Level 2**: Add constraints
-   - "Summarize this article in 3 bullet points, focusing on key findings"
-
-3. **Level 3**: Add reasoning
-   - "Read this article, identify the main findings, then summarize in 3 bullet points"
-
-4. **Level 4**: Add examples
-   - Include 2-3 example summaries with input-output pairs
-
-### Instruction Hierarchy
 ```
-[System Context] → [Task Instruction] → [Examples] → [Input Data] → [Output Format]
+You are a {role} assistant.
+
+Primary Objective: {main_target}
+
+Goals:
+- {goal_1}
+- {goal_2}
+
+Constraints:
+- Must: {required}
+- Must not: {prohibited}
+
+Output format: {format}
+
+Task: {task}
 ```
 
-### Error Recovery
-Build prompts that gracefully handle failures:
-- Include fallback instructions
-- Request confidence scores
-- Ask for alternative interpretations when uncertain
-- Specify how to indicate missing information
+### Meta-Prompt Template
+
+```
+Generate a prompt that will {task_description}.
+
+The generated prompt should:
+- {requirement_1}
+- {requirement_2}
+- {requirement_3}
+
+Context: {context}
+
+Generate the prompt:
+```
+
+### AI-to-AI Task Delegation
+
+```
+As the {receiving_agent_type}, please {task}.
+
+Context:
+- Delegating from: {sending_agent_type}
+- Task purpose: {why_this_task}
+- Dependencies: {what_this_depends_on}
+- Output will be used by: {next_agent_or_purpose}
+
+{task_details}
+```
+
+### Inter-Agent Workflow
+
+```
+This prompt initiates a multi-agent workflow.
+
+Step {N} of {total}: {step_name}
+
+Your role: {agent_role}
+Your task: {specific_task}
+
+When complete, provide output in this format:
+{structured_output_format}
+
+The next agent will use your output to: {next_step_description}
+```
 
 ## Best Practices
 
-1. **Be Specific**: Vague prompts produce inconsistent results
-2. **Show, Don't Tell**: Examples are more effective than descriptions
-3. **Test Extensively**: Evaluate on diverse, representative inputs
-4. **Iterate Rapidly**: Small changes can have large impacts
-5. **Monitor Performance**: Track metrics in production
-6. **Version Control**: Treat prompts as code with proper versioning
-7. **Document Intent**: Explain why prompts are structured as they are
+1. **Be specific** - Vague prompts produce inconsistent results
+2. **Show, don't tell** - Examples beat lengthy descriptions
+3. **Test extensively** - Evaluate on diverse inputs
+4. **Iterate rapidly** - Small changes can have large impacts
+5. **Version control** - Track what works
+6. **Document intent** - Explain why prompts are structured this way
 
 ## Common Pitfalls
 
-- **Over-engineering**: Starting with complex prompts before trying simple ones
-- **Example pollution**: Using examples that don't match the target task
-- **Context overflow**: Exceeding token limits with excessive examples
-- **Ambiguous instructions**: Leaving room for multiple interpretations
-- **Ignoring edge cases**: Not testing on unusual or boundary inputs
+- **Over-engineering**: Starting complex before trying simple
+- **Example mismatch**: Examples don't align with target task
+- **Information overload**: Too many examples or instructions
+- **Ambiguous instructions**: Room for multiple interpretations
+- **Ignoring edge cases**: Not testing boundary conditions
 
-## Integration Patterns
+## Success Criteria
 
-### With RAG Systems
-```python
-# Combine retrieved context with prompt engineering
-prompt = f"""Given the following context:
-{retrieved_context}
-
-{few_shot_examples}
-
-Question: {user_question}
-
-Provide a detailed answer based solely on the context above. If the context doesn't contain enough information, explicitly state what's missing."""
-```
-
-### With Validation
-```python
-# Add self-verification step
-prompt = f"""{main_task_prompt}
-
-After generating your response, verify it meets these criteria:
-1. Answers the question directly
-2. Uses only information from provided context
-3. Cites specific sources
-4. Acknowledges any uncertainty
-
-If verification fails, revise your response."""
-```
-
-## Performance Optimization
-
-### Token Efficiency
-- Remove redundant words and phrases
-- Use abbreviations consistently after first definition
-- Consolidate similar instructions
-- Move stable content to system prompts
-
-### Latency Reduction
-- Minimize prompt length without sacrificing quality
-- Use streaming for long-form outputs
-- Cache common prompt prefixes
-- Batch similar requests when possible
-
-## Resources
-
-- **references/few-shot-learning.md**: Deep dive on example selection and construction
-- **references/chain-of-thought.md**: Advanced reasoning elicitation techniques
-- **references/prompt-optimization.md**: Systematic refinement workflows
-- **references/prompt-templates.md**: Reusable template patterns
-- **references/system-prompts.md**: System-level prompt design
-- **assets/prompt-template-library.md**: Battle-tested prompt templates
-- **assets/few-shot-examples.json**: Curated example datasets
-- **scripts/optimize-prompt.py**: Automated prompt optimization tool
-
-## Success Metrics
-
-Track these KPIs for your prompts:
-- **Accuracy**: Correctness of outputs
-- **Consistency**: Reproducibility across similar inputs
-- **Latency**: Response time (P50, P95, P99)
-- **Token Usage**: Average tokens per request
-- **Success Rate**: Percentage of valid outputs
-- **User Satisfaction**: Ratings and feedback
-
-## Next Steps
-
-1. Review the prompt template library for common patterns
-2. Experiment with few-shot learning for your specific use case
-3. Implement prompt versioning and A/B testing
-4. Set up automated evaluation pipelines
-5. Document your prompt engineering decisions and learnings
+Evaluate prompts on:
+- **Accuracy**: Correctness and relevance
+- **Consistency**: Reproducible across similar inputs
+- **Clarity**: How well intent is conveyed
+- **Completeness**: Addresses all task aspects
+- **Efficiency**: Achieves goals without complexity
