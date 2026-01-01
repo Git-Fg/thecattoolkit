@@ -6,13 +6,13 @@ allowed-tools: [Read, Write, Glob, SlashCommand, AskUserQuestion]
 
 <!--
 CREATION COMMANDS GUIDE:
-- Use /create-plan for building projects (hierarchical planning)
-- Use /create-meta-prompt for Claude→Claude pipelines (staged workflows)
-- Use /create-prompt for single prompts (simple, one-off)
-- Use /create-agent-skill for creating new skills
-- Use /create-subagent for creating specialized agents
-- Use /create-slash-command for creating commands
-- Use /create-hook for automation
+- Use /taches-cc-resources:create-plan for building projects (hierarchical planning)
+- Use /taches-cc-resources:create-meta-prompt for Claude→Claude pipelines (staged workflows)
+- Use /taches-cc-resources:create-prompt for single prompts (simple, one-off)
+- Use /taches-cc-resources:create-agent-skill for creating new skills
+- Use /taches-cc-resources:create-subagent for creating specialized agents
+- Use /taches-cc-resources:create-slash-command for creating commands
+- Use /taches-cc-resources:create-hook for automation
 -->
 
 <context>
@@ -391,7 +391,7 @@ Choose (1-4): \_
 </presentation>
 
 <action>
-If user chooses #1, invoke via SlashCommand tool: `/run-prompt 005`
+If user chooses #1, invoke via SlashCommand tool: `/taches-cc-resources:run-prompt 005`
 </action>
 </single_prompt_scenario>
 
@@ -417,8 +417,8 @@ Choose (1-4): \_
 </presentation>
 
 <actions>
-If user chooses #1, invoke via SlashCommand tool: `/run-prompt 005 006 007 --parallel`
-If user chooses #2, invoke via SlashCommand tool: `/run-prompt 005 006 007 --sequential`
+If user chooses #1, invoke via SlashCommand tool: `/taches-cc-resources:run-prompt 005 006 007 --parallel`
+If user chooses #2, invoke via SlashCommand tool: `/taches-cc-resources:run-prompt 005 006 007 --sequential`
 </actions>
 </parallel_scenario>
 
@@ -444,8 +444,8 @@ Choose (1-4): \_
 </presentation>
 
 <actions>
-If user chooses #1, invoke via SlashCommand tool: `/run-prompt 005 006 007 --sequential`
-If user chooses #2, invoke via SlashCommand tool: `/run-prompt 005`
+If user chooses #1, invoke via SlashCommand tool: `/taches-cc-resources:run-prompt 005 006 007 --sequential`
+If user chooses #2, invoke via SlashCommand tool: `/taches-cc-resources:run-prompt 005`
 </actions>
 </sequential_scenario>
 
@@ -475,5 +475,5 @@ If user chooses #2, invoke via SlashCommand tool: `/run-prompt 005`
 - Consider the user's working directory as the root for all relative paths
 - Each prompt file should contain ONLY the prompt content, no preamble or explanation
 - After saving, present the decision tree as inline text (not AskUserQuestion)
-- Use the SlashCommand tool to invoke /run-prompt when user makes their choice
+- Use the SlashCommand tool to invoke /taches-cc-resources:run-prompt when user makes their choice
 </meta_instructions>
