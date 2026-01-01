@@ -257,19 +257,19 @@ description: Helps with testing
 description: Billing agent
 ```
 
-✅ Good (specific triggers + differentiation):
+✅ Good (specific triggers + differentiation + strong language):
 ```yaml
-description: Creates comprehensive test suites. Use when new code needs tests or test coverage is insufficient. Proactively use after implementing new features.
+description: Creates comprehensive test suites. PROACTIVELY USE when new code needs tests or test coverage is insufficient.
 ```
 
 ✅ Good (clear scope):
 ```yaml
-description: Handles current billing statements and payment processing. Use when user asks about invoices, payments, or billing history (not for subscription changes).
+description: Handles current billing statements and payment processing. MUST USE when user asks about invoices, payments, or billing history (not for subscription changes).
 ```
 
 **Optimization tips**:
 - Include **trigger keywords** that match common user requests
-- Specify **when to use** (not just what it does)
+- Use **strong language** (MUST USE/PROACTIVELY USE) based on agent type
 - **Differentiate** from similar agents (what this one does vs others)
 - Include **proactive triggers** if agent should be invoked automatically
 </anti_pattern>
@@ -479,7 +479,7 @@ Task is complete when:
 ```markdown
 ---
 name: subagent-name
-description: What it does and when to use it. Include trigger keywords.
+description: What it does and when to use it. Include trigger keywords and strong language (PROACTIVELY/NEVER/ALWAYS/MUST).
 tools: Tool1, Tool2, Tool3
 model: sonnet
 ---

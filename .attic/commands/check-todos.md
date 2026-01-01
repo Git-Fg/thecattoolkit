@@ -1,15 +1,12 @@
 ---
 description: List outstanding todos and select one to work on
-allowed-tools:
-  - Read
-  - Edit
-  - Glob
 ---
 
-# Check Todos
+<objective>
+List outstanding todos and allow user to select one to work on with full context loading.
+</objective>
 
-## Instructions
-
+<process>
 1. Read TO-DOS.md in the working directory (if doesn't exist, say "No outstanding todos" and exit)
 
 2. Parse and display todos:
@@ -42,9 +39,17 @@ allowed-tools:
    - **Option "Invoke skill" or "Start working"**: Remove todo from TO-DOS.md (and h2 heading if section becomes empty), then begin work (invoke skill if applicable, or proceed directly)
    - **Option "Brainstorm approach"**: Keep todo in file, invoke `/brainstorm` with the todo description as argument
    - **Option "Put it back"**: Keep todo in file, return to step 2 to display the full list again
+</process>
 
-## Display Format
+<success_criteria>
+- User presented with numbered list of todos
+- Selected todo loaded with full context
+- Relevant files summarized
+- Workflow options presented based on domain matching
+- User choice executed (skill invoked, work started, or brainstorm triggered)
+</success_criteria>
 
+<output_format>
 ```
 Outstanding Todos:
 
@@ -54,3 +59,4 @@ Outstanding Todos:
 
 Reply with the number of the todo you'd like to work on.
 ```
+</output_format>

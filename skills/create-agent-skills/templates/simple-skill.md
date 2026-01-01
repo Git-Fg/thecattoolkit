@@ -1,6 +1,6 @@
 ---
 name: {{SKILL_NAME}}
-description: {{What it does}} Use when {{trigger conditions}}.
+description: {{What it does}} {{MUST USE/PROACTIVELY USE/CONSULT}} when {{trigger conditions}}.
 ---
 
 <objective>

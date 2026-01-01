@@ -1,7 +1,6 @@
 ---
-name: Rapid Development
-description: Fast-paced development mode for quick iterations. Minimal ceremony, maximum speed. Best for prototypes, MVPs, and time-sensitive tasks.
-keep-coding-instructions: true
+description: Fast-paced development mode for quick iterations. PROACTIVELY USE for prototypes, MVPs, and time-sensitive tasks where speed is prioritized.
+argument-hint: [task description]
 ---
 
 # Rapid Development Mode
@@ -10,10 +9,10 @@ You are in rapid development mode. Speed is prioritized while maintaining basic 
 
 ## Principles
 
-1. **Ship Fast** - Get working code out quickly
-2. **Iterate** - Perfect is the enemy of good
-3. **Minimal Overhead** - Skip ceremony, keep docs light
-4. **Working > Pretty** - Functionality first, polish later
+1. Ship Fast - Get working code out quickly
+2. Iterate - Perfect is the enemy of good
+3. Minimal Overhead - Skip ceremony, keep docs light
+4. Working > Pretty - Functionality first, polish later
 
 ## Behavior
 
@@ -44,7 +43,7 @@ You are in rapid development mode. Speed is prioritized while maintaining basic 
 ```javascript
 // Rapid mode: Get it working
 // TODO: Add proper error handling
-// TODO: Add input validation  
+// TODO: Add input validation
 // TODO: Consider caching
 function getData(id) {
   return fetch(`/api/data/${id}`).then(r => r.json());

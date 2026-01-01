@@ -1,26 +1,29 @@
 ---
-name: build-macos-apps
+name: macos-apps
 description: Build professional native macOS apps in Swift with SwiftUI and AppKit. Full lifecycle - build, debug, test, optimize, ship. CLI-only, no Xcode.
 ---
 
-<essential_principles>
-## How We Work
+# Essential Principles
+
+## Overview
 
 **The user is the product owner. Claude is the developer.**
 
 The user does not write code. The user does not read code. The user describes what they want and judges whether the result is acceptable. Claude implements, verifies, and reports outcomes.
 
-### 1. Prove, Don't Promise
+## Prove, Don't Promise
 
 Never say "this should work." Prove it:
+
 ```bash
 xcodebuild build 2>&1 | xcsift  # Build passes
 xcodebuild test                  # Tests pass
 open .../App.app                 # App launches
 ```
+
 If you didn't run it, you don't know it works.
 
-### 2. Tests for Correctness, Eyes for Quality
+## Tests for Correctness
 
 | Question | How to Answer |
 |----------|---------------|
@@ -32,14 +35,15 @@ If you didn't run it, you don't know it works.
 
 Tests verify *correctness*. The user verifies *desirability*.
 
-### 3. Report Outcomes, Not Code
+## Report Outcomes, Not Code
 
 **Bad:** "I refactored DataService to use async/await with weak self capture"
+
 **Good:** "Fixed the memory leak. `leaks` now shows 0 leaks. App tested stable for 5 minutes."
 
 The user doesn't care what you changed. The user cares what's different.
 
-### 4. Small Steps, Always Verified
+## Small Steps, Always Verified
 
 ```
 Change → Verify → Report → Next change
@@ -47,20 +51,20 @@ Change → Verify → Report → Next change
 
 Never batch up work. Never say "I made several changes." Each change is verified before the next. If something breaks, you know exactly what caused it.
 
-### 5. Ask Before, Not After
+## Ask Before, Not After
 
-Unclear requirement? Ask now.
-Multiple valid approaches? Ask which.
-Scope creep? Ask if wanted.
-Big refactor needed? Ask permission.
+- Unclear requirement? Ask now.
+- Multiple valid approaches? Ask which.
+- Scope creep? Ask if wanted.
+- Big refactor needed? Ask permission.
 
-Wrong: Build for 30 minutes, then "is this what you wanted?"
-Right: "Before I start, does X mean Y or Z?"
+**Wrong:** Build for 30 minutes, then "is this what you wanted?"
 
-### 6. Always Leave It Working
+**Right:** "Before I start, does X mean Y or Z?"
+
+## Always Leave It Working
 
 Every stopping point = working state. Tests pass, app launches, changes committed. The user can walk away anytime and come back to something that works.
-</essential_principles>
 
 <intake>
 **Ask the user:**
@@ -89,7 +93,8 @@ What would you like to do?
 | 7, other | Clarify, then select workflow or references |
 </routing>
 
-<verification_loop>
+# Verification Loop
+
 ## After Every Change
 
 ```bash
@@ -107,9 +112,9 @@ Report to the user:
 - "Build: ✓"
 - "Tests: 12 pass, 0 fail"
 - "App launches, ready for you to check [specific thing]"
-</verification_loop>
 
-<when_to_test>
+# When to Test
+
 ## Testing Decision
 
 **Write a test when:**
@@ -126,23 +131,24 @@ Report to the user:
 - One-off verification (launch and check manually)
 
 **The principle:** Tests let the user verify correctness without reading code. If the user needs to verify it works, and it's not purely visual, write a test.
-</when_to_test>
 
-<reference_index>
-## Domain Knowledge
+# Reference Index
 
 All in `references/`:
 
 **Architecture:** app-architecture, swiftui-patterns, appkit-integration, concurrency-patterns
-**Data:** data-persistence, networking
-**App Types:** document-apps, shoebox-apps, menu-bar-apps
-**System:** system-apis, app-extensions
-**Development:** project-scaffolding, cli-workflow, cli-observability, testing-tdd, testing-debugging
-**Polish:** design-system, macos-polish, security-code-signing
-</reference_index>
 
-<workflows_index>
-## Workflows
+**Data:** data-persistence, networking
+
+**App Types:** document-apps, shoebox-apps, menu-bar-apps
+
+**System:** system-apis, app-extensions
+
+**Development:** project-scaffolding, cli-workflow, cli-observability, testing-tdd, testing-debugging
+
+**Polish:** design-system, macos-polish, security-code-signing
+
+# Workflows Index
 
 All in `workflows/`:
 
@@ -154,4 +160,3 @@ All in `workflows/`:
 | write-tests.md | Write and run tests |
 | optimize-performance.md | Profile and speed up |
 | ship-app.md | Sign, notarize, distribute |
-</workflows_index>

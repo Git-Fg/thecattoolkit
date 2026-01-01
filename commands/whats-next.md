@@ -13,32 +13,32 @@ Create a comprehensive, detailed handoff document that captures all context from
 
 ## Instructions
 
-**PRIORITY: Comprehensive detail and precision over brevity.** The goal is to enable someone (or a fresh Claude instance) to pick up exactly where you left off with zero information loss.
+PRIORITY: Comprehensive detail and precision over brevity. The goal is to enable someone (or a fresh Claude instance) to pick up exactly where you left off with zero information loss.
 
 Adapt the level of detail to the task type (coding, research, analysis, writing, configuration, etc.) but maintain comprehensive coverage:
 
-1. **Original Task**: Identify what was initially requested (not new scope or side tasks)
+1. Original Task: Identify what was initially requested (not new scope or side tasks)
 
-2. **Work Completed**: Document everything accomplished in detail
+2. Work Completed: Document everything accomplished in detail
    - All artifacts created, modified, or analyzed (files, documents, research findings, etc.)
    - Specific changes made (code with line numbers, content written, data analyzed, etc.)
    - Actions taken (commands run, APIs called, searches performed, tools used, etc.)
    - Findings discovered (insights, patterns, answers, data points, etc.)
    - Decisions made and the reasoning behind them
 
-3. **Work Remaining**: Specify exactly what still needs to be done
+3. Work Remaining: Specify exactly what still needs to be done
    - Break down remaining work into specific, actionable steps
    - Include precise locations, references, or targets (file paths, URLs, data sources, etc.)
    - Note dependencies, prerequisites, or ordering requirements
    - Specify validation or verification steps needed
 
-4. **Attempted Approaches**: Capture everything tried, including failures
+4. Attempted Approaches: Capture everything tried, including failures
    - Approaches that didn't work and why they failed
    - Errors encountered, blockers hit, or limitations discovered
    - Dead ends to avoid repeating
    - Alternative approaches considered but not pursued
 
-5. **Critical Context**: Preserve all essential knowledge
+5. Critical Context: Preserve all essential knowledge
    - Key decisions and trade-offs considered
    - Constraints, requirements, or boundaries
    - Important discoveries, gotchas, edge cases, or non-obvious behaviors
@@ -46,7 +46,7 @@ Adapt the level of detail to the task type (coding, research, analysis, writing,
    - Assumptions made that need validation
    - References to documentation, sources, or resources consulted
 
-6. **Current State**: Document the exact current state
+6. Current State: Document the exact current state
    - Status of deliverables (complete, in-progress, not started)
    - What's committed, saved, or finalized vs. what's temporary or draft
    - Any temporary changes, workarounds, or open questions

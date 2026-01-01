@@ -1,20 +1,21 @@
 ---
 name: create-hooks
-description: Expert guidance for creating, configuring, and using Claude Code hooks. Use when working with hooks, setting up event listeners, validating commands, automating workflows, adding notifications, or understanding hook types (PreToolUse, PostToolUse, Stop, SessionStart, UserPromptSubmit, etc).
+description: Expert guidance for creating, configuring, and using AI agent hooks (Claude Code-specific). MUST USE when working with hooks, setting up event listeners, validating commands, automating workflows, adding notifications, or understanding hook types (PreToolUse, PostToolUse, Stop, SessionStart, UserPromptSubmit, etc).
 ---
 
-<objective>
+## Objective
+
 Hooks are event-driven automation for Claude Code that execute shell commands or LLM prompts in response to tool usage, session events, and user interactions. This skill teaches you how to create, configure, and debug hooks for validating commands, automating workflows, injecting context, and implementing custom completion criteria.
 
 Hooks provide programmatic control over Claude's behavior without modifying core code, enabling project-specific automation, safety checks, and workflow customization.
-</objective>
 
-<context>
+## Context
+
 Hooks are shell commands or LLM-evaluated prompts that execute in response to Claude Code events. They operate within an event hierarchy: events (PreToolUse, PostToolUse, Stop, etc.) trigger matchers (tool patterns) which fire hooks (commands or prompts). Hooks can block actions, modify tool inputs, inject context, or simply observe and log Claude's operations.
-</context>
 
-<quick_start>
-<workflow>
+## Quick Start
+
+Workflow:
 1. Create hooks config file:
    - Project: `.claude/hooks.json`
    - User: `~/.claude/hooks.json`
@@ -22,10 +23,8 @@ Hooks are shell commands or LLM-evaluated prompts that execute in response to Cl
 3. Choose hook type (command or prompt)
 4. Configure matcher (which tools trigger it)
 5. Test with `claude --debug`
-</workflow>
 
-<example>
-**Log all bash commands**:
+Example: Log all bash commands
 
 `.claude/hooks.json`:
 ```json
@@ -50,8 +49,6 @@ This hook:
 - Fires before (`PreToolUse`) every `Bash` tool use
 - Executes a `command` (not an LLM prompt)
 - Logs command + description to a file
-</example>
-</quick_start>
 
 <hook_types>
 | Event | When it fires | Can block? |
@@ -112,7 +109,8 @@ Blocking hooks can return `"decision": "block"` to prevent the action. See [refe
 </hook_type>
 </hook_anatomy>
 
-<matchers>
+## Matchers
+
 Matchers filter which tools trigger the hook:
 
 ```json
@@ -124,7 +122,7 @@ Matchers filter which tools trigger the hook:
 }
 ```
 
-**No matcher**: Hook fires for all tools
+No matcher: Hook fires for all tools
 ```json
 {
   "hooks": {
@@ -136,12 +134,12 @@ Matchers filter which tools trigger the hook:
   }
 }
 ```
-</matchers>
 
-<input_output>
+## Input/Output
+
 Hooks receive JSON via stdin with session info, current directory, and event-specific data. Blocking hooks can return JSON to approve/block actions or modify inputs.
 
-**Example output** (blocking hooks):
+Example output (blocking hooks):
 ```json
 {
   "decision": "approve" | "block",
@@ -150,9 +148,9 @@ Hooks receive JSON via stdin with session info, current directory, and event-spe
 ```
 
 See [references/input-output-schemas.md](references/input-output-schemas.md) for complete schemas for each hook type.
-</input_output>
 
-<environment_variables>
+## Environment Variables
+
 Available in hook commands:
 
 | Variable | Value |
@@ -161,16 +159,16 @@ Available in hook commands:
 | `${CLAUDE_PLUGIN_ROOT}` | Plugin directory (plugin hooks only) |
 | `$ARGUMENTS` | Hook input JSON (prompt hooks only) |
 
-**Example**:
+Example:
 ```json
 {
   "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/validate.sh"
 }
 ```
-</environment_variables>
 
-<common_patterns>
-**Desktop notification when input needed**:
+## Common Patterns
+
+Desktop notification when input needed:
 ```json
 {
   "hooks": {
@@ -188,7 +186,7 @@ Available in hook commands:
 }
 ```
 
-**Block destructive git commands**:
+Block destructive git commands:
 ```json
 {
   "hooks": {
@@ -207,7 +205,7 @@ Available in hook commands:
 }
 ```
 
-**Auto-format code after edits**:
+Auto-format code after edits:
 ```json
 {
   "hooks": {
@@ -227,7 +225,7 @@ Available in hook commands:
 }
 ```
 
-**Add context at session start**:
+Add context at session start:
 ```json
 {
   "hooks": {
@@ -244,43 +242,43 @@ Available in hook commands:
   }
 }
 ```
-</common_patterns>
 
-<debugging>
+## Debugging
+
 Always test hooks with the debug flag:
 ```bash
 claude --debug
 ```
 
 This shows which hooks matched, command execution, and output. See [references/troubleshooting.md](references/troubleshooting.md) for common issues and solutions.
-</debugging>
 
-<reference_guides>
-**Hook types and events**: [references/hook-types.md](references/hook-types.md)
+## Reference Guides
+
+Hook types and events: [references/hook-types.md](references/hook-types.md)
 - Complete list of hook events
 - When each event fires
 - Input/output schemas for each
 - Blocking vs non-blocking hooks
 
-**Command vs Prompt hooks**: [references/command-vs-prompt.md](references/command-vs-prompt.md)
+Command vs Prompt hooks: [references/command-vs-prompt.md](references/command-vs-prompt.md)
 - Decision tree: which type to use
 - Command hook patterns and examples
 - Prompt hook patterns and examples
 - Performance considerations
 
-**Matchers and patterns**: [references/matchers.md](references/matchers.md)
+Matchers and patterns: [references/matchers.md](references/matchers.md)
 - Regex patterns for tool matching
 - MCP tool matching patterns
 - Multiple tool matching
 - Debugging matcher issues
 
-**Input/Output schemas**: [references/input-output-schemas.md](references/input-output-schemas.md)
+Input/Output schemas: [references/input-output-schemas.md](references/input-output-schemas.md)
 - Complete schema for each hook type
 - Field descriptions and types
 - Hook-specific output fields
 - Example JSON for each event
 
-**Working examples**: [references/examples.md](references/examples.md)
+Working examples: [references/examples.md](references/examples.md)
 - Desktop notifications
 - Command validation
 - Auto-formatting workflows
@@ -288,26 +286,26 @@ This shows which hooks matched, command execution, and output. See [references/t
 - Stop logic patterns
 - Session context injection
 
-**Troubleshooting**: [references/troubleshooting.md](references/troubleshooting.md)
+Troubleshooting: [references/troubleshooting.md](references/troubleshooting.md)
 - Hooks not triggering
 - Command execution failures
 - Prompt hook issues
 - Permission problems
 - Timeout handling
 - Debug workflow
-</reference_guides>
 
-<security_checklist>
-**Critical safety requirements**:
+## Security Checklist
 
-- **Infinite loop prevention**: Check `stop_hook_active` flag in Stop hooks to prevent recursive triggering
-- **Timeout configuration**: Set reasonable timeouts (default: 60s) to prevent hanging
-- **Permission validation**: Ensure hook scripts have executable permissions (`chmod +x`)
-- **Path safety**: Use absolute paths with `$CLAUDE_PROJECT_DIR` to avoid path injection
-- **JSON validation**: Validate hook config with `jq` before use to catch syntax errors
-- **Selective blocking**: Be conservative with blocking hooks to avoid workflow disruption
+Critical safety requirements:
 
-**Testing protocol**:
+- Infinite loop prevention: Check `stop_hook_active` flag in Stop hooks to prevent recursive triggering
+- Timeout configuration: Set reasonable timeouts (default: 60s) to prevent hanging
+- Permission validation: Ensure hook scripts have executable permissions (`chmod +x`)
+- Path safety: Use absolute paths with `$CLAUDE_PROJECT_DIR` to avoid path injection
+- JSON validation: Validate hook config with `jq` before use to catch syntax errors
+- Selective blocking: Be conservative with blocking hooks to avoid workflow disruption
+
+Testing protocol:
 ```bash
 # Always test with debug flag first
 claude --debug
@@ -315,9 +313,9 @@ claude --debug
 # Validate JSON config
 jq . .claude/hooks.json
 ```
-</security_checklist>
 
-<success_criteria>
+## Success Criteria
+
 A working hook configuration has:
 
 - Valid JSON in `.claude/hooks.json` (validated with `jq`)
@@ -329,4 +327,3 @@ A working hook configuration has:
 - No infinite loops in Stop hooks (checks `stop_hook_active` flag)
 - Reasonable timeout set (especially for external commands)
 - Executable permissions on script files if using file paths
-</success_criteria>

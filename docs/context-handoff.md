@@ -159,15 +159,14 @@ Continuing from src/components/Dashboard.tsx:67..."
 - Reference with `@whats-next.md` in new chats for seamless continuation
 - The file is overwritten each time - it's a snapshot, not a log
 - Delete `whats-next.md` when work is complete
-- Works great with `/add-to-todos` for long-term task tracking
 
 ## Integration
 
-**Combine with todo management:**
+**For task continuation:**
 - `/whats-next` for immediate continuation (same session/day)
-- `/add-to-todos` for longer-term backlog (weeks/months)
+- Use your AI assistant's native task tracking for longer-term backlog
 
-Use whats-next.md for "I'll finish this after lunch" and TO-DOS.md for "I'll get to this eventually."
+Use whats-next.md for "I'll finish this after lunch" and native task tracking for "I'll get to this eventually."
 
 ---
 

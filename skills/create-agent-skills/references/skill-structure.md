@@ -109,25 +109,37 @@ description: What it does and when to use it (third person, specific triggers)
 - No XML tags
 - Third person (never first or second person)
 - Include what it does AND when to use it
+- Use strong language patterns (MUST USE/PROACTIVELY USE/CONSULT)
 
-**Critical rule**: Always write in third person.
-- ✅ "Processes Excel files and generates reports"
+**Critical rule**: Always write in third person with strong modal verbs.
+- ✅ "Processes Excel files and generates reports. MUST USE when..."
+- ✅ "Analyzes Excel spreadsheets and creates pivot tables. PROACTIVELY USE when..."
+- ✅ "Provides expert guidance on API design. CONSULT when..."
 - ❌ "I can help you process Excel files"
 - ❌ "You can use this to process Excel files"
 
-**Structure**: Include both capabilities and triggers.
+**Structure**: Include both capabilities and triggers with strong language.
+
+**Language strength hierarchy**:
+1. **MUST USE** - For creation/critical skills where usage is mandatory
+2. **PROACTIVELY USE** - For skills that should be used proactively
+3. **CONSULT** - For reference/expert guidance skills
 
 **Effective examples**:
+
 ```yaml
-description: Extract text and tables from PDF files, fill forms, merge documents. Use when working with PDF files or when the user mentions PDFs, forms, or document extraction.
+# MUST USE pattern (creation/critical skills)
+description: Expert guidance for creating AI agent skills. MUST USE when working with SKILL.md files, authoring new skills, or understanding best practices.
 ```
 
 ```yaml
-description: Analyze Excel spreadsheets, create pivot tables, generate charts. Use when analyzing Excel files, spreadsheets, tabular data, or .xlsx files.
+# PROACTIVELY USE pattern (proactive usage skills)
+description: Analyzes any project to understand structure, tech stack, patterns, and conventions. PROACTIVELY USE when starting work on a new codebase, onboarding, or asked "how does this project work?"
 ```
 
 ```yaml
-description: Generate descriptive commit messages by analyzing git diffs. Use when the user asks for help writing commit messages or reviewing staged changes.
+# CONSULT pattern (reference/expert guidance skills)
+description: Expert guidance for REST and GraphQL API design including endpoints, error handling, versioning, and documentation. CONSULT when designing APIs, creating endpoints, or asked about API patterns.
 ```
 
 **Avoid**:
@@ -137,6 +149,10 @@ description: Helps with documents
 
 ```yaml
 description: Processes data
+```
+
+```yaml
+description: Use when...  # Missing strong modal verb
 ```
 </description_field>
 </yaml_requirements>

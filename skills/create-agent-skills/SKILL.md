@@ -1,25 +1,26 @@
 ---
 name: create-agent-skills
-description: Expert guidance for creating, writing, building, and refining Claude Code Skills. Use when working with SKILL.md files, authoring new skills, improving existing skills, or understanding skill structure and best practices.
+description: Expert guidance for creating, writing, building, and refining AI agent skills. MUST USE when working with SKILL.md files, authoring new skills, improving existing skills, or understanding skill structure and best practices.
 ---
 
 <essential_principles>
-## How Skills Work
-
+<overview>
 Skills are modular, filesystem-based capabilities that provide domain expertise on demand. This skill teaches how to create effective skills.
+</overview>
 
-### 1. Skills Are Prompts
-
+<principle name="skills_are_prompts">
 All prompting best practices apply. Be clear, be direct, use XML structure. Assume Claude is smart - only add context Claude doesn't have.
+</principle>
 
-### 2. SKILL.md Is Always Loaded
-
+<principle name="skill_md_always_loaded">
 When a skill is invoked, Claude reads SKILL.md. Use this guarantee:
 - Essential principles go in SKILL.md (can't be skipped)
 - Workflow-specific content goes in workflows/
 - Reusable knowledge goes in references/
+</principle>
 
-### 3. Router Pattern for Complex Skills
+<principle name="router_pattern">
+For complex skills, use this structure:
 
 ```
 skill-name/
@@ -32,26 +33,37 @@ skill-name/
 
 SKILL.md asks "what do you want to do?" → routes to workflow → workflow specifies which references to read.
 
-**When to use each folder:**
+**Folder usage:**
 - **workflows/** - Multi-step procedures Claude follows
 - **references/** - Domain knowledge Claude reads for context
 - **templates/** - Consistent output structures Claude copies and fills (plans, specs, configs)
 - **scripts/** - Executable code Claude runs as-is (deploy, setup, API calls)
+</principle>
 
-### 4. Pure XML Structure
+<principle name="structure_clarity">
+Use markdown headings for structure (#, ##, ###). Reserve XML only for highly structured elements like routing decisions:
 
-No markdown headings (#, ##, ###) in skill body. Use semantic XML tags:
-```xml
-<objective>...</objective>
-<process>...</process>
-<success_criteria>...</success_criteria>
+```markdown
+# Objective
+
+What this skill does
+
+# Process
+
+Step-by-step procedure
+
+# Success Criteria
+
+How to know it worked
 ```
 
 Keep markdown formatting within content (bold, lists, code blocks).
+XML reserved for complex routing logic in router pattern skills.
+</principle>
 
-### 5. Progressive Disclosure
-
+<principle name="progressive_disclosure">
 SKILL.md under 500 lines. Split detailed content into reference files. Load only what's needed for the current workflow.
+</principle>
 </essential_principles>
 
 <intake>
@@ -94,23 +106,35 @@ What would you like to do?
 **After reading the workflow, follow it exactly.**
 </routing>
 
-<quick_reference>
-## Skill Structure Quick Reference
+## Quick Reference
 
-**Simple skill (single file):**
+Simple skill (single file):
+
 ```yaml
 ---
 name: skill-name
 description: What it does and when to use it.
 ---
 
-<objective>What this skill does</objective>
-<quick_start>Immediate actionable guidance</quick_start>
-<process>Step-by-step procedure</process>
-<success_criteria>How to know it worked</success_criteria>
+# Objective
+
+What this skill does
+
+# Quick Start
+
+Immediate actionable guidance
+
+# Process
+
+Step-by-step procedure
+
+# Success Criteria
+
+How to know it worked
 ```
 
-**Complex skill (router pattern):**
+Complex skill (router pattern):
+
 ```
 SKILL.md:
   <essential_principles> - Always applies
@@ -133,22 +157,18 @@ scripts/:
   Executable code Claude runs as-is
   (deploy, setup, API calls, data processing)
 ```
-</quick_reference>
 
-<reference_index>
-## Domain Knowledge
+## Reference Index
 
 All in `references/`:
 
-**Structure:** recommended-structure.md, skill-structure.md
-**Principles:** core-principles.md, be-clear-and-direct.md, use-xml-tags.md
-**Patterns:** common-patterns.md, workflows-and-validation.md
-**Assets:** using-templates.md, using-scripts.md
-**Advanced:** executable-code.md, api-security.md, iteration-and-testing.md
-</reference_index>
+Structure: recommended-structure.md, skill-structure.md
+Principles: core-principles.md, be-clear-and-direct.md, use-xml-tags.md
+Patterns: common-patterns.md, workflows-and-validation.md
+Assets: using-templates.md, using-scripts.md
+Advanced: executable-code.md, api-security.md, iteration-and-testing.md
 
-<workflows_index>
-## Workflows
+## Workflows Index
 
 All in `workflows/`:
 
@@ -164,12 +184,11 @@ All in `workflows/`:
 | add-script.md | Add a script to existing skill |
 | upgrade-to-router.md | Convert simple skill to router pattern |
 | get-guidance.md | Help decide what kind of skill to build |
-</workflows_index>
 
-<yaml_requirements>
-## YAML Frontmatter
+## YAML Requirements
 
 Required fields:
+
 ```yaml
 ---
 name: skill-name          # lowercase-with-hyphens, matches directory
@@ -178,15 +197,14 @@ description: ...          # What it does AND when to use it (third person)
 ```
 
 Name conventions: `create-*`, `manage-*`, `setup-*`, `generate-*`, `build-*`
-</yaml_requirements>
 
-<success_criteria>
+## Success Criteria
+
 A well-structured skill:
 - Has valid YAML frontmatter
-- Uses pure XML structure (no markdown headings in body)
+- Uses markdown headings for structure
 - Has essential principles inline in SKILL.md
 - Routes directly to appropriate workflows based on user intent
 - Keeps SKILL.md under 500 lines
 - Asks minimal clarifying questions only when truly needed
 - Has been tested with real usage
-</success_criteria>

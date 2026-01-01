@@ -3,21 +3,22 @@ name: create-slash-commands
 description: Expert guidance for creating Claude Code slash commands. Use when working with slash commands, creating custom commands, understanding command structure, or learning YAML configuration.
 ---
 
-<objective>
+# Objective
+
 Create effective slash commands for Claude Code that enable users to trigger reusable prompts with `/command-name` syntax. Slash commands expand as prompts in the current conversation, allowing teams to standardize workflows and operations. This skill teaches you to structure commands with XML tags, YAML frontmatter, dynamic context loading, and intelligent argument handling.
-</objective>
 
-<quick_start>
+# Quick Start
 
-<workflow>
+## Workflow
+
 1. Create `.claude/commands/` directory (project) or use `~/.claude/commands/` (personal)
 2. Create `command-name.md` file
 3. Add YAML frontmatter (at minimum: `description`)
 4. Write command prompt
 5. Test with `/command-name [args]`
-</workflow>
 
-<example>
+## Example
+
 **File**: `.claude/commands/optimize.md`
 
 ```markdown
@@ -31,15 +32,15 @@ Analyze the performance of this code and suggest three specific optimizations:
 **Usage**: `/optimize`
 
 Claude receives the expanded prompt and analyzes the code in context.
-</example>
-</quick_start>
 
-<xml_structure>
+# XML Structure
+
 All generated slash commands should use XML tags in the body (after YAML frontmatter) for clarity and consistency.
 
-<required_tags>
+## Required Tags
 
 **`<objective>`** - What the command does and why it matters
+
 ```markdown
 <objective>
 What needs to happen and why this matters.
@@ -48,6 +49,7 @@ Context about who uses this and what it accomplishes.
 ```
 
 **`<process>` or `<steps>`** - How to execute the command
+
 ```markdown
 <process>
 Sequential steps to accomplish the objective:
@@ -58,25 +60,28 @@ Sequential steps to accomplish the objective:
 ```
 
 **`<success_criteria>`** - How to know the command succeeded
+
 ```markdown
 <success_criteria>
 Clear, measurable criteria for successful completion.
 </success_criteria>
 ```
-</required_tags>
 
-<conditional_tags>
+## Conditional Tags
 
 **`<context>`** - When loading dynamic state or files
+
 ```markdown
 <context>
 Current state: ! `git status`
 Relevant files: @ package.json
 </context>
 ```
+
 (Note: Remove the space after @ in actual usage)
 
 **`<verification>`** - When producing artifacts that need checking
+
 ```markdown
 <verification>
 Before completing, verify:
@@ -86,6 +91,7 @@ Before completing, verify:
 ```
 
 **`<testing>`** - When running tests is part of the workflow
+
 ```markdown
 <testing>
 Run tests: ! `npm test`
@@ -94,15 +100,15 @@ Check linting: ! `npm run lint`
 ```
 
 **`<output>`** - When creating/modifying specific files
+
 ```markdown
 <output>
 Files created/modified:
 - `./path/to/file.ext` - Description
 </output>
 ```
-</conditional_tags>
 
-<structure_example>
+## Structure Example
 
 ```markdown
 ---
@@ -133,9 +139,8 @@ Files: @ relevant/files
 - Output matches expected format
 </success_criteria>
 ```
-</structure_example>
 
-<intelligence_rules>
+## Intelligence Rules
 
 **Simple commands** (single operation, no artifacts):
 - Required: `<objective>`, `<process>`, `<success_criteria>`
@@ -158,13 +163,12 @@ Files: @ relevant/files
 **Commands that run tests/builds**:
 - Include `<testing>` tag with specific commands
 - Include pass/fail criteria in `<success_criteria>`
-</intelligence_rules>
-</xml_structure>
 
-<arguments_intelligence>
+# Arguments Intelligence
+
 The skill should intelligently determine whether a slash command needs arguments.
 
-<commands_that_need_arguments>
+## Commands That Need Arguments
 
 **User provides specific input:**
 - `/fix-issue [issue-number]` - Needs issue number
@@ -175,9 +179,8 @@ The skill should intelligently determine whether a slash command needs arguments
 **Pattern:** Task operates on user-specified data
 
 Include `argument-hint: [description]` in frontmatter and reference `$ARGUMENTS` in the body.
-</commands_that_need_arguments>
 
-<commands_without_arguments>
+## Commands Without Arguments
 
 **Self-contained procedures:**
 - `/check-todos` - Operates on known file (TO-DOS.md)
@@ -187,11 +190,11 @@ Include `argument-hint: [description]` in frontmatter and reference `$ARGUMENTS`
 **Pattern:** Task operates on implicit context (current conversation, known files, project state)
 
 Omit `argument-hint` and don't reference `$ARGUMENTS`.
-</commands_without_arguments>
 
-<incorporating_arguments>
+## Incorporating Arguments
 
 **In `<objective>` tag:**
+
 ```markdown
 <objective>
 Fix issue #$ARGUMENTS following project conventions.
@@ -201,6 +204,7 @@ This ensures bugs are resolved systematically with proper testing.
 ```
 
 **In `<process>` tag:**
+
 ```markdown
 <process>
 1. Understand issue #$ARGUMENTS from issue tracker
@@ -211,16 +215,17 @@ This ensures bugs are resolved systematically with proper testing.
 ```
 
 **In `<context>` tag:**
+
 ```markdown
 <context>
 Issue details: @ issues/$ARGUMENTS.md
 Related files: ! `grep -r "TODO.*$ARGUMENTS" src/`
 </context>
 ```
-(Note: Remove the space after the exclamation mark in actual usage)
-</incorporating_arguments>
 
-<positional_arguments>
+(Note: Remove the space after the exclamation mark in actual usage)
+
+## Positional Arguments
 
 For structured input, use `$1`, `$2`, `$3`:
 
@@ -235,10 +240,8 @@ Review PR #$1 with priority $2 and assign to $3.
 ```
 
 **Usage:** `/review-pr 456 high alice`
-</positional_arguments>
-</arguments_intelligence>
 
-<file_structure>
+# File Structure
 
 **Project commands**: `.claude/commands/`
 - Shared with team via version control
@@ -249,11 +252,11 @@ Review PR #$1 with priority $2 and assign to $3.
 - Shows `(user)` in `/help` list
 
 **File naming**: `command-name.md` → invoked as `/command-name`
-</file_structure>
 
-<yaml_frontmatter>
+# YAML Frontmatter
 
-<field name="description">
+## description
+
 **Required** - Describes what the command does
 
 ```yaml
@@ -261,9 +264,9 @@ description: Analyze this code for performance issues and suggest optimizations
 ```
 
 Shown in the `/help` command list.
-</field>
 
-<field name="allowed-tools">
+## allowed-tools
+
 **Optional** - Restricts which tools Claude can use
 
 ```yaml
@@ -276,13 +279,13 @@ allowed-tools: Bash(git add:*), Bash(git status:*), Bash(git commit:*)
 - Bash restrictions: `allowed-tools: Bash(git add:*)`
 
 If omitted: All tools available
-</field>
-</yaml_frontmatter>
 
-<arguments>
-<all_arguments_string>
+# Arguments
+
+## All Arguments String
 
 **Command file**: `.claude/commands/fix-issue.md`
+
 ```markdown
 ---
 description: Fix issue following coding standards
@@ -294,11 +297,11 @@ Fix issue #$ARGUMENTS following our coding standards
 **Usage**: `/fix-issue 123 high-priority`
 
 **Claude receives**: "Fix issue #123 high-priority following our coding standards"
-</all_arguments_string>
 
-<positional_arguments_syntax>
+## Positional Arguments Syntax
 
 **Command file**: `.claude/commands/review-pr.md`
+
 ```markdown
 ---
 description: Review PR with priority and assignee
@@ -311,11 +314,9 @@ Review PR #$1 with priority $2 and assign to $3
 
 **Claude receives**: "Review PR #456 with priority high and assign to alice"
 
-See [references/arguments.md](references/arguments.md) for advanced patterns.
-</positional_arguments_syntax>
-</arguments>
+See references/arguments.md for advanced patterns.
 
-<dynamic_context>
+# Dynamic Context
 
 Execute bash commands before the prompt using the exclamation mark prefix directly before backticks (no space between).
 
@@ -342,9 +343,8 @@ Based on the above changes, create a single git commit.
 ```
 
 The bash commands execute and their output is included in the expanded prompt.
-</dynamic_context>
 
-<file_references>
+# File References
 
 Use `@` prefix to reference specific files:
 
@@ -355,17 +355,14 @@ description: Review implementation
 
 Review the implementation in @ src/utils/helpers.js
 ```
+
 (Note: Remove the space after @ in actual usage)
 
 Claude can access the referenced file's contents.
-</file_references>
 
-<best_practices>
+# Best Practices
 
 **1. Always use XML structure**
-```yaml
-# All slash commands should have XML-structured bodies
-```
 
 After frontmatter, use XML tags:
 - `<objective>` - What and why (always)
@@ -374,45 +371,55 @@ After frontmatter, use XML tags:
 - Additional tags as needed (see xml_structure section)
 
 **2. Clear descriptions**
-```yaml
-# Good
-description: Analyze this code for performance issues and suggest optimizations
 
-# Bad
+Good:
+```yaml
+description: Analyze this code for performance issues and suggest optimizations
+```
+
+Bad:
+```yaml
 description: Optimize stuff
 ```
 
 **3. Use dynamic context for state-dependent tasks**
+
 ```markdown
 Current git status: ! `git status`
 Files changed: ! `git diff --name-only`
 ```
 
 **4. Restrict tools when appropriate**
-```yaml
-# For git commands - prevent running arbitrary bash
-allowed-tools: Bash(git add:*), Bash(git status:*), Bash(git commit:*)
 
-# For analysis - thinking only
+For git commands - prevent running arbitrary bash:
+```yaml
+allowed-tools: Bash(git add:*), Bash(git status:*), Bash(git commit:*)
+```
+
+For analysis - thinking only:
+```yaml
 allowed-tools: SequentialThinking
 ```
 
 **5. Use $ARGUMENTS for flexibility**
+
 ```markdown
 Find and fix issue #$ARGUMENTS
 ```
 
 **6. Reference relevant files**
+
 ```markdown
 Review @ package.json for dependencies
 Analyze @ src/database/* for schema
 ```
+
 (Note: Remove the space after @ in actual usage)
-</best_practices>
 
-<common_patterns>
+# Common Patterns
 
-**Simple analysis command**:
+## Simple Analysis Command
+
 ```markdown
 ---
 description: Review this code for security vulnerabilities
@@ -435,7 +442,8 @@ Review code for security vulnerabilities and suggest fixes.
 </success_criteria>
 ```
 
-**Git workflow with context**:
+## Git Workflow with Context
+
 ```markdown
 ---
 description: Create a git commit
@@ -466,7 +474,8 @@ Create a git commit for current changes following repository conventions.
 </success_criteria>
 ```
 
-**Parameterized command**:
+## Parameterized Command
+
 ```markdown
 ---
 description: Fix issue following coding standards
@@ -495,7 +504,8 @@ This ensures bugs are resolved systematically with proper testing.
 </success_criteria>
 ```
 
-**File-specific command**:
+## File-Specific Command
+
 ```markdown
 ---
 description: Optimize code performance
@@ -525,32 +535,30 @@ This helps improve application performance through targeted improvements.
 
 **Usage**: `/optimize src/utils/helpers.js`
 
-See [references/patterns.md](references/patterns.md) for more examples.
-</common_patterns>
+See references/patterns.md for more examples.
 
-<reference_guides>
+# Reference Guides
 
-**Arguments reference**: [references/arguments.md](references/arguments.md)
+**Arguments reference**: references/arguments.md
 - $ARGUMENTS variable
 - Positional arguments ($1, $2, $3)
 - Parsing strategies
 - Examples from official docs
 
-**Patterns reference**: [references/patterns.md](references/patterns.md)
+**Patterns reference**: references/patterns.md
 - Git workflows
 - Code analysis
 - File operations
 - Security reviews
 - Examples from official docs
 
-**Tool restrictions**: [references/tool-restrictions.md](references/tool-restrictions.md)
+**Tool restrictions**: references/tool-restrictions.md
 - Bash command patterns
 - Security best practices
 - When to restrict tools
 - Examples from official docs
-</reference_guides>
 
-<generation_protocol>
+# Generation Protocol
 
 1. **Analyze the user's request**:
    - What is the command's purpose?
@@ -595,36 +603,40 @@ See [references/patterns.md](references/patterns.md) for more examples.
 6. **Save the file**:
    - Project: `.claude/commands/command-name.md`
    - Personal: `~/.claude/commands/command-name.md`
-</generation_protocol>
 
-<success_criteria>
+# Success Criteria
+
 A well-structured slash command meets these criteria:
 
-**YAML Frontmatter**:
+## YAML Frontmatter
+
 - `description` field is clear and concise
 - `argument-hint` present if command accepts arguments
 - `allowed-tools` specified if tool restrictions needed
 
-**XML Structure**:
+## XML Structure
+
 - All three required tags present: `<objective>`, `<process>`, `<success_criteria>`
 - Conditional tags used appropriately based on complexity
 - No raw markdown headings in body
 - All XML tags properly closed
 
-**Arguments Handling**:
+## Arguments Handling
+
 - `$ARGUMENTS` used when command operates on user-specified data
 - Positional arguments (`$1`, `$2`, etc.) used when structured input needed
 - No `$ARGUMENTS` reference for self-contained commands
 
-**Functionality**:
+## Functionality
+
 - Command expands correctly when invoked
 - Dynamic context loads properly (bash commands, file references)
 - Tool restrictions prevent unauthorized operations
 - Command accomplishes intended purpose reliably
 
-**Quality**:
+## Quality
+
 - Clear, actionable instructions in `<process>` tag
 - Measurable completion criteria in `<success_criteria>`
 - Appropriate level of detail (not over-engineered for simple tasks)
 - Examples provided when beneficial
-</success_criteria>

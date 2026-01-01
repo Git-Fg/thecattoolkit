@@ -242,7 +242,7 @@ Useful for testing configurations before saving them.
 ```markdown
 ---
 name: test-writer
-description: Creates comprehensive test suites. Use when new code needs tests or test coverage is insufficient.
+description: Creates comprehensive test suites. PROACTIVELY USE when new code needs tests or test coverage is insufficient.
 tools: Read, Write, Grep, Glob, Bash
 model: sonnet
 ---
@@ -272,7 +272,7 @@ You are a test automation specialist creating thorough, maintainable test suites
 ```markdown
 ---
 name: debugger
-description: Investigates and fixes bugs. Use when errors occur or behavior is unexpected.
+description: Investigates and fixes bugs. PROACTIVELY USE when errors occur or behavior is unexpected.
 tools: Read, Edit, Bash, Grep, Glob
 model: sonnet
 ---

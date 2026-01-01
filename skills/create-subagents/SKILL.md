@@ -1,6 +1,6 @@
 ---
 name: create-subagents
-description: Expert guidance for creating, building, and using Claude Code subagents and the Task tool. Use when working with subagents, setting up agent configurations, understanding how agents work, or using the Task tool to launch specialized agents.
+description: Expert guidance for creating, building, and using AI subagents and delegation tools. MUST USE when working with subagents, setting up agent configurations, understanding how agents work, or using delegation tools to launch specialized agents.
 ---
 
 <objective>
@@ -133,8 +133,8 @@ Main Chat: Present results, handle testing/deployment
 Clearly define the subagent's role, capabilities, and constraints.
 </principle>
 
-<principle name="use_pure_xml_structure">
-Structure the system prompt with pure XML tags. Remove ALL markdown headings from the body.
+<principle name="use_clear_structure">
+Structure the system prompt clearly. Use markdown headings for general structure, XML for highly structured elements like workflows:
 
 ```markdown
 ---
@@ -144,23 +144,23 @@ tools: Read, Grep, Glob, Bash
 model: sonnet
 ---
 
-<role>
-You are a senior code reviewer specializing in security.
-</role>
+## Role
 
-<focus_areas>
+You are a senior code reviewer specializing in security.
+
+## Focus Areas
+
 - SQL injection vulnerabilities
 - XSS attack vectors
 - Authentication/authorization issues
 - Sensitive data exposure
-</focus_areas>
 
-<workflow>
+## Workflow
+
 1. Read the modified files
 2. Identify security risks
 3. Provide specific remediation steps
 4. Rate severity (Critical/High/Medium/Low)
-</workflow>
 ```
 </principle>
 
@@ -172,20 +172,20 @@ Tailor instructions to the specific task domain. Don't create generic "helper" s
 </principle>
 </system_prompt_guidelines>
 
-<subagent_xml_structure>
-Subagent.md files are system prompts consumed only by Claude. Like skills and slash commands, they should use pure XML structure for optimal parsing and token efficiency.
+<subagent_structure>
+Subagent.md files are system prompts. Use clear structure with markdown headings for organization.
 
-<recommended_tags>
-Common tags for subagent structure:
+<recommended_structure>
+Common sections for subagent structure:
 
-- `<role>` - Who the subagent is and what it does
-- `<constraints>` - Hard rules (NEVER/MUST/ALWAYS)
-- `<focus_areas>` - What to prioritize
-- `<workflow>` - Step-by-step process
-- `<output_format>` - How to structure deliverables
-- `<success_criteria>` - Completion criteria
-- `<validation>` - How to verify work
-</recommended_tags>
+- `## Role` - Who the subagent is and what it does
+- `## Constraints` - Hard rules (NEVER/MUST/ALWAYS)
+- `## Focus Areas` - What to prioritize
+- `## Workflow` - Step-by-step process
+- `## Output Format` - How to structure deliverables
+- `## Success Criteria` - Completion criteria
+- `## Validation` - How to verify work
+</recommended_structure>
 
 <intelligence_rules>
 **Simple subagents** (single focused task):
@@ -193,22 +193,20 @@ Common tags for subagent structure:
 - Example: code-reviewer, test-runner
 
 **Medium subagents** (multi-step process):
-- Add workflow steps, output_format, success_criteria
+- Add workflow steps, output format, success criteria
 - Example: api-researcher, documentation-generator
 
 **Complex subagents** (research + generation + validation):
-- Add all tags as appropriate including validation, examples
+- Add all sections as appropriate including validation, examples
 - Example: mcp-api-researcher, comprehensive-auditor
 </intelligence_rules>
 
-<critical_rule>
-**Remove ALL markdown headings (##, ###) from subagent body.** Use semantic XML tags instead.
+<formatting_guidance>
+Use markdown headings for structure. Keep markdown formatting within content (bold, italic, lists, code blocks, links).
 
-Keep markdown formatting WITHIN content (bold, italic, lists, code blocks, links).
-
-For XML structure principles and token efficiency details, see @skills/create-agent-skills/references/use-xml-tags.md - the same principles apply to subagents.
-</critical_rule>
-</subagent_xml_structure>
+For structure principles, see @skills/create-agent-skills/references/core-principles.md.
+</formatting_guidance>
+</subagent_structure>
 
 <invocation>
 <automatic>
@@ -300,7 +298,7 @@ A well-configured subagent has:
 - Valid YAML frontmatter (name matches file, description includes triggers)
 - Clear role definition in system prompt
 - Appropriate tool restrictions (least privilege)
-- XML-structured system prompt with role, approach, and constraints
+- Well-structured system prompt with role, approach, and constraints
 - Description field optimized for automatic routing
 - Successfully tested on representative tasks
 - Model selection appropriate for task complexity (Sonnet for reasoning, Haiku for simple tasks)

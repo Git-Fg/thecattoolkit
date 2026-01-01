@@ -1,11 +1,15 @@
 ---
 name: testing-strategy
-description: Designs comprehensive testing strategies for any codebase. Use when adding tests, improving coverage, setting up testing infrastructure, or when asked about testing approaches.
+description: Expert guidance for comprehensive testing strategies across any codebase. PROACTIVELY USE when adding features, fixing bugs, improving coverage, or asked about testing approaches.
 ---
 
-# Testing Strategy Skill
+# Objective
 
-## Testing Pyramid Approach
+Expert guidance for comprehensive testing strategies across any codebase.
+
+# Essential Principles
+
+## Testing Pyramid
 
 Apply the testing pyramid for balanced coverage:
 
@@ -22,9 +26,10 @@ Apply the testing pyramid for balanced coverage:
                    - Business logic focus
 ```
 
-## Framework Selection by Language
+## Framework Selection
 
 ### JavaScript/TypeScript
+
 | Type | Recommended | Alternative |
 |------|-------------|-------------|
 | Unit | Vitest | Jest |
@@ -33,6 +38,7 @@ Apply the testing pyramid for balanced coverage:
 | Component | Testing Library | Enzyme |
 
 ### Python
+
 | Type | Recommended | Alternative |
 |------|-------------|-------------|
 | Unit | pytest | unittest |
@@ -41,29 +47,31 @@ Apply the testing pyramid for balanced coverage:
 | API | pytest + FastAPI TestClient | - |
 
 ### Go
+
 | Type | Recommended |
 |------|-------------|
 | Unit | testing + testify |
 | Integration | testing + httptest |
 | E2E | testing + chromedp |
 
-## Test Structure Templates
+## Test Templates
 
 ### Unit Test
+
 ```javascript
 describe('[Unit] ComponentName', () => {
   describe('methodName', () => {
     it('should [expected behavior] when [condition]', () => {
       // Arrange
       const input = createTestInput();
-      
+
       // Act
       const result = methodName(input);
-      
+
       // Assert
       expect(result).toEqual(expectedOutput);
     });
-    
+
     it('should throw error when [invalid condition]', () => {
       expect(() => methodName(invalidInput)).toThrow(ExpectedError);
     });
@@ -72,21 +80,22 @@ describe('[Unit] ComponentName', () => {
 ```
 
 ### Integration Test
+
 ```javascript
 describe('[Integration] API /users', () => {
   beforeAll(async () => {
     await setupTestDatabase();
   });
-  
+
   afterAll(async () => {
     await teardownTestDatabase();
   });
-  
+
   it('should create user and return 201', async () => {
     const response = await request(app)
       .post('/users')
       .send({ name: 'Test', email: 'test@example.com' });
-    
+
     expect(response.status).toBe(201);
     expect(response.body.id).toBeDefined();
   });
@@ -94,33 +103,36 @@ describe('[Integration] API /users', () => {
 ```
 
 ### E2E Test
+
 ```javascript
 describe('[E2E] User Registration Flow', () => {
   it('should complete registration successfully', async ({ page }) => {
     await page.goto('/register');
-    
+
     await page.fill('[data-testid="email"]', 'new@example.com');
     await page.fill('[data-testid="password"]', 'SecurePass123!');
     await page.click('[data-testid="submit"]');
-    
+
     await expect(page.locator('.welcome-message')).toBeVisible();
     await expect(page).toHaveURL('/dashboard');
   });
 });
 ```
 
-## Coverage Strategy
+# Coverage Strategy
 
-### What to Cover
-- ✅ Business logic (100%)
-- ✅ Edge cases and error handling (90%+)
-- ✅ API contracts (100%)
-- ✅ Critical user paths (E2E)
-- ⚠️ UI components (snapshot + interaction)
-- ❌ Third-party library internals
-- ❌ Simple getters/setters
+## What to Cover
 
-### Coverage Thresholds
+- Business logic (100%)
+- Edge cases and error handling (90%+)
+- API contracts (100%)
+- Critical user paths (E2E)
+- UI components (snapshot + interaction)
+- Not: Third-party library internals
+- Not: Simple getters/setters
+
+## Coverage Thresholds
+
 ```json
 {
   "coverageThreshold": {
@@ -138,9 +150,10 @@ describe('[E2E] User Registration Flow', () => {
 }
 ```
 
-## Test Data Management
+# Test Data Management
 
-### Factories/Builders
+## Factories/Builders
+
 ```javascript
 // factories/user.js
 export const userFactory = (overrides = {}) => ({
@@ -155,7 +168,8 @@ export const userFactory = (overrides = {}) => ({
 const admin = userFactory({ role: 'admin' });
 ```
 
-### Fixtures
+## Fixtures
+
 ```javascript
 // fixtures/users.json
 {
@@ -164,17 +178,19 @@ const admin = userFactory({ role: 'admin' });
 }
 ```
 
-## Mocking Strategy
+# Mocking Strategy
 
-### When to Mock
-- ✅ External APIs and services
-- ✅ Database in unit tests
-- ✅ Time/Date for determinism
-- ✅ Random values
-- ❌ Internal modules (usually)
-- ❌ The code under test
+## When to Mock
 
-### Mock Examples
+- External APIs and services
+- Database in unit tests
+- Time/Date for determinism
+- Random values
+- Not: Internal modules (usually)
+- Not: The code under test
+
+## Mock Examples
+
 ```javascript
 // API mocking with MSW
 import { http, HttpResponse } from 'msw';

@@ -1,20 +1,18 @@
 ---
 description: Add todo item to TO-DOS.md with context from conversation
 argument-hint: <todo-description> (optional - infers from conversation if omitted)
-allowed-tools:
-  - Read
-  - Edit
-  - Write
 ---
 
-# Add Todo Item
+<context>
+Current timestamp: !`date "+%Y-%m-%d %H:%M"`
+Git status: !`git status --short`
+</context>
 
-## Context
+<objective>
+Add todo item to TO-DOS.md with context from conversation.
+</objective>
 
-- Current timestamp: !`date "+%Y-%m-%d %H:%M"`
-
-## Instructions
-
+<process>
 1. Read TO-DOS.md in the working directory (create with Write tool if it doesn't exist)
 
 2. Check for duplicates:
@@ -44,9 +42,15 @@ allowed-tools:
    - Confirm the todo was saved: "✓ Saved to todos."
    - Ask if they want to continue with the original work: "Would you like to continue with [original task]?"
    - Wait for user response
+</process>
 
-## Format Example
+<success_criteria>
+- Todo saved to TO-DOS.md
+- Duplicate check performed if similar todos exist
+- User confirmed and offered option to continue original work
+</success_criteria>
 
+<example>
 ```markdown
 ## Add Todo Command Improvements - 2025-11-15 14:23
 
@@ -54,3 +58,4 @@ allowed-tools:
 
 - **Create check-todos command** - Build companion command to list and select todos. **Problem:** Need workflow to review outstanding todos and load context for selected item. **Files:** `commands/check-todos.md` (new), `TO-DOS.md` (reads from). **Solution:** Parse markdown list, display numbered list, accept selection to load full context and remove item.
 ```
+</example>

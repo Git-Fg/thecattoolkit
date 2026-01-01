@@ -1,13 +1,16 @@
 ---
 name: performance-optimization
-description: Guides performance analysis and optimization for any application. Use when diagnosing slowness, optimizing code, improving load times, or when asked about performance.
+description: Expert guidance for performance analysis and optimization of any application. PROACTIVELY USE when diagnosing slowness, optimizing bottlenecks, improving load times, or asked about performance.
 ---
 
-# Performance Optimization Skill
+# Objective
 
-## Performance Analysis Process
+Expert guidance for performance analysis and optimization of any application.
 
-### 1. Measure First
+# Workflow
+
+## Measure First
+
 Never optimize without data. Always profile before changing code.
 
 ```bash
@@ -23,9 +26,9 @@ python -m pstats profile.stats
 lighthouse https://example.com --output=json
 ```
 
-### 2. Identify Bottlenecks
+## Identify Bottlenecks
 
-#### Common Bottleneck Categories
+Common bottleneck categories:
 | Category | Symptoms | Tools |
 |----------|----------|-------|
 | CPU | High CPU usage, slow computation | Profiler, flame graphs |
@@ -33,11 +36,11 @@ lighthouse https://example.com --output=json
 | I/O | Slow disk/network, waiting | strace, network inspector |
 | Database | Slow queries, lock contention | Query analyzer, EXPLAIN |
 
-### 3. Apply Optimizations
+## Apply Optimizations
 
-## Frontend Optimizations
+### Frontend
 
-### Bundle Size
+Bundle size:
 ```javascript
 // ❌ Import entire library
 import _ from 'lodash';
@@ -49,7 +52,7 @@ import debounce from 'lodash/debounce';
 const HeavyComponent = lazy(() => import('./HeavyComponent'));
 ```
 
-### Rendering
+Rendering:
 ```javascript
 // ❌ Render on every parent update
 function Child({ data }) {
@@ -65,13 +68,13 @@ const Child = memo(function Child({ data }) {
 const processed = useMemo(() => expensiveCalc(data), [data]);
 ```
 
-### Images
+Images:
 ```html
 <!-- ❌ Unoptimized -->
 <img src="large-image.jpg" />
 
 <!-- ✅ Optimized -->
-<img 
+<img
   src="image.webp"
   srcset="image-300.webp 300w, image-600.webp 600w"
   sizes="(max-width: 600px) 300px, 600px"
@@ -80,9 +83,9 @@ const processed = useMemo(() => expensiveCalc(data), [data]);
 />
 ```
 
-## Backend Optimizations
+### Backend
 
-### Database Queries
+Database queries:
 ```sql
 -- ❌ N+1 Query Problem
 SELECT * FROM users;
@@ -90,39 +93,39 @@ SELECT * FROM users;
 SELECT * FROM orders WHERE user_id = ?;
 
 -- ✅ Single query with JOIN
-SELECT u.*, o.* 
-FROM users u 
+SELECT u.*, o.*
+FROM users u
 LEFT JOIN orders o ON u.id = o.user_id;
 
 -- ✅ Or use pagination
 SELECT * FROM users LIMIT 100 OFFSET 0;
 ```
 
-### Caching Strategy
+Caching strategy:
 ```javascript
 // Multi-layer caching
 const getUser = async (id) => {
   // L1: In-memory cache (fastest)
   let user = memoryCache.get(`user:${id}`);
   if (user) return user;
-  
+
   // L2: Redis cache (fast)
   user = await redis.get(`user:${id}`);
   if (user) {
     memoryCache.set(`user:${id}`, user, 60);
     return JSON.parse(user);
   }
-  
+
   // L3: Database (slow)
   user = await db.users.findById(id);
   await redis.setex(`user:${id}`, 3600, JSON.stringify(user));
   memoryCache.set(`user:${id}`, user, 60);
-  
+
   return user;
 };
 ```
 
-### Async Processing
+Async processing:
 ```javascript
 // ❌ Blocking operation
 app.post('/upload', async (req, res) => {
@@ -137,9 +140,9 @@ app.post('/upload', async (req, res) => {
 });
 ```
 
-## Algorithm Optimizations
+### Algorithm
 
-### Time Complexity Improvements
+Time complexity:
 ```javascript
 // ❌ O(n²) - nested loops
 function findDuplicates(arr) {
@@ -164,9 +167,10 @@ function findDuplicates(arr) {
 }
 ```
 
-## Performance Metrics
+# Performance Metrics
 
-### Web Vitals (Target Values)
+## Web Vitals
+
 | Metric | Good | Needs Work | Poor |
 |--------|------|------------|------|
 | LCP | < 2.5s | 2.5-4s | > 4s |
@@ -174,7 +178,8 @@ function findDuplicates(arr) {
 | CLS | < 0.1 | 0.1-0.25 | > 0.25 |
 | TTFB | < 800ms | 800ms-1.8s | > 1.8s |
 
-### API Performance (Target Values)
+## API Performance
+
 | Metric | Target |
 |--------|--------|
 | P50 Latency | < 100ms |

@@ -1,32 +1,34 @@
 ---
 name: api-design
-description: Guides REST and GraphQL API design, including endpoints, error handling, versioning, and documentation. Use when designing APIs, creating endpoints, or when asked about API patterns.
+description: Expert guidance for REST and GraphQL API design including endpoints, error handling, versioning, and documentation. CONSULT when designing APIs, creating endpoints, or asked about API patterns.
 ---
 
-# API Design Skill
+# Objective
 
-## REST API Design Principles
+Expert guidance for REST and GraphQL API design including endpoints, error handling, versioning, and documentation.
 
-### URL Structure
-```
-# Resource-based URLs (nouns, not verbs)
-GET    /users              # List users
-GET    /users/:id          # Get user
-POST   /users              # Create user
-PUT    /users/:id          # Replace user
-PATCH  /users/:id          # Update user
-DELETE /users/:id          # Delete user
+# Essential Principles
 
-# Nested resources
-GET    /users/:id/orders   # User's orders
-POST   /users/:id/orders   # Create order for user
+## URL Structure
 
-# Query parameters for filtering/pagination
-GET    /users?role=admin&status=active
-GET    /users?page=2&limit=20&sort=-createdAt
-```
+Resource-based URLs (nouns, not verbs):
+- GET    /users              # List users
+- GET    /users/:id          # Get user
+- POST   /users              # Create user
+- PUT    /users/:id          # Replace user
+- PATCH  /users/:id          # Update user
+- DELETE /users/:id          # Delete user
 
-### HTTP Status Codes
+Nested resources:
+- GET    /users/:id/orders   # User's orders
+- POST   /users/:id/orders   # Create order for user
+
+Query parameters for filtering/pagination:
+- GET    /users?role=admin&status=active
+- GET    /users?page=2&limit=20&sort=-createdAt
+
+## HTTP Status Codes
+
 | Code | Meaning | Use Case |
 |------|---------|----------|
 | 200 | OK | Successful GET, PUT, PATCH |
@@ -41,9 +43,9 @@ GET    /users?page=2&limit=20&sort=-createdAt
 | 429 | Too Many Requests | Rate limited |
 | 500 | Internal Error | Server error |
 
-### Response Formats
+## Response Formats
 
-#### Success Response
+Success response:
 ```json
 {
   "data": {
@@ -60,7 +62,7 @@ GET    /users?page=2&limit=20&sort=-createdAt
 }
 ```
 
-#### List Response with Pagination
+List response with pagination:
 ```json
 {
   "data": [...],
@@ -78,7 +80,7 @@ GET    /users?page=2&limit=20&sort=-createdAt
 }
 ```
 
-#### Error Response
+Error response:
 ```json
 {
   "error": {
@@ -100,40 +102,31 @@ GET    /users?page=2&limit=20&sort=-createdAt
 
 ## API Versioning
 
-### URL Versioning (Recommended)
-```
-/api/v1/users
-/api/v2/users
-```
+URL versioning (recommended):
+- /api/v1/users
+- /api/v2/users
 
-### Header Versioning
-```
-Accept: application/vnd.api+json; version=1
-```
+Header versioning:
+- Accept: application/vnd.api+json; version=1
 
 ## Authentication Patterns
 
-### JWT Bearer Token
-```
-Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
-```
+JWT bearer token:
+- Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
 
-### API Key
-```
-X-API-Key: your-api-key
-# or
-?api_key=your-api-key
-```
+API key:
+- X-API-Key: your-api-key
+- ?api_key=your-api-key
 
 ## Rate Limiting Headers
-```
-X-RateLimit-Limit: 100
-X-RateLimit-Remaining: 95
-X-RateLimit-Reset: 1609459200
-Retry-After: 60
-```
 
-## OpenAPI Specification Template
+- X-RateLimit-Limit: 100
+- X-RateLimit-Remaining: 95
+- X-RateLimit-Reset: 1609459200
+- Retry-After: 60
+
+## OpenAPI Template
+
 ```yaml
 openapi: 3.0.3
 info:
@@ -191,7 +184,7 @@ security:
 
 ## GraphQL Patterns
 
-### Schema Design
+Schema design:
 ```graphql
 type Query {
   user(id: ID!): User
@@ -222,12 +215,13 @@ type UserPayload {
 ```
 
 ## API Security Checklist
-- [ ] HTTPS only
-- [ ] Authentication on all endpoints
-- [ ] Authorization checks
-- [ ] Input validation
-- [ ] Rate limiting
-- [ ] Request size limits
-- [ ] CORS properly configured
-- [ ] No sensitive data in URLs
-- [ ] Audit logging
+
+- HTTPS only
+- Authentication on all endpoints
+- Authorization checks
+- Input validation
+- Rate limiting
+- Request size limits
+- CORS properly configured
+- No sensitive data in URLs
+- Audit logging

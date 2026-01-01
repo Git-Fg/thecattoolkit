@@ -1,24 +1,33 @@
 ---
 name: git-workflow
-description: Guides Git workflows, branching strategies, commit conventions, and collaboration patterns. Use when working with Git, creating PRs, managing branches, or when asked about version control.
+description: Expert guidance for Git workflows, branching strategies, commit conventions, and collaboration patterns. PROACTIVELY USE when creating PRs, resolving merge conflicts, or asked about version control best practices.
 ---
 
-# Git Workflow Skill
+# Objective
 
-## Branching Strategies
+Expert guidance for Git workflows, branching strategies, commit conventions, and collaboration patterns.
 
-### GitHub Flow (Recommended for most projects)
+# Branching Strategies
+
+## GitHub Flow
+
+Recommended for most projects:
+
 ```
 main ──●────●────●────●────●── (always deployable)
         \          /
 feature  └──●──●──┘
 ```
-- `main` is always deployable
+
+- main is always deployable
 - Feature branches from main
 - PR + review + merge
 - Deploy after merge
 
-### Git Flow (For release-based projects)
+## Git Flow
+
+For release-based projects:
+
 ```
 main     ──●─────────────●────── (releases only)
             \           /
@@ -29,9 +38,10 @@ develop  ──●──●────●──●──●──
 feature      └──●┘
 ```
 
-## Commit Conventions
+# Commit Conventions
 
-### Conventional Commits Format
+## Format
+
 ```
 <type>(<scope>): <description>
 
@@ -40,20 +50,22 @@ feature      └──●┘
 [optional footer(s)]
 ```
 
-### Types
+## Types
+
 | Type | Description |
 |------|-------------|
-| `feat` | New feature |
-| `fix` | Bug fix |
-| `docs` | Documentation only |
-| `style` | Formatting, no logic change |
-| `refactor` | Code change that neither fixes bug nor adds feature |
-| `perf` | Performance improvement |
-| `test` | Adding/updating tests |
-| `chore` | Build process, dependencies |
-| `ci` | CI configuration |
+| feat | New feature |
+| fix | Bug fix |
+| docs | Documentation only |
+| style | Formatting, no logic change |
+| refactor | Code change that neither fixes bug nor adds feature |
+| perf | Performance improvement |
+| test | Adding/updating tests |
+| chore | Build process, dependencies |
+| ci | CI configuration |
 
-### Examples
+## Examples
+
 ```bash
 feat(auth): add OAuth2 login support
 
@@ -70,19 +82,19 @@ Previously caused 500 error when gateway returned null.
 Now returns appropriate error message to user.
 ```
 
-## Branch Naming
-```
-<type>/<ticket-id>-<short-description>
+# Branch Naming
 
-# Examples
-feature/AUTH-123-oauth-login
-fix/BUG-456-null-pointer
-chore/TECH-789-upgrade-deps
-```
+Format: `<type>/<ticket-id>-<short-description>`
 
-## PR Best Practices
+Examples:
+- feature/AUTH-123-oauth-login
+- fix/BUG-456-null-pointer
+- chore/TECH-789-upgrade-deps
 
-### PR Template
+# PR Best Practices
+
+## PR Template
+
 ```markdown
 ## Summary
 [Brief description of changes]
@@ -105,7 +117,8 @@ chore/TECH-789-upgrade-deps
 - [ ] No security vulnerabilities introduced
 ```
 
-### PR Size Guidelines
+## PR Size Guidelines
+
 | Size | Lines Changed | Review Time |
 |------|---------------|-------------|
 | XS | < 50 | < 15 min |
@@ -113,9 +126,10 @@ chore/TECH-789-upgrade-deps
 | M | 200-500 | 30-60 min |
 | L | 500+ | Split if possible |
 
-## Common Git Commands
+# Common Git Commands
 
-### Daily Workflow
+## Daily Workflow
+
 ```bash
 # Start new feature
 git checkout main
@@ -134,7 +148,8 @@ git rebase origin/main
 git push -u origin HEAD
 ```
 
-### Fixing Mistakes
+## Fixing Mistakes
+
 ```bash
 # Amend last commit (before push)
 git commit --amend
@@ -152,7 +167,8 @@ git revert <commit-hash>
 git rebase -i HEAD~3
 ```
 
-### Advanced Operations
+## Advanced Operations
+
 ```bash
 # Cherry-pick specific commit
 git cherry-pick <commit-hash>

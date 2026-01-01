@@ -1,7 +1,6 @@
 ---
-name: Code Review Mode
-description: Strict code review mode with high standards. Thoroughly examines code for bugs, security issues, performance problems, and best practice violations.
-keep-coding-instructions: true
+description: Strict code review mode with high standards. PROACTIVELY USE when reviewing code, PRs, or changes to catch bugs, security issues, and performance problems.
+argument-hint: [file-path or PR-number]
 ---
 
 # Code Review Mode
@@ -51,18 +50,18 @@ Apply these standards to ALL code:
 [1-2 sentence overall assessment]
 
 ### 🔴 Critical Issues (Must Fix)
-1. **[Issue Title]** - `file:line`
+1. [Issue Title] - `file:line`
    - Problem: [description]
    - Risk: [what could go wrong]
    - Fix: [specific solution]
 
 ### 🟡 Warnings (Should Fix)
-1. **[Issue Title]** - `file:line`
+1. [Issue Title] - `file:line`
    - Problem: [description]
    - Suggestion: [improvement]
 
 ### 🔵 Suggestions (Consider)
-1. **[Issue Title]** - `file:line`
+1. [Issue Title] - `file:line`
    - Current: [what it is]
    - Better: [what it could be]
 

@@ -1,13 +1,15 @@
 ---
 name: architecture-patterns
-description: Provides guidance on software architecture patterns and design decisions. Use when designing systems, choosing patterns, structuring projects, or when asked about architectural approaches.
+description: Expert guidance on software architecture patterns and design decisions. CONSULT when designing systems, choosing patterns, structuring projects, or asked about architectural approaches.
 ---
 
-# Architecture Patterns Skill
+# Objective
 
-## Pattern Selection Guide
+Expert guidance on software architecture patterns and design decisions.
 
-### By Project Size
+# Pattern Selection
+
+## By Project Size
 
 | Size | Recommended Pattern |
 |------|---------------------|
@@ -15,7 +17,7 @@ description: Provides guidance on software architecture patterns and design deci
 | Medium (10K-100K) | Clean Architecture |
 | Large (>100K) | Modular Monolith or Microservices |
 
-### By Team Size
+## By Team Size
 
 | Team | Recommended |
 |------|-------------|
@@ -23,9 +25,10 @@ description: Provides guidance on software architecture patterns and design deci
 | 4-10 devs | Modular Monolith |
 | 10+ devs | Microservices (if justified) |
 
-## Common Patterns
+# Common Patterns
 
-### 1. Layered Architecture
+## Layered Architecture
+
 ```
 ┌─────────────────────────────┐
 │       Presentation          │  ← UI, API Controllers
@@ -37,9 +40,11 @@ description: Provides guidance on software architecture patterns and design deci
 │      Infrastructure         │  ← Database, External APIs
 └─────────────────────────────┘
 ```
-**Use when**: Simple CRUD apps, small teams, quick prototypes
 
-### 2. Clean Architecture
+Use when: Simple CRUD apps, small teams, quick prototypes
+
+## Clean Architecture
+
 ```
 ┌─────────────────────────────────────┐
 │            Frameworks & Drivers      │
@@ -54,9 +59,11 @@ description: Provides guidance on software architecture patterns and design deci
 │  └─────────────────────────────┘    │
 └─────────────────────────────────────┘
 ```
-**Use when**: Complex business logic, long-lived projects, testability is key
 
-### 3. Hexagonal (Ports & Adapters)
+Use when: Complex business logic, long-lived projects, testability is key
+
+## Hexagonal Architecture
+
 ```
         ┌──────────┐
         │ HTTP API │
@@ -73,9 +80,11 @@ description: Provides guidance on software architecture patterns and design deci
         │ Database │
         └──────────┘
 ```
-**Use when**: Need to swap external dependencies, multiple entry points
 
-### 4. Event-Driven Architecture
+Use when: Need to swap external dependencies, multiple entry points
+
+## Event-Driven Architecture
+
 ```
 Producer → Event Bus → Consumer
               │
@@ -83,9 +92,11 @@ Producer → Event Bus → Consumer
               │
               └─→ Consumer
 ```
-**Use when**: Loose coupling needed, async processing, scalability
 
-### 5. CQRS (Command Query Responsibility Segregation)
+Use when: Loose coupling needed, async processing, scalability
+
+## CQRS
+
 ```
 ┌─────────────┐      ┌─────────────┐
 │  Commands   │      │   Queries   │
@@ -99,11 +110,14 @@ Producer → Event Bus → Consumer
                 ▼
            Event Store
 ```
-**Use when**: Different read/write scaling, complex domains, event sourcing
 
-## Directory Structure Patterns
+Use when: Different read/write scaling, complex domains, event sourcing
 
-### Feature-Based (Recommended for medium+)
+# Directory Structure Patterns
+
+## Feature-Based
+
+Recommended for medium+ projects:
 ```
 src/
 ├── features/
@@ -125,7 +139,9 @@ src/
     └── ...
 ```
 
-### Layer-Based (Simple apps)
+## Layer-Based
+
+For simple apps:
 ```
 src/
 ├── controllers/
@@ -135,17 +151,20 @@ src/
 └── utils/
 ```
 
-## Decision Framework
+# Decision Framework
+
+## Considerations
 
 When making architectural decisions, consider:
 
-1. **Simplicity** - Start simple, evolve when needed
-2. **Team Skills** - Match architecture to team capabilities
-3. **Requirements** - Let business needs drive decisions
-4. **Scalability** - Consider growth trajectory
-5. **Maintainability** - Optimize for change
+1. Simplicity - Start simple, evolve when needed
+2. Team Skills - Match architecture to team capabilities
+3. Requirements - Let business needs drive decisions
+4. Scalability - Consider growth trajectory
+5. Maintainability - Optimize for change
 
-### Trade-off Analysis Template
+## Trade-Off Analysis Template
+
 ```markdown
 ## Decision: [What we're deciding]
 

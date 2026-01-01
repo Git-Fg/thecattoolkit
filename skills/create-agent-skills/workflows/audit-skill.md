@@ -50,7 +50,7 @@ Evaluate against each criterion:
 - [ ] Name matches directory name
 - [ ] Has `description:` field
 - [ ] Description says what it does AND when to use it
-- [ ] Description is third person ("Use when...")
+- [ ] Description is third person with strong language (MUST USE/PROACTIVELY USE/CONSULT)
 
 ### Structure
 - [ ] SKILL.md under 500 lines

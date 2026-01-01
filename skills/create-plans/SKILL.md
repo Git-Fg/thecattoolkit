@@ -1,6 +1,6 @@
 ---
 name: create-plans
-description: Create hierarchical project plans optimized for solo agentic development. Use when planning projects, phases, or tasks that Claude will execute. Produces Claude-executable plans with verification criteria, not enterprise documentation. Handles briefs, roadmaps, phase plans, and context handoffs.
+description: Expert guidance for creating hierarchical project plans optimized for solo agentic development. MUST USE when planning projects, phases, or tasks that an AI agent will execute. Produces agent-executable plans with verification criteria, not enterprise documentation. Handles briefs, roadmaps, phase plans, and context handoffs.
 ---
 
 <essential_principles>
@@ -197,22 +197,24 @@ If yes: `git init`
 **Present findings before intake question.**
 </context_scan>
 
-<domain_expertise>
-**Domain expertise lives in `~/.claude/skills/expertise/`**
+## Domain Expertise
+
+Domain expertise lives in `~/.claude/skills/expertise/`
 
 Before creating roadmap or phase plans, determine if domain expertise should be loaded.
 
-<scan_domains>
+### Scan Domains
+
 ```bash
 ls ~/.claude/skills/expertise/ 2>/dev/null
 ```
 
 This reveals available domain expertise (e.g., macos-apps, iphone-apps, unity-games, nextjs-ecommerce).
 
-**If no domain skills found:** Proceed without domain expertise (graceful degradation). The skill works fine without domain-specific context.
-</scan_domains>
+If no domain skills found: Proceed without domain expertise (graceful degradation). The skill works fine without domain-specific context.
 
-<inference_rules>
+### Inference Rules
+
 If user's request contains domain keywords, INFER the domain:
 
 | Keywords | Domain Skill |
@@ -230,9 +232,9 @@ If domain inferred, confirm:
 Detected: [domain] project → expertise/[skill-name]
 Load this expertise for planning? (Y / see other options / none)
 ```
-</inference_rules>
 
-<no_inference>
+### No Inference
+
 If no domain obvious from request, present options:
 
 ```
@@ -252,19 +254,19 @@ C. Create domain skill first
 
 Select:
 ```
-</no_inference>
 
-<load_domain>
+### Load Domain
+
 When domain selected, use intelligent loading:
 
-**Step 1: Read domain SKILL.md**
+Step 1: Read domain SKILL.md
 ```bash
 cat ~/.claude/skills/expertise/[domain]/SKILL.md 2>/dev/null
 ```
 
 This loads core principles and routing guidance (~5k tokens).
 
-**Step 2: Determine what references are needed**
+Step 2: Determine what references are needed
 
 Domain SKILL.md should contain a `<references_index>` section that maps planning contexts to specific references.
 
@@ -278,7 +280,7 @@ Example:
 </references_index>
 ```
 
-**Step 3: Load only relevant references**
+Step 3: Load only relevant references
 
 Based on the phase being planned (from ROADMAP), load ONLY the references mentioned for that type of work.
 
@@ -288,19 +290,19 @@ cat ~/.claude/skills/expertise/macos-apps/references/core-data.md
 cat ~/.claude/skills/expertise/macos-apps/references/swift-conventions.md
 ```
 
-**Context efficiency:**
+Context efficiency:
 - SKILL.md only: ~5k tokens
 - SKILL.md + selective references: ~8-12k tokens
 - All references (old approach): ~20-27k tokens
 
 Announce: "Loaded [domain] expertise ([X] references for [phase-type])."
 
-**If domain skill not found:** Inform user and offer to proceed without domain expertise.
+If domain skill not found: Inform user and offer to proceed without domain expertise.
 
-**If SKILL.md doesn't have references_index:** Fall back to loading all references with warning about context usage.
-</load_domain>
+If SKILL.md doesn't have references_index: Fall back to loading all references with warning about context usage.
 
-<when_to_load>
+### When to Load
+
 Domain expertise should be loaded BEFORE:
 - Creating roadmap (phases should be domain-appropriate)
 - Planning phases (tasks must be domain-specific)
@@ -309,8 +311,6 @@ Domain expertise is NOT needed for:
 - Creating brief (vision is domain-agnostic)
 - Resuming from handoff (context already established)
 - Transition between phases (just updating status)
-</when_to_load>
-</domain_expertise>
 
 <intake>
 Based on scan results, present context-aware options:
@@ -374,7 +374,8 @@ What would you like to do?
 **After reading the workflow, follow it exactly.**
 </routing>
 
-<hierarchy>
+## Hierarchy
+
 The planning hierarchy (each level builds on previous):
 
 ```
@@ -391,15 +392,15 @@ PLAN.md           → THE PROMPT (Claude executes this)
 SUMMARY.md        → Outcome (existence = phase complete)
 ```
 
-**Rules:**
+Rules:
 - Roadmap requires Brief (or prompts to create one)
 - Phase plan requires Roadmap (knows phase scope)
 - PLAN.md IS the execution prompt
 - SUMMARY.md existence marks phase complete
 - Each level can look UP for context
-</hierarchy>
 
-<output_structure>
+## Output Structure
+
 All planning artifacts go in `.planning/`:
 
 ```
@@ -421,26 +422,26 @@ All planning artifacts go in `.planning/`:
         └── 02-02-SUMMARY.md
 ```
 
-**Naming convention:**
+Naming convention:
 - Plans: `{phase}-{plan}-PLAN.md` (e.g., 01-03-PLAN.md)
 - Summaries: `{phase}-{plan}-SUMMARY.md` (e.g., 01-03-SUMMARY.md)
 - Phase folders: `{phase}-{name}/` (e.g., 01-foundation/)
 
 Files sort chronologically. Related artifacts (plan + summary) are adjacent.
-</output_structure>
 
-<reference_index>
+## Reference Index
+
 All in `references/`:
 
-**Structure:** directory-structure.md, hierarchy-rules.md
-**Formats:** handoff-format.md, plan-format.md
-**Patterns:** context-scanning.md, context-management.md
-**Planning:** scope-estimation.md, checkpoints.md, milestone-management.md
-**Process:** user-gates.md, git-integration.md, research-pitfalls.md
-**Domain:** domain-expertise.md (guide for creating context-efficient domain skills)
-</reference_index>
+Structure: directory-structure.md, hierarchy-rules.md
+Formats: handoff-format.md, plan-format.md
+Patterns: context-scanning.md, context-management.md
+Planning: scope-estimation.md, checkpoints.md, milestone-management.md
+Process: user-gates.md, git-integration.md, research-pitfalls.md
+Domain: domain-expertise.md (guide for creating context-efficient domain skills)
 
-<templates_index>
+## Templates Index
+
 All in `templates/`:
 
 | Template | Purpose |
@@ -453,9 +454,9 @@ All in `templates/`:
 | milestone.md | Milestone entry for MILESTONES.md |
 | issues.md | Deferred enhancements log (ISSUES.md) |
 | continue-here.md | Context handoff format |
-</templates_index>
 
-<workflows_index>
+## Workflows Index
+
 All in `workflows/`:
 
 | Workflow | Purpose |
@@ -471,9 +472,9 @@ All in `workflows/`:
 | handoff.md | Create context handoff for pausing |
 | resume.md | Load handoff, restore context |
 | get-guidance.md | Help decide planning approach |
-</workflows_index>
 
-<success_criteria>
+## Success Criteria
+
 Planning skill succeeds when:
 - Context scan runs before intake
 - Appropriate workflow selected based on state
@@ -485,4 +486,3 @@ Planning skill succeeds when:
 - All work (planned and discovered) fully documented
 - Domain expertise loaded intelligently (SKILL.md + selective references, not all files)
 - Plan execution uses /run-plan command (not skill invocation)
-</success_criteria>
