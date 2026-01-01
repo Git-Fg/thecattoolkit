@@ -5,6 +5,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.1.0] - 2025-01-01
+
+### Refinement Release - Diamond Polish
+
+This release refines the plugin from "raw diamond" to "refined diamond" by improving consistency, ensuring proper agent activation patterns, and optimizing integration between components.
+
+### Changed
+
+#### Agent Descriptions (3 agents)
+- **test-architect** - Added "Use PROACTIVELY when..." pattern for proper activation
+- **docs-writer** - Added "Use PROACTIVELY when..." pattern and project-analysis skill
+- **refactorer** - Added "Use PROACTIVELY when..." pattern (already had architecture-patterns skill)
+
+#### Agent Integration (1 agent)
+- **debugger** - Added debug-like-expert skill for systematic debugging methodology
+
+#### Creation Commands (7 commands)
+- Added guidance notes to all creation commands explaining when to use each:
+  - `/create-plan` - For building projects (hierarchical planning)
+  - `/create-meta-prompt` - For Claude→Claude pipelines (staged workflows)
+  - `/create-prompt` - For single prompts (simple, one-off)
+  - `/create-agent-skill` - For creating new skills
+  - `/create-subagent` - For creating specialized agents
+  - `/create-slash-command` - For creating commands
+  - `/create-hook` - For automation
+
+### Technical Notes
+- Verified all agent tool access is appropriate for their roles
+- Confirmed knowledge reference skills use markdown (standard pattern for readability)
+- Verified all agents use "Use PROACTIVELY when..." pattern for optimal Claude activation
+
 ## [2.0.0] - 2025-01-01
 
 ### Major Release - claude-workflow Integration

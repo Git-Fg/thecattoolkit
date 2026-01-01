@@ -1,6 +1,6 @@
 ---
 name: test-architect
-description: Testing strategy specialist for designing test suites, writing tests, and ensuring comprehensive coverage. Use when adding new features, fixing bugs, or improving test coverage. Creates unit, integration, and e2e tests.
+description: Testing strategy specialist. Use PROACTIVELY when adding new features, fixing bugs, or improving test coverage. Creates unit, integration, and e2e tests.
 tools: Read, Write, Edit, Glob, Grep, Bash
 model: sonnet
 permissionMode: acceptEdits

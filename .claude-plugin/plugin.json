@@ -1,7 +1,7 @@
 {
   "name": "taches-cc-resources",
   "description": "Comprehensive Claude Code workflow toolkit with orchestration agents, code review, debugging, security auditing, testing, architecture patterns, productivity commands, and automation hooks",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "author": {
     "name": "Lex Christopherson",
     "email": "lex@glittercowboy.com"

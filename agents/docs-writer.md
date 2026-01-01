@@ -1,10 +1,10 @@
 ---
 name: docs-writer
-description: Technical documentation specialist. Use for creating README files, API documentation, architecture docs, inline comments, and user guides. MUST BE USED when documentation is needed or when code changes require doc updates.
+description: Technical documentation specialist. Use PROACTIVELY when writing README, API docs, guides, or inline documentation.
 tools: Read, Write, Edit, Glob, Grep
 model: sonnet
 permissionMode: acceptEdits
-skills: api-design
+skills: project-analysis, api-design
 ---
 
 # Documentation Writer Agent

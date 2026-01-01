@@ -1,6 +1,6 @@
 ---
 name: refactorer
-description: Code refactoring specialist for improving code quality, reducing technical debt, and applying design patterns. Use when code needs restructuring, simplification, or when applying DRY/SOLID principles.
+description: Code structure specialist. Use PROACTIVELY when reducing technical debt, improving code organization, or cleaning up legacy code.
 tools: Read, Write, Edit, Glob, Grep, Bash
 model: sonnet
 permissionMode: acceptEdits

@@ -4,6 +4,17 @@ argument-hint: [task description]
 allowed-tools: [Read, Write, Glob, SlashCommand, AskUserQuestion]
 ---
 
+<!--
+CREATION COMMANDS GUIDE:
+- Use /create-plan for building projects (hierarchical planning)
+- Use /create-meta-prompt for Claude→Claude pipelines (staged workflows)
+- Use /create-prompt for single prompts (simple, one-off)
+- Use /create-agent-skill for creating new skills
+- Use /create-subagent for creating specialized agents
+- Use /create-slash-command for creating commands
+- Use /create-hook for automation
+-->
+
 <context>
 Before generating prompts, use the Glob tool to check `./prompts/*.md` to:
 1. Determine if the prompts directory exists
