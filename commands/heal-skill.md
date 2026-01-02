@@ -1,5 +1,5 @@
 ---
-description: Heal skill documentation by applying corrections discovered during execution with approval workflow
+description: MUST USE when fixing skill documentation after discovering errors during execution, applying corrections to SKILL.md files, or healing broken skill references. Secondary: updating outdated skills, fixing skill bugs, or maintaining skill accuracy.
 argument-hint: [optional: specific issue to fix]
 allowed-tools: [Read, Edit, Bash(ls:*), Bash(git:*)]
 ---

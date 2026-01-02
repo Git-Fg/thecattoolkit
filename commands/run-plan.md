@@ -1,5 +1,5 @@
 ---
-description: Execute a PLAN.md file with full project context (BRIEF, ROADMAP)
+description: MUST USE when executing PLAN.md files created by the planning system. Secondary: running plan-executor agent, executing phase plans, or implementing planned tasks.
 argument-hint: <plan-path>
 allowed-tools: [Read, Write, Task, Bash(git add:*), Bash(git status:*), Bash(git commit:*), Bash(ls:*)]
 ---

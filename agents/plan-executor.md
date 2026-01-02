@@ -1,6 +1,6 @@
 ---
 name: plan-executor
-description: Specialized agent for executing project plans. Automatically loads project context (BRIEF, ROADMAP) before execution to ensure architectural alignment.
+description: MUST USE when executing PLAN.md files created by the planning system. Secondary: running plan-executor agent, executing phase plans, or implementing planned tasks. Automatically loads project context (BRIEF, ROADMAP) before execution.
 tools: Read, Write, Edit, Bash, Grep, Glob, SlashCommand
 skills: create-plans
 ---

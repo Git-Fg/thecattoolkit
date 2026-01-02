@@ -1,5 +1,5 @@
 ---
-description: Locate and audit a subagent configuration file.
+description: MUST USE when auditing subagents for best practices compliance, validating agent configurations, or checking agent quality. Secondary: reviewing agent structure, improving existing agents, or learning agent patterns.
 argument-hint: [agent-name]
 allowed-tools: Task
 ---

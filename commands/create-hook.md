@@ -1,5 +1,5 @@
 ---
-description: Invoke create-hooks skill for expert guidance on Claude Code hook development
+description: MUST USE when working with hooks, setting up event listeners, or automating workflows. Secondary: understanding hook types, validating commands, adding notifications, or learning event-driven automation.
 allowed-tools: Skill(create-hooks)
 argument-hint: [hook requirements]
 ---

@@ -1,6 +1,6 @@
 ---
 name: architecture-patterns
-description: Expert guidance on software architecture patterns and design decisions. CONSULT when designing systems, choosing patterns, structuring projects, or asked about architectural approaches.
+description: MUST USE when designing systems, choosing patterns, structuring projects, or making architectural decisions. Secondary: evaluating technical options, planning system architecture, or comparing design approaches.
 ---
 
 # Objective

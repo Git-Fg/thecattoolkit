@@ -1,6 +1,6 @@
 ---
 name: whats-next
-description: Analyze the current conversation and create a handoff document for continuing this work in a fresh context
+description: MUST USE when pausing work and needing to resume later in a fresh context, or when context is getting full and requires handoff. Secondary: creating context summaries, preserving conversation state, or transferring work between sessions.
 allowed-tools:
   - Read
   - Write

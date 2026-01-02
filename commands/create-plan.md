@@ -1,5 +1,5 @@
 ---
-description: Create hierarchical project plans for solo agentic development (briefs, roadmaps, phase plans)
+description: MUST USE when planning projects, phases, or tasks that an AI agent will execute. Secondary: organizing complex work, creating roadmaps, structuring multi-step implementations.
 argument-hint: [what to plan]
 allowed-tools: Skill(create-plans)
 ---

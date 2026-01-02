@@ -1,6 +1,6 @@
 ---
 name: create-slash-commands
-description: Expert guidance for creating Claude Code slash commands. Use when working with slash commands, creating custom commands, understanding command structure, or learning YAML configuration.
+description: MUST USE when creating custom slash commands, standardizing workflows, or adding reusable operations. Secondary: understanding command structure, learning YAML configuration, or optimizing existing commands.
 ---
 
 # Objective

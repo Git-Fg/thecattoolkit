@@ -1,6 +1,6 @@
 ---
 name: prompt-engineering-patterns
-description: Create effective prompts for AI-to-AI communication through Web UI. Covers meta-prompts, constraint structuring, example-based learning, chain-of-thought, and skill creation patterns.
+description: MUST USE when creating prompts for AI agents, structuring constraints, or designing prompt workflows. Secondary: implementing chain-of-thought, using example-based learning, or building meta-prompts.
 ---
 
 # Path Resolution

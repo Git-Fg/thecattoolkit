@@ -1,5 +1,5 @@
 ---
-description: Frame the user's problem and launch the Brainstormer for deep analysis.
+description: PROACTIVELY USE for complex problems requiring structured thinking frameworks, multi-perspective analysis, or strategic insight. Secondary: ambiguous challenges, decisions with trade-offs, situations requiring creative solutions.
 argument-hint: [topic or question]
 allowed-tools: Task
 ---

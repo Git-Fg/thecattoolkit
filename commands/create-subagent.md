@@ -1,5 +1,5 @@
 ---
-description: Create specialized Claude Code subagents with expert guidance
+description: MUST USE when creating specialized AI agents, setting up delegation tools, or configuring autonomous workers. Secondary: learning agent architecture, understanding tool restrictions, or optimizing agent prompts.
 argument-hint: [agent idea or description]
 allowed-tools: Skill(create-subagents)
 ---

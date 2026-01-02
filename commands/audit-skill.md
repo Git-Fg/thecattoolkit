@@ -1,5 +1,5 @@
 ---
-description: Validate and audit a skill for best practices compliance.
+description: MUST USE when auditing skills for best practices compliance, validating SKILL.md files, or checking skill quality. Secondary: reviewing skill structure, improving existing skills, or learning skill patterns.
 argument-hint: <skill-path>
 allowed-tools: Task
 ---

@@ -1,5 +1,5 @@
 ---
-description: Create a new slash command following best practices and patterns
+description: MUST USE when creating custom slash commands, standardizing workflows, or adding reusable operations. Secondary: understanding command structure, learning YAML configuration, or optimizing existing commands.
 argument-hint: [command description or requirements]
 allowed-tools: Skill(create-slash-commands)
 ---

@@ -1,6 +1,6 @@
 ---
 name: create-plans
-description: Expert guidance for creating hierarchical project plans optimized for solo agentic development. MUST USE when planning projects, phases, or tasks that an AI agent will execute. Produces agent-executable plans with verification criteria, not enterprise documentation. Handles briefs, roadmaps, phase plans, and context handoffs.
+description: MUST USE when planning projects, phases, or tasks that an AI agent will execute. Secondary: organizing complex work, creating roadmaps, structuring multi-step implementations, or planning agent-executable workflows.
 ---
 
 # Essential Principles

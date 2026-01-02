@@ -1,5 +1,5 @@
 ---
-description: Summarize changes and launch the Code Reviewer agent.
+description: ALWAYS USE after completing code changes to review quality, identify issues, and ensure standards compliance. Secondary: before merging PRs, when refactoring, after implementing features.
 argument-hint: [focus area, optional]
 allowed-tools: Task
 ---

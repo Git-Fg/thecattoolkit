@@ -1,5 +1,5 @@
 ---
-description: Audit slash command for YAML frontmatter, argument handling, description clarity, and best practices
+description: MUST USE when auditing slash commands for YAML compliance, description quality, or best practices. Secondary: reviewing command structure, improving existing commands, or learning command patterns.
 argument-hint: <command-path-or-name>
 ---
 

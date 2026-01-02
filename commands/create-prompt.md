@@ -1,5 +1,5 @@
 ---
-description: Create optimized prompts with Markdown structure for AI agents. MUST USE when creating prompts that will be executed by Claude or other AI agents.
+description: MUST USE when creating prompts that will be executed by Claude or other AI agents. Secondary: when needing structured prompt templates, multi-stage workflows, or reusable prompt patterns.
 argument-hint: [task description]
 allowed-tools: [Read, Write, Glob, AskUserQuestion]
 ---

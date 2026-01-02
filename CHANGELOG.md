@@ -5,6 +5,69 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.8] - 2026-01-02
+
+### AI Agent Discoverability Improvements
+
+This release implements the A+D Hybrid methodology for writing descriptions that AI agents can autonomously discover and invoke. All commands, skills, and subagents now use strong calling conditions (MUST/ALWAYS/PROACTIVELY USE) with concrete trigger conditions.
+
+### Changed
+
+**Command Descriptions** (16 commands updated)
+
+All commands now follow the pattern: `[CALLING_CONDITION] when [primary_condition]. Secondary: [edge_cases]`
+
+- `/debug` - "MUST USE when investigating bugs, errors, or unexpected behavior requiring systematic root cause analysis. Secondary: recurring issues, intermittent failures, production outages."
+- `/review` - "ALWAYS USE after completing code changes to review quality, identify issues, and ensure standards compliance. Secondary: before merging PRs, when refactoring, after implementing features."
+- `/brainstorm` - "PROACTIVELY USE for complex problems requiring structured thinking frameworks, multi-perspective analysis, or strategic insight. Secondary: ambiguous challenges, decisions with trade-offs, situations requiring creative solutions."
+- `/create-plan` - "MUST USE when planning projects, phases, or tasks that an AI agent will execute."
+- `/create-prompt` - "MUST USE when creating prompts that will be executed by Claude or other AI agents."
+- `/create-meta-prompt` - "MUST USE when building prompts that produce outputs for other prompts to consume."
+- `/create-slash-command` - "MUST USE when creating custom slash commands, standardizing workflows."
+- `/create-subagent` - "MUST USE when creating specialized AI agents, setting up delegation tools."
+- `/create-agent-skill` - "MUST USE when working with SKILL.md files, authoring new skills."
+- `/create-hook` - "MUST USE when working with hooks, setting up event listeners."
+- `/run-plan` - "MUST USE when executing PLAN.md files created by the planning system."
+- `/run-prompt` - "MUST USE when executing prompts from .prompts/prompts/ as delegated sub-tasks."
+- `/whats-next` - "MUST USE when pausing work and needing to resume later in a fresh context."
+- `/audit-skill` - "MUST USE when auditing skills for best practices compliance."
+- `/audit-subagent` - "MUST USE when auditing subagents for best practices compliance."
+- `/audit-slash-command` - "MUST USE when auditing slash commands for YAML compliance."
+
+**Skill Descriptions** (6 skills updated)
+
+- `api-design` - "MUST USE when designing APIs, creating endpoints, defining error handling."
+- `architecture-patterns` - "MUST USE when designing systems, choosing patterns, structuring projects."
+- `prompt-engineering-patterns` - "MUST USE when creating prompts for AI agents, structuring constraints."
+- `create-meta-prompts` - "MUST USE when building prompts that produce outputs for other prompts."
+- `create-plans` - "MUST USE when planning projects, phases, or tasks that an AI agent will execute."
+- `create-slash-commands` - "MUST USE when creating custom slash commands, standardizing workflows."
+
+**Subagent Descriptions** (1 updated)
+
+- `plan-executor` - "MUST USE when executing PLAN.md files created by the planning system."
+
+### Added
+
+**Documentation**
+
+- `.claude/description-guidelines.md` - Comprehensive guidelines for writing agent-discoverable descriptions including:
+  - A+D hybrid methodology explanation
+  - Decision tree for writing descriptions
+  - Validation checklist
+  - Before/after examples
+  - Anti-patterns to avoid
+
+### Benefits
+
+**Improved Autonomous Invocation**: AI agents can now autonomously discover and invoke tools with confidence due to unambiguous activation signals.
+
+**Reduced Hesitation**: Strong calling conditions (MUST/ALWAYS/PROACTIVELY USE) override agent hesitation in borderline cases.
+
+**Better Differentiation**: Each tool has mutually exclusive conditions where appropriate, preventing confusion between similar tools.
+
+**Consistency**: All commands, skills, and subagents follow the same description pattern, making the plugin more predictable.
+
 ## [1.0.7] - 2026-01-02
 
 ### Architecture Refactoring - "Refine & Relay" Pattern

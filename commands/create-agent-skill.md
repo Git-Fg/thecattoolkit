@@ -1,5 +1,5 @@
 ---
-description: Create or edit a skill using the expert workflow.
+description: MUST USE when working with SKILL.md files, authoring new skills, or improving existing skills. Secondary: understanding skill structure, learning skill patterns, or auditing skills for best practices.
 allowed-tools: Skill(create-agent-skills)
 argument-hint: [description of skill to build]
 ---

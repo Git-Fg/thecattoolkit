@@ -1,6 +1,6 @@
 ---
 name: api-design
-description: Expert guidance for REST and GraphQL API design including endpoints, error handling, versioning, and documentation. CONSULT when designing APIs, creating endpoints, or asked about API patterns.
+description: MUST USE when designing APIs, creating endpoints, defining error handling, or asked about API patterns. Secondary: planning API versioning, structuring responses, or documenting REST/GraphQL interfaces.
 ---
 
 # Objective

@@ -1,5 +1,5 @@
 ---
-description: Analyze context and launch the Debugger Agent with a targeted investigation plan.
+description: MUST USE when investigating bugs, errors, or unexpected behavior requiring systematic root cause analysis. Secondary: recurring issues, intermittent failures, production outages.
 argument-hint: [error description]
 allowed-tools: Task
 ---
