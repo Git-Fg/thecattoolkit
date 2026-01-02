@@ -21,6 +21,8 @@ objective, context, tasks, verification, success criteria, and output specificat
 **Key insight:** PLAN.md IS the prompt that Claude executes. Not a document that
 gets transformed into a prompt.
 
+**Example**: A database setup plan might have 2 tasks: "Create User model in Prisma schema" and "Run Prisma migrate to create PostgreSQL table."
+
 ## Process
 
 ### Step: Identify Phase

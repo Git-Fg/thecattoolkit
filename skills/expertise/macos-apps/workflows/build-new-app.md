@@ -88,11 +88,11 @@ Avoid:
 ## Success Criteria
 
 A well-built macOS app:
-- Follows macOS conventions (menu bar, shortcuts, window behavior)
-- Uses SwiftUI for UI with AppKit integration where needed
-- Manages state with @Observable and environment
-- Persists data appropriately
-- Handles errors gracefully
-- Supports accessibility
-- Builds and runs from CLI without opening Xcode
-- Feels native and responsive
+- [ ] Follows macOS conventions (menu bar, shortcuts, window behavior)
+- [ ] Uses SwiftUI for UI with AppKit integration where needed
+- [ ] Manages state with @Observable and environment
+- [ ] Persists data appropriately
+- [ ] Handles errors gracefully
+- [ ] Supports accessibility
+- [ ] Builds and runs from CLI without opening Xcode
+- [ ] Feels native and responsive

@@ -88,7 +88,7 @@ What's next?
 NOTE: FINDINGS.md is NOT committed separately. It will be committed with phase completion.
 
 ## Success Criteria
-- RESEARCH.md exists with clear scope
-- FINDINGS.md created with structured recommendations
-- Confidence level and metadata included
-- Ready to inform PLAN.md creation
+- [ ] RESEARCH.md exists with clear scope
+- [ ] FINDINGS.md created with structured recommendations
+- [ ] Confidence level and metadata included
+- [ ] Ready to inform PLAN.md creation

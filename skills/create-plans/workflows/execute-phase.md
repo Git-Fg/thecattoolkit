@@ -970,7 +970,7 @@ What's next?
 
 ## Success Criteria
 
-- All tasks from PLAN.md completed
-- All verifications pass
-- SUMMARY.md created with substantive content
-- ROADMAP.md updated
+- [ ] All tasks from PLAN.md completed
+- [ ] All verifications pass
+- [ ] SUMMARY.md created with substantive content
+- [ ] ROADMAP.md updated

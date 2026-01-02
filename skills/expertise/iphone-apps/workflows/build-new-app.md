@@ -102,8 +102,8 @@ struct ContentView: View {
 
 ## Success Criteria
 
-- Follows iOS Human Interface Guidelines
-- Builds and runs from CLI
-- Tests pass
-- Launches in simulator
-- User can verify UX manually
+- [ ] Follows iOS Human Interface Guidelines
+- [ ] Builds and runs from CLI
+- [ ] Tests pass
+- [ ] Launches in simulator
+- [ ] User can verify UX manually

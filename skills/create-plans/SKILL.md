@@ -471,16 +471,30 @@ All in `workflows/`:
 | resume.md | Load handoff, restore context |
 | get-guidance.md | Help decide planning approach |
 
+## When To Use
+
+MUST USE when planning projects, phases, or tasks that an AI agent will execute.
+
+**Context**: Plans are executable prompts, not documentation. Each plan should be:
+- Scoped to 2-3 tasks maximum (~50% context usage)
+- Independently executable by subagent with fresh context
+- Verifiable with specific success criteria
+- Complete with @file references for all context needed
+
+**Workflow**: User → Brief → Roadmap → Phase Plans → Execute → Summary → Next Phase
+
+**Example**: Phase "01-foundation" with 4 plans: database setup, API routes, UI components, frontend integration.
+
 ## Success Criteria
 
 Planning skill succeeds when:
-- Context scan runs before intake
-- Appropriate workflow selected based on state
-- PLAN.md IS the executable prompt (not separate)
-- Hierarchy is maintained (brief → roadmap → phase)
-- Handoffs preserve full context for resumption
-- Context limits are respected (auto-handoff at 10%)
-- Deviations handled automatically per embedded rules
-- All work (planned and discovered) fully documented
-- Domain expertise loaded intelligently (SKILL.md + selective references, not all files)
-- Plan execution uses /run-plan command (not skill invocation)
+- [ ] Context scan runs before intake
+- [ ] Appropriate workflow selected based on state
+- [ ] PLAN.md IS the executable prompt (not separate)
+- [ ] Hierarchy is maintained (brief → roadmap → phase)
+- [ ] Handoffs preserve full context for resumption
+- [ ] Context limits are respected (auto-handoff at 10%)
+- [ ] Deviations handled automatically per embedded rules
+- [ ] All work (planned and discovered) fully documented
+- [ ] Domain expertise loaded intelligently (SKILL.md + selective references, not all files)
+- [ ] Plan execution uses /run-plan command (not skill invocation)

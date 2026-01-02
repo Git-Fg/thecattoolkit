@@ -133,6 +133,8 @@ Step-by-step procedure
 How to know it worked
 ```
 
+**Example**: Simple skill like "process-pdfs" has single SKILL.md with objective, quick start (extract with pdfplumber), and success criteria.
+
 Complex skill (router pattern):
 
 ```
@@ -157,6 +159,8 @@ scripts/:
   Executable code Claude runs as-is
   (deploy, setup, API calls, data processing)
 ```
+
+**Example**: Router skill like "create-plans" uses intake/routing to delegate to create-brief, create-roadmap, or plan-phase workflows.
 
 ## Reference Index
 

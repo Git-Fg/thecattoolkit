@@ -25,6 +25,10 @@ Subagents enable delegation of complex tasks to specialized agents that operate 
 
 ## Example
 
+**Simple subagent**: code-reviewer focused on quality and security (Read, Grep, Glob, Bash tools, sonnet model)
+**Research subagent**: api-researcher investigates APIs and creates documentation (Glob, Read, WebFetch tools)
+**Analysis subagent**: test-writer generates tests based on existing code (Read, Glob, Write tools)
+
 ```markdown
 ---
 name: code-reviewer

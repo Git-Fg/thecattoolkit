@@ -65,3 +65,10 @@ This skill is commonly used with:
 
 Agent integration:
 - Strategic Thinker agent (opus model) for complex strategic decisions requiring deep reasoning
+
+## Example Applications
+
+**Business decision**: Should we expand to new market? (Use swot for positioning, second-order for consequences)
+**Product strategy**: Build vs buy? (Use first-principles to rebuild from fundamentals, inversion to identify failure modes)
+**Career choice**: Job offer evaluation? (Use 10-10-10 for temporal perspective, swot for comprehensive analysis)
+**Technical architecture**: Microservices vs monolith? (Use first-principles to challenge assumptions, inversion for risks)

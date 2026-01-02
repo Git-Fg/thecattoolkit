@@ -23,6 +23,15 @@ Each prompt gets its own folder in `.prompts/` with its output artifacts, enabli
 6. **Execute**: Run prompt(s) with dependency-aware execution engine
 7. **Summarize**: Create SUMMARY.md for human scanning
 
+## Example
+
+**Research → Plan → Implement chain**:
+- `001-auth-research/` - Research JWT libraries (outputs auth-research.md with findings)
+- `002-auth-plan/` - Plan implementation based on research (references 001 output)
+- `003-auth-implement/` - Generate JWT middleware code (references 002 plan)
+
+Each creates SUMMARY.md for quick scanning.
+
 ## Folder Structure
 
 ```
