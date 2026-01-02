@@ -167,15 +167,12 @@ def main():
         # Get type checker command
         cmd_info = get_type_checker_command(checker, project_root)
         if not cmd_info:
-            msg = f"[type-check-on-edit] {checker} is configured but not available. Install it or add it to your project."
-            print(msg, file=sys.stderr)
-            output = {
+            print(json.dumps({
                 "hookSpecificOutput": {
                     "hookEventName": "PostToolUse",
-                    "additionalContext": f"Type checker {checker} configured but not available"
+                    "additionalContext": f"[{checker}] not available"
                 }
-            }
-            print(json.dumps(output))
+            }))
             sys.exit(0)
 
         cmd, checker_name = cmd_info
@@ -185,68 +182,48 @@ def main():
         try:
             result = subprocess.run(full_cmd, capture_output=True, timeout=30)
 
-            # Report results to stderr and provide JSON for AI context
+            # Concise output: basename only
+            name = checker_name.replace("uv run ", "")
             if result.returncode != 0:
-                print(f"[type-check-on-edit] {checker_name} found issues in {file_path}:", file=sys.stderr)
-
-                # Parse and display errors
                 output = result.stdout.decode("utf-8", errors="ignore").strip()
-                if output:
-                    # Show first few lines of output (not overwhelming)
-                    lines = output.split("\n")
-                    for line in lines[:10]:
-                        print(f"  {line}", file=sys.stderr)
-                    if len(lines) > 10:
-                        print(f"  ... ({len(lines)} total issues)", file=sys.stderr)
+                # First meaningful line
+                error_line = ""
+                for line in output.split("\n"):
+                    line = line.strip()
+                    if line and not line.startswith(("Success", "Found")):
+                        error_line = f" — {line[:100]}"
+                        break
 
-                    # Provide JSON with issues summary for AI
-                    summary = f"Found {len(lines)} type checking issues. First few: " + "; ".join(lines[:3])
-                    json_output = {
-                        "hookSpecificOutput": {
-                            "hookEventName": "PostToolUse",
-                            "additionalContext": f"Type check failed: {checker_name} found {len(lines)} issues in {file_path}. {summary}"
-                        }
-                    }
-                    print(json.dumps(json_output))
-                else:
-                    json_output = {
-                        "hookSpecificOutput": {
-                            "hookEventName": "PostToolUse",
-                            "additionalContext": f"Type check failed: {checker_name} reported errors in {file_path}"
-                        }
-                    }
-                    print(json.dumps(json_output))
-            else:
-                msg = f"[type-check-on-edit] {checker_name} passed for {file_path}"
-                print(msg, file=sys.stderr)
-                json_output = {
+                print(json.dumps({
                     "hookSpecificOutput": {
                         "hookEventName": "PostToolUse",
-                        "additionalContext": f"Type check passed: {checker_name} validated {file_path} successfully"
+                        "additionalContext": f"[{name}] type-check failed{error_line}"
                     }
-                }
-                print(json.dumps(json_output))
+                }))
+            else:
+                print(json.dumps({
+                    "hookSpecificOutput": {
+                        "hookEventName": "PostToolUse",
+                        "additionalContext": f"[{name}] type-checked {os.path.basename(file_path)}"
+                    }
+                }))
 
         except subprocess.TimeoutExpired:
-            msg = f"[type-check-on-edit] {checker_name} timed out on {file_path}"
-            print(msg, file=sys.stderr)
-            json_output = {
+            name = checker_name.replace("uv run ", "")
+            print(json.dumps({
                 "hookSpecificOutput": {
                     "hookEventName": "PostToolUse",
-                    "additionalContext": f"Type check timeout: {checker_name} timed out on {file_path}"
+                    "additionalContext": f"[{name}] timed out"
                 }
-            }
-            print(json.dumps(json_output))
-        except FileNotFoundError as e:
-            msg = f"[type-check-on-edit] {checker_name} not found: {e}"
-            print(msg, file=sys.stderr)
-            json_output = {
+            }))
+        except FileNotFoundError:
+            name = checker_name.replace("uv run ", "")
+            print(json.dumps({
                 "hookSpecificOutput": {
                     "hookEventName": "PostToolUse",
-                    "additionalContext": f"Type checker not found: {checker_name} - {e}"
+                    "additionalContext": f"[{name}] not found"
                 }
-            }
-            print(json.dumps(json_output))
+            }))
 
     except json.JSONDecodeError:
         # Invalid JSON input, skip silently

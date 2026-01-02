@@ -126,64 +126,49 @@ def main():
             try:
                 result = subprocess.run(full_cmd, capture_output=True, timeout=10)
 
-                # Only report if there's meaningful output (errors or changes)
-                context_msg = None
-                if result.stdout or result.stderr:
-                    stdout = result.stdout.decode('utf-8', errors='ignore').strip()
+                # Simple, robust: always confirm formatting happened
+                base_msg = f"[{formatter_name}] formatted {os.path.basename(file_path)}"
+
+                # Only add detail if formatter returned non-zero (errors)
+                if result.returncode != 0 and (result.stderr or result.stdout):
                     stderr = result.stderr.decode('utf-8', errors='ignore').strip()
-
-                    # Filter out boilerplate (version info, "Finding:", "Linting:")
-                    meaningful_lines = []
-                    for line in (stdout + '\n' + stderr).split('\n'):
+                    stdout = result.stdout.decode('utf-8', errors='ignore').strip()
+                    # Append first meaningful line of error output
+                    for line in (stderr + '\n' + stdout).split('\n'):
                         line = line.strip()
-                        # Skip common boilerplate
-                        if not line or line.startswith(('Finding:', 'Linting:', 'All checks passed', 'Summary: 0 error')):
-                            continue
-                        # Skip version lines (e.g. "markdownlint-cli2 v0.20.0")
-                        if any(word in line.lower() for word in ['v0.', 'v1.', 'v2.', 'version', 'formatting']):
-                            continue
-                        meaningful_lines.append(line)
+                        if line and not any(skip in line.lower() for skip in ['v0.', 'v1.', 'v2.', 'version']):
+                            base_msg += f" — {line[:100]}"
+                            break
 
-                    if meaningful_lines:
-                        context_msg = ' | '.join(meaningful_lines[:3])  # Max 3 lines
-
-                # Build output - only include additionalContext if there's something to say
-                output_data = {"hookSpecificOutput": {"hookEventName": "PostToolUse"}}
-                if context_msg:
-                    output_data["hookSpecificOutput"]["additionalContext"] = f"[{formatter_name}] {file_path}: {context_msg}"
-                print(json.dumps(output_data))
+                print(json.dumps({
+                    "hookSpecificOutput": {
+                        "hookEventName": "PostToolUse",
+                        "additionalContext": base_msg
+                    }
+                }))
 
             except subprocess.TimeoutExpired:
-                msg = f"[format-on-edit] {formatter_name} timed out on {file_path}"
-                print(msg, file=sys.stderr)
-                output = {
+                print(json.dumps({
                     "hookSpecificOutput": {
                         "hookEventName": "PostToolUse",
-                        "additionalContext": f"Formatter timeout: {formatter_name} timed out on {file_path}"
+                        "additionalContext": f"[{formatter_name}] timed out"
                     }
-                }
-                print(json.dumps(output))
-            except FileNotFoundError as e:
-                msg = f"[format-on-edit] {formatter_name} not found: {e}"
-                print(msg, file=sys.stderr)
-                output = {
+                }))
+            except FileNotFoundError:
+                print(json.dumps({
                     "hookSpecificOutput": {
                         "hookEventName": "PostToolUse",
-                        "additionalContext": f"Formatter not found: {formatter_name} - {e}"
+                        "additionalContext": f"[{formatter_name}] not found"
                     }
-                }
-                print(json.dumps(output))
+                }))
         else:
             ext = os.path.splitext(file_path)[1].lower()
-            msg = f"[format-on-edit] No formatter available for {ext} files"
-            print(msg, file=sys.stderr)
-            output = {
+            print(json.dumps({
                 "hookSpecificOutput": {
                     "hookEventName": "PostToolUse",
-                    "additionalContext": f"No formatter configured for {ext} files"
+                    "additionalContext": f"No formatter for {ext}"
                 }
-            }
-            print(json.dumps(output))
+            }))
 
     except json.JSONDecodeError:
         # Invalid JSON input, skip silently
