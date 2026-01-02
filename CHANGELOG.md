@@ -5,6 +5,79 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.5] - 2026-01-02
+
+### Changed
+
+#### Markdown Formatting Behavior
+
+- `format-on-edit.py` - Markdown files now only use markdownlint-cli2 if
+  `.markdownlint.jsonc` exists in the project
+- Removed prettier fallback for `.md` files
+- Projects without markdownlint config will not have markdown auto-formatting
+
+### Benefits
+
+#### Opt-in Markdown Linting
+
+Only enforce markdown rules when explicitly configured
+
+#### No Surprises
+
+Projects without markdownlint config won't have unexpected formatting changes
+
+## [1.1.4] - 2026-01-02
+
+### Changed
+
+#### Markdown Formatting Behavior
+
+- `format-on-edit.py` - Markdown files now prefer prettier, only use markdownlint-cli2
+  if `.markdownlint.jsonc` exists in the project
+- Added `has_markdownlint_config()` function to search upward for config file
+
+## [1.1.3] - 2026-01-02
+
+### Changed
+
+#### Hook Output Conciseness
+
+- `format-on-edit.py` - Always show `[formatter] formatted file.ext` message
+  - Removed stderr redundancy (JSON output is sufficient)
+  - Use basename instead of full path
+  - Only add error details when formatter returns non-zero
+- `type-check-on-edit.py` - Concise output: `[checker] type-checked file.ext` or
+  `[checker] type-check failed — error`
+  - Removed stderr noise
+  - Consistent `[name]` format across all hooks
+
+### Benefits
+
+#### Cleaner Output
+
+One-line confirmation for all formatting actions
+
+#### AI Awareness
+
+Claude always knows formatting happened without verbose noise
+
+## [1.1.2] - 2026-01-02
+
+### Changed
+
+#### Hook Output Verbosity
+
+- `format-on-edit.py` - Reduced hook output verbosity
+  - Filter out boilerplate (version info, "Finding:", "Linting:")
+  - Only show `additionalContext` when there are errors or actual changes
+  - Silent output for clean files to reduce context pollution
+
+### Benefits
+
+#### Reduced Context Pollution
+
+Clean files no longer produce verbose hook output
+
 ## [1.1.1] - 2026-01-02
 
 ### AI Context Awareness for Hooks

@@ -1,10 +1,12 @@
 # THE CAT TOOLKIT
 
-**Version:** 1.1.1 | **License:** MIT | **Author:** Git-Fg
+**Version:** 1.1.5 | **License:** MIT | **Author:** Git-Fg
 
-A comprehensive collection of AI agent resources (primarily for Claude Code, adaptable to other AI assistants) built for real workflows.
+A comprehensive collection of AI agent resources (primarily for Claude Code,
+adaptable to other AI assistants) built for real workflows.
 
-/// A PERSONAL MERGE & REFINEMENT FROM <https://github.com/glittercowboy/taches-cc-resources> and <https://github.com/CloudAI-X/claude-workflow> ///
+/// A PERSONAL MERGE & REFINEMENT FROM <https://github.com/glittercowboy/taches-cc-resources>
+and <https://github.com/CloudAI-X/claude-workflow> ///
 
 ## Quick Start
 
@@ -22,7 +24,7 @@ claude plugin install thecattoolkit
 
 Try these commands to get started:
 
-```
+```bash
 # Strategic decision making
 /thecattoolkit:brainstorm Should I refactor this module now?
 
@@ -60,33 +62,40 @@ Dream big. Happy building.
 
 ## What's Inside
 
-**[Commands](#commands)** (18 total) - Slash commands that expand into structured workflows
+**[Commands](#commands)** (18 total) - Slash commands that expand into structured
+workflows
 
 - **Meta-Prompting**: Separate planning from execution with staged prompts
 - **Strategic Thinking**: Unified mental models framework with 12 thinking patterns
-- **Deep Analysis**: Systematic debugging methodology with evidence and hypothesis testing
+- **Deep Analysis**: Systematic debugging methodology with evidence and
+  hypothesis testing
 - **Output Modes**: Architect, rapid, mentor, and review modes
 
-**[Skills](#skills)** (16 total) - Autonomous workflows that research, generate, and self-heal
+**[Skills](#skills)** (16 total) - Autonomous workflows that research, generate,
+and self-heal
 
-- **Workflow Creation**: Create plans, meta-prompts, slash commands, subagents, hooks
+- **Workflow Creation**: Create plans, meta-prompts, slash commands, subagents,
+  hooks
 - **Strategic Thinking**: Strategic thinking, prioritization, problem analysis
-- **Knowledge Domains**: Project analysis, architecture patterns, testing, performance, git workflow, API design
+- **Knowledge Domains**: Project analysis, architecture patterns, testing,
+  performance, git workflow, API design
 - **Specialized**: Debug like expert, prompt engineering patterns
 
 **[Agents](#agents)** (11 total) - Specialized subagents for various workflows
 
-- **Operational**: Orchestrator, code-reviewer, debugger, docs-writer, security-auditor, refactorer, test-architect, brainstormer
+- **Operational**: Orchestrator, code-reviewer, debugger, docs-writer,
+  security-auditor, refactorer, test-architect, brainstormer
 - **Quality Assurance**: skill-auditor, slash-command-auditor, subagent-auditor
 
 **[Hooks](#hooks)** (4 total) - Automation triggers (Claude Code-specific)
 
 - **File Protection**: Warn about edits to sensitive files (lock files, .env, .git)
 - **Security Check**: Warn about potential secrets before writes
-- **Auto-Format**: Format files on edit (Python with ruff, markdown with markdownlint, JS/TS with prettier)
+- **Auto-Format**: Format files on edit (Python with ruff, markdown with markdownlint
+  only if .markdownlint.jsonc exists, JS/TS with prettier)
 - **Type-Check**: Type-check Python files when pyproject.toml is configured (pyrefly/mypy)
 
-## Installation
+## Installation Options
 
 ### Option 1: Plugin Install (Recommended for Claude Code)
 
@@ -114,7 +123,9 @@ cp -r commands/* ~/.claude/commands/
 cp -r skills/* ~/.claude/skills/
 ```
 
-Commands install globally to `~/.claude/commands/`. Skills install to `~/.claude/skills/`. Project-specific data (prompts, todos) lives in each project's working directory.
+Commands install globally to `~/.claude/commands/`. Skills install to
+`~/.claude/skills/`. Project-specific data (prompts, todos) lives in each
+project's working directory.
 
 ## Quick Examples
 
