@@ -24,8 +24,12 @@ PROTECTED_PATTERNS = [
     '.env',
     '.env.local',
     '.env.production',
-    '**/secrets/*',
-    '**/credentials/*',
+    'secrets/*',
+    '*/secrets/*',
+    '*/*/secrets/*',
+    'credentials/*',
+    '*/credentials/*',
+    '*/*/credentials/*',
 
     # Git internals
     '.git/*',
@@ -36,13 +40,17 @@ WARN_PATTERNS = [
     '.github/workflows/*',
     'docker-compose.yml',
     'Dockerfile',
-    '**/production/*',
+    'production/*',
+    '*/production/*',
+    '*/*/production/*',
 ]
 
 
 def matches_pattern(file_path: str, patterns: list[str]) -> Optional[str]:
     """Check if file matches any protected pattern. Returns matching pattern or None."""
-    file_path = file_path.lstrip('./')
+    # Remove leading ./ if present (but don't use lstrip which removes individual chars)
+    if file_path.startswith('./'):
+        file_path = file_path[2:]
     for pattern in patterns:
         if fnmatch.fnmatch(file_path, pattern):
             return pattern
