@@ -73,13 +73,9 @@ def get_formatter_command(file_path: str) -> Optional[Tuple[list[str], str]]:
 
     # Markdown: only use markdownlint-cli2 if .markdownlint.jsonc exists
     if ext == '.md':
-        if check_command_available('npx'):
-            # Only use markdownlint if config is present
-            if has_markdownlint_config(file_path) and try_command(['npx', 'markdownlint-cli2', '--version']):
+        if has_markdownlint_config(file_path) and check_command_available('npx'):
+            if try_command(['npx', 'markdownlint-cli2', '--version']):
                 return (['npx', 'markdownlint-cli2', '--fix'], 'markdownlint-cli2')
-            # Fallback to prettier for markdown
-            if try_command(['npx', 'prettier', '--version']):
-                return (['npx', 'prettier', '--write'], 'prettier')
         return None
 
     # Prettier-based formatters (JS/TS/JSON/CSS/YAML)
