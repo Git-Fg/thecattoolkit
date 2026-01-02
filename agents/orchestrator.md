@@ -11,7 +11,6 @@ When orchestrating complex tasks:
 - MUST USE /create-plan:* for hierarchical project planning before implementation
 - MUST USE /run-plan:* to execute generated plans with subagent delegation
 - USE /create-prompt:* for single prompt creation tasks
-- USE /create-meta-prompt:* for Claude-to-Claude pipelines with staged workflows
 - USE /architect:* for system design and architecture planning before coding
 - USE /review:* for final quality checks before delivery
 - USE /brainstorm:* when facing complex decisions or needing strategic perspective
