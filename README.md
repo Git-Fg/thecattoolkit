@@ -1,8 +1,52 @@
 # TÂCHES AI Agent Resources
 
+**Version:** 1.0.2 | **License:** MIT | **Author:** Git-Fg
+
 A comprehensive collection of AI agent resources (primarily for Claude Code, adaptable to other AI assistants) built for real workflows.
 
-/// A PERSONNAL MERGE & REFINEMENT FROM https://github.com/glittercowboy/taches-cc-resources and https://github.com/CloudAI-X/claude-workflow ///
+/// A PERSONAL MERGE & REFINEMENT FROM https://github.com/glittercowboy/taches-cc-resources and https://github.com/CloudAI-X/claude-workflow ///
+
+## Quick Start
+
+### Installation
+
+```bash
+# Add the marketplace
+claude plugin marketplace add Git-Fg/thecattoolkit
+
+# Install the plugin
+claude plugin install thecattoolkit
+```
+
+### First Steps
+
+Try these commands to get started:
+
+```
+# Strategic decision making
+/thecattoolkit:brainstorm Should I refactor this module now?
+
+# Code review
+> Use the code-reviewer agent to check my recent changes
+
+# Create a new skill
+/thecattoolkit:create-agent-skill Create a skill for database validation
+
+# System architecture
+/thecattoolkit:architect Design a user authentication system
+```
+
+## Table of Contents
+
+- [Philosophy](#philosophy)
+- [What's Inside](#whats-inside)
+- [Installation](#installation)
+- [Quick Examples](#quick-examples)
+- [Commands](#commands)
+- [Agents](#agents)
+- [Skills](#skills)
+- [Hooks](#hooks)
+- [Troubleshooting](#troubleshooting)
 
 ## Philosophy
 
@@ -66,6 +110,75 @@ cp -r skills/* ~/.claude/skills/
 ```
 
 Commands install globally to `~/.claude/commands/`. Skills install to `~/.claude/skills/`. Project-specific data (prompts, todos) lives in each project's working directory.
+
+## Quick Examples
+
+### Code Review Workflow
+
+```
+> Use the code-reviewer agent to review my changes
+```
+
+The code-reviewer will:
+1. Run `git diff` to see changes
+2. Analyze modified files for quality, security, performance
+3. Provide findings with severity ratings (Critical, Warning, Suggestion, Positive)
+4. Include specific fixes with file:line references
+
+### Strategic Decision Making
+
+```
+/thecattoolkit:brainstorm Should we migrate to microservices?
+```
+
+The brainstorm command applies strategic thinking frameworks:
+- **Auto-detect**: Chooses appropriate frameworks automatically
+- **Specific framework**: `/thecattoolkit:brainstorm pareto`
+- **Skill-level**: `/thecattoolkit:brainstorm strategic`
+
+### Creating a New Skill
+
+```
+/thecattoolkit:create-agent-skill Create a skill for React component testing
+```
+
+This will:
+1. Invoke the create-agent-skills skill
+2. Guide through skill structure (simple vs router pattern)
+3. Help with YAML frontmatter and progressive disclosure
+4. Offer to create directory structure and files
+
+### Auditing Components
+
+```
+# Audit a skill
+/thecattoolkit:audit-skill ./skills/my-skill
+
+# Audit a command
+/thecattoolkit:audit-slash-command commands/my-command.md
+
+# Audit an agent
+/thecattoolkit:audit-subagent agents/my-agent.md
+```
+
+Each audit provides:
+- Overall assessment
+- Critical issues (must-fix)
+- Recommendations (should-fix)
+- Strengths (what works well)
+- Context-specific guidance
+
+### Platform-Specific Development
+
+```
+> Build a native macOS menu bar app for monitoring system resources
+```
+
+The macos-apps skill provides:
+- CLI-only development (no Xcode required)
+- "Prove, don't promise" methodology
+- Verification with xcodebuild
+- Focus on outcomes, not code changes
 
 ## Commands
 
@@ -344,10 +457,214 @@ Event-driven automation that triggers during Claude Code operations:
 
 ---
 
+## Troubleshooting
+
+### Plugin Not Loading
+
+**Symptom:** Commands don't appear after installation
+
+**Solutions:**
+1. Verify plugin.json exists and is valid:
+   ```bash
+   cat .claude-plugin/plugin.json | python3 -m json.tool
+   ```
+
+2. Try loading with full path:
+   ```bash
+   claude --plugin-dir /full/path/to/thecattoolkit
+   ```
+
+3. Check Claude Code version (requires 1.0.33+):
+   ```bash
+   claude --version
+   ```
+
+### Commands Not Appearing
+
+**Symptom:** `/help` doesn't show thecattoolkit commands
+
+**Solutions:**
+1. Verify command files exist:
+   ```bash
+   ls commands/*.md
+   ```
+
+2. Check YAML frontmatter in commands:
+   ```bash
+   head -5 commands/your-command.md
+   ```
+
+3. Restart Claude Code after adding commands
+
+### Skills Not Triggering
+
+**Symptom:** Skills don't activate automatically
+
+**Solutions:**
+1. Check SKILL.md exists:
+   ```bash
+   ls skills/your-skill/SKILL.md
+   ```
+
+2. Verify description includes trigger keywords:
+   ```bash
+   head -10 skills/your-skill/SKILL.md
+   ```
+
+3. Use explicit invocation:
+   ```
+   > Use the your-skill skill to...
+   ```
+
+### Hook Scripts Failing
+
+**Symptom:** Errors on file edits or hooks not running
+
+**Solutions:**
+1. Verify Python is available:
+   ```bash
+   which python3
+   ```
+
+2. Test script manually:
+   ```bash
+   python3 hooks/scripts/protect-files.py < /dev/null
+   ```
+
+3. Check CLAUDE_PLUGIN_ROOT variable:
+   ```bash
+   echo $CLAUDE_PLUGIN_ROOT
+   ```
+
+4. Review hook configuration:
+   ```bash
+   cat hooks/hooks.json | python3 -m json.tool
+   ```
+
+### Agent Not Found
+
+**Symptom:** "Agent not found" error when invoking
+
+**Solutions:**
+1. Check agent file exists:
+   ```bash
+   ls agents/your-agent.md
+   ```
+
+2. Verify agent name in YAML frontmatter:
+   ```bash
+   head -5 agents/your-agent.md
+   ```
+
+3. Use exact name from frontmatter (not filename)
+
+### Mental Model Frameworks
+
+**Symptom:** Not sure which framework to use in `/brainstorm`
+
+**Guidance:**
+
+| Situation | Use Framework |
+|----------|--------------|
+| Challenging assumptions | first-principles |
+| Identifying risks | inversion |
+| Understanding ripple effects | second-order |
+| Strategic positioning | swot |
+| Short-term vs long-term | 10-10-10 |
+| Too many tasks | pareto, one-thing |
+| Prioritizing by urgency | eisenhower-matrix |
+| Finding root cause | 5-whys |
+| Trade-off analysis | opportunity-cost |
+| Simplifying complexity | occams-razor |
+| Removing bloat | via-negativa |
+
+---
+
+## Complete Component Reference
+
+### All Skills (19)
+
+| Skill | Purpose | Type | Location |
+|-------|---------|------|----------|
+| create-agent-skills | Guide for creating AI agent skills | Creation | skills/create-agent-skills/ |
+| create-hooks | Guide for creating automation hooks | Creation | skills/create-hooks/ |
+| create-meta-prompts | AI-to-AI pipeline prompts | Creation | skills/create-meta-prompts/ |
+| create-plans | Hierarchical project planning | Creation | skills/create-plans/ |
+| create-slash-commands | Command creation guide | Creation | skills/create-slash-commands/ |
+| create-subagents | Agent creation guide | Creation | skills/create-subagents/ |
+| prompt-engineering-patterns | Effective prompts for AI-to-AI | Creation | skills/prompt-engineering-patterns/ |
+| debug-like-expert | Deep debugging methodology | Specialized | skills/debug-like-expert/ |
+| api-design | REST/GraphQL patterns | Domain | skills/api-design/ |
+| architecture-patterns | Software architecture | Domain | skills/architecture-patterns/ |
+| git-workflow | Git optimization | Domain | skills/git-workflow/ |
+| performance-optimization | Code performance | Domain | skills/performance-optimization/ |
+| project-analysis | Project structure | Domain | skills/project-analysis/ |
+| testing-strategy | Testing methodologies | Domain | skills/testing-strategy/ |
+| strategic-thinking | 5 frameworks (first-principles, inversion, etc.) | Mental Model | skills/strategic-thinking/ |
+| problem-analysis | 4 frameworks (5-whys, opportunity-cost, etc.) | Mental Model | skills/problem-analysis/ |
+| prioritization | 3 frameworks (pareto, one-thing, eisenhower) | Mental Model | skills/prioritization/ |
+| macos-apps | Native macOS development (Swift/SwiftUI) | Platform | skills/expertise/macos-apps/ |
+| iphone-apps | Native iOS development (Swift/SwiftUI) | Platform | skills/expertise/iphone-apps/ |
+
+### All Agents (11)
+
+| Agent | Purpose | Tools | Skills |
+|-------|---------|-------|--------|
+| brainstormer | Creative ideation | - | - |
+| code-reviewer | Code quality and security review | Read, Grep, Glob, Bash, SlashCommand | git-workflow, testing-strategy |
+| debugger | Root cause analysis | Read, Edit, Bash, Grep, Glob, Write, SlashCommand | debug-like-expert, performance-optimization, prompt-engineering-patterns |
+| docs-writer | Technical documentation | - | - |
+| orchestrator | Multi-agent coordination | Task, SlashCommand, TodoWrite, etc. | project-analysis, architecture-patterns, prompt-engineering-patterns, strategic-thinking |
+| refactorer | Code refactoring | - | - |
+| security-auditor | Security assessment | - | - |
+| skill-auditor | Skill compliance audit | Read, Grep, Glob, SlashCommand | create-agent-skills |
+| slash-command-auditor | Command configuration audit | Read, Grep, Glob, SlashCommand | create-slash-commands |
+| subagent-auditor | Agent prompt quality audit | Read, Grep, Glob, SlashCommand | create-subagents |
+| test-architect | Testing strategy specialist | - | - |
+
+### All Commands (20)
+
+| Command | Purpose | Type |
+|---------|---------|------|
+| /thecattoolkit:architect | System design and architecture planning | Output Mode |
+| /thecattoolkit:audit-skill | Audit skills for best practices | Audit |
+| /thecattoolkit:audit-slash-command | Audit slash commands | Audit |
+| /thecattoolkit:audit-subagent | Audit subagents | Audit |
+| /thecattoolkit:brainstorm | Strategic thinking frameworks | Mental Model |
+| /thecattoolkit:create-agent-skill | Create new skills | Creation |
+| /thecattoolkit:create-hook | Create hooks | Creation |
+| /thecattoolkit:create-meta-prompt | AI-to-AI pipeline prompts | Creation |
+| /thecattoolkit:create-plan | Hierarchical project planning | Creation |
+| /thecattoolkit:create-prompt | Single prompt creation | Creation |
+| /thecattoolkit:create-slash-command | Create commands | Creation |
+| /thecattoolkit:create-subagent | Create agents | Creation |
+| /thecattoolkit:debug | Deep debugging methodology | Deep Analysis |
+| /thecattoolkit:heal-skill | Fix skill documentation | Self-Improvement |
+| /thecattoolkit:mentor | Learning mode | Output Mode |
+| /thecattoolkit:rapid | Fast development mode | Output Mode |
+| /thecattoolkit:review | Strict code review mode | Output Mode |
+| /thecattoolkit:run-prompt | Execute saved prompts | Meta-Prompting |
+| /thecattoolkit:run-plan | Execute generated plans | Planning |
+| /thecattoolkit:whats-next | Create handoff documents | Context Handoff |
+
+### All Hooks (3)
+
+| Hook | Trigger | Script | Purpose |
+|------|---------|--------|---------|
+| PreToolUse | Edit, Write | protect-files.py | Block edits to sensitive files |
+| PreToolUse | Edit, Write | security-check.py | Scan for potential secrets |
+| PostToolUse | Edit, Write | format-on-edit.py | Auto-format files |
+
+---
+
 More resources coming soon.
 
 ---
 
 **Community Ports:** [OpenCode](https://github.com/stephenschoettler/taches-oc-prompts)
+
+**Support:**
+- Issues: https://github.com/Git-Fg/thecattoolkit/issues
+- Email: felix@gitfg.dev
 
 —TÂCHES
