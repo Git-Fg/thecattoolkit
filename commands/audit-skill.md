@@ -1,5 +1,5 @@
 ---
-description: Audit skill for YAML compliance, pure XML structure, progressive disclosure, and best practices
+description: Audit skill for YAML compliance, Markdown structure, progressive disclosure, and best practices
 argument-hint: <skill-path>
 ---
 
@@ -12,11 +12,7 @@ Git status: ! `git status --short "$ARGUMENTS" 2>/dev/null || echo "NOT_TRACKED"
 
 Invoke the skill-auditor subagent to audit the skill(s) at $ARGUMENTS for compliance with Agent Skills best practices.
 
-This ensures skills follow proper structure (pure XML, required tags, progressive disclosure) and effectiveness patterns.
-
-This ensures referenced files follow proper structure and effectiveness patterns.
-
-This ensures files from the Skill(s) folder are properly integrated and referenced with relative path within the Skill(s) markdown file.
+This ensures skills follow proper structure (Markdown headings, required sections, progressive disclosure) and effectiveness patterns.
 
 ## Process
 

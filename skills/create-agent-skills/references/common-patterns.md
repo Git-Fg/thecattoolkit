@@ -1,5 +1,5 @@
 ## Overview
-This reference documents common patterns for skill authoring, including templates, examples, terminology consistency, and anti-patterns. All patterns use pure XML structure.
+This reference documents common patterns for skill authoring, including templates, examples, terminology consistency, and anti-patterns. All patterns use Markdown headings for structure.
 
 ## Template Pattern
 ## Description
@@ -212,23 +212,23 @@ Extract text with pdfplumber...
 Form filling requires additional setup...
 ```
 
-✅ **GOOD**: Using pure XML structure:
+✅ **GOOD**: Using Markdown structure:
 
-```xml
-<objective>
+```markdown
+## Objective
+
 PDF processing with text extraction, form filling, and merging capabilities.
-</objective>
 
-<quick_start>
+## Quick Start
+
 Extract text with pdfplumber...
-</quick_start>
 
-<advanced_features>
+## Advanced Features
+
 Form filling requires additional setup...
-</advanced_features>
 ```
 
-**Why it matters**: XML provides semantic meaning, reliable parsing, and token efficiency.
+**Why it matters**: Markdown headings provide semantic meaning, reliable parsing, and better readability.
 
 ## Pitfall
 ❌ **BAD**:
@@ -408,7 +408,7 @@ Form filling...
 </advanced_features>
 ```
 
-**Why it matters**: Consistency in structure. Either use pure XML or pure markdown (prefer XML).
+**Why it matters**: Consistency in structure. Use Markdown headings for all skill content.
 
 ## Pitfall
 ❌ **BAD**: Forgetting to close XML tags:

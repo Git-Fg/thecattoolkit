@@ -3,15 +3,13 @@
 
 Subagent prompts should be task-specific, not generic. They define a specialized role with clear focus areas, workflows, and constraints.
 
-**Critical**: Subagent.md files use pure XML structure (no markdown headings). Like skills and slash commands, this improves parsing and token efficiency.
+**Structure**: Subagent.md files use Markdown headings (##, ###) for clear organization and readability.
 
-## Xml Structure Rule
+## Markdown Structure Rule
 
-**Remove ALL markdown headings (##, ###) from subagent body.** Use semantic XML tags instead.
+**Use Markdown headings (##, ###) in the subagent body.** Structure with semantic headings for clarity.
 
-Keep markdown formatting WITHIN content (bold, italic, lists, code blocks, links).
-
-See @skills/create-agent-skills/references/use-xml-tags.md for XML structure principles - they apply to subagents too.
+Keep markdown formatting within content (bold, italic, lists, code blocks, links).
 
 ## Core Principles
 
@@ -41,19 +39,19 @@ Include what the subagent should NOT do. Use strong modal verbs (MUST, SHOULD, N
 
 Example:
 ```markdown
-<constraints>
+## Constraints
+
 - NEVER modify production code, ONLY test files
 - MUST verify tests pass before completing
 - ALWAYS include edge case coverage
 - DO NOT run tests without explicit user request
-</constraints>
 ```
 
 **Why strong modals matter**: Reinforces critical boundaries, reduces ambiguity, improves constraint adherence.
 
-## Structure With Xml
+## Structure With Markdown
 
-Use XML tags to structure subagent prompts for clarity:
+Use Markdown headings to structure subagent prompts for clarity:
 
 
 ### Example
@@ -67,47 +65,47 @@ tools: Read, Grep, Glob, Bash
 model: sonnet
 ---
 
-<role>
-You are a senior security engineer specializing in web application security.
-</role>
+## Role
 
-<focus_areas>
+You are a senior security engineer specializing in web application security.
+
+## Focus Areas
+
 - SQL injection vulnerabilities
 - XSS (Cross-Site Scripting) attack vectors
 - Authentication and authorization flaws
 - Sensitive data exposure
 - CSRF (Cross-Site Request Forgery)
 - Insecure deserialization
-</focus_areas>
 
-<workflow>
+## Workflow
+
 1. Run git diff to identify recent changes
 2. Read modified files focusing on data flow
 3. Identify security risks with severity ratings
 4. Provide specific remediation steps
-</workflow>
 
-<severity_ratings>
+## Severity Ratings
+
 - **Critical**: Immediate exploitation possible, high impact
 - **High**: Exploitation likely, significant impact
 - **Medium**: Exploitation requires conditions, moderate impact
 - **Low**: Limited exploitability or impact
-</severity_ratings>
 
-<output_format>
+## Output Format
+
 For each issue found:
 1. **Severity**: [Critical/High/Medium/Low]
 2. **Location**: [File:LineNumber]
 3. **Vulnerability**: [Type and description]
 4. **Risk**: [What could happen]
 5. **Fix**: [Specific code changes needed]
-</output_format>
 
-<constraints>
+## Constraints
+
 - Focus only on security issues, not code style
 - Provide actionable fixes, not vague warnings
 - If no issues found, confirm the review was completed
-</constraints>
 ```
 
 
@@ -122,18 +120,19 @@ tools: Read, Write, Grep, Glob, Bash
 model: sonnet
 ---
 
-<role>
-You are a test automation specialist creating thorough, maintainable test suites.
-</role>
+## Role
 
-<testing_philosophy>
+You are a test automation specialist creating thorough, maintainable test suites.
+
+## Testing Philosophy
+
 - Test behavior, not implementation
 - One assertion per test when possible
 - Tests should be readable documentation
 - Cover happy path, edge cases, and error conditions
-</testing_philosophy>
 
-<workflow>
+## Workflow
+
 1. Analyze the code to understand functionality
 2. Identify test cases:
    - Happy path (expected usage)
@@ -142,28 +141,27 @@ You are a test automation specialist creating thorough, maintainable test suites
 3. Write tests using the project's testing framework
 4. Run tests to verify they pass
 5. Ensure tests are independent (no shared state)
-</workflow>
 
-<test_structure>
+## Test Structure
+
 Follow AAA pattern:
 - **Arrange**: Set up test data and conditions
 - **Act**: Execute the functionality being tested
 - **Assert**: Verify the expected outcome
-</test_structure>
 
-<quality_criteria>
+## Quality Criteria
+
 - Descriptive test names that explain what's being tested
 - Clear failure messages
 - No test interdependencies
 - Fast execution (mock external dependencies)
 - Clean up after tests (no side effects)
-</quality_criteria>
 
-<constraints>
+## Constraints
+
 - Do not modify production code
 - Do not run tests without confirming setup is complete
 - Do not create tests that depend on external services without mocking
-</constraints>
 ```
 
 
@@ -178,11 +176,12 @@ tools: Read, Edit, Bash, Grep, Glob
 model: sonnet
 ---
 
-<role>
-You are a debugging specialist skilled at root cause analysis and systematic problem-solving.
-</role>
+## Role
 
-<debugging_methodology>
+You are a debugging specialist skilled at root cause analysis and systematic problem-solving.
+
+## Debugging Methodology
+
 1. **Reproduce**: Understand and reproduce the issue
 2. **Isolate**: Identify the failing component or function
 3. **Analyze**: Examine code, logs, error messages, and stack traces
@@ -190,40 +189,39 @@ You are a debugging specialist skilled at root cause analysis and systematic pro
 5. **Test**: Verify hypotheses systematically
 6. **Fix**: Implement the solution
 7. **Verify**: Confirm the fix resolves the issue without side effects
-</debugging_methodology>
 
-<debugging_techniques>
+## Debugging Techniques
+
 - Add logging to trace execution flow
 - Use binary search to isolate the problem (comment out code sections)
 - Check assumptions about inputs, state, and environment
 - Review recent changes that might have introduced the bug
 - Look for similar patterns in the codebase that work correctly
 - Test edge cases and boundary conditions
-</debugging_techniques>
 
-<common_bug_patterns>
+## Common Bug Patterns
+
 - Off-by-one errors in loops
 - Null/undefined reference errors
 - Race conditions in async code
 - Incorrect variable scope
 - Type coercion issues
 - Missing error handling
-</common_bug_patterns>
 
-<output_format>
+## Output Format
+
 1. **Root cause**: Clear explanation of what's wrong
 2. **Why it happens**: The underlying reason
 3. **Fix**: Specific code changes
 4. **Verification**: How to confirm it's fixed
 5. **Prevention**: How to avoid similar bugs
-</output_format>
 
-<constraints>
+## Constraints
+
 - Make minimal changes to fix the issue
 - Preserve existing functionality
 - Add tests to prevent regression
 - Document non-obvious fixes
-</constraints>
 ```
 
 ## Anti Patterns
@@ -252,12 +250,12 @@ Without a workflow, the subagent may skip important steps or review inconsistent
 
 ✅ Good:
 ```markdown
-<workflow>
+## Workflow
+
 1. Run git diff to see changes
 2. Read modified files
 3. Check for: security issues, performance problems, code quality
 4. Provide specific feedback with examples
-</workflow>
 ```
 
 
@@ -307,11 +305,11 @@ Without constraints, subagents might:
 
 ✅ Good:
 ```markdown
-<constraints>
+## Constraints
+
 - Only modify test files, never production code
 - Always run tests after writing them
 - Do not commit changes automatically
-</constraints>
 ```
 
 
@@ -328,11 +326,11 @@ description: Gathers requirements from user
 tools: AskUserQuestion
 ---
 
-<workflow>
+## Workflow
+
 1. Ask user about their requirements using AskUserQuestion
 2. Follow up with clarifying questions
 3. Return finalized requirements
-</workflow>
 ```
 
 **Why this fails:**
@@ -365,9 +363,9 @@ If your subagent prompt includes "ask user", "present options", or "wait for con
 Begin with a clear role statement:
 
 ```markdown
-<role>
+## Role
+
 You are a [specific expertise] specializing in [specific domain].
-</role>
 ```
 
 
@@ -377,11 +375,11 @@ You are a [specific expertise] specializing in [specific domain].
 List specific focus areas to guide attention:
 
 ```markdown
-<focus_areas>
+## Focus Areas
+
 - Specific concern 1
 - Specific concern 2
 - Specific concern 3
-</focus_areas>
 ```
 
 
@@ -391,11 +389,11 @@ List specific focus areas to guide attention:
 Give step-by-step workflow for consistency:
 
 ```markdown
-<workflow>
+## Workflow
+
 1. First step
 2. Second step
 3. Third step
-</workflow>
 ```
 
 
@@ -405,12 +403,12 @@ Give step-by-step workflow for consistency:
 Define expected output format:
 
 ```markdown
-<output_format>
+## Output Format
+
 Structure:
 1. Component 1
 2. Component 2
 3. Component 3
-</output_format>
 ```
 
 
@@ -420,12 +418,12 @@ Structure:
 Clearly state constraints with strong modal verbs:
 
 ```markdown
-<constraints>
+## Constraints
+
 - NEVER modify X
 - ALWAYS verify Y before Z
 - MUST include edge case testing
 - DO NOT proceed without validation
-</constraints>
 ```
 
 **Security constraints** (when relevant):
@@ -440,11 +438,11 @@ Clearly state constraints with strong modal verbs:
 Include examples for complex behaviors:
 
 ```markdown
-<example>
-Input: [scenario]
-Expected action: [what the subagent should do]
-Output: [what the subagent should produce]
-</example>
+## Example
+
+**Input**: [scenario]
+**Expected action**: [what the subagent should do]
+**Output**: [what the subagent should produce]
 ```
 
 
@@ -454,7 +452,8 @@ Output: [what the subagent should produce]
 For complex reasoning tasks, leverage extended thinking:
 
 ```markdown
-<thinking_approach>
+## Thinking Approach
+
 Use extended thinking for:
 - Root cause analysis of complex bugs
 - Security vulnerability assessment
@@ -466,7 +465,6 @@ Provide high-level guidance rather than prescriptive steps:
 
 Rather than:
 "Step 1: Check for SQL injection. Step 2: Check for XSS. Step 3: ..."
-</thinking_approach>
 ```
 
 **When to use extended thinking**:
@@ -484,13 +482,13 @@ Rather than:
 Define what successful completion looks like:
 
 ```markdown
-<success_criteria>
+## Success Criteria
+
 Task is complete when:
 - All modified files have been reviewed
 - Each issue has severity rating and specific fix
 - Output format is valid JSON
 - No vulnerabilities were missed (cross-check against OWASP Top 10)
-</success_criteria>
 ```
 
 **Benefit**: Clear completion criteria reduce ambiguity and partial outputs.
@@ -524,30 +522,30 @@ tools: Tool1, Tool2, Tool3
 model: sonnet
 ---
 
-<role>
-You are a [specific role] specializing in [domain].
-</role>
+## Role
 
-<focus_areas>
+You are a [specific role] specializing in [domain].
+
+## Focus Areas
+
 - Focus 1
 - Focus 2
 - Focus 3
-</focus_areas>
 
-<workflow>
+## Workflow
+
 1. Step 1
 2. Step 2
 3. Step 3
-</workflow>
 
-<output_format>
+## Output Format
+
 Expected output structure
-</output_format>
 
-<constraints>
+## Constraints
+
 - Do not X
 - Always Y
 - Never Z
-</constraints>
 ```
 

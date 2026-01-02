@@ -10,9 +10,9 @@ Git status: ! `git status --short "$ARGUMENTS" 2>/dev/null || echo "NOT_TRACKED"
 
 ## Objective
 
-Invoke the subagent-auditor subagent to audit the subagent at $ARGUMENTS for compliance with best practices, including pure XML structure standards.
+Invoke the subagent-auditor subagent to audit the subagent at $ARGUMENTS for compliance with best practices, including Markdown structure standards.
 
-This ensures subagents follow proper structure, configuration, pure XML formatting, and implementation patterns.
+This ensures subagents follow proper structure, configuration, Markdown formatting, and implementation patterns.
 
 ## Process
 

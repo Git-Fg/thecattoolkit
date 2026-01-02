@@ -1,71 +1,43 @@
 ## Overview
 Core principles guide skill authoring decisions. These principles ensure skills are efficient, effective, and maintainable across different models and use cases.
 
-## Xml Structure Principle
+## Markdown Structure Principle
 ## Description
-Skills use pure XML structure for consistent parsing, efficient token usage, and improved Claude performance.
+Skills use Markdown headings for structure to ensure readability and maintainability. XML is reserved only for highly structured elements like routing decisions in router pattern skills.
 
-## Why Xml
+## Why Markdown Headings
 ## Consistency
-XML enforces consistent structure across all skills. All skills use the same tag names for the same purposes:
-- `<objective>` always defines what the skill does
-- `<quick_start>` always provides immediate guidance
-- `<success_criteria>` always defines completion
+Markdown headings provide consistent structure across all skills. Common section names appear consistently:
+- `## Objective` or `# Objective` defines what the skill does
+- `## Quick Start` provides immediate guidance
+- `## Success Criteria` defines completion
 
-This consistency makes skills predictable and easier to maintain.
+This consistency makes skills predictable and easier to read and maintain.
 
-## Parseability
-XML provides unambiguous boundaries and semantic meaning. Claude can reliably:
-- Identify section boundaries (where content starts and ends)
-- Understand content purpose (what role each section plays)
-- Skip irrelevant sections (progressive disclosure)
-- Parse programmatically (validation tools can check structure)
+## Readability
+Markdown is human-readable and works well with all editors and tools. Claude can reliably:
+- Identify section boundaries through heading levels
+- Understand content purpose from semantic heading names
+- Navigate structure efficiently
+- Parse content programmatically when needed
 
-Markdown headings are just visual formatting. Claude must infer meaning from heading text, which is less reliable.
-
-## Token Efficiency
-XML tags are more efficient than markdown headings:
-
-**Markdown headings**:
-```markdown
-## Quick start
-## Workflow
-## Advanced features
-## Success criteria
-```
-Total: ~20 tokens, no semantic meaning to Claude
-
-**XML tags**:
-```xml
-<quick_start>
-<workflow>
-<advanced_features>
-<success_criteria>
-```
-Total: ~15 tokens, semantic meaning built-in
-
-Savings compound across all skills in the ecosystem.
-
-## Claude Performance
-Claude performs better with pure XML because:
-- Unambiguous section boundaries reduce parsing errors
-- Semantic tags convey intent directly (no inference needed)
-- Nested tags create clear hierarchies
-- Consistent structure across skills reduces cognitive load
-- Progressive disclosure works more reliably
-
-Pure XML structure is not just a style preference—it's a performance optimization.
+## Accessibility
+Markdown headings are:
+- Easier to read directly in source files
+- Supported by all editors and preview tools
+- More familiar to developers
+- Simpler to debug and modify
 
 ## Critical Rule
-**Remove ALL markdown headings (#, ##, ###) from skill body content.** Replace with semantic XML tags. Keep markdown formatting WITHIN content (bold, italic, lists, code blocks, links).
+**Use Markdown headings (#, ##, ###) for structure.** Keep markdown formatting within content (bold, italic, lists, code blocks, links). Reserve XML only for router pattern skills with complex routing logic.
 
-## Required Tags
+## Required Sections
 Every skill MUST have:
-- `<objective>` - What the skill does and why it matters
-- `<quick_start>` - Immediate, actionable guidance
-- `<success_criteria>` or `<when_successful>` - How to know it worked
+- `## Objective` or `# Objective` - What the skill does and why it matters
+- `## Quick Start` or similar - Immediate, actionable guidance
+- `## Success Criteria` or `## When Successful` - How to know it worked
 
-See [use-xml-tags.md](use-xml-tags.md) for conditional tags and intelligence rules.
+See [skill-structure.md](skill-structure.md) for conditional sections and structure guidance.
 
 ## Conciseness Principle
 ## Description
@@ -81,8 +53,9 @@ Assume Claude is smart. Don't explain obvious concepts.
 
 ## Concise Example
 **Concise** (~50 tokens):
-```xml
-<quick_start>
+```markdown
+## Quick Start
+
 Extract PDF text with pdfplumber:
 
 ```python
@@ -91,12 +64,12 @@ import pdfplumber
 with pdfplumber.open("file.pdf") as pdf:
     text = pdf.pages[0].extract_text()
 ```
-</quick_start>
 ```
 
 **Verbose** (~150 tokens):
-```xml
-<quick_start>
+```markdown
+## Quick Start
+
 PDF files are a common file format used for documents. To extract text from them, we'll use a Python library called pdfplumber. First, you'll need to import the library, then open the PDF file using the open method, and finally extract the text from each page. Here's how to do it:
 
 ```python
@@ -107,7 +80,6 @@ with pdfplumber.open("file.pdf") as pdf:
 ```
 
 This code opens the PDF and extracts text from the first page.
-</quick_start>
 ```
 
 The concise version assumes Claude knows what PDFs are, understands Python imports, and can read code. All those assumptions are correct.
@@ -137,23 +109,23 @@ Match the level of specificity to the task's fragility and variability. Give Cla
 - Creative solutions welcome
 
 ## Example
-```xml
-<objective>
-Review code for quality, bugs, and maintainability.
-</objective>
+```markdown
+## Objective
 
-<workflow>
+Review code for quality, bugs, and maintainability.
+
+## Process
+
 1. Analyze the code structure and organization
 2. Check for potential bugs or edge cases
 3. Suggest improvements for readability and maintainability
 4. Verify adherence to project conventions
-</workflow>
 
-<success_criteria>
+## Success Criteria
+
 - All major issues identified
 - Suggestions are actionable and specific
 - Review balances praise and criticism
-</success_criteria>
 ```
 
 Claude has freedom to adapt the review based on what the code needs.
@@ -166,12 +138,13 @@ Claude has freedom to adapt the review based on what the code needs.
 - Template can be adapted
 
 ## Example
-```xml
-<objective>
-Generate reports with customizable format and sections.
-</objective>
+```markdown
+## Objective
 
-<report_template>
+Generate reports with customizable format and sections.
+
+## Template
+
 Use this template and customize as needed:
 
 ```python
@@ -180,13 +153,12 @@ def generate_report(data, format="markdown", include_charts=True):
     # Generate output in specified format
     # Optionally include visualizations
 ```
-</report_template>
 
-<success_criteria>
+## Success Criteria
+
 - Report includes all required sections
 - Format matches user preference
 - Data accurately represented
-</success_criteria>
 ```
 
 Claude can customize the template based on requirements.
@@ -199,12 +171,13 @@ Claude can customize the template based on requirements.
 - Deviation causes failures
 
 ## Example
-```xml
-<objective>
-Run database migration with exact sequence to prevent data loss.
-</objective>
+```markdown
+## Objective
 
-<workflow>
+Run database migration with exact sequence to prevent data loss.
+
+## Process
+
 Run exactly this script:
 
 ```bash
@@ -212,13 +185,12 @@ python scripts/migrate.py --verify --backup
 ```
 
 **Do not modify the command or add additional flags.**
-</workflow>
 
-<success_criteria>
+## Success Criteria
+
 - Migration completes without errors
 - Backup created before migration
 - Verification confirms data integrity
-</success_criteria>
 ```
 
 Claude must follow the exact command with no variation.
@@ -267,7 +239,7 @@ Questions to ask:
 
 Sonnet benefits from:
 - Balanced detail level
-- XML structure for clarity
+- Markdown structure for clarity
 - Progressive disclosure
 - Concise but complete guidance
 
@@ -290,8 +262,9 @@ Opus benefits from:
 Aim for instructions that work well across all target models:
 
 **Good balance**:
-```xml
-<quick_start>
+```markdown
+## Quick Start
+
 Use pdfplumber for text extraction:
 
 ```python
@@ -301,7 +274,6 @@ with pdfplumber.open("file.pdf") as pdf:
 ```
 
 For scanned PDFs requiring OCR, use pdf2image with pytesseract instead.
-</quick_start>
 ```
 
 This works for all models:
@@ -310,17 +282,17 @@ This works for all models:
 - Opus gets enough context without over-explanation
 
 **Too minimal for Haiku**:
-```xml
-<quick_start>
+```markdown
+## Quick Start
+
 Use pdfplumber for text extraction.
-</quick_start>
 ```
 
 **Too verbose for Opus**:
-```xml
-<quick_start>
+```markdown
+## Quick Start
+
 PDF files are documents that contain text. To extract that text, we use a library called pdfplumber. First, import the library at the top of your Python file. Then, open the PDF file using the pdfplumber.open() method. This returns a PDF object. Access the pages attribute to get a list of pages. Each page has an extract_text() method that returns the text content...
-</quick_start>
 ```
 
 ## Iterative Improvement
@@ -369,8 +341,8 @@ Good validation scripts:
 See [workflows-and-validation.md](workflows-and-validation.md) for validation patterns.
 
 ## Principle Summary
-## Xml Structure
-Use pure XML structure for consistency, parseability, and Claude performance. Required tags: objective, quick_start, success_criteria.
+## Markdown Structure
+Use Markdown headings for structure and readability. Required sections: Objective, Quick Start, Success Criteria. Reserve XML only for router pattern skills.
 
 ## Conciseness
 Only add context Claude doesn't have. Assume Claude is smart. Challenge every piece of content.

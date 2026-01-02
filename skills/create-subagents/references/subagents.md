@@ -12,7 +12,7 @@ model: sonnet # Optional - specify model alias or 'inherit'
 ---
 
 ### Role
-Your subagent's system prompt using pure XML structure. This defines the subagent's role, capabilities, and approach.
+Your subagent's system prompt using Markdown headings for structure. This defines the subagent's role, capabilities, and approach.
 
 ### Constraints
 Hard rules using NEVER/MUST/ALWAYS for critical boundaries.
@@ -21,7 +21,7 @@ Hard rules using NEVER/MUST/ALWAYS for critical boundaries.
 Step-by-step process for consistency.
 ```
 
-**Critical**: Use pure XML structure in the body. Remove ALL markdown headings (##, ###). Keep markdown formatting within content (bold, lists, code blocks).
+**Structure**: Use Markdown headings (##, ###) in the body for clear organization. Keep markdown formatting within content (bold, lists, code blocks).
 
 ## Configuration Fields
 

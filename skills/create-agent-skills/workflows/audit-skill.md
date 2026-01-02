@@ -2,9 +2,8 @@
 
 ## Required Reading
 **Read these reference files NOW:**
-1. references/recommended-structure.md
-2. references/skill-structure.md
-3. references/use-xml-tags.md
+1. references/skill-structure.md
+2. references/core-principles.md
 
 ## Process
 ## Step 1: List Available Skills

@@ -2,10 +2,9 @@
 
 ## Required Reading
 **Read these reference files NOW:**
-1. references/recommended-structure.md
-2. references/skill-structure.md
-3. references/core-principles.md
-4. references/use-xml-tags.md
+1. references/skill-structure.md
+2. references/core-principles.md
+3. references/be-clear-and-direct.md
 
 ## Process
 ## Step 1: Adaptive Requirements Gathering
@@ -102,33 +101,33 @@ mkdir -p ~/.claude/skills/{skill-name}/scripts    # for reusable code
 
 **Simple skill:** Write complete skill file with:
 - YAML frontmatter (name, description)
-- `<objective>`
-- `<quick_start>`
-- Content sections with pure XML
-- `<success_criteria>`
+- `## Objective` or `# Objective`
+- `## Quick Start` or similar
+- Content sections with Markdown headings
+- `## Success Criteria` or `## When Successful`
 
-**Complex skill:** Write router with:
+**Complex skill (router pattern):** Write router with:
 - YAML frontmatter
-- `<essential_principles>` (inline, unavoidable)
+- Essential principles (using Markdown headings)
 - `<intake>` (question to ask user)
 - `<routing>` (maps answers to workflows)
-- `<reference_index>` and `<workflows_index>`
+- Reference index and workflows index (using Markdown lists)
 
 ## Step 6: Write Workflows (if complex)
 
 For each workflow:
-```xml
-<required_reading>
+```markdown
+## Required Reading
+
 Which references to load for this workflow
-</required_reading>
 
-<process>
+## Process
+
 Step-by-step procedure
-</process>
 
-<success_criteria>
+## Success Criteria
+
 How to know this workflow is done
-</success_criteria>
 ```
 
 ## Step 7: Write References (if needed)
@@ -144,11 +143,11 @@ Check:
 - [ ] YAML frontmatter valid
 - [ ] Name matches directory (lowercase-with-hyphens)
 - [ ] Description says what it does AND when to use it (third person, with strong language: MUST USE/PROACTIVELY USE/CONSULT)
-- [ ] No markdown headings (#) in body - use XML tags
-- [ ] Required tags present: objective, quick_start, success_criteria
+- [ ] Markdown headings used for structure (#, ##, ###)
+- [ ] Required sections present: Objective, Quick Start, Success Criteria
 - [ ] All referenced files exist
 - [ ] SKILL.md under 500 lines
-- [ ] XML tags properly closed
+- [ ] For router skills: <intake> and <routing> XML tags properly closed
 
 ## Step 9: Create Slash Command
 

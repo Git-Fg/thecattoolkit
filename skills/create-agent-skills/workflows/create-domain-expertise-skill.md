@@ -22,9 +22,9 @@ Domain expertise skills:
 
 ## Required Reading
 **Read these reference files NOW:**
-1. references/recommended-structure.md
+1. references/skill-structure.md
 2. references/core-principles.md
-3. references/use-xml-tags.md
+3. references/be-clear-and-direct.md
 
 ## Process
 ## Step 1: Identify Domain

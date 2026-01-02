@@ -196,7 +196,7 @@ After updating a skill, verify:
 - ✅ No over-engineering or under-specifying
 
 ## Reference Files Check
-- ✅ Reference files also use pure XML structure
+- ✅ Reference files also use Markdown structure
 - ✅ Links to reference files are correct
 - ✅ References are one level deep from SKILL.md
 

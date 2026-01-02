@@ -162,8 +162,8 @@ scripts/:
 
 All in `references/`:
 
-Structure: recommended-structure.md, skill-structure.md
-Principles: core-principles.md, be-clear-and-direct.md, use-xml-tags.md
+Structure: skill-structure.md
+Principles: core-principles.md, be-clear-and-direct.md
 Patterns: common-patterns.md, workflows-and-validation.md
 Assets: using-templates.md, using-scripts.md
 Advanced: executable-code.md, api-security.md, iteration-and-testing.md
