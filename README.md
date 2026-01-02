@@ -62,37 +62,30 @@ Dream big. Happy building.
 
 ## What's Inside
 
-**[Commands](#commands)** (18 total) - Slash commands that expand into structured
-workflows
+**[Commands](#commands)** (18 total) - Slash commands that expand into structured workflows
 
 - **Meta-Prompting**: Separate planning from execution with staged prompts
 - **Strategic Thinking**: Unified mental models framework with 12 thinking patterns
-- **Deep Analysis**: Systematic debugging methodology with evidence and
-  hypothesis testing
+- **Deep Analysis**: Systematic debugging methodology with evidence and hypothesis testing
 - **Output Modes**: Architect, rapid, mentor, and review modes
 
-**[Skills](#skills)** (16 total) - Autonomous workflows that research, generate,
-and self-heal
+**[Skills](#skills)** (16 total) - Autonomous workflows that research, generate, and self-heal
 
-- **Workflow Creation**: Create plans, meta-prompts, slash commands, subagents,
-  hooks
+- **Workflow Creation**: Create plans, meta-prompts, slash commands, subagents, hooks
 - **Strategic Thinking**: Strategic thinking, prioritization, problem analysis
-- **Knowledge Domains**: Project analysis, architecture patterns, testing,
-  performance, git workflow, API design
+- **Knowledge Domains**: Project analysis, architecture patterns, testing, performance, git workflow, API design
 - **Specialized**: Debug like expert, prompt engineering patterns
 
 **[Agents](#agents)** (11 total) - Specialized subagents for various workflows
 
-- **Operational**: Orchestrator, code-reviewer, debugger, docs-writer,
-  security-auditor, refactorer, test-architect, brainstormer
+- **Operational**: Orchestrator, code-reviewer, debugger, docs-writer, security-auditor, refactorer, test-architect, brainstormer
 - **Quality Assurance**: skill-auditor, slash-command-auditor, subagent-auditor
 
 **[Hooks](#hooks)** (4 total) - Automation triggers (Claude Code-specific)
 
 - **File Protection**: Warn about edits to sensitive files (lock files, .env, .git)
 - **Security Check**: Warn about potential secrets before writes
-- **Auto-Format**: Format files on edit (Python with ruff, markdown with markdownlint
-  only if .markdownlint.jsonc exists, JS/TS with prettier)
+- **Auto-Format**: Format files on edit (Python with ruff, markdown only with markdownlint if .markdownlint.jsonc exists, JS/TS with prettier)
 - **Type-Check**: Type-check Python files when pyproject.toml is configured (pyrefly/mypy)
 
 ## Installation Options
@@ -113,7 +106,7 @@ Start a new Claude Code session to use the commands and skills.
 
 ```bash
 # Clone the repo
-git clone https://github.com/glittercowboy/Git-Fg.git
+git clone https://github.com/Git-Fg/thecattoolkit.git
 cd thecattoolkit
 
 # Install commands
@@ -123,9 +116,7 @@ cp -r commands/* ~/.claude/commands/
 cp -r skills/* ~/.claude/skills/
 ```
 
-Commands install globally to `~/.claude/commands/`. Skills install to
-`~/.claude/skills/`. Project-specific data (prompts, todos) lives in each
-project's working directory.
+Commands install globally to `~/.claude/commands/`. Skills install to `~/.claude/skills/`. Project-specific data (prompts, todos) lives in each project's working directory.
 
 ## Quick Examples
 
@@ -478,7 +469,7 @@ Event-driven automation that triggers during Claude Code operations. All hooks u
   - `protect-files.py` - Warns about edits to lock files, .env, .git, credentials
   - `security-check.py` - Warns about potential secrets (API keys, passwords, tokens)
 - **PostToolUse (Edit/Write)**: Auto-formatting and type-checking
-  - `format-on-edit.py` - Formats files on edit (Python: uv run ruff, Markdown: markdownlint, JS/TS/JSON: prettier)
+  - `format-on-edit.py` - Formats files on edit (Python: uv run ruff, Markdown: markdownlint only if .markdownlint.jsonc exists, JS/TS/JSON: prettier)
   - `type-check-on-edit.py` - Type-checks Python files when pyproject.toml is configured (uv run pyrefly/mypy)
 
 **Hooks use uv with python3 fallback** - Automatically prefers `uv run` for formatters/type-checkers if available.
