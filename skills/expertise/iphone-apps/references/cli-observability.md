@@ -2,15 +2,14 @@
 
 Complete debugging and monitoring without opening Xcode. Claude has full visibility into build errors, runtime logs, crashes, memory issues, and network traffic.
 
-<prerequisites>
+## Prerequisites
+
 ```bash
 # Install observability tools (one-time)
 brew tap ldomaradzki/xcsift && brew install xcsift
 brew install mitmproxy xcbeautify
 ```
-</prerequisites>
 
-<build_output>
 ## Build Error Parsing
 
 **xcsift** converts verbose xcodebuild output to token-efficient JSON for AI agents:
@@ -35,9 +34,7 @@ Output includes structured errors with file paths and line numbers:
 ```bash
 xcodebuild build 2>&1 | xcbeautify
 ```
-</build_output>
 
-<runtime_logging>
 ## Runtime Logs
 
 ### In-App Logging Pattern
@@ -86,9 +83,7 @@ xcrun simctl spawn booted log collect --output sim_logs.logarchive
 # Search collected logs
 log show sim_logs.logarchive --predicate 'subsystem == "com.yourcompany.MyApp"'
 ```
-</runtime_logging>
 
-<crash_analysis>
 ## Crash Logs
 
 ### Find Crashes (Simulator)
@@ -121,9 +116,7 @@ xcrun lldb
 (lldb) command script import lldb.macosx.crashlog
 (lldb) crashlog /path/to/crash.ips
 ```
-</crash_analysis>
 
-<debugger>
 ## LLDB Debugging
 
 ### Launch with Console Output
@@ -174,9 +167,7 @@ lldb -n MyApp --wait-for
 (lldb) expr self.items.count
 (lldb) expr self.items.append(newItem)
 ```
-</debugger>
 
-<memory_debugging>
 ## Memory Debugging
 
 ### Leak Detection (Simulator)
@@ -211,9 +202,7 @@ xcrun xctrace record \
 # Export data
 xcrun xctrace export --input profile.trace --toc
 ```
-</memory_debugging>
 
-<sanitizers>
 ## Sanitizers
 
 Enable via xcodebuild flags:
@@ -242,9 +231,7 @@ xcodebuild test \
 ```
 
 **Note:** ASAN and TSAN cannot run simultaneously.
-</sanitizers>
 
-<network_inspection>
 ## Network Traffic Inspection
 
 ### mitmproxy Setup
@@ -287,9 +274,7 @@ mitmdump --filter "~d api.example.com"
 # Verbose (show bodies)
 mitmdump -v
 ```
-</network_inspection>
 
-<test_results>
 ## Test Result Parsing
 
 ```bash
@@ -332,9 +317,7 @@ xcodebuild test \
   -destination 'platform=iOS Simulator,name=iPhone 16' \
   -only-testing:MyAppUITests/AccessibilityTests
 ```
-</test_results>
 
-<swiftui_debugging>
 ## SwiftUI Debugging
 
 ### Track View Re-evaluation
@@ -355,9 +338,7 @@ let _ = dump(someObject)  // Full object hierarchy to console
 ```
 
 **Note:** No CLI equivalent for Xcode's visual view hierarchy inspector. Use logging extensively.
-</swiftui_debugging>
 
-<simulator_management>
 ## Simulator Management
 
 ```bash
@@ -392,9 +373,7 @@ xcrun simctl push booted com.yourcompany.MyApp notification.apns
 # Reset simulator
 xcrun simctl erase booted
 ```
-</simulator_management>
 
-<device_debugging>
 ## Device Debugging (iOS 17+)
 
 ```bash
@@ -407,9 +386,7 @@ xcrun devicectl device install app --device <udid> MyApp.app
 # Launch app
 xcrun devicectl device process launch --device <udid> com.yourcompany.MyApp
 ```
-</device_debugging>
 
-<standard_debug_workflow>
 ## Standard Debug Workflow
 
 ```bash
@@ -437,9 +414,7 @@ leaks MyApp
 # 6. Deep debugging
 lldb -n MyApp
 ```
-</standard_debug_workflow>
 
-<cli_vs_xcode>
 ## What CLI Can and Cannot Do
 
 | Task | CLI | Tool |
@@ -456,4 +431,3 @@ lldb -n MyApp
 | Sanitizers | ✓ | xcodebuild flags |
 | View hierarchy | ⚠️ | _printChanges() only |
 | GPU debugging | ✗ | Requires Xcode |
-</cli_vs_xcode>

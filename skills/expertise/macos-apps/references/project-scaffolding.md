@@ -2,15 +2,14 @@
 
 Complete setup for new macOS Swift apps with all necessary files and configurations.
 
-<new_project_checklist>
 1. Create project.yml for XcodeGen
 2. Create Swift source files
 3. Run `xcodegen generate`
 4. Configure signing (DEVELOPMENT_TEAM)
 5. Build and verify with `xcodebuild`
-</new_project_checklist>
 
-<xcodegen_setup>
+### XcodeGen Setup
+
 **Install XcodeGen** (one-time):
 ```bash
 brew install xcodegen
@@ -25,9 +24,9 @@ mkdir -p Sources Tests Resources
 xcodegen generate
 xcodebuild -project MyApp.xcodeproj -scheme MyApp build
 ```
-</xcodegen_setup>
 
-<project_yml_template>
+### project.yml Template
+
 **project.yml** - Complete macOS SwiftUI app template:
 
 ```yaml
@@ -116,9 +115,9 @@ schemes:
     archive:
       config: Release
 ```
-</project_yml_template>
 
-<project_yml_swiftdata>
+### project.yml with SwiftData
+
 **project.yml with SwiftData**:
 
 Add to target settings:
@@ -130,9 +129,9 @@ Add to target settings:
     dependencies:
       - sdk: SwiftData.framework
 ```
-</project_yml_swiftdata>
 
-<project_yml_packages>
+### Adding Swift Packages
+
 **Adding Swift Package dependencies**:
 
 ```yaml
@@ -151,18 +150,18 @@ targets:
       - package: Alamofire
       - package: KeychainAccess
 ```
-</project_yml_packages>
 
-<alternative_xcode_template>
+### Alternative: Xcode GUI
+
 **Alternative: Xcode GUI method**
 
 For users who prefer Xcode:
 1. File > New > Project > macOS > App
 2. Settings: SwiftUI, Swift, SwiftData (optional)
 3. Save to desired location
-</alternative_xcode_template>
 
-<minimal_file_structure>
+### Minimal File Structure
+
 ```
 MyApp/
 ├── MyApp.xcodeproj/
@@ -181,10 +180,11 @@ MyApp/
 └── MyAppTests/
     └── MyAppTests.swift
 ```
-</minimal_file_structure>
 
-<starter_code>
-<app_entry_point>
+### Starter Code
+
+#### App Entry Point
+
 **MyApp.swift**:
 ```swift
 import SwiftUI
@@ -208,9 +208,9 @@ struct MyApp: App {
     }
 }
 ```
-</app_entry_point>
 
-<app_state>
+#### App State
+
 **AppState.swift**:
 ```swift
 import SwiftUI
@@ -252,9 +252,9 @@ struct Item: Identifiable, Hashable {
     var createdAt = Date()
 }
 ```
-</app_state>
 
-<content_view>
+#### Content View
+
 **ContentView.swift**:
 ```swift
 import SwiftUI
@@ -317,9 +317,9 @@ struct DetailView: View {
     }
 }
 ```
-</content_view>
 
-<settings_view>
+#### Settings View
+
 **SettingsView.swift**:
 ```swift
 import SwiftUI
@@ -365,10 +365,9 @@ struct AdvancedSettingsView: View {
     }
 }
 ```
-</settings_view>
-</starter_code>
 
-<info_plist>
+### Info.plist
+
 **Info.plist** (complete template):
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -409,9 +408,9 @@ struct AdvancedSettingsView: View {
 - `public.app-category.utilities`
 - `public.app-category.music`
 - `public.app-category.graphics-design`
-</info_plist>
 
-<entitlements>
+### Entitlements
+
 **MyApp.entitlements** (sandbox with network):
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -433,9 +432,9 @@ struct AdvancedSettingsView: View {
 <key>com.apple.security.get-task-allow</key>
 <true/>
 ```
-</entitlements>
 
-<assets_catalog>
+### Assets Catalog
+
 **Assets.xcassets/Contents.json**:
 ```json
 {
@@ -522,9 +521,9 @@ struct AdvancedSettingsView: View {
   }
 }
 ```
-</assets_catalog>
 
-<swift_packages>
+### Swift Packages
+
 Add dependencies via Package.swift or Xcode:
 
 **Common packages**:
@@ -549,9 +548,9 @@ Add dependencies via Package.swift or Xcode:
 # Edit project to add package dependency
 # (Easier to do once in Xcode, then clone for future projects)
 ```
-</swift_packages>
 
-<verify_setup>
+### Verify Setup
+
 ```bash
 # Verify project configuration
 xcodebuild -list -project MyApp.xcodeproj
@@ -569,9 +568,9 @@ open ./build/Build/Products/Debug/MyApp.app
 # Check signing
 codesign -dv ./build/Build/Products/Debug/MyApp.app
 ```
-</verify_setup>
 
-<next_steps>
+### Next Steps
+
 After scaffolding:
 
 1. **Define your data model**: Create models in Models/ folder
@@ -582,4 +581,3 @@ After scaffolding:
 6. **Write tests**: Unit tests for models, integration tests for services
 
 See [cli-workflow.md](cli-workflow.md) for build/run/debug workflow.
-</next_steps>

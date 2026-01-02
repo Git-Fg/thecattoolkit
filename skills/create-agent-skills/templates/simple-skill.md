@@ -3,15 +3,13 @@ name: {{SKILL_NAME}}
 description: {{What it does}} {{MUST USE/PROACTIVELY USE/CONSULT}} when {{trigger conditions}}.
 ---
 
-<objective>
+## Objective
 {{Clear statement of what this skill accomplishes}}
-</objective>
 
-<quick_start>
+## Quick Start
 {{Immediate actionable guidance - what Claude should do first}}
-</quick_start>
 
-<process>
+## Process
 ## Step 1: {{First action}}
 
 {{Instructions for step 1}}
@@ -23,11 +21,9 @@ description: {{What it does}} {{MUST USE/PROACTIVELY USE/CONSULT}} when {{trigge
 ## Step 3: {{Third action}}
 
 {{Instructions for step 3}}
-</process>
 
-<success_criteria>
+## Success Criteria
 {{Skill name}} is complete when:
 - [ ] {{First success criterion}}
 - [ ] {{Second success criterion}}
 - [ ] {{Third success criterion}}
-</success_criteria>

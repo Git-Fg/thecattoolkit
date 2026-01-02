@@ -1,8 +1,7 @@
-<overview>
+## Overview
 Prompt patterns for improving existing research or plan outputs based on feedback.
-</overview>
 
-<prompt_template>
+## Prompt Template
 ```xml
 <objective>
 Refine {topic}-{original_purpose} based on feedback.
@@ -64,9 +63,9 @@ For Refine, always include:
 ```
 </prompt_template>
 
-<key_principles>
+## Key Principles
 
-<preserve_context>
+### Preserve Context
 Refine builds on existing work, not replaces it:
 ```xml
 <context>
@@ -78,9 +77,8 @@ Key strengths to preserve:
 - Code examples format
 </context>
 ```
-</preserve_context>
 
-<specific_feedback>
+### Specific Feedback
 Feedback must be actionable:
 ```xml
 <feedback>
@@ -94,9 +92,8 @@ Do NOT change:
 - Recommendation format
 </feedback>
 ```
-</specific_feedback>
 
-<version_tracking>
+### Version Tracking
 Archive before overwriting:
 ```xml
 <output>
@@ -105,13 +102,10 @@ Archive before overwriting:
 3. Update SUMMARY.md with version info
 </output>
 ```
-</version_tracking>
 
-</key_principles>
+## Refine Types
 
-<refine_types>
-
-<deepen_research>
+### Deepen Research
 When research was too surface-level:
 
 ```xml
@@ -140,9 +134,8 @@ Target: @.prompts/001-auth-research/auth-research.md
 - Increase confidence if gaps are filled
 </requirements>
 ```
-</deepen_research>
 
-<expand_scope>
+### Expand Scope
 When research missed important areas:
 
 ```xml
@@ -171,9 +164,8 @@ Target: @.prompts/005-stripe-research/stripe-research.md
 - Update summary to reflect expanded scope
 </requirements>
 ```
-</expand_scope>
 
-<update_plan>
+### Update Plan
 When plan needs adjustment:
 
 ```xml
@@ -201,9 +193,8 @@ Target: @.prompts/002-auth-plan/auth-plan.md
 - Ensure new phase is prompt-sized
 </requirements>
 ```
-</update_plan>
 
-<correct_errors>
+### Correct Errors
 When output has factual errors:
 
 ```xml
@@ -232,11 +223,8 @@ Target: @.prompts/003-jwt-research/jwt-research.md
 - Lower confidence if other findings may need verification
 </requirements>
 ```
-</correct_errors>
 
-</refine_types>
-
-<folder_structure>
+## Folder Structure
 Refine prompts get their own folder (new number), but output goes to the original folder:
 
 ```
@@ -258,11 +246,10 @@ This maintains:
 - Clear prompt history (each prompt is numbered)
 - Single source of truth for each output
 - Visible iteration count in SUMMARY.md
-</folder_structure>
 
-<execution_notes>
+## Execution Notes
 
-<dependency_handling>
+### Dependency Handling
 Refine prompts depend on the target output existing:
 - Check target file exists before execution
 - If target folder missing, offer to create the original prompt first
@@ -274,23 +261,18 @@ If `.prompts/{num}-{topic}-{original_purpose}/{topic}-{original_purpose}.md` not
 - Offer: "Create the original {purpose} prompt first?"
 </dependency_check>
 ```
-</dependency_handling>
 
-<archive_creation>
+### Archive Creation
 Before overwriting, ensure archive exists:
 ```bash
 mkdir -p .prompts/{num}-{topic}-{original_purpose}/archive/
 mv .prompts/{num}-{topic}-{original_purpose}/{topic}-{original_purpose}.md \
    .prompts/{num}-{topic}-{original_purpose}/archive/{topic}-{original_purpose}-v{n}.md
 ```
-</archive_creation>
 
-<summary_update>
+### Summary Update
 SUMMARY.md must reflect the refinement:
 - Update version number
 - Add "Changes from Previous" section
 - Update one-liner if findings changed
 - Update confidence if improved
-</summary_update>
-
-</execution_notes>

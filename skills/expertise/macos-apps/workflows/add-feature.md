@@ -1,14 +1,14 @@
 # Workflow: Add a Feature to an Existing App
 
-<required_reading>
+## Required Reading
+
 **Read these reference files NOW:**
 1. references/app-architecture.md
 2. references/swiftui-patterns.md
 
 **Plus relevant refs based on feature type** (see Step 2).
-</required_reading>
 
-<process>
+## Process
 ## Step 1: Understand the Feature
 
 Ask the user:
@@ -86,9 +86,8 @@ open ./build/Build/Products/Debug/AppName.app
 - Add keyboard shortcuts (references/macos-polish.md)
 - Ensure accessibility
 - Match existing UI patterns
-</process>
 
-<integration_patterns>
+## Integration Patterns
 **Adding to state:**
 ```swift
 // In AppState
@@ -132,9 +131,8 @@ struct AppCommands: Commands {
     }
 }
 ```
-</integration_patterns>
 
-<success_criteria>
+## Success Criteria
 Feature is complete when:
 - Functionality works as specified
 - Tests pass

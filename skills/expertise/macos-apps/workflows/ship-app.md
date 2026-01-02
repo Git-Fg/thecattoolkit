@@ -1,12 +1,12 @@
 # Workflow: Ship/Release a macOS App
 
-<required_reading>
+## Required Reading
+
 **Read these reference files NOW:**
 1. references/security-code-signing.md
 2. references/cli-workflow.md
-</required_reading>
 
-<process>
+## Process
 ## Step 1: Prepare for Release
 
 Ensure the app is ready:
@@ -135,9 +135,8 @@ spctl -a -vv ./build/export/AppName.app
 **For App Store:**
 - Check App Store Connect for review status
 - Test TestFlight build if applicable
-</process>
 
-<checklist>
+## Checklist
 Before shipping:
 - [ ] Version number incremented
 - [ ] Release notes written
@@ -147,13 +146,11 @@ Before shipping:
 - [ ] App icon complete (all sizes)
 - [ ] Screenshots prepared (if App Store)
 - [ ] Tested on clean install
-</checklist>
 
-<common_issues>
+## Common Issues
 | Issue | Cause | Fix |
 |-------|-------|-----|
 | Notarization fails | Unsigned frameworks, hardened runtime issues | Check all embedded binaries are signed |
 | "App is damaged" | Not notarized or stapled | Run notarytool and stapler |
 | Gatekeeper blocks | Missing Developer ID | Sign with Developer ID certificate |
 | App Store rejection | Missing entitlement descriptions, privacy issues | Add usage descriptions to Info.plist |
-</common_issues>

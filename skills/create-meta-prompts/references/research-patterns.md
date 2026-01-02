@@ -1,10 +1,9 @@
-<overview>
+## Overview
 Prompt patterns for gathering information that will be consumed by planning or implementation prompts.
 
 Includes quality controls, verification mechanisms, and streaming writes to prevent research gaps and token limit failures.
-</overview>
 
-<prompt_template>
+## Prompt Template
 ```xml
 <session_initialization>
 Before beginning research, verify today's date:
@@ -200,7 +199,7 @@ Before submitting your research report, confirm:
 ```
 </output_structure>
 
-<incremental_output>
+## Incremental Output
 **CRITICAL: Write findings incrementally to prevent token limit failures**
 
 Instead of generating the full research in memory and writing at the end:
@@ -215,7 +214,7 @@ This ensures:
 - No estimation heuristics needed
 - Works for any research size
 
-<workflow>
+### Workflow
 Step 1 - Initialize structure:
 ```bash
 # Create file with skeleton
@@ -243,9 +242,8 @@ Step 4 - Finalize metadata:
 # After completing research
 Edit: Update <metadata> section with confidence, dependencies, etc.
 ```
-</workflow>
 
-<example_prompt_instruction>
+### Example Prompt Instruction
 ```xml
 <output_requirements>
 Write findings incrementally to {topic}-research.md as you discover them:
@@ -275,9 +273,8 @@ This incremental approach ensures all work is saved even if execution
 hits token limits. Never generate the full output in memory first.
 </output_requirements>
 ```
-</example_prompt_instruction>
 
-<benefits>
+### Benefits
 **vs. Pre-execution estimation:**
 - No estimation errors (you don't predict, you just write)
 - No artificial modularization (agent decides natural breakpoints)
@@ -287,18 +284,15 @@ hits token limits. Never generate the full output in memory first.
 - Survives token limit failures (partial progress saved)
 - Lower memory usage (write as you go)
 - Natural checkpoint recovery (can continue from last finding)
-</benefits>
-</incremental_output>
 
-<summary_requirements>
+## Summary Requirements
 Create `.prompts/{num}-{topic}-research/SUMMARY.md`
 
 Load template: [summary-template.md](summary-template.md)
 
 For research, emphasize key recommendation and decision readiness. Next step typically: Create plan.
-</summary_requirements>
 
-<success_criteria>
+## Success Criteria
 - All scope questions answered
 - All verification checklist items completed
 - Sources are current and authoritative
@@ -307,13 +301,10 @@ For research, emphasize key recommendation and decision readiness. Next step typ
 - Quality report distinguishes verified from assumed
 - SUMMARY.md created with substantive one-liner
 - Ready for planning/implementation to consume
-</success_criteria>
-```
-</prompt_template>
 
-<key_principles>
+## Key Principles
 
-<structure_for_consumption>
+### Structure for Consumption
 The next Claude needs to quickly extract relevant information:
 ```xml
 <finding category="authentication">
@@ -328,9 +319,8 @@ The next Claude needs to quickly extract relevant information:
   </relevance>
 </finding>
 ```
-</structure_for_consumption>
 
-<include_code_examples>
+### Include Code Examples
 The implementation prompt needs patterns to follow:
 ```xml
 <code_examples>
@@ -348,9 +338,8 @@ Source: jose library documentation
 </example>
 </code_examples>
 ```
-</include_code_examples>
 
-<explicit_confidence>
+### Explicit Confidence
 Help the next Claude know what to trust:
 ```xml
 <metadata>
@@ -369,9 +358,8 @@ Help the next Claude know what to trust:
   </quality_report>
 </metadata>
 ```
-</explicit_confidence>
 
-<enumerate_known_possibilities>
+### Enumerate Known Possibilities
 When researching systems with known components, enumerate them explicitly:
 ```xml
 <verification_checklist>
@@ -384,13 +372,10 @@ When researching systems with known components, enumerate them explicitly:
 ```
 
 This forces systematic coverage and prevents omissions.
-</enumerate_known_possibilities>
 
-</key_principles>
+## Research Types
 
-<research_types>
-
-<technology_research>
+### Technology Research
 For understanding tools, libraries, APIs:
 
 ```xml
@@ -438,9 +423,8 @@ Additional sources (use WebSearch):
 □ Document bundle sizes from bundlephobia or similar
 </verification_checklist>
 ```
-</technology_research>
 
-<best_practices_research>
+### Best Practices Research
 For understanding patterns and standards:
 
 ```xml
@@ -479,9 +463,8 @@ Search sources (use WebSearch):
 □ Document secure cookie flags (httpOnly, secure, sameSite)
 </verification_checklist>
 ```
-</best_practices_research>
 
-<api_service_research>
+### API/Service Research
 For understanding external services:
 
 ```xml
@@ -529,9 +512,8 @@ Context7 MCP:
 □ Verify SDK availability for our stack
 </verification_checklist>
 ```
-</api_service_research>
 
-<comparison_research>
+### Comparison Research
 For evaluating options:
 
 ```xml
@@ -569,11 +551,8 @@ For each option:
 □ Assess team expertise honestly (survey if needed)
 </verification_checklist>
 ```
-</comparison_research>
 
-</research_types>
-
-<metadata_guidelines>
+## Metadata Guidelines
 Load: [metadata-guidelines.md](metadata-guidelines.md)
 
 **Enhanced guidance**:
@@ -582,39 +561,34 @@ Load: [metadata-guidelines.md](metadata-guidelines.md)
 - List all sources consulted with URLs for verification
 - Document contradictions encountered and how resolved
 - Be honest about limitations and gaps in research
-</metadata_guidelines>
 
-<tool_usage>
+## Tool Usage
 
-<context7_mcp>
+### Context7 MCP
 For library documentation:
 ```
 Use mcp__context7__resolve-library-id to find library
 Then mcp__context7__get-library-docs for current patterns
 ```
-</context7_mcp>
 
-<web_search>
+### Web Search
 For recent articles and updates:
 ```
 Search: "{topic} best practices {current_year}"
 Search: "{library} security vulnerabilities {current_year}"
 Search: "{topic} vs {alternative} comparison {current_year}"
 ```
-</web_search>
 
-<web_fetch>
+### Web Fetch
 For specific documentation pages:
 ```
 Fetch official docs, API references, changelogs with exact URLs
 Prefer WebFetch over WebSearch for authoritative sources
 ```
-</web_fetch>
 
 Include tool usage hints in research prompts when specific sources are needed.
-</tool_usage>
 
-<pitfalls_reference>
+## Pitfalls Reference
 Before completing research, review common pitfalls:
 Load: [research-pitfalls.md](research-pitfalls.md)
 
@@ -623,4 +597,3 @@ Key patterns to avoid:
 - "Search for X" vagueness - provide exact URLs
 - Deprecated vs current confusion - check changelogs
 - Tool-specific variations - check each environment
-</pitfalls_reference>

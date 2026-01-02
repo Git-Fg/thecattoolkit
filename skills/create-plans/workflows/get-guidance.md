@@ -1,19 +1,17 @@
 # Workflow: Get Planning Guidance
 
-<purpose>
+## Purpose
 Help decide the right planning approach based on project state and goals.
-</purpose>
 
-<process>
+## Process
 
-<step name="understand_situation">
+### Step: Understand Situation
 Ask conversationally:
 - What's the project/idea?
 - How far along are you? (idea, started, mid-project, almost done)
 - What feels unclear?
-</step>
 
-<step name="recommend_approach">
+### Step: Recommend Approach
 Based on situation:
 
 **Just an idea:**
@@ -30,9 +28,8 @@ Based on situation:
 
 **Project feels stuck:**
 → Identify the blocker. Is it planning or execution?
-</step>
 
-<step name="offer_next_action">
+### Step: Offer Next Action
 ```
 Recommendation: [approach]
 
@@ -43,11 +40,8 @@ Start now?
 2. Different approach
 3. More questions first
 ```
-</step>
 
-</process>
-
-<decision_tree>
+## Decision Tree
 ```
 Is there a brief?
 ├─ No → Create Brief
@@ -57,9 +51,8 @@ Is there a brief?
                   ├─ No → Plan Phase
                   └─ Yes → Plan Chunk or Generate Prompts
 ```
-</decision_tree>
 
-<common_situations>
+## Common Situations
 **"I have an idea but don't know where to start"**
 → Brief first. 5 minutes to capture vision.
 
@@ -74,11 +67,9 @@ Is there a brief?
 
 **"Context keeps running out mid-task"**
 → Tasks are too big. Break into smaller chunks + use handoff.
-</common_situations>
 
-<success_criteria>
+## Success Criteria
 Guidance is complete when:
 - [ ] User's situation understood
 - [ ] Appropriate approach recommended
 - [ ] User knows next step
-</success_criteria>

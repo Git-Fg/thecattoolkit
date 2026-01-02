@@ -1,17 +1,15 @@
 # Workflow: Verify Skill Content Accuracy
 
-<required_reading>
+## Required Reading
 **Read these reference files NOW:**
 1. references/skill-structure.md
-</required_reading>
 
-<purpose>
+## Purpose
 Audit checks structure. **Verify checks truth.**
 
 Skills contain claims about external things: APIs, CLI tools, frameworks, services. These change over time. This workflow checks if a skill's content is still accurate.
-</purpose>
 
-<process>
+## Process
 ## Step 1: Select the Skill
 
 ```bash
@@ -171,9 +169,8 @@ Based on skill type, recommend:
 | Pure Process | Annually |
 
 "This skill should be re-verified in approximately [timeframe]."
-</process>
 
-<verification_shortcuts>
+## Verification Shortcuts
 ## Quick Verification Commands
 
 **Check if CLI tool exists and get version:**
@@ -191,9 +188,8 @@ which {tool} && {tool} --version
 - Breaking changes: "{service} breaking changes 2025"
 - Deprecations: "{service} deprecated API"
 - Current best practices: "{framework} best practices 2025"
-</verification_shortcuts>
 
-<success_criteria>
+## Success Criteria
 Verification is complete when:
 - [ ] Skill categorized by dependency type
 - [ ] Verifiable claims extracted
@@ -201,4 +197,3 @@ Verification is complete when:
 - [ ] Freshness report generated
 - [ ] Updates applied (if requested)
 - [ ] User knows when to re-verify
-</success_criteria>

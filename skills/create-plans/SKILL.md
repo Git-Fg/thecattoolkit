@@ -3,15 +3,16 @@ name: create-plans
 description: Expert guidance for creating hierarchical project plans optimized for solo agentic development. MUST USE when planning projects, phases, or tasks that an AI agent will execute. Produces agent-executable plans with verification criteria, not enterprise documentation. Handles briefs, roadmaps, phase plans, and context handoffs.
 ---
 
-<essential_principles>
+# Essential Principles
 
-<principle name="solo_developer_plus_claude">
+## Solo Developer Plus Claude
+
 You are planning for ONE person (the user) and ONE implementer (Claude).
 No teams. No stakeholders. No ceremonies. No coordination overhead.
 The user is the visionary/product owner. Claude is the builder.
-</principle>
 
-<principle name="plans_are_prompts">
+## Plans Are Prompts
+
 PLAN.md is not a document that gets transformed into a prompt.
 PLAN.md IS the prompt. It contains:
 - Objective (what and why)
@@ -22,9 +23,9 @@ PLAN.md IS the prompt. It contains:
 - Output (SUMMARY.md specification)
 
 When planning a phase, you are writing the prompt that will execute it.
-</principle>
 
-<principle name="scope_control">
+## Scope Control
+
 Plans must complete within ~50% of context usage to maintain consistent quality.
 
 **The quality degradation curve:**
@@ -50,9 +51,9 @@ Each plan is independently executable, verifiable, and scoped to **2-3 tasks max
 **Autonomous execution:** Plans without checkpoints execute via subagent with fresh context - impossible to degrade.
 
 See: references/scope-estimation.md
-</principle>
 
-<principle name="human_checkpoints">
+## Human Checkpoints
+
 **Claude automates everything that has a CLI or API.** Checkpoints are for verification and decisions, not manual work.
 
 **Checkpoint types:**
@@ -71,9 +72,9 @@ See: references/scope-estimation.md
 **Protocol:** Claude automates work → reaches checkpoint:human-verify → presents what was done → waits for confirmation → resumes
 
 See: references/checkpoints.md, references/cli-automation.md
-</principle>
 
-<principle name="deviation_rules">
+## Deviation Rules
+
 Plans are guides, not straitjackets. Real development always involves discoveries.
 
 **During execution, deviations are handled automatically via 5 embedded rules:**
@@ -91,17 +92,17 @@ Plans are guides, not straitjackets. Real development always involves discoverie
 **Result:** Flow never breaks. Bugs get fixed. Scope stays controlled. Complete transparency.
 
 See: workflows/execute-phase.md (deviation_rules section)
-</principle>
 
-<principle name="ship_fast_iterate_fast">
+## Ship Fast, Iterate Fast
+
 No enterprise process. No approval gates. No multi-week timelines.
 Plan → Execute → Ship → Learn → Repeat.
 
 **Milestone-driven:** Ship v1.0 → mark milestone → plan v1.1 → ship → repeat.
 Milestones mark shipped versions and enable continuous iteration.
-</principle>
 
-<principle name="milestone_boundaries">
+## Milestone Boundaries
+
 Milestones mark shipped versions (v1.0, v1.1, v2.0).
 
 **Purpose:**
@@ -118,9 +119,9 @@ Milestones mark shipped versions (v1.0, v1.1, v2.0).
 **Archive ONLY for:** Separate codebases or complete rewrites (rare).
 
 See: references/milestone-management.md
-</principle>
 
-<principle name="anti_enterprise_patterns">
+## Anti-Enterprise Patterns
+
 NEVER include in plans:
 - Team structures, roles, RACI matrices
 - Stakeholder management, alignment meetings
@@ -130,9 +131,9 @@ NEVER include in plans:
 - Documentation for documentation's sake
 
 If it sounds like corporate PM theater, delete it.
-</principle>
 
-<principle name="context_awareness">
+## Context Awareness
+
 Monitor token usage via system warnings.
 
 **At 25% remaining**: Mention context getting full
@@ -140,9 +141,9 @@ Monitor token usage via system warnings.
 **At 10% remaining**: Auto-create handoff, stop
 
 Never start large operations below 15% without user confirmation.
-</principle>
 
-<principle name="user_gates">
+## User Gates
+
 Never charge ahead at critical decision points. Use gates:
 - **AskUserQuestion**: Structured choices (2-4 options)
 - **Inline questions**: Simple confirmations
@@ -156,9 +157,9 @@ Mandatory gates:
 - Before starting next phase with previous issues
 
 See: references/user-gates.md
-</principle>
 
-<principle name="git_versioning">
+## Git Versioning
+
 All planning artifacts are version controlled. Commit outcomes, not process.
 
 - Check for repo on invocation, offer to initialize
@@ -167,11 +168,9 @@ All planning artifacts are version controlled. Commit outcomes, not process.
 - Git log becomes project history
 
 See: references/git-integration.md
-</principle>
 
-</essential_principles>
+## Context Scan
 
-<context_scan>
 **Run on every invocation** to understand current state:
 
 ```bash
@@ -195,7 +194,6 @@ Inline question: "No git repo found. Initialize one? (Recommended for version co
 If yes: `git init`
 
 **Present findings before intake question.**
-</context_scan>
 
 ## Domain Expertise
 
@@ -268,16 +266,16 @@ This loads core principles and routing guidance (~5k tokens).
 
 Step 2: Determine what references are needed
 
-Domain SKILL.md should contain a `<references_index>` section that maps planning contexts to specific references.
+Domain SKILL.md should contain a references section that maps planning contexts to specific references.
 
 Example:
 ```markdown
-<references_index>
+## References Index
+
 **For database/persistence phases:** references/core-data.md, references/swift-concurrency.md
 **For UI/layout phases:** references/swiftui-layout.md, references/appleHIG.md
 **For system integration:** references/appkit-integration.md
 **Always useful:** references/swift-conventions.md
-</references_index>
 ```
 
 Step 3: Load only relevant references
@@ -312,7 +310,8 @@ Domain expertise is NOT needed for:
 - Resuming from handoff (context already established)
 - Transition between phases (just updating status)
 
-<intake>
+## Intake
+
 Based on scan results, present context-aware options:
 
 **If handoff found:**
@@ -352,9 +351,9 @@ What would you like to do?
 ```
 
 **Wait for response before proceeding.**
-</intake>
 
-<routing>
+## Routing
+
 | Response | Workflow |
 |----------|----------|
 | "brief", "new project", "start", 1 (no structure) | `workflows/create-brief.md` |
@@ -372,7 +371,6 @@ What would you like to do?
 **Critical:** Plan execution should NOT invoke this skill. Use `/run-plan` for context efficiency (skill loads ~20k tokens, /run-plan loads ~5-7k).
 
 **After reading the workflow, follow it exactly.**
-</routing>
 
 ## Hierarchy
 

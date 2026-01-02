@@ -3,23 +3,25 @@ name: create-agent-skills
 description: Expert guidance for creating, writing, building, and refining AI agent skills. MUST USE when working with SKILL.md files, authoring new skills, improving existing skills, or understanding skill structure and best practices.
 ---
 
-<essential_principles>
-<overview>
+# Essential Principles
+
+## Overview
+
 Skills are modular, filesystem-based capabilities that provide domain expertise on demand. This skill teaches how to create effective skills.
-</overview>
 
-<principle name="skills_are_prompts">
+## Skills Are Prompts
+
 All prompting best practices apply. Be clear, be direct, use XML structure. Assume Claude is smart - only add context Claude doesn't have.
-</principle>
 
-<principle name="skill_md_always_loaded">
+## SKILL.md Always Loaded
+
 When a skill is invoked, Claude reads SKILL.md. Use this guarantee:
 - Essential principles go in SKILL.md (can't be skipped)
 - Workflow-specific content goes in workflows/
 - Reusable knowledge goes in references/
-</principle>
 
-<principle name="router_pattern">
+## Router Pattern
+
 For complex skills, use this structure:
 
 ```
@@ -38,9 +40,9 @@ SKILL.md asks "what do you want to do?" → routes to workflow → workflow spec
 - **references/** - Domain knowledge Claude reads for context
 - **templates/** - Consistent output structures Claude copies and fills (plans, specs, configs)
 - **scripts/** - Executable code Claude runs as-is (deploy, setup, API calls)
-</principle>
 
-<principle name="structure_clarity">
+## Structure Clarity
+
 Use markdown headings for structure (#, ##, ###). Reserve XML only for highly structured elements like routing decisions:
 
 ```markdown
@@ -59,14 +61,13 @@ How to know it worked
 
 Keep markdown formatting within content (bold, lists, code blocks).
 XML reserved for complex routing logic in router pattern skills.
-</principle>
 
-<principle name="progressive_disclosure">
+## Progressive Disclosure
+
 SKILL.md under 500 lines. Split detailed content into reference files. Load only what's needed for the current workflow.
-</principle>
-</essential_principles>
 
-<intake>
+## Intake
+
 What would you like to do?
 
 1. Create new skill
@@ -75,9 +76,9 @@ What would you like to do?
 4. Get guidance
 
 **Wait for response before proceeding.**
-</intake>
 
-<routing>
+## Routing
+
 | Response | Next Action | Workflow |
 |----------|-------------|----------|
 | 1, "create", "new", "build" | Ask: "Task-execution skill or domain expertise skill?" | Route to appropriate create workflow |
@@ -104,7 +105,6 @@ What would you like to do?
 - "upgrade to router" → workflows/upgrade-to-router.md
 
 **After reading the workflow, follow it exactly.**
-</routing>
 
 ## Quick Reference
 
@@ -137,14 +137,14 @@ Complex skill (router pattern):
 
 ```
 SKILL.md:
-  <essential_principles> - Always applies
-  <intake> - Question to ask
-  <routing> - Maps answers to workflows
+  Essential Principles - Always applies
+  Intake - Question to ask
+  Routing - Maps answers to workflows
 
 workflows/:
-  <required_reading> - Which refs to load
-  <process> - Steps
-  <success_criteria> - Done when...
+  Required Reading - Which refs to load
+  Process - Steps
+  Success Criteria - Done when...
 
 references/:
   Domain knowledge, patterns, examples

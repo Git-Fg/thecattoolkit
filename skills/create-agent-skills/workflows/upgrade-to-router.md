@@ -1,12 +1,11 @@
 # Workflow: Upgrade Skill to Router Pattern
 
-<required_reading>
+## Required Reading
 **Read these reference files NOW:**
 1. references/recommended-structure.md
 2. references/skill-structure.md
-</required_reading>
 
-<process>
+## Process
 ## Step 1: Select the Skill
 
 ```bash
@@ -147,9 +146,8 @@ Invoke the upgraded skill:
 - Does behavior match original skill?
 
 Report any issues.
-</process>
 
-<success_criteria>
+## Success Criteria
 Upgrade is complete when:
 - [ ] workflows/ directory created with workflow files
 - [ ] references/ directory created (if needed)
@@ -158,4 +156,3 @@ Upgrade is complete when:
 - [ ] All original content preserved
 - [ ] Intake question routes correctly
 - [ ] Tested and working
-</success_criteria>

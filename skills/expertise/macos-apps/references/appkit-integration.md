@@ -2,7 +2,8 @@
 
 When and how to use AppKit alongside SwiftUI for advanced functionality.
 
-<when_to_use_appkit>
+### When To Use Appkit
+
 Use AppKit (not SwiftUI) when you need:
 - Custom drawing with `NSView.draw(_:)`
 - Complex text editing (`NSTextView`)
@@ -26,10 +27,11 @@ Before reaching for AppKit as a workaround:
 - Policy wins. Check policy first.
 
 Prefer SwiftUI for everything else.
-</when_to_use_appkit>
 
-<nsviewrepresentable>
-<basic_pattern>
+### NSViewRepresentable
+
+### Basic Pattern
+
 ```swift
 import SwiftUI
 
@@ -63,7 +65,6 @@ struct CustomCanvasView: NSViewRepresentable {
     }
 }
 ```
-</basic_pattern>
 
 <with_sizeThatFits>
 ```swift
@@ -86,10 +87,11 @@ struct IntrinsicSizeView: NSViewRepresentable {
 }
 ```
 </with_sizeThatFits>
-</nsviewrepresentable>
 
-<custom_nsview>
-<drawing_view>
+### Custom Nsview
+
+### Drawing View
+
 ```swift
 import AppKit
 
@@ -143,9 +145,9 @@ protocol CanvasDelegate: AnyObject {
     func canvasDidUpdate(_ drawing: Drawing)
 }
 ```
-</drawing_view>
 
-<keyboard_handling>
+### Keyboard Handling
+
 ```swift
 class KeyHandlingView: NSView {
     var onKeyPress: ((NSEvent) -> Bool)?
@@ -167,11 +169,11 @@ class KeyHandlingView: NSView {
     }
 }
 ```
-</keyboard_handling>
-</custom_nsview>
 
-<nstextview_integration>
-<rich_text_editor>
+### NSTextView Integration
+
+### Rich Text Editor
+
 ```swift
 struct RichTextEditor: NSViewRepresentable {
     @Binding var attributedText: NSAttributedString
@@ -222,10 +224,9 @@ struct RichTextEditor: NSViewRepresentable {
     }
 }
 ```
-</rich_text_editor>
-</nstextview_integration>
 
-<nshostingview>
+## NSHostingView
+
 Use SwiftUI views in AppKit:
 
 ```swift
@@ -262,10 +263,11 @@ class ToolbarItemController: NSToolbarItem {
     }
 }
 ```
-</nshostingview>
 
-<drag_and_drop>
-<dragging_source>
+## Drag and Drop
+
+### Dragging Source
+
 ```swift
 class DraggableView: NSView, NSDraggingSource {
     var item: Item?
@@ -301,9 +303,9 @@ class DraggableView: NSView, NSDraggingSource {
     }
 }
 ```
-</dragging_source>
 
-<dragging_destination>
+### Dragging Destination
+
 ```swift
 class DropTargetView: NSView {
     var onDrop: (([String]) -> Bool)?
@@ -332,11 +334,11 @@ class DropTargetView: NSView {
     }
 }
 ```
-</dragging_destination>
-</drag_and_drop>
 
-<window_customization>
-<custom_titlebar>
+### Window Customization
+
+### Custom Titlebar
+
 ```swift
 class CustomWindow: NSWindow {
     override init(
@@ -360,9 +362,9 @@ class CustomWindow: NSWindow {
     }
 }
 ```
-</custom_titlebar>
 
-<access_window_from_swiftui>
+### Access Window From Swiftui
+
 ```swift
 struct WindowAccessor: NSViewRepresentable {
     var callback: (NSWindow?) -> Void
@@ -388,10 +390,9 @@ struct ContentView: View {
     }
 }
 ```
-</access_window_from_swiftui>
-</window_customization>
 
-<popover>
+## Popover
+
 ```swift
 class PopoverController {
     private var popover: NSPopover?
@@ -466,20 +467,19 @@ struct PopoverButton<Content: View>: NSViewRepresentable {
     }
 }
 ```
-</popover>
 
-<best_practices>
-<do>
+## Best Practices
+
+### Do
+
 - Use NSViewRepresentable for custom views
 - Use Coordinator for delegate callbacks
 - Clean up resources in NSViewRepresentable
 - Use NSHostingView to embed SwiftUI in AppKit
-</do>
 
-<avoid>
+### Avoid
+
 - Using AppKit when SwiftUI suffices
 - Forgetting to set acceptsFirstResponder for keyboard input
 - Not handling coordinate system (isFlipped)
 - Memory leaks from strong delegate references
-</avoid>
-</best_practices>

@@ -1,22 +1,23 @@
 # Workflow: Build a New macOS App
 
-<required_reading>
+## Required Reading
+
 **Read these reference files NOW before writing any code:**
 1. references/project-scaffolding.md
 2. references/cli-workflow.md
 3. references/app-architecture.md
 4. references/swiftui-patterns.md
-</required_reading>
 
-<process>
-## Step 1: Clarify Requirements
+## Process
+
+### Step 1: Clarify Requirements
 
 Ask the user:
 - What does the app do? (core functionality)
 - What type of app? (document-based, shoebox/library, menu bar utility, single-window)
 - Any specific features needed? (persistence, networking, system integration)
 
-## Step 2: Choose App Archetype
+### Step 2: Choose App Archetype
 
 Based on requirements, select:
 
@@ -29,7 +30,7 @@ Based on requirements, select:
 
 Read the relevant app type reference if not single-window.
 
-## Step 3: Scaffold Project
+### Step 3: Scaffold Project
 
 Use XcodeGen (recommended):
 
@@ -44,7 +45,7 @@ cd AppName
 xcodegen generate
 ```
 
-## Step 4: Implement with TDD
+### Step 4: Implement with TDD
 
 Follow test-driven development:
 1. Write failing test
@@ -56,7 +57,7 @@ Follow test-driven development:
 
 See references/testing-tdd.md for patterns.
 
-## Step 5: Build and Verify
+### Step 5: Build and Verify
 
 ```bash
 # Build
@@ -66,16 +67,16 @@ xcodebuild -project AppName.xcodeproj -scheme AppName build 2>&1 | xcsift
 open ./build/Build/Products/Debug/AppName.app
 ```
 
-## Step 6: Polish
+### Step 6: Polish
 
 Read references/macos-polish.md for:
 - Keyboard shortcuts
 - Menu bar integration
 - Accessibility
 - State restoration
-</process>
 
-<anti_patterns>
+## Anti-Patterns
+
 Avoid:
 - Massive view models - views ARE the view model in SwiftUI
 - Fighting SwiftUI - use declarative patterns
@@ -83,9 +84,9 @@ Avoid:
 - Blocking main thread - async/await for all I/O
 - Hard-coded paths - use FileManager APIs
 - Retain cycles - use `[weak self]` in escaping closures
-</anti_patterns>
 
-<success_criteria>
+## Success Criteria
+
 A well-built macOS app:
 - Follows macOS conventions (menu bar, shortcuts, window behavior)
 - Uses SwiftUI for UI with AppKit integration where needed
@@ -95,4 +96,3 @@ A well-built macOS app:
 - Supports accessibility
 - Builds and runs from CLI without opening Xcode
 - Feels native and responsive
-</success_criteria>

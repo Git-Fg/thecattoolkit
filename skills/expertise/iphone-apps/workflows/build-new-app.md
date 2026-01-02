@@ -1,14 +1,14 @@
 # Workflow: Build a New iOS App
 
-<required_reading>
+## Required Reading
+
 **Read these reference files NOW before writing any code:**
 1. references/project-scaffolding.md
 2. references/cli-workflow.md
 3. references/app-architecture.md
 4. references/swiftui-patterns.md
-</required_reading>
 
-<process>
+## Process
 ## Step 1: Clarify Requirements
 
 Ask the user:
@@ -64,9 +64,8 @@ Read references/polish-and-ux.md for:
 - Animations
 - Accessibility
 - Dynamic Type support
-</process>
 
-<minimum_viable_app>
+## Minimum Viable App
 ```swift
 import SwiftUI
 
@@ -100,12 +99,11 @@ struct ContentView: View {
     }
 }
 ```
-</minimum_viable_app>
 
-<success_criteria>
+## Success Criteria
+
 - Follows iOS Human Interface Guidelines
 - Builds and runs from CLI
 - Tests pass
 - Launches in simulator
 - User can verify UX manually
-</success_criteria>

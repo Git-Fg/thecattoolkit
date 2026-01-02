@@ -1,13 +1,12 @@
 # Workflow: Audit a Skill
 
-<required_reading>
+## Required Reading
 **Read these reference files NOW:**
 1. references/recommended-structure.md
 2. references/skill-structure.md
 3. references/use-xml-tags.md
-</required_reading>
 
-<process>
+## Process
 ## Step 1: List Available Skills
 
 **DO NOT use AskUserQuestion** - there may be many skills.
@@ -112,9 +111,8 @@ If fixing:
 - Make each change
 - Verify file validity after each change
 - Report what was fixed
-</process>
 
-<audit_anti_patterns>
+## Audit Anti Patterns
 ## Common Anti-Patterns to Flag
 
 **Skippable principles**: Essential principles in separate file instead of inline
@@ -126,13 +124,11 @@ If fixing:
 **Missing routing**: Complex skill without intake/routing
 **Broken references**: Files mentioned but don't exist
 **Redundant content**: Same information in multiple places
-</audit_anti_patterns>
 
-<success_criteria>
+## Success Criteria
 Audit is complete when:
 - [ ] Skill fully read and analyzed
 - [ ] All checklist items evaluated
 - [ ] Report presented to user
 - [ ] Fixes applied (if requested)
 - [ ] User has clear picture of skill health
-</success_criteria>

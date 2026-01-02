@@ -2,8 +2,10 @@
 
 URLSession patterns for API calls, authentication, caching, and offline support.
 
-<basic_requests>
-<async_await>
+## Basic Requests
+
+## Async/Await
+
 ```swift
 actor NetworkService {
     private let session: URLSession
@@ -48,9 +50,9 @@ enum NetworkError: Error {
     case decodingError(Error)
 }
 ```
-</async_await>
 
-<request_building>
+### Request Building
+
 ```swift
 struct Endpoint {
     let path: String
@@ -105,11 +107,11 @@ extension Endpoint {
     }
 }
 ```
-</request_building>
-</basic_requests>
 
-<authentication>
-<bearer_token>
+## Authentication
+
+### Bearer Token
+
 ```swift
 actor AuthenticatedNetworkService {
     private let session: URLSession
@@ -152,9 +154,9 @@ actor AuthenticatedNetworkService {
     }
 }
 ```
-</bearer_token>
 
-<oauth_refresh>
+### OAuth Refresh
+
 ```swift
 actor OAuthService {
     private var accessToken: String?
@@ -203,11 +205,11 @@ actor OAuthService {
     }
 }
 ```
-</oauth_refresh>
-</authentication>
 
-<caching>
-<urlcache>
+## Caching
+
+### URLCache
+
 ```swift
 // Configure cache in URLSession
 let config = URLSessionConfiguration.default
@@ -220,9 +222,9 @@ config.requestCachePolicy = .returnCacheDataElseLoad
 
 let session = URLSession(configuration: config)
 ```
-</urlcache>
 
-<custom_cache>
+### Custom Cache
+
 ```swift
 actor ResponseCache {
     private var cache: [String: CachedResponse] = [:]
@@ -280,10 +282,9 @@ actor CachedNetworkService {
     }
 }
 ```
-</custom_cache>
-</caching>
 
-<offline_support>
+### Offline Support
+
 ```swift
 @Observable
 class OfflineAwareService {
@@ -330,10 +331,11 @@ class OfflineAwareService {
     }
 }
 ```
-</offline_support>
 
-<upload_download>
-<file_upload>
+## Upload/Download
+
+### File Upload
+
 ```swift
 actor UploadService {
     func upload(file: URL, to endpoint: Endpoint) async throws -> UploadResponse {
@@ -367,9 +369,9 @@ actor UploadService {
     }
 }
 ```
-</file_upload>
 
-<file_download>
+### File Download
+
 ```swift
 actor DownloadService {
     func download(from url: URL, to destination: URL) async throws {
@@ -425,10 +427,9 @@ enum DownloadProgress {
     case completed(URL)
 }
 ```
-</file_download>
-</upload_download>
 
-<error_handling>
+## Error Handling
+
 ```swift
 enum NetworkError: LocalizedError {
     case invalidResponse
@@ -489,9 +490,9 @@ func fetchWithRetry<T: Decodable>(
     throw lastError ?? NetworkError.requestFailed
 }
 ```
-</error_handling>
 
-<testing>
+### Testing
+
 ```swift
 // Mock URLProtocol for testing
 class MockURLProtocol: URLProtocol {
@@ -546,4 +547,3 @@ func testFetchProjects() async throws {
     XCTAssertEqual(projects.count, 1)
 }
 ```
-</testing>

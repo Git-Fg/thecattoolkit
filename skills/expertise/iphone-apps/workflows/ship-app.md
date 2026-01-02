@@ -1,12 +1,12 @@
 # Workflow: Ship iOS App
 
-<required_reading>
+## Required Reading
+
 **Read NOW:**
 1. references/app-store.md
 2. references/ci-cd.md
-</required_reading>
 
-<process>
+## Process
 ## Step 1: Pre-Release Checklist
 
 - [ ] Version/build numbers updated
@@ -82,9 +82,8 @@ In App Store Connect:
 - Monitor crash reports
 - Respond to reviews
 - Plan next version
-</process>
 
-<privacy_manifest>
+## Privacy Manifest
 Required since iOS 17. Create `PrivacyInfo.xcprivacy`:
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -109,9 +108,8 @@ Required since iOS 17. Create `PrivacyInfo.xcprivacy`:
 </dict>
 </plist>
 ```
-</privacy_manifest>
 
-<common_rejections>
+## Common Rejections
 | Reason | Fix |
 |--------|-----|
 | Crash on launch | Test on real device, check entitlements |
@@ -119,4 +117,3 @@ Required since iOS 17. Create `PrivacyInfo.xcprivacy`:
 | Broken links | Verify all URLs work |
 | Incomplete metadata | Fill all required fields |
 | Guideline 4.3 (spam) | Differentiate from existing apps |
-</common_rejections>

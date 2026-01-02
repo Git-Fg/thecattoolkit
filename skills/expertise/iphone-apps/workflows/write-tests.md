@@ -1,15 +1,14 @@
 # Workflow: Write and Run Tests
 
-<required_reading>
+## Required Reading
+
 **Read NOW:**
 1. references/testing.md
-</required_reading>
 
-<philosophy>
+## Philosophy
 Tests are documentation that runs. They let the user verify correctness without reading code.
-</philosophy>
 
-<process>
+## Process
 ## Step 1: Understand What to Test
 
 **Claude tests (automated):**
@@ -90,12 +89,10 @@ For new features:
 4. Run → GREEN
 5. Refactor
 6. Repeat
-</process>
 
-<coverage_targets>
+## Coverage Targets
 | Code Type | Target |
 |-----------|--------|
 | Business logic | 80-100% |
 | State management | 70-90% |
 | Views | 0% (manual) |
-</coverage_targets>

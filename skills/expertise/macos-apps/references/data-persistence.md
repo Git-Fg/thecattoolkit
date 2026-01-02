@@ -2,7 +2,8 @@
 
 Patterns for persisting data in macOS apps using SwiftData, Core Data, and file-based storage.
 
-<choosing_persistence>
+### Choosing Persistence
+
 **SwiftData** (macOS 14+): Best for new apps
 - Declarative schema in code
 - Tight SwiftUI integration
@@ -26,10 +27,12 @@ Patterns for persisting data in macOS apps using SwiftData, Core Data, and file-
 
 **Keychain**: Sensitive data only
 - Passwords, tokens, keys
-</choosing_persistence>
 
-<swiftdata>
-<model_definition>
+## SwiftData
+
+
+### Model Definition
+
 ```swift
 import SwiftData
 
@@ -80,9 +83,9 @@ class Task {
     }
 }
 ```
-</model_definition>
 
-<container_setup>
+### Container Setup
+
 ```swift
 @main
 struct MyApp: App {
@@ -123,9 +126,9 @@ struct MyApp: App {
     }
 }
 ```
-</container_setup>
 
-<querying>
+## Querying
+
 ```swift
 struct ProjectListView: View {
     // Basic query
@@ -160,14 +163,15 @@ struct ProjectListView: View {
     }
 }
 ```
-</querying>
 
-<relationship_patterns>
-<critical_rule>
+### Relationship Patterns
+
+### Critical Rule
+
 **When adding items to relationships, set the inverse relationship property, then insert into context.** Don't manually append to arrays.
-</critical_rule>
 
-<adding_to_relationships>
+### Adding To Relationships
+
 ```swift
 // CORRECT: Set inverse, then insert
 func addCard(to column: Column, title: String) {
@@ -184,9 +188,9 @@ func addCardWrong(to column: Column, title: String) {
     modelContext.insert(card)
 }
 ```
-</adding_to_relationships>
 
-<when_to_insert>
+### When to Insert
+
 **Always call `modelContext.insert()` for new objects.** SwiftData needs this to track the object.
 
 ```swift
@@ -202,9 +206,9 @@ existingCard.title = "Updated"  // SwiftData tracks this automatically
 card.column = newColumn  // Just update the relationship
 // No insert needed for existing objects
 ```
-</when_to_insert>
 
-<relationship_definition>
+### Relationship Definition
+
 ```swift
 @Model
 class Column {
@@ -235,9 +239,9 @@ class Card {
     }
 }
 ```
-</relationship_definition>
 
-<common_pitfalls>
+### Common Pitfalls
+
 **Pitfall 1: Not setting inverse relationship**
 ```swift
 // WRONG - card won't appear in column.cards
@@ -260,9 +264,9 @@ let card = Card(title: "New", position: 1.0)
 card.column = column
 // Missing: modelContext.insert(card)
 ```
-</common_pitfalls>
 
-<reordering_items>
+### Reordering Items
+
 ```swift
 // For drag-and-drop reordering within same parent
 func moveCard(_ card: Card, to newPosition: Double) {
@@ -277,10 +281,9 @@ func moveCard(_ card: Card, to newColumn: Column, position: Double) {
     // No insert needed - card already exists
 }
 ```
-</reordering_items>
-</relationship_patterns>
 
-<crud_operations>
+### CRUD Operations
+
 ```swift
 struct ProjectListView: View {
     @Environment(\.modelContext) private var context
@@ -335,9 +338,9 @@ actor DataService {
     }
 }
 ```
-</crud_operations>
 
-<icloud_sync>
+### iCloud Sync
+
 ```swift
 // Enable in ModelConfiguration
 let config = ModelConfiguration(
@@ -355,11 +358,11 @@ struct SyncStatusView: View {
     }
 }
 ```
-</icloud_sync>
-</swiftdata>
 
-<core_data>
-<stack_setup>
+## Core Data
+
+### Stack Setup
+
 ```swift
 class PersistenceController {
     static let shared = PersistenceController()
@@ -392,9 +395,9 @@ class PersistenceController {
     }
 }
 ```
-</stack_setup>
 
-<fetch_request>
+### Fetch Request
+
 ```swift
 struct ProjectListView: View {
     @Environment(\.managedObjectContext) private var context
@@ -412,9 +415,9 @@ struct ProjectListView: View {
     }
 }
 ```
-</fetch_request>
 
-<crud_operations_coredata>
+### CRUD Operations (Core Data)
+
 ```swift
 // Create
 func createProject(name: String) {
@@ -456,11 +459,11 @@ func importProjects(_ data: [ProjectData]) async throws {
     }
 }
 ```
-</crud_operations_coredata>
-</core_data>
 
-<file_based>
-<codable_storage>
+## File-Based
+
+### Codable Storage
+
 ```swift
 struct AppData: Codable {
     var items: [Item]
@@ -491,9 +494,9 @@ class FileStorage {
     }
 }
 ```
-</codable_storage>
 
-<document_storage>
+### Document Storage
+
 For document-based apps, see [document-apps.md](document-apps.md).
 
 ```swift
@@ -519,10 +522,9 @@ struct ProjectDocument: FileDocument {
     }
 }
 ```
-</document_storage>
-</file_based>
 
-<keychain>
+## Keychain
+
 ```swift
 import Security
 
@@ -584,9 +586,9 @@ enum KeychainError: Error {
 let token = "secret-token".data(using: .utf8)!
 try KeychainService.shared.save(key: "api-token", data: token)
 ```
-</keychain>
 
-<user_defaults>
+### User Defaults
+
 ```swift
 // Using @AppStorage
 struct SettingsView: View {
@@ -634,10 +636,11 @@ extension UserDefaults {
     }
 }
 ```
-</user_defaults>
 
-<migration>
-<swiftdata_migration>
+## Migration
+
+### SwiftData Migration
+
 ```swift
 // SwiftData handles lightweight migrations automatically
 // For complex migrations, use VersionedSchema
@@ -687,14 +690,12 @@ enum MyAppMigrationPlan: SchemaMigrationPlan {
     )
 }
 ```
-</swiftdata_migration>
-</migration>
 
-<best_practices>
+## Best Practices
+
 - Use SwiftData for new apps targeting macOS 14+
 - Use background contexts for heavy operations
 - Handle migration explicitly for production apps
 - Don't store large blobs in database (use @Attribute(.externalStorage))
 - Use transactions for multiple related changes
 - Test persistence with in-memory stores
-</best_practices>

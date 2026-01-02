@@ -1,20 +1,19 @@
 # Workflow: Debug an Existing iOS App
 
-<required_reading>
+## Required Reading
+
 **Read these reference files NOW:**
 1. references/cli-observability.md
 2. references/testing.md
-</required_reading>
 
-<philosophy>
+## Philosophy
 Debugging is iterative. Use whatever gets you to root cause fastest:
 - Small app, obvious symptom → read relevant code
 - Large codebase, unclear cause → use tools to narrow down
 - Code looks correct but fails → tools reveal runtime behavior
 - After fixing → tools verify the fix
-</philosophy>
 
-<process>
+## Process
 ## Step 1: Understand the Symptom
 
 Ask:
@@ -77,9 +76,8 @@ xcodebuild build ...
 ## Step 8: Regression Test
 
 Write a test that would catch this bug in future.
-</process>
 
-<common_patterns>
+## Common Patterns
 ## Memory Leaks
 **Cause:** Strong reference cycles in closures
 **Fix:** `[weak self]` capture
@@ -95,9 +93,8 @@ Write a test that would catch this bug in future.
 ## Silent Failures
 **Cause:** Error swallowed, async not awaited
 **Fix:** Add logging, check async chains
-</common_patterns>
 
-<ios_specific_tools>
+## iOS Specific Tools
 ```bash
 # Console output from simulator
 xcrun simctl spawn booted log stream --predicate 'subsystem == "com.company.AppName"'
@@ -112,4 +109,3 @@ xcrun simctl io booted screenshot /tmp/screenshot.png
 # Video recording
 xcrun simctl io booted recordVideo /tmp/video.mp4
 ```
-</ios_specific_tools>

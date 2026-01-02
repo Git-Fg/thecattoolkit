@@ -1,12 +1,11 @@
 # Workflow: Add a Reference to Existing Skill
 
-<required_reading>
+## Required Reading
 **Read these reference files NOW:**
 1. references/recommended-structure.md
 2. references/skill-structure.md
-</required_reading>
 
-<process>
+## Process
 ## Step 1: Select the Skill
 
 ```bash
@@ -85,12 +84,10 @@ For each workflow that should use this reference:
 - [ ] Reference is in SKILL.md reference_index
 - [ ] Relevant workflows have it in required_reading
 - [ ] No broken references
-</process>
 
-<success_criteria>
+## Success Criteria
 Reference addition is complete when:
 - [ ] Reference file created with useful content
 - [ ] Added to reference_index in SKILL.md
 - [ ] Relevant workflows updated to read it
 - [ ] Content is reusable (not workflow-specific)
-</success_criteria>

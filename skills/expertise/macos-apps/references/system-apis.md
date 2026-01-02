@@ -2,8 +2,10 @@
 
 macOS system integration: file system, notifications, services, and automation.
 
-<file_system>
-<standard_directories>
+## File System
+
+### Standard Directories
+
 ```swift
 let fileManager = FileManager.default
 
@@ -23,9 +25,9 @@ let temp = fileManager.temporaryDirectory
 // Create directories
 try? fileManager.createDirectory(at: appFolder, withIntermediateDirectories: true)
 ```
-</standard_directories>
 
-<file_operations>
+### File Operations
+
 ```swift
 // Read
 let data = try Data(contentsOf: fileURL)
@@ -52,9 +54,9 @@ let contents = try fileManager.contentsOfDirectory(
     options: [.skipsHiddenFiles]
 )
 ```
-</file_operations>
 
-<file_monitoring>
+### File Monitoring
+
 ```swift
 import CoreServices
 
@@ -103,9 +105,9 @@ let watcher = FileWatcher(path: "/path/to/watch") {
     print("Files changed!")
 }
 ```
-</file_monitoring>
 
-<security_scoped_bookmarks>
+### Security-Scoped Bookmarks
+
 For sandboxed apps to retain file access:
 
 ```swift
@@ -140,11 +142,11 @@ class BookmarkManager {
     }
 }
 ```
-</security_scoped_bookmarks>
-</file_system>
 
-<notifications>
-<local_notifications>
+## Notifications
+
+### Local Notifications
+
 ```swift
 import UserNotifications
 
@@ -194,9 +196,9 @@ class NotificationService {
     }
 }
 ```
-</local_notifications>
 
-<notification_handling>
+### Notification Handling
+
 ```swift
 class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
@@ -222,10 +224,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     }
 }
 ```
-</notification_handling>
-</notifications>
 
-<launch_at_login>
+## Launch at Login
+
 ```swift
 import ServiceManagement
 
@@ -260,9 +261,9 @@ struct SettingsView: View {
     }
 }
 ```
-</launch_at_login>
 
-<nsworkspace>
+## NSWorkspace
+
 ```swift
 import AppKit
 
@@ -311,9 +312,9 @@ NotificationCenter.default.addObserver(
     }
 }
 ```
-</nsworkspace>
 
-<process_management>
+## Process Management
+
 ```swift
 import Foundation
 
@@ -348,9 +349,9 @@ func isAppRunning(bundleIdentifier: String) -> Bool {
     }
 }
 ```
-</process_management>
 
-<clipboard>
+## Clipboard
+
 ```swift
 import AppKit
 
@@ -398,9 +399,9 @@ class ClipboardMonitor {
     }
 }
 ```
-</clipboard>
 
-<apple_events>
+## Apple Events
+
 ```swift
 import AppKit
 
@@ -448,10 +449,11 @@ func getFinderSelection() -> [URL] {
     return []
 }
 ```
-</apple_events>
 
-<services>
-<providing_services>
+## Services
+
+### Providing Services
+
 ```swift
 // Info.plist
 /*
@@ -505,10 +507,9 @@ func applicationDidFinishLaunching(_ notification: Notification) {
     NSUpdateDynamicServices()
 }
 ```
-</providing_services>
-</services>
 
-<accessibility>
+## Accessibility
+
 ```swift
 import AppKit
 
@@ -529,4 +530,3 @@ let reduceMotion = workspace.accessibilityDisplayShouldReduceMotion
 let reduceTransparency = workspace.accessibilityDisplayShouldReduceTransparency
 let increaseContrast = workspace.accessibilityDisplayShouldIncreaseContrast
 ```
-</accessibility>

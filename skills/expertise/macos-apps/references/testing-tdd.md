@@ -1,8 +1,9 @@
-<overview>
-Test-Driven Development patterns for macOS apps. Write tests first, implement minimal code to pass, refactor while keeping tests green. Covers SwiftData testing, network mocking, @Observable state testing, and UI testing patterns.
-</overview>
+## Overview
 
-<tdd_workflow>
+Test-Driven Development patterns for macOS apps. Write tests first, implement minimal code to pass, refactor while keeping tests green. Covers SwiftData testing, network mocking, @Observable state testing, and UI testing patterns.
+
+## TDD Workflow
+
 Test-Driven Development cycle for macOS apps:
 
 1. **Write failing test** - Specify expected behavior
@@ -13,9 +14,9 @@ Test-Driven Development cycle for macOS apps:
 6. **Run suite** - Ensure no regressions
 
 Repeat for each feature. Keep tests running fast.
-</tdd_workflow>
 
-<test_organization>
+## Test Organization
+
 ```
 MyApp/
 ├── MyApp/
@@ -32,9 +33,9 @@ MyApp/
 ```
 
 Group tests by layer. One test file per production file/class.
-</test_organization>
 
-<testing_swiftdata>
+### Testing SwiftData
+
 SwiftData requires ModelContainer. Create in-memory container for tests:
 
 ```swift
@@ -67,9 +68,9 @@ class ItemTests: XCTestCase {
     }
 }
 ```
-</testing_swiftdata>
 
-<testing_relationships>
+### Testing Relationships
+
 Critical: Test relationship behavior with in-memory container:
 
 ```swift
@@ -93,9 +94,9 @@ func testDeletingParentCascadesToChildren() throws {
     XCTAssertEqual(children.count, 0) // Cascade delete worked
 }
 ```
-</testing_relationships>
 
-<mocking_network>
+### Mocking Network
+
 ```swift
 protocol NetworkSession {
     func data(for request: URLRequest) async throws -> (Data, URLResponse)
@@ -134,9 +135,9 @@ func testFetchItems() async throws {
     XCTAssertEqual(items.first?.name, "Test")
 }
 ```
-</mocking_network>
 
-<testing_observable>
+### Testing @Observable
+
 Test @Observable state changes:
 
 ```swift
@@ -161,9 +162,9 @@ func testSelectionChanges() {
     XCTAssertEqual(appState.selectedItem?.id, item.id)
 }
 ```
-</testing_observable>
 
-<ui_testing>
+## UI Testing
+
 Use XCUITest for critical user flows:
 
 ```swift
@@ -190,9 +191,9 @@ class MyAppUITests: XCTestCase {
 ```
 
 Keep UI tests minimal (slow, brittle). Test critical flows only.
-</ui_testing>
 
-<what_not_to_test>
+## What Not to Test
+
 Don't test:
 - SwiftUI framework itself
 - URLSession (Apple's code)
@@ -203,9 +204,9 @@ Do test:
 - State management
 - Data transformations
 - Service layer with mocks
-</what_not_to_test>
 
-<running_tests>
+## Running Tests
+
 ```bash
 # Run all tests
 xcodebuild test -scheme MyApp -destination 'platform=macOS'
@@ -219,4 +220,3 @@ xcodebuild test -scheme MyApp -destination 'platform=macOS' -only-testing:MyAppU
 # Watch mode
 find . -name "*.swift" | entr xcodebuild test -scheme MyApp -destination 'platform=macOS' -only-testing:MyAppTests
 ```
-</running_tests>

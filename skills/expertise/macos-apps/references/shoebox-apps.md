@@ -2,7 +2,8 @@
 
 Apps with internal database and sidebar navigation (like Notes, Photos, Music).
 
-<when_to_use>
+### When to Use
+
 Use shoebox pattern when:
 - Single library of items (not separate files)
 - No explicit save (auto-save everything)
@@ -13,9 +14,9 @@ Use shoebox pattern when:
 Do NOT use when:
 - Users need to manage individual files
 - Files shared with other apps directly
-</when_to_use>
 
-<basic_structure>
+### Basic Structure
+
 ```swift
 @main
 struct LibraryApp: App {
@@ -51,9 +52,9 @@ struct ContentView: View {
     }
 }
 ```
-</basic_structure>
 
-<data_model>
+### Data Model
+
 ```swift
 import SwiftData
 
@@ -117,9 +118,9 @@ class Tag {
     }
 }
 ```
-</data_model>
 
-<sidebar>
+### Sidebar
+
 ```swift
 struct SidebarView: View {
     @Environment(\.modelContext) private var context
@@ -187,9 +188,9 @@ struct SidebarView: View {
     }
 }
 ```
-</sidebar>
 
-<note_list>
+### Note List
+
 ```swift
 struct NoteListView: View {
     let folder: Folder?
@@ -271,9 +272,9 @@ struct NoteRow: View {
     }
 }
 ```
-</note_list>
 
-<editor>
+### Editor
+
 ```swift
 struct NoteEditorView: View {
     @Bindable var note: Note
@@ -317,9 +318,9 @@ struct NoteEditorView: View {
     }
 }
 ```
-</editor>
 
-<smart_folders>
+### Smart Folders
+
 ```swift
 struct SmartFolderSetup {
     static func createDefaultSmartFolders(context: ModelContext) {
@@ -356,9 +357,9 @@ func notesForSmartFolder(_ folder: Folder) -> [Note] {
     }
 }
 ```
-</smart_folders>
 
-<import_export>
+### Import/Export
+
 ```swift
 struct LibraryCommands: Commands {
     @Environment(\.modelContext) private var context
@@ -420,9 +421,9 @@ struct NoteExport: Codable {
     }
 }
 ```
-</import_export>
 
-<search>
+### Search
+
 ```swift
 struct ContentView: View {
     @State private var searchText = ""
@@ -462,9 +463,9 @@ struct ContentView: View {
     }
 }
 ```
-</search>
 
-<icloud_sync>
+### iCloud Sync
+
 ```swift
 // Configure container for iCloud
 @main
@@ -509,9 +510,9 @@ struct SyncStatusIndicator: View {
     }
 }
 ```
-</icloud_sync>
 
-<best_practices>
+## Best Practices
+
 - Auto-save on every change (no explicit save)
 - Provide import/export for data portability
 - Use sidebar for navigation (folders, tags, smart folders)
@@ -519,4 +520,3 @@ struct SyncStatusIndicator: View {
 - Show modification dates, not explicit "save"
 - Use SwiftData with iCloud for seamless sync
 - Provide trash/restore instead of permanent delete
-</best_practices>

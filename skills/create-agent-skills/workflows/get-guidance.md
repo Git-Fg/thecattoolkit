@@ -1,12 +1,11 @@
 # Workflow: Get Guidance on Skill Design
 
-<required_reading>
+## Required Reading
 **Read these reference files NOW:**
 1. references/core-principles.md
 2. references/recommended-structure.md
-</required_reading>
 
-<process>
+## Process
 ## Step 1: Understand the Problem Space
 
 Ask the user:
@@ -96,9 +95,8 @@ Ask: "Does this structure make sense? Ready to build it?"
 
 If yes → offer to switch to "Create a new skill" workflow
 If no → clarify and iterate
-</process>
 
-<decision_framework>
+## Decision Framework
 ## Quick Decision Framework
 
 | Situation | Recommendation |
@@ -108,9 +106,8 @@ If no → clarify and iterate
 | Complex domain, many patterns | Router + workflows + references |
 | User-triggered, fresh context | Slash command, not skill |
 | One-off task | No skill needed |
-</decision_framework>
 
-<success_criteria>
+## Success Criteria
 Guidance is complete when:
 - [ ] User understands if they need a skill
 - [ ] Structure is recommended and explained
@@ -118,4 +115,3 @@ Guidance is complete when:
 - [ ] References are identified
 - [ ] Essential principles are identified
 - [ ] User is ready to build (or decided not to)
-</success_criteria>

@@ -1,8 +1,7 @@
-<overview>
+## Overview
 Prompt patterns for creating approaches, roadmaps, and strategies that will be consumed by subsequent prompts.
-</overview>
 
-<prompt_template>
+## Prompt Template
 ```xml
 <objective>
 Create a {plan type} for {topic}.
@@ -86,9 +85,9 @@ For plans, emphasize phase breakdown with objectives and assumptions needing val
 ```
 </prompt_template>
 
-<key_principles>
+## Key Principles
 
-<reference_research>
+### Reference Research
 Plans should build on research findings:
 ```xml
 <context>
@@ -100,9 +99,8 @@ Key findings to incorporate:
 - Best practices to follow
 </context>
 ```
-</reference_research>
 
-<prompt_sized_phases>
+### Prompt-Sized Phases
 Each phase should be executable by a single prompt:
 ```xml
 <phase number="1" name="setup-infrastructure">
@@ -114,9 +112,8 @@ Each phase should be executable by a single prompt:
   </tasks>
 </phase>
 ```
-</prompt_sized_phases>
 
-<execution_hints>
+### Execution Hints
 Help the next Claude understand how to proceed:
 ```xml
 <phase number="2" name="implement-jwt">
@@ -127,13 +124,10 @@ Help the next Claude understand how to proceed:
   </execution_notes>
 </phase>
 ```
-</execution_hints>
 
-</key_principles>
+## Plan Types
 
-<plan_types>
-
-<implementation_roadmap>
+### Implementation Roadmap
 For breaking down how to build something:
 
 ```xml
@@ -156,9 +150,8 @@ Research: @.prompts/001-auth-research/auth-research.md
 - Consider rollback points
 </planning_requirements>
 ```
-</implementation_roadmap>
 
-<decision_framework>
+### Decision Framework
 For choosing between options:
 
 ```xml
@@ -205,9 +198,8 @@ Structure as decision framework:
 ```
 </output_structure>
 ```
-</decision_framework>
 
-<process_definition>
+### Process Definition
 For defining workflows or methodologies:
 
 ```xml
@@ -258,10 +250,6 @@ Structure as process:
 ```
 </output_structure>
 ```
-</process_definition>
 
-</plan_types>
-
-<metadata_guidelines>
+## Metadata Guidelines
 Load: [metadata-guidelines.md](metadata-guidelines.md)
-</metadata_guidelines>

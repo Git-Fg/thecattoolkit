@@ -28,7 +28,8 @@ Add this entry to `.planning/MILESTONES.md` when completing a milestone:
 ---
 ```
 
-<structure>
+## Structure
+
 If MILESTONES.md doesn't exist, create it with header:
 
 ```markdown
@@ -36,9 +37,9 @@ If MILESTONES.md doesn't exist, create it with header:
 
 [Entries in reverse chronological order - newest first]
 ```
-</structure>
 
-<guidelines>
+## Guidelines
+
 **When to create milestones:**
 - Initial v1.0 MVP shipped
 - Major version releases (v2.0, v3.0)
@@ -59,9 +60,9 @@ If MILESTONES.md doesn't exist, create it with header:
 **Git range format:**
 - First commit of milestone → last commit of milestone
 - Example: `feat(01-01)` → `feat(04-01)` for phases 1-4
-</guidelines>
 
-<example>
+## Example
+
 ```markdown
 # Project Milestones: WeatherBar
 
@@ -112,4 +113,3 @@ If MILESTONES.md doesn't exist, create it with header:
 
 **What's next:** Security audit and hardening for v1.1
 ```
-</example>

@@ -1,10 +1,9 @@
-<overview>
+## Overview
 Guidelines for determining prompt complexity, tool usage, and optimization patterns.
-</overview>
 
-<complexity_assessment>
+## Complexity Assessment
 
-<simple_prompts>
+### Simple Prompts
 Single focused task, clear outcome:
 
 **Indicators:**
@@ -18,9 +17,8 @@ Single focused task, clear outcome:
 - Minimal context
 - Direct requirements
 - Simple verification
-</simple_prompts>
 
-<complex_prompts>
+### Complex Prompts
 Multi-step tasks, multiple considerations:
 
 **Indicators:**
@@ -35,22 +33,18 @@ Multi-step tasks, multiple considerations:
 - Explicit implementation guidance
 - Comprehensive verification
 - Extended thinking triggers
-</complex_prompts>
 
-</complexity_assessment>
+## Extended Thinking Triggers
 
-<extended_thinking_triggers>
-
-<when_to_include>
+### When to Include
 Use these phrases to activate deeper reasoning in complex prompts:
 - Complex architectural decisions
 - Multiple valid approaches to evaluate
 - Security-sensitive implementations
 - Performance optimization tasks
 - Trade-off analysis
-</when_to_include>
 
-<trigger_phrases>
+### Trigger Phrases
 ```
 "Thoroughly analyze..."
 "Consider multiple approaches..."
@@ -58,9 +52,8 @@ Use these phrases to activate deeper reasoning in complex prompts:
 "Explore various solutions before..."
 "Carefully evaluate trade-offs..."
 ```
-</trigger_phrases>
 
-<example_usage>
+### Example Usage
 ```xml
 <requirements>
 Thoroughly analyze the authentication options and consider multiple
@@ -68,20 +61,16 @@ approaches before selecting an implementation. Deeply consider the
 security implications of each choice.
 </requirements>
 ```
-</example_usage>
 
-<when_not_to_use>
+### When Not to Use
 - Simple, straightforward tasks
 - Tasks with clear single approach
 - Following established patterns
 - Basic CRUD operations
-</when_not_to_use>
 
-</extended_thinking_triggers>
+## Parallel Tool Calling
 
-<parallel_tool_calling>
-
-<when_to_include>
+### When to Include
 ```xml
 <efficiency>
 For maximum efficiency, invoke all independent tool operations
@@ -90,34 +79,28 @@ searches, and API calls that don't depend on each other should
 run in parallel.
 </efficiency>
 ```
-</when_to_include>
 
-<applicable_scenarios>
+### Applicable Scenarios
 - Reading multiple files for context
 - Running multiple searches
 - Fetching from multiple sources
 - Creating multiple independent files
-</applicable_scenarios>
 
-</parallel_tool_calling>
+## Context Loading
 
-<context_loading>
-
-<when_to_load>
+### When to Load
 - Modifying existing code
 - Following established patterns
 - Integrating with current systems
 - Building on research/plan outputs
-</when_to_load>
 
-<when_not_to_load>
+### When Not to Load
 - Greenfield features
 - Standalone utilities
 - Pure research tasks
 - Standard patterns without customization
-</when_not_to_load>
 
-<loading_patterns>
+### Loading Patterns
 ```xml
 <context>
 <!-- Chained artifacts -->
@@ -132,13 +115,10 @@ Types to extend: @src/types/auth.ts
 Similar feature: @src/features/payments/
 </context>
 ```
-</loading_patterns>
 
-</context_loading>
+## Output Optimization
 
-<output_optimization>
-
-<streaming_writes>
+### Streaming Writes
 For research and plan outputs that may be large:
 
 **Instruct incremental writing:**
@@ -167,9 +147,8 @@ For research and plan outputs that may be large:
 **When NOT to use:**
 - Do prompts (code generation is different workflow)
 - Simple tasks with known small outputs
-</streaming_writes>
 
-<claude_to_claude>
+### Claude-to-Claude
 For Claude-to-Claude consumption:
 
 **Use heavy XML structure:**
@@ -199,60 +178,50 @@ For Claude-to-Claude consumption:
   <action priority="medium">Validate rate limits in sandbox</action>
 </next_actions>
 ```
-</claude_to_claude>
 
-<human_consumption>
+### Human Consumption
 For human consumption:
 - Clear headings
 - Bullet points for scanning
 - Code examples with comments
 - Summary at top
-</human_consumption>
 
-</output_optimization>
+## Prompt Depth Guidelines
 
-<prompt_depth_guidelines>
-
-<minimal>
+### Minimal
 Simple Do prompts:
 - 20-40 lines
 - Basic objective, requirements, output, verification
 - No extended thinking
 - No parallel tool hints
-</minimal>
 
-<standard>
+### Standard
 Typical task prompts:
 - 40-80 lines
 - Full objective with context
 - Clear requirements and implementation notes
 - Standard verification
-</standard>
 
-<comprehensive>
+### Comprehensive
 Complex task prompts:
 - 80-150 lines
 - Extended thinking triggers
 - Parallel tool calling hints
 - Multiple verification steps
 - Detailed success criteria
-</comprehensive>
 
-</prompt_depth_guidelines>
-
-<why_explanations>
+## Why Explanations
 
 Always explain why constraints matter:
 
-<bad_example>
+### Bad Example
 ```xml
 <requirements>
 Never store tokens in localStorage.
 </requirements>
 ```
-</bad_example>
 
-<good_example>
+### Good Example
 ```xml
 <requirements>
 Never store tokens in localStorage - it's accessible to any
@@ -260,15 +229,12 @@ JavaScript on the page, making it vulnerable to XSS attacks.
 Use httpOnly cookies instead.
 </requirements>
 ```
-</good_example>
 
 This helps the executing Claude make good decisions when facing edge cases.
 
-</why_explanations>
+## Verification Patterns
 
-<verification_patterns>
-
-<for_code>
+### For Code
 ```xml
 <verification>
 1. Run test suite: `npm test`
@@ -277,9 +243,8 @@ This helps the executing Claude make good decisions when facing edge cases.
 4. Manual test: [specific flow to test]
 </verification>
 ```
-</for_code>
 
-<for_documents>
+### For Documents
 ```xml
 <verification>
 1. Validate structure: [check required sections]
@@ -287,9 +252,8 @@ This helps the executing Claude make good decisions when facing edge cases.
 3. Review completeness: [check against requirements]
 </verification>
 ```
-</for_documents>
 
-<for_research>
+### For Research
 ```xml
 <verification>
 1. Sources are current (2024-2025)
@@ -298,9 +262,8 @@ This helps the executing Claude make good decisions when facing edge cases.
 4. Actionable recommendations included
 </verification>
 ```
-</for_research>
 
-<for_plans>
+### For Plans
 ```xml
 <verification>
 1. Phases are sequential and logical
@@ -309,34 +272,26 @@ This helps the executing Claude make good decisions when facing edge cases.
 4. Metadata captures assumptions
 </verification>
 ```
-</for_plans>
 
-</verification_patterns>
+## Chain Optimization
 
-<chain_optimization>
-
-<research_prompts>
+### Research Prompts
 Research prompts should:
 - Structure findings for easy extraction
 - Include code examples for implementation
 - Clearly mark confidence levels
 - List explicit next actions
-</research_prompts>
 
-<plan_prompts>
+### Plan Prompts
 Plan prompts should:
 - Reference research explicitly
 - Break phases into prompt-sized chunks
 - Include execution hints per phase
 - Capture dependencies between phases
-</plan_prompts>
 
-<do_prompts>
+### Do Prompts
 Do prompts should:
 - Reference both research and plan
 - Follow plan phases explicitly
 - Verify against research recommendations
 - Update plan status when done
-</do_prompts>
-
-</chain_optimization>

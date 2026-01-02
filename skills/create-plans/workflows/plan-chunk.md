@@ -1,17 +1,15 @@
 # Workflow: Plan Next Chunk
 
-<required_reading>
+## Required Reading
 **Read the current phase's PLAN.md**
-</required_reading>
 
-<purpose>
+## Purpose
 Identify the immediate next 1-3 tasks to work on. This is for when you want
 to focus on "what's next" without replanning the whole phase.
-</purpose>
 
-<process>
+## Process
 
-<step name="find_current_position">
+### Step: Find Current Position
 Read the phase plan:
 ```bash
 cat .planning/phases/XX-current/PLAN.md
@@ -21,9 +19,8 @@ Identify:
 - Which tasks are complete (marked or inferred)
 - Which task is next
 - Dependencies between tasks
-</step>
 
-<step name="identify_chunk">
+### Step: Identify Chunk
 Select 1-3 tasks that:
 - Are next in sequence
 - Have dependencies met
@@ -40,19 +37,15 @@ Next chunk:
 
 Ready to work on these?
 ```
-</step>
 
-<step name="offer_execution">
+### Step: Offer Execution
 Options:
 1. **Start working** - Begin with Task N
 2. **Generate prompt** - Create meta-prompt for this chunk
 3. **See full plan** - Review all remaining tasks
 4. **Different chunk** - Pick different tasks
-</step>
 
-</process>
-
-<chunk_sizing>
+## Chunk Sizing
 Good chunks:
 - 1-3 tasks
 - Can complete in one session
@@ -60,11 +53,9 @@ Good chunks:
 
 If user asks "what's next" - give them ONE task.
 If user asks "plan my session" - give them 2-3 tasks.
-</chunk_sizing>
 
-<success_criteria>
+## Success Criteria
 Chunk planning is complete when:
 - [ ] Current position identified
 - [ ] Next 1-3 tasks selected
 - [ ] User knows what to work on
-</success_criteria>

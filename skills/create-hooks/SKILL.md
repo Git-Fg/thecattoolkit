@@ -50,7 +50,8 @@ This hook:
 - Executes a `command` (not an LLM prompt)
 - Logs command + description to a file
 
-<hook_types>
+## Hook Types
+
 | Event | When it fires | Can block? |
 |-------|---------------|------------|
 | **PreToolUse** | Before tool execution | Yes |
@@ -64,10 +65,11 @@ This hook:
 | **Notification** | Claude needs input | No |
 
 Blocking hooks can return `"decision": "block"` to prevent the action. See [references/hook-types.md](references/hook-types.md) for detailed use cases.
-</hook_types>
 
-<hook_anatomy>
-<hook_type name="command">
+## Hook Anatomy
+
+### Command Hook
+
 **Type**: Executes a shell command
 
 **Use when**:
@@ -86,9 +88,9 @@ Blocking hooks can return `"decision": "block"` to prevent the action. See [refe
   "timeout": 30000
 }
 ```
-</hook_type>
 
-<hook_type name="prompt">
+### Prompt Hook
+
 **Type**: LLM evaluates a prompt
 
 **Use when**:
@@ -106,8 +108,6 @@ Blocking hooks can return `"decision": "block"` to prevent the action. See [refe
   "prompt": "Evaluate if this command is safe: $ARGUMENTS\n\nReturn JSON: {\"decision\": \"approve\" or \"block\", \"reason\": \"explanation\"}"
 }
 ```
-</hook_type>
-</hook_anatomy>
 
 ## Matchers
 

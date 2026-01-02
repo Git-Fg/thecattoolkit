@@ -1,8 +1,7 @@
-<overview>
-Modern SwiftUI patterns for macOS apps. Covers @Bindable usage, navigation (NavigationSplitView, NavigationStack), windows, toolbars, menus, lists/tables, forms, sheets/alerts, drag & drop, focus management, and keyboard shortcuts.
-</overview>
+## Overview
 
-<sections>
+Modern SwiftUI patterns for macOS apps. Covers @Bindable usage, navigation (NavigationSplitView, NavigationStack), windows, toolbars, menus, lists/tables, forms, sheets/alerts, drag & drop, focus management, and keyboard shortcuts.
+
 Reference sections:
 - observation_rules - @Bindable, @Observable, environment patterns
 - navigation - NavigationSplitView, NavigationStack, drill-down
@@ -15,10 +14,11 @@ Reference sections:
 - drag_and_drop - Draggable items, drop targets, reorderable lists
 - focus_and_keyboard - Focus state, keyboard shortcuts
 - previews - Preview patterns
-</sections>
 
-<observation_rules>
-<passing_model_objects>
+## Observation Rules
+
+### Passing Model Objects
+
 **Critical rule for SwiftData @Model objects**: Use `@Bindable` when the child view needs to observe property changes or create bindings. Use `let` only for static display.
 
 ```swift
@@ -43,9 +43,9 @@ struct CardViewBroken: View {
     }
 }
 ```
-</passing_model_objects>
 
-<when_to_use_bindable>
+### When to Use @Bindable
+
 **Use `@Bindable` when:**
 - Passing @Model objects to child views that observe changes
 - Creating bindings to model properties ($model.property)
@@ -80,9 +80,9 @@ struct BadgeView: View {
     }
 }
 ```
-</when_to_use_bindable>
 
-<environment_to_bindable>
+### Environment to @Bindable
+
 When accessing @Observable from environment, create local @Bindable for bindings:
 
 ```swift
@@ -99,11 +99,11 @@ struct SidebarView: View {
     }
 }
 ```
-</environment_to_bindable>
-</observation_rules>
 
-<navigation>
-<navigation_split_view>
+## Navigation
+
+### NavigationSplitView
+
 Standard three-column layout:
 
 ```swift
@@ -134,9 +134,9 @@ struct ContentView: View {
     }
 }
 ```
-</navigation_split_view>
 
-<two_column_layout>
+### Two Column Layout
+
 ```swift
 struct ContentView: View {
     @State private var selectedItem: Item?
@@ -155,9 +155,9 @@ struct ContentView: View {
     }
 }
 ```
-</two_column_layout>
 
-<navigation_stack>
+### NavigationStack
+
 For drill-down navigation:
 
 ```swift
@@ -177,11 +177,11 @@ struct BrowseView: View {
     }
 }
 ```
-</navigation_stack>
-</navigation>
 
-<windows>
-<multiple_window_types>
+## Windows
+
+### Multiple Window Types
+
 ```swift
 @main
 struct MyApp: App {
@@ -216,9 +216,9 @@ struct MyApp: App {
     }
 }
 ```
-</multiple_window_types>
 
-<window_control>
+### Window Control
+
 Open windows programmatically:
 
 ```swift
@@ -232,9 +232,9 @@ struct ContentView: View {
     }
 }
 ```
-</window_control>
 
-<document_group>
+### DocumentGroup
+
 For document-based apps:
 
 ```swift
@@ -250,9 +250,9 @@ struct MyApp: App {
     }
 }
 ```
-</document_group>
 
-<debugging_swiftui_appkit>
+### Debugging SwiftUI/AppKit
+
 **Meta-principle: Declarative overrides Imperative**
 
 When SwiftUI wraps AppKit (via NSHostingView, NSViewRepresentable, etc.), SwiftUI's declarative layer manages the AppKit objects underneath. Your AppKit code may be "correct" but irrelevant if SwiftUI is controlling that concern.
@@ -277,11 +277,11 @@ When SwiftUI wraps AppKit (via NSHostingView, NSViewRepresentable, etc.), SwiftU
 
 **When to actually use AppKit:**
 Only when SwiftUI doesn't provide the capability (custom drawing, specialized controls, backward compatibility). Not as a workaround when SwiftUI "doesn't work" - you probably haven't found SwiftUI's way yet.
-</debugging_swiftui_appkit>
-</windows>
 
-<toolbar>
-<toolbar_content>
+## Toolbar
+
+### Toolbar Content
+
 ```swift
 struct ContentView: View {
     @State private var searchText = ""
@@ -320,9 +320,9 @@ struct ContentView: View {
     }
 }
 ```
-</toolbar_content>
 
-<customizable_toolbar>
+### Customizable Toolbar
+
 ```swift
 struct ContentView: View {
     var body: some View {
@@ -346,11 +346,11 @@ struct ContentView: View {
     }
 }
 ```
-</customizable_toolbar>
-</toolbar>
 
-<menus>
-<app_commands>
+## Menus
+
+### App Commands
+
 ```swift
 struct AppCommands: Commands {
     @Environment(\.openWindow) private var openWindow
@@ -394,9 +394,9 @@ struct AppCommands: Commands {
     }
 }
 ```
-</app_commands>
 
-<context_menus>
+### Context Menus
+
 ```swift
 struct ItemRow: View {
     let item: Item
@@ -430,11 +430,11 @@ struct ItemRow: View {
     }
 }
 ```
-</context_menus>
-</menus>
 
-<lists_and_tables>
-<list_selection>
+## Lists and Tables
+
+### List Selection
+
 ```swift
 struct SidebarView: View {
     @Environment(AppState.self) private var appState
@@ -450,9 +450,9 @@ struct SidebarView: View {
     }
 }
 ```
-</list_selection>
 
-<table>
+### Table
+
 ```swift
 struct ItemTableView: View {
     @Environment(AppState.self) private var appState
@@ -482,9 +482,9 @@ struct ItemTableView: View {
     }
 }
 ```
-</table>
 
-<outline_group>
+### OutlineGroup
+
 For hierarchical data:
 
 ```swift
@@ -507,11 +507,11 @@ struct TreeItem: Identifiable {
     var children: [TreeItem]?
 }
 ```
-</outline_group>
-</lists_and_tables>
 
-<forms>
-<settings_form>
+## Forms
+
+### Settings Form
+
 ```swift
 struct SettingsView: View {
     @AppStorage("autoSave") private var autoSave = true
@@ -543,9 +543,9 @@ struct SettingsView: View {
     }
 }
 ```
-</settings_form>
 
-<validation>
+## Validation
+
 ```swift
 struct EditItemView: View {
     @Binding var item: Item
@@ -567,11 +567,11 @@ struct EditItemView: View {
     }
 }
 ```
-</validation>
-</forms>
 
-<sheets_and_alerts>
-<sheet>
+## Sheets and Alerts
+
+### Sheet
+
 ```swift
 struct ContentView: View {
     @State private var showingSheet = false
@@ -588,9 +588,9 @@ struct ContentView: View {
     }
 }
 ```
-</sheet>
 
-<confirmation_dialog>
+### Confirmation Dialog
+
 ```swift
 struct ItemRow: View {
     let item: Item
@@ -612,9 +612,9 @@ struct ItemRow: View {
     }
 }
 ```
-</confirmation_dialog>
 
-<file_dialogs>
+### File Dialogs
+
 ```swift
 struct ContentView: View {
     @State private var showingImporter = false
@@ -652,11 +652,11 @@ struct ContentView: View {
     }
 }
 ```
-</file_dialogs>
-</sheets_and_alerts>
 
-<drag_and_drop>
-<draggable>
+## Drag and Drop
+
+### Draggable
+
 ```swift
 struct DraggableItem: View {
     let item: Item
@@ -673,9 +673,9 @@ struct DraggableItem: View {
     }
 }
 ```
-</draggable>
 
-<drop_target>
+### Drop Target
+
 ```swift
 struct DropTargetView: View {
     @State private var isTargeted = false
@@ -694,9 +694,9 @@ struct DropTargetView: View {
     }
 }
 ```
-</drop_target>
 
-<reorderable_list>
+### Reorderable List
+
 ```swift
 struct ReorderableList: View {
     @State private var items = ["A", "B", "C", "D"]
@@ -713,11 +713,11 @@ struct ReorderableList: View {
     }
 }
 ```
-</reorderable_list>
-</drag_and_drop>
 
-<focus_and_keyboard>
-<focus_state>
+## Focus and Keyboard
+
+### Focus State
+
 ```swift
 struct EditForm: View {
     @State private var name = ""
@@ -752,14 +752,15 @@ struct EditForm: View {
     }
 }
 ```
-</focus_state>
 
-<keyboard_shortcuts>
+### Keyboard Shortcuts
+
 **CRITICAL: Menu commands required for reliable keyboard shortcuts**
 
 `.onKeyPress()` handlers ALONE are unreliable in SwiftUI. You MUST define menu commands with `.keyboardShortcut()` for keyboard shortcuts to work properly.
 
-<correct_pattern>
+#### Correct Pattern
+
 **Step 1: Define menu command in App or WindowGroup:**
 
 ```swift
@@ -836,9 +837,9 @@ struct ContentView: View {
 - System menus (Edit, View, etc.) can intercept keys before `.onKeyPress()` fires
 - Menu commands show shortcuts in the menu bar for discoverability
 
-</correct_pattern>
 
-<onKeyPress_usage>
+#### .onKeyPress() Usage
+
 **When to use `.onKeyPress()`:**
 
 Use for keyboard **input** (typing, arrow keys for navigation):
@@ -869,11 +870,9 @@ struct ContentView: View {
 ```
 
 **Always check focus state** to prevent interfering with text input.
-</onKeyPress_usage>
-</keyboard_shortcuts>
-</focus_and_keyboard>
 
-<previews>
+## Previews
+
 ```swift
 #Preview("Default") {
     ContentView()
@@ -902,4 +901,3 @@ struct ContentView: View {
         .environment(AppState())
 }
 ```
-</previews>

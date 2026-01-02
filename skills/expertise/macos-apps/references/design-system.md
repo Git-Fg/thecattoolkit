@@ -2,7 +2,8 @@
 
 Colors, typography, spacing, and visual patterns for professional macOS apps.
 
-<semantic_colors>
+### Semantic Colors
+
 ```swift
 import SwiftUI
 
@@ -33,9 +34,9 @@ Text("Hello")
     .foregroundStyle(.primaryText)
     .background(.background)
 ```
-</semantic_colors>
 
-<custom_colors>
+### Custom Colors
+
 ```swift
 extension Color {
     // Define once, use everywhere
@@ -66,9 +67,9 @@ extension Color {
 }
 */
 ```
-</custom_colors>
 
-<typography>
+### Typography
+
 ```swift
 extension Font {
     // System fonts
@@ -100,9 +101,9 @@ Text("Body text")
 Text("let x = 42")
     .font(.codeMedium)
 ```
-</typography>
 
-<spacing>
+### Spacing
+
 ```swift
 enum Spacing {
     static let xxxs: CGFloat = 2
@@ -128,9 +129,9 @@ HStack(spacing: Spacing.sm) {
     Text("Favorite")
 }
 ```
-</spacing>
 
-<corner_radius>
+### Corner Radius
+
 ```swift
 enum CornerRadius {
     static let small: CGFloat = 4
@@ -148,9 +149,9 @@ Text("Tag")
     .padding(.vertical, Spacing.xxs)
     .background(.controlBackground, in: RoundedRectangle(cornerRadius: CornerRadius.small))
 ```
-</corner_radius>
 
-<shadows>
+## Shadows
+
 ```swift
 extension View {
     func cardShadow() -> some View {
@@ -170,10 +171,11 @@ extension View {
 CardView()
     .cardShadow()
 ```
-</shadows>
 
-<component_styles>
-<buttons>
+### Component Styles
+
+## Buttons
+
 ```swift
 struct PrimaryButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
@@ -212,9 +214,9 @@ Button("Save") { save() }
 Button("Cancel") { cancel() }
     .buttonStyle(SecondaryButtonStyle())
 ```
-</buttons>
 
-<cards>
+## Cards
+
 ```swift
 struct CardStyle: ViewModifier {
     func body(content: Content) -> some View {
@@ -241,9 +243,9 @@ VStack {
 }
 .cardStyle()
 ```
-</cards>
 
-<list_rows>
+### List Rows
+
 ```swift
 struct ItemRow: View {
     let item: Item
@@ -279,9 +281,9 @@ struct ItemRow: View {
     }
 }
 ```
-</list_rows>
 
-<text_fields>
+### Text Fields
+
 ```swift
 struct StyledTextField: View {
     let placeholder: String
@@ -303,10 +305,9 @@ struct StyledTextField: View {
     }
 }
 ```
-</text_fields>
-</component_styles>
 
-<icons>
+## Icons
+
 ```swift
 // Use SF Symbols
 Image(systemName: "doc.text")
@@ -326,9 +327,9 @@ Image(systemName: "checkmark.circle.fill")
 Image(systemName: "externaldrive.badge.checkmark")
     .symbolRenderingMode(.multicolor)
 ```
-</icons>
 
-<animations>
+### Animations
+
 ```swift
 // Standard durations
 enum AnimationDuration {
@@ -363,9 +364,9 @@ struct AnimationSettings {
     }
 }
 ```
-</animations>
 
-<dark_mode>
+### Dark Mode
+
 ```swift
 // Automatic adaptation
 struct ContentView: View {
@@ -391,9 +392,9 @@ struct ContentView: View {
         .preferredColorScheme(.dark)
 }
 ```
-</dark_mode>
 
-<accessibility>
+## Accessibility
+
 ```swift
 // Dynamic type support
 Text("Title")
@@ -417,4 +418,3 @@ VStack {
 }
 .background(reduceTransparency ? .background : .background.opacity(0.8))
 ```
-</accessibility>

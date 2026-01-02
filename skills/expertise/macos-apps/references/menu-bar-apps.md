@@ -2,7 +2,8 @@
 
 Status bar utilities with quick access and minimal UI.
 
-<when_to_use>
+### When to Use
+
 Use menu bar pattern when:
 - Quick actions or status display
 - Background functionality
@@ -10,9 +11,7 @@ Use menu bar pattern when:
 - System-level utilities
 
 Examples: Rectangle, Bartender, system utilities
-</when_to_use>
 
-<basic_setup>
 ```swift
 import SwiftUI
 
@@ -56,10 +55,11 @@ struct MenuContent: View {
     }
 }
 ```
-</basic_setup>
 
-<menu_styles>
-<window_style>
+### Menu Styles
+
+### Window Style
+
 Rich UI with any SwiftUI content:
 
 ```swift
@@ -100,9 +100,9 @@ struct WindowStyleContent: View {
     }
 }
 ```
-</window_style>
 
-<menu_style>
+### Menu Style
+
 Standard menu appearance:
 
 ```swift
@@ -129,10 +129,9 @@ MenuBarExtra("MyApp", systemImage: "star.fill") {
 }
 .menuBarExtraStyle(.menu)
 ```
-</menu_style>
-</menu_styles>
 
-<dynamic_icon>
+### Dynamic Icon
+
 ```swift
 @main
 struct MenuBarApp: App {
@@ -165,9 +164,9 @@ MenuBarExtra {
     Label("\(count)", systemImage: "bell.fill")
 }
 ```
-</dynamic_icon>
 
-<background_only>
+### Background Only
+
 App without dock icon (menu bar only):
 
 ```swift
@@ -200,9 +199,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 }
 ```
-</background_only>
 
-<global_shortcuts>
+### Global Shortcuts
+
 ```swift
 import Carbon
 
@@ -256,9 +255,9 @@ ShortcutManager.shared.register(
     // Toggle menu bar app
 }
 ```
-</global_shortcuts>
 
-<with_main_window>
+### With Main Window
+
 Menu bar app with optional main window:
 
 ```swift
@@ -298,9 +297,9 @@ struct MenuContent: View {
     }
 }
 ```
-</with_main_window>
 
-<persistent_state>
+### Persistent State
+
 ```swift
 struct MenuContent: View {
     @AppStorage("isEnabled") private var isEnabled = true
@@ -323,9 +322,9 @@ struct MenuContent: View {
     }
 }
 ```
-</persistent_state>
 
-<popover_from_menu_bar>
+### Popover From Menu Bar
+
 Custom popover positioning:
 
 ```swift
@@ -355,9 +354,9 @@ class PopoverManager: NSObject {
     }
 }
 ```
-</popover_from_menu_bar>
 
-<timer_background_task>
+### Timer Background Task
+
 ```swift
 @Observable
 class BackgroundService {
@@ -410,9 +409,9 @@ struct MenuContent: View {
     }
 }
 ```
-</timer_background_task>
 
-<best_practices>
+## Best Practices
+
 - Keep menu content minimal and fast
 - Use .window style for rich UI, .menu for simple actions
 - Provide keyboard shortcuts for common actions
@@ -421,4 +420,3 @@ struct MenuContent: View {
 - Use background-only (LSUIElement) when appropriate
 - Provide settings window for configuration
 - Show status in icon when possible (dynamic icon)
-</best_practices>

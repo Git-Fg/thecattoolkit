@@ -2,21 +2,22 @@
 description: Analyze what you give up by choosing this option
 ---
 
-<objective>
+# Objective
+
 Apply opportunity cost analysis to the current discussion.
 
 Every yes is a no to something else. What's the true cost of this choice?
-</objective>
 
-<process>
+# Process
+
 1. State the choice being considered
 2. List what resources it consumes (time, money, energy, attention)
 3. Identify the best alternative use of those same resources
 4. Compare value of chosen option vs. best alternative
 5. Determine if the tradeoff is worth it
-</process>
 
-<output_format>
+# Output Format
+
 **Choice:** [what you're considering doing]
 
 **Resources Required:**
@@ -35,12 +36,11 @@ Choosing this means NOT doing [best alternative], which would have provided [val
 
 **Verdict:**
 [Is the chosen option worth more than the best alternative?]
-</output_format>
 
-<success_criteria>
+# Success Criteria
+
 - Makes hidden costs explicit
 - Compares to best alternative, not just any alternative
 - Accounts for all resource types (not just money)
 - Reveals when "affordable" things are actually expensive
 - Enables genuine comparison of value
-</success_criteria>

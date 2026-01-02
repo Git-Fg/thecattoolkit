@@ -1,15 +1,19 @@
-<overview>
+# Use XML Tags
+
+## Overview
+
 Skills use pure XML structure for consistent parsing, efficient token usage, and improved Claude performance. This reference defines the required and conditional XML tags for skill authoring, along with intelligence rules for tag selection.
-</overview>
 
-<critical_rule>
+## Critical Rule
+
 **Remove ALL markdown headings (#, ##, ###) from skill body content.** Replace with semantic XML tags. Keep markdown formatting WITHIN content (bold, italic, lists, code blocks, links).
-</critical_rule>
 
-<required_tags>
+## Required Tags
+
 Every skill MUST have these three tags:
 
-<tag name="objective">
+### Objective
+
 **Purpose**: What the skill does and why it matters. Sets context and scope.
 
 **Content**: 1-3 paragraphs explaining the skill's purpose, domain, and value proposition.
@@ -20,9 +24,9 @@ Every skill MUST have these three tags:
 Extract text and tables from PDF files, fill forms, and merge documents using Python libraries. This skill provides patterns for common PDF operations without requiring external services or APIs.
 </objective>
 ```
-</tag>
 
-<tag name="quick_start">
+### Quick Start
+
 **Purpose**: Immediate, actionable guidance. Gets Claude started quickly without reading advanced sections.
 
 **Content**: Minimal working example, essential commands, or basic usage pattern.
@@ -39,9 +43,9 @@ with pdfplumber.open("file.pdf") as pdf:
 ```
 </quick_start>
 ```
-</tag>
 
-<tag name="success_criteria">
+### Success Criteria
+
 **Purpose**: How to know the task worked. Defines completion criteria.
 
 **Alternative name**: `<when_successful>` (use whichever fits better)
@@ -60,13 +64,13 @@ A well-structured skill has:
 - Real-world testing and iteration based on observed behavior
 </success_criteria>
 ```
-</tag>
-</required_tags>
 
-<conditional_tags>
+## Conditional Tags
+
 Add these tags based on skill complexity and domain requirements:
 
-<tag name="context">
+### Context
+
 **When to use**: Background or situational information that Claude needs before starting.
 
 **Example**:
@@ -75,9 +79,9 @@ Add these tags based on skill complexity and domain requirements:
 The Facebook Marketing API uses a hierarchy: Account → Campaign → Ad Set → Ad. Each level has different configuration options and requires specific permissions. Always verify API access before making changes.
 </context>
 ```
-</tag>
 
-<tag name="workflow">
+### Workflow
+
 **When to use**: Step-by-step procedures, sequential operations, multi-step processes.
 
 **Alternative name**: `<process>`
@@ -92,9 +96,9 @@ The Facebook Marketing API uses a hierarchy: Account → Campaign → Ad Set →
 5. **Verify output**: Check generated PDF
 </workflow>
 ```
-</tag>
 
-<tag name="advanced_features">
+### Advanced Features
+
 **When to use**: Deep-dive topics that most users won't need (progressive disclosure).
 
 **Example**:
@@ -105,9 +109,9 @@ The Facebook Marketing API uses a hierarchy: Account → Campaign → Ad Set →
 **API reference**: See [reference.md](reference.md)
 </advanced_features>
 ```
-</tag>
 
-<tag name="validation">
+### Validation
+
 **When to use**: Skills with verification steps, quality checks, or validation scripts.
 
 **Example**:
@@ -122,9 +126,9 @@ python scripts/validate.py output_dir/
 Only proceed when validation passes. If errors occur, review and fix before continuing.
 </validation>
 ```
-</tag>
 
-<tag name="examples">
+### Examples
+
 **When to use**: Multi-shot learning, input/output pairs, demonstrating patterns.
 
 **Example**:
@@ -141,9 +145,9 @@ Only proceed when validation passes. If errors occur, review and fix before cont
 </example>
 </examples>
 ```
-</tag>
 
-<tag name="anti_patterns">
+### Anti Patterns
+
 **When to use**: Common mistakes that Claude should avoid.
 
 **Example**:
@@ -160,9 +164,9 @@ Only proceed when validation passes. If errors occur, review and fix before cont
 </pitfall>
 </anti_patterns>
 ```
-</tag>
 
-<tag name="security_checklist">
+### Security Checklist
+
 **When to use**: Skills with security implications (API keys, payments, authentication).
 
 **Example**:
@@ -175,9 +179,9 @@ Only proceed when validation passes. If errors occur, review and fix before cont
 - Check API response status before proceeding
 </security_checklist>
 ```
-</tag>
 
-<tag name="testing">
+### Testing
+
 **When to use**: Testing workflows, test patterns, or validation steps.
 
 **Example**:
@@ -191,9 +195,9 @@ Test with all target models (Haiku, Sonnet, Opus):
 4. Validate XML structure after changes
 </testing>
 ```
-</tag>
 
-<tag name="common_patterns">
+### Common Patterns
+
 **When to use**: Code examples, recipes, or reusable patterns.
 
 **Example**:
@@ -211,9 +215,9 @@ except Exception as e:
 </pattern>
 </common_patterns>
 ```
-</tag>
 
-<tag name="reference_guides">
+### Reference Guides
+
 **When to use**: Links to detailed reference files (progressive disclosure).
 
 **Alternative name**: `<detailed_references>`
@@ -228,11 +232,11 @@ For deeper topics, see reference files:
 **Troubleshooting**: [references/troubleshooting.md](references/troubleshooting.md)
 </reference_guides>
 ```
-</tag>
-</conditional_tags>
 
-<intelligence_rules>
-<decision_tree>
+## Intelligence Rules
+
+### Decision Tree
+
 **Simple skills** (single domain, straightforward):
 - Required tags only: objective, quick_start, success_criteria
 - Example: Text extraction, file format conversion, simple calculations
@@ -244,13 +248,13 @@ For deeper topics, see reference files:
 **Complex skills** (multiple domains, security, APIs):
 - Required tags + conditional tags as appropriate
 - Example: Payment processing, authentication systems, multi-step workflows with validation
-</decision_tree>
 
-<principle>
+### Principle
+
 Don't over-engineer simple skills. Don't under-specify complex skills. Match tag selection to actual complexity and user needs.
-</principle>
 
-<when_to_add_conditional>
+### When To Add Conditional
+
 Ask these questions:
 
 - **Context needed?** → Add `<context>`
@@ -263,11 +267,11 @@ Ask these questions:
 - **Testing guidance?** → Add `<testing>`
 - **Code recipes?** → Add `<common_patterns>`
 - **Deep references?** → Add `<reference_guides>`
-</when_to_add_conditional>
-</intelligence_rules>
 
-<xml_vs_markdown_headings>
-<token_efficiency>
+## XML vs Markdown Headings
+
+### Token Efficiency
+
 XML tags are more efficient than markdown headings:
 
 **Markdown headings**:
@@ -287,9 +291,9 @@ Total: ~20 tokens, no semantic meaning to Claude
 <success_criteria>
 ```
 Total: ~15 tokens, semantic meaning built-in
-</token_efficiency>
 
-<parsing_accuracy>
+### Parsing Accuracy
+
 XML provides unambiguous boundaries and semantic meaning. Claude can reliably:
 - Identify section boundaries
 - Understand content purpose
@@ -297,18 +301,18 @@ XML provides unambiguous boundaries and semantic meaning. Claude can reliably:
 - Parse programmatically
 
 Markdown headings are just visual formatting. Claude must infer meaning from heading text.
-</parsing_accuracy>
 
-<consistency>
+### Consistency
+
 XML enforces consistent structure across all skills. All skills use the same tag names for the same purposes. Makes it easier to:
 - Validate skill structure programmatically
 - Learn patterns across skills
 - Maintain consistent quality
-</consistency>
-</xml_vs_markdown_headings>
 
-<nesting_guidelines>
-<proper_nesting>
+## Nesting Guidelines
+
+### Proper Nesting
+
 XML tags can nest for hierarchical content:
 
 ```xml
@@ -324,9 +328,9 @@ XML tags can nest for hierarchical content:
 </example>
 </examples>
 ```
-</proper_nesting>
 
-<closing_tags>
+### Closing Tags
+
 Always close tags properly:
 
 ✅ Good:
@@ -341,19 +345,18 @@ Content here
 <objective>
 Content here
 ```
-</closing_tags>
 
-<tag_naming>
+### Tag Naming
+
 Use descriptive, semantic names:
 - `<workflow>` not `<steps>`
 - `<success_criteria>` not `<done>`
 - `<anti_patterns>` not `<dont_do>`
 
 Be consistent within your skill. If you use `<workflow>`, don't also use `<process>` for the same purpose.
-</tag_naming>
-</nesting_guidelines>
 
-<anti_pattern>
+## Anti Pattern
+
 **DO NOT use markdown headings in skill body content.**
 
 ❌ Bad (hybrid approach):
@@ -383,35 +386,35 @@ Extract text with pdfplumber...
 Form filling...
 </advanced_features>
 ```
-</anti_pattern>
 
-<benefits>
-<benefit type="clarity">
+## Benefits
+
+### Clarity
+
 Clearly separate different sections with unambiguous boundaries
-</benefit>
 
-<benefit type="accuracy">
+### Accuracy
+
 Reduce parsing errors. Claude knows exactly where sections begin and end.
-</benefit>
 
-<benefit type="flexibility">
+### Flexibility
+
 Easily find, add, remove, or modify sections without rewriting
-</benefit>
 
-<benefit type="parseability">
+### Parseability
+
 Programmatically extract specific sections for validation or analysis
-</benefit>
 
-<benefit type="efficiency">
+### Efficiency
+
 Lower token usage compared to markdown headings
-</benefit>
 
-<benefit type="consistency">
+### Consistency
+
 Standardized structure across all skills in the ecosystem
-</benefit>
-</benefits>
 
-<combining_with_other_techniques>
+## Combining With Other Techniques
+
 XML tags work well with other prompting techniques:
 
 **Multi-shot learning**:
@@ -453,9 +456,9 @@ Based on the analysis...
 }
 </schema>
 ```
-</combining_with_other_techniques>
 
-<tag_reference_pattern>
+## Tag Reference Pattern
+
 When referencing content in tags, use the tag name:
 
 "Using the schema in `<schema>` tags..."
@@ -463,4 +466,3 @@ When referencing content in tags, use the tag name:
 "See examples in `<examples>`..."
 
 This makes the structure self-documenting.
-</tag_reference_pattern>

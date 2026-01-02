@@ -1,10 +1,11 @@
 
-<overview>
+## Overview
+
 These are systematic approaches to narrowing down bugs. Each technique is a tool in your debugging toolkit. The skill is knowing which tool to use when.
-</overview>
 
 
-<technique name="binary_search">
+## Binary Search
+
 **When to use**: Large codebase, long execution path, or many possible failure points.
 
 **How it works**: Cut the problem space in half repeatedly until you isolate the issue.
@@ -17,7 +18,8 @@ These are systematic approaches to narrowing down bugs. Each technique is a tool
 4. **Repeat**: Cut that half in half, test again
 5. **Converge**: Keep halving until you find the exact line
 
-<example>
+### Example
+
 Problem: API request returns wrong data
 
 1. Test: Does the data leave the database correctly? YES
@@ -27,10 +29,10 @@ Problem: API request returns wrong data
 5. **Found it**: Bug is in the serialization layer
 
 You just eliminated 90% of the code in 4 tests.
-</example>
-</technique>
 
-<technique name="comment_out_bisection">
+
+## Comment Out Bisection
+
 **Variant**: Commenting out code to find the breaking change.
 
 1. Comment out the second half of a function
@@ -39,10 +41,10 @@ You just eliminated 90% of the code in 4 tests.
 4. Converge on the problematic lines
 
 **Warning**: Only works for code you can safely comment out. Don't use for initialization code.
-</technique>
 
 
-<technique name="rubber_duck">
+## Rubber Duck
+
 **When to use**: You're stuck, confused, or your mental model doesn't match reality.
 
 **How it works**: Explain the problem out loud (to a rubber duck, a colleague, or in writing) in complete detail.
@@ -65,13 +67,13 @@ Write or say out loud:
 
 Often you'll spot the bug mid-explanation: "Wait, I never actually verified that B returns what I think it does."
 
-<example>
+### Example
+
 "So when the user clicks the button, it calls handleClick, which dispatches an action, which... wait, does the reducer actually handle this action type? Let me check... Oh. The reducer is looking for 'UPDATE_USER' but I'm dispatching 'USER_UPDATE'."
-</example>
-</technique>
 
 
-<technique name="minimal_reproduction">
+## Minimal Reproduction
+
 **When to use**: Complex system, many moving parts, unclear which part is failing.
 
 **How it works**: Strip away everything until you have the smallest possible code that reproduces the bug.
@@ -92,7 +94,8 @@ Often you'll spot the bug mid-explanation: "Wait, I never actually verified that
 4. **Repeat** until you have the bare minimum
 5. **The bug is now obvious** in the stripped-down code
 
-<example>
+### Example
+
 Start with: 500-line React component with 15 props, 8 hooks, 3 contexts
 
 End with:
@@ -109,11 +112,10 @@ function MinimalRepro() {
 ```
 
 The bug was hidden in complexity. Minimal reproduction made it obvious.
-</example>
-</technique>
 
 
-<technique name="working_backwards">
+## Working Backwards
+
 **When to use**: You know what the correct output should be, but don't know why you're not getting it.
 
 **How it works**: Start from the desired end state and trace backwards through the execution path.
@@ -128,7 +130,8 @@ The bug was hidden in complexity. Minimal reproduction made it obvious.
 4. **Repeat backwards** through the call stack
 5. **Find the divergence point**: Where does expected vs actual first differ?
 
-<example>
+### Example
+
 Problem: UI shows "User not found" when user exists
 
 Trace backwards:
@@ -139,11 +142,10 @@ Trace backwards:
 5. **Found it**: The user ID is 'undefined' (string) instead of a number
 
 Working backwards revealed the bug was in how the ID was passed to the query.
-</example>
-</technique>
 
 
-<technique name="differential_debugging">
+## Differential Debugging
+
 **When to use**: Something used to work and now doesn't. A feature works in one environment but not another.
 
 **How it works**: Compare the working vs broken states to find what's different.
@@ -171,7 +173,8 @@ Working backwards revealed the bug was in how the ID was passed to the query.
 3. **Find the difference that causes the failure**
 4. **That difference reveals the root cause**
 
-<example>
+### Example
+
 Works locally, fails in CI:
 
 Differences:
@@ -183,11 +186,10 @@ Test: Set local timezone to UTC (like CI)
 Result: Now fails locally too
 
 **Found it**: Date comparison logic assumes local timezone
-</example>
-</technique>
 
 
-<technique name="observability_first">
+## Observability First
+
 **When to use**: Always. Before making any fix.
 
 **Why it matters**: You can't fix what you can't see. Add visibility before changing behavior.
@@ -234,10 +236,10 @@ console.log('[updateUser] Called from:', new Error().stack);
 5. **Only then** make changes
 
 Don't code in the dark. Light up the execution path first.
-</technique>
 
 
-<technique name="comment_out_everything">
+## Comment Out Everything
+
 **When to use**: Many possible interactions, unclear which code is causing the issue.
 
 **How it works**:
@@ -250,7 +252,8 @@ Don't code in the dark. Light up the execution path first.
 
 **Variant**: For config files, reset to defaults and add back one setting at a time.
 
-<example>
+### Example
+
 Problem: Some middleware breaks requests, but you have 8 middleware functions.
 
 ```javascript
@@ -261,11 +264,10 @@ app.use(bodyParser.json({ limit: '50mb' })); // Uncomment, test → BREAKS
 
 // Found it: Body size limit too high causes memory issues
 ```
-</example>
-</technique>
 
 
-<technique name="git_bisect">
+## Git Bisect
+
 **When to use**: Feature worked in the past, broke at some unknown commit.
 
 **How it works**: Binary search through git history to find the breaking commit.
@@ -275,29 +277,31 @@ app.use(bodyParser.json({ limit: '50mb' })); // Uncomment, test → BREAKS
 ```bash
 git bisect start
 
-git bisect bad
+git bisect bad  # current version is broken
 
-git bisect good abc123
+git bisect good abc123  # last known working commit
 
-git bisect bad
+# Git will checkout a middle commit
+# Test if it works
+git bisect bad  # or git bisect good
 
-git bisect good
-
+# Repeat until you find the breaking commit
+git bisect reset  # when done
 ```
 
 **Why it's powerful**: Turns "it broke sometime in the last 100 commits" into "it broke in commit abc123" in ~7 tests (log₂ 100 ≈ 7).
 
-<example>
+### Example
+
 100 commits between working and broken
 Manual testing: 100 commits to check
 Git bisect: 7 commits to check
 
 Time saved: Massive
-</example>
-</technique>
 
 
-<decision_tree>
+## Decision Tree
+
 **Large codebase, many files**:
 → Binary search / Divide and conquer
 
@@ -321,9 +325,10 @@ Time saved: Massive
 
 **Always**:
 → Observability first before making changes
-</decision_tree>
 
-<combining_techniques>
+
+## Combining Techniques
+
 Often you'll use multiple techniques together:
 
 1. **Differential debugging** to identify what changed
@@ -334,4 +339,3 @@ Often you'll use multiple techniques together:
 6. **Working backwards** to find the root cause
 
 Techniques compose. Use as many as needed.
-</combining_techniques>

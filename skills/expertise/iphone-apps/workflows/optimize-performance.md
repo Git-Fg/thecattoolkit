@@ -1,16 +1,15 @@
 # Workflow: Optimize iOS App Performance
 
-<required_reading>
+## Required Reading
+
 **Read NOW:**
 1. references/performance.md
 2. references/cli-observability.md
-</required_reading>
 
-<philosophy>
+## Philosophy
 Measure first, optimize second. Never optimize based on assumptions.
-</philosophy>
 
-<process>
+## Process
 ## Step 1: Define the Problem
 
 Ask:
@@ -114,12 +113,10 @@ func testScrollPerformance() {
     }
 }
 ```
-</process>
 
-<targets>
+## Targets
 | Metric | Target | Unacceptable |
 |--------|--------|--------------|
 | Launch | < 1s | > 2s |
 | Scroll | 60 fps | < 30 fps |
 | Response | < 100ms | > 500ms |
-</targets>

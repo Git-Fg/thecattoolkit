@@ -1,10 +1,9 @@
 # Workflow: Create Exhaustive Domain Expertise Skill
 
-<objective>
+## Objective
 Build a comprehensive execution skill that does real work in a specific domain. Domain expertise skills are full-featured build skills with exhaustive domain knowledge in references, complete workflows for the full lifecycle (build → debug → optimize → ship), and can be both invoked directly by users AND loaded by other skills (like create-plans) for domain knowledge.
-</objective>
 
-<critical_distinction>
+## Critical Distinction
 **Regular skill:** "Do one specific task"
 **Domain expertise skill:** "Do EVERYTHING in this domain, with complete practitioner knowledge"
 
@@ -20,16 +19,14 @@ Domain expertise skills:
 - ✅ Are invoked directly by users ("build a macOS app")
 - ✅ Can be loaded by other skills (create-plans reads references for planning)
 - ✅ Cover the FULL lifecycle, not just getting started
-</critical_distinction>
 
-<required_reading>
+## Required Reading
 **Read these reference files NOW:**
 1. references/recommended-structure.md
 2. references/core-principles.md
 3. references/use-xml-tags.md
-</required_reading>
 
-<process>
+## Process
 ## Step 1: Identify Domain
 
 Ask user what domain expertise to build:
@@ -558,9 +555,8 @@ Review entire skill:
 - [ ] Can be invoked directly by users
 - [ ] Can be loaded by create-plans for knowledge
 
-</process>
 
-<success_criteria>
+## Success Criteria
 Domain expertise skill is complete when:
 
 - [ ] Comprehensive research completed (5+ web searches)
@@ -577,9 +573,8 @@ Domain expertise skill is complete when:
 - [ ] Referenced in create-plans domain inference table
 - [ ] Passes dual-purpose test: Can be invoked directly AND loaded for knowledge
 - [ ] User can build something professional from scratch through shipping
-</success_criteria>
 
-<anti_patterns>
+## Anti Patterns
 **DON'T:**
 - Copy tutorial content without verification
 - Include only "getting started" material
@@ -602,4 +597,3 @@ Domain expertise skill is complete when:
 - Include verification in every workflow
 - Make it exhaustive, not minimal
 - Test both direct invocation and knowledge reference use cases
-</anti_patterns>

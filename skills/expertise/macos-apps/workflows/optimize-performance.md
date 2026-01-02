@@ -1,18 +1,17 @@
 # Workflow: Optimize App Performance
 
-<required_reading>
+## Required Reading
+
 **Read these reference files NOW:**
 1. references/cli-observability.md
 2. references/concurrency-patterns.md
 3. references/swiftui-patterns.md
-</required_reading>
 
-<philosophy>
+## Philosophy
 Measure first, optimize second. Never optimize based on assumptions.
 Profile → Identify bottleneck → Fix → Measure again → Repeat
-</philosophy>
 
-<process>
+## Process
 ## Step 1: Define the Problem
 
 Ask the user:
@@ -211,9 +210,8 @@ func testScrollingPerformance() {
     }
 }
 ```
-</process>
 
-<performance_targets>
+## Performance Targets
 | Metric | Target | Unacceptable |
 |--------|--------|--------------|
 | App launch | < 1 second | > 3 seconds |
@@ -221,9 +219,8 @@ func testScrollingPerformance() {
 | List scrolling | 60 fps | < 30 fps |
 | Memory (idle) | < 100MB | > 500MB |
 | Memory growth | Stable | Unbounded |
-</performance_targets>
 
-<tools_reference>
+## Tools Reference
 ```bash
 # CPU profiling
 xcrun xctrace record --template 'Time Profiler' --attach AppName
@@ -241,4 +238,3 @@ xcrun xctrace record --template 'Energy Log' --attach AppName
 # System trace (comprehensive)
 xcrun xctrace record --template 'System Trace' --attach AppName
 ```
-</tools_reference>

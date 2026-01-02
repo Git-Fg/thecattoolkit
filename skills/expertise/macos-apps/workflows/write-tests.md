@@ -1,19 +1,18 @@
 # Workflow: Write and Run Tests
 
-<required_reading>
+## Required Reading
+
 **Read these reference files NOW:**
 1. references/testing-tdd.md
 2. references/testing-debugging.md
-</required_reading>
 
-<philosophy>
+## Philosophy
 Tests are documentation that runs. Write tests that:
 - Describe what the code should do
 - Catch regressions before users do
 - Enable confident refactoring
-</philosophy>
 
-<process>
+## Process
 ## Step 1: Understand What to Test
 
 Ask the user:
@@ -192,9 +191,8 @@ For new features:
 2. **Green:** Write minimum code to pass
 3. **Refactor:** Clean up while keeping tests green
 4. **Repeat:** Next behavior
-</process>
 
-<test_patterns>
+## Test Patterns
 ### Arrange-Act-Assert
 ```swift
 @Test func pattern() {
@@ -238,16 +236,14 @@ class MockDataService: DataServiceProtocol {
     #expect(state.selectedItem?.name == "A")
 }
 ```
-</test_patterns>
 
-<what_not_to_test>
+## What Not To Test
 - SwiftUI view rendering (use previews + manual testing)
 - Apple framework behavior
 - Simple getters/setters with no logic
 - Private implementation details (test via public interface)
-</what_not_to_test>
 
-<coverage_targets>
+## Coverage Targets
 | Code Type | Target Coverage |
 |-----------|-----------------|
 | Business logic | 80-100% |
@@ -255,4 +251,3 @@ class MockDataService: DataServiceProtocol {
 | Utilities/helpers | 60-80% |
 | Views | 0% (manual test) |
 | Generated code | 0% |
-</coverage_targets>

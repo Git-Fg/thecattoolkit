@@ -1,8 +1,7 @@
-<overview>
+## Overview
 Standard metadata structure for research and plan outputs. Include in all research, plan, and refine prompts.
-</overview>
 
-<metadata_structure>
+## Metadata Structure
 ```xml
 <metadata>
   <confidence level="{high|medium|low}">
@@ -19,15 +18,13 @@ Standard metadata structure for research and plan outputs. Include in all resear
   </assumptions>
 </metadata>
 ```
-</metadata_structure>
 
-<confidence_levels>
+## Confidence Levels
 - **high**: Official docs, verified patterns, clear consensus, few unknowns
 - **medium**: Mixed sources, some outdated info, minor gaps, reasonable approach
 - **low**: Sparse documentation, conflicting info, significant unknowns, best guess
-</confidence_levels>
 
-<dependencies_format>
+## Dependencies Format
 External requirements that must be met:
 ```xml
 <dependencies>
@@ -36,9 +33,8 @@ External requirements that must be met:
   - Team trained on new patterns
 </dependencies>
 ```
-</dependencies_format>
 
-<open_questions_format>
+## Open Questions Format
 What couldn't be determined or needs validation:
 ```xml
 <open_questions>
@@ -47,9 +43,8 @@ What couldn't be determined or needs validation:
   - Specific error codes for edge cases
 </open_questions>
 ```
-</open_questions_format>
 
-<assumptions_format>
+## Assumptions Format
 Context assumed that might need validation:
 ```xml
 <assumptions>
@@ -58,4 +53,3 @@ Context assumed that might need validation:
   - Node.js/TypeScript stack
 </assumptions>
 ```
-</assumptions_format>

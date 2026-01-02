@@ -2,7 +2,8 @@
 
 The optimal structure for complex skills separates routing, workflows, and knowledge.
 
-<structure>
+## Structure
+
 ```
 skill-name/
 ├── SKILL.md              # Router + essential principles (unavoidable)
@@ -15,10 +16,10 @@ skill-name/
     ├── reference-b.md
     └── ...
 ```
-</structure>
 
-<why_this_works>
-## Problems This Solves
+## Why This Works
+
+### Problems This Solves
 
 **Problem 1: Context gets skipped**
 When important principles are in a separate file, Claude may not read them.
@@ -35,9 +36,7 @@ A "build" task loads debugging references. A "debug" task loads build references
 **Problem 4: Procedures mixed with knowledge**
 "How to do X" mixed with "What X means" creates confusion.
 **Solution:** Workflows are procedures (steps). References are knowledge (patterns, examples).
-</why_this_works>
 
-<skill_md_template>
 ## SKILL.md Template
 
 ```markdown
@@ -46,7 +45,6 @@ name: skill-name
 description: What it does and when to use it.
 ---
 
-<essential_principles>
 ## How This Skill Works
 
 [Inline principles that apply to ALL workflows. Cannot be skipped.]
@@ -56,9 +54,9 @@ description: What it does and when to use it.
 
 ### Principle 2: [Name]
 [Brief explanation]
-</essential_principles>
 
-<intake>
+## Intake
+
 **Ask the user:**
 
 What would you like to do?
@@ -68,9 +66,9 @@ What would you like to do?
 4. Something else
 
 **Wait for response before proceeding.**
-</intake>
 
-<routing>
+## Routing
+
 | Response | Workflow |
 |----------|----------|
 | 1, "keyword", "keyword" | `workflows/option-a.md` |
@@ -79,59 +77,54 @@ What would you like to do?
 | 4, other | Clarify, then select |
 
 **After reading the workflow, follow it exactly.**
-</routing>
 
-<reference_index>
+## Reference Index
+
 All domain knowledge in `references/`:
 
 **Category A:** file-a.md, file-b.md
 **Category B:** file-c.md, file-d.md
-</reference_index>
 
-<workflows_index>
+## Workflows Index
+
 | Workflow | Purpose |
 |----------|---------|
 | option-a.md | [What it does] |
 | option-b.md | [What it does] |
 | option-c.md | [What it does] |
-</workflows_index>
 ```
-</skill_md_template>
 
-<workflow_template>
 ## Workflow Template
 
 ```markdown
 # Workflow: [Name]
 
-<required_reading>
+## Required Reading
+
 **Read these reference files NOW:**
 1. references/relevant-file.md
 2. references/another-file.md
-</required_reading>
 
-<process>
-## Step 1: [Name]
+## Process
+
+### Step 1: [Name]
 [What to do]
 
-## Step 2: [Name]
+### Step 2: [Name]
 [What to do]
 
-## Step 3: [Name]
+### Step 3: [Name]
 [What to do]
-</process>
 
-<success_criteria>
+## Success Criteria
+
 This workflow is complete when:
 - [ ] Criterion 1
 - [ ] Criterion 2
 - [ ] Criterion 3
-</success_criteria>
 ```
-</workflow_template>
 
-<when_to_use_this_pattern>
-## When to Use This Pattern
+## When To Use This Pattern
 
 **Use router + workflows + references when:**
 - Multiple distinct workflows (build vs debug vs ship)
@@ -144,10 +137,10 @@ This workflow is complete when:
 - Small reference set
 - Under 200 lines total
 - No essential principles to enforce
-</when_to_use_this_pattern>
 
-<key_insight>
-## The Key Insight
+## Key Insight
+
+**The Key Insight**
 
 **SKILL.md is always loaded. Use this guarantee.**
 
@@ -165,4 +158,3 @@ Put reusable knowledge in references/:
 - Patterns and examples
 - Technical details
 - Domain expertise
-</key_insight>

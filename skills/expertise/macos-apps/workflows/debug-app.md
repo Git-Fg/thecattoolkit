@@ -1,12 +1,12 @@
 # Workflow: Debug an Existing macOS App
 
-<required_reading>
+## Required Reading
+
 **Read these reference files NOW:**
 1. references/cli-observability.md
 2. references/testing-debugging.md
-</required_reading>
 
-<philosophy>
+## Philosophy
 Debugging is iterative. Use whatever gets you to the root cause fastest:
 - Small app, obvious symptom → read relevant code
 - Large codebase, unclear cause → use tools to narrow down
@@ -14,9 +14,8 @@ Debugging is iterative. Use whatever gets you to the root cause fastest:
 - After fixing → tools verify the fix
 
 The goal is root cause, not following a ritual.
-</philosophy>
 
-<process>
+## Process
 ## Step 1: Understand the Symptom
 
 Ask the user or observe:
@@ -119,9 +118,8 @@ If the bug was significant, write a test:
 ```bash
 xcodebuild test -project AppName.xcodeproj -scheme AppName
 ```
-</process>
 
-<common_patterns>
+## Common Patterns
 ## Memory Leaks
 **Symptom:** Memory grows over time, `leaks` shows retained objects
 **Common causes:**
@@ -161,9 +159,8 @@ xcodebuild test -project AppName.xcodeproj -scheme AppName
 - Unnecessary re-renders in SwiftUI
 - Repeated expensive operations
 **Fix:** Better algorithm, memoization, `let _ = Self._printChanges()`
-</common_patterns>
 
-<tools_quick_reference>
+## Tools Quick Reference
 ```bash
 # Build errors (structured JSON)
 xcodebuild build 2>&1 | xcsift
@@ -195,4 +192,3 @@ xcrun xctrace record --template 'Time Profiler' --attach AppName
 # Thread issues (build flag)
 xcodebuild build -enableThreadSanitizer YES
 ```
-</tools_quick_reference>

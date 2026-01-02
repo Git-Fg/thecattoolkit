@@ -1,8 +1,7 @@
-<overview>
+## Overview
 Prompt patterns for execution tasks that produce artifacts (code, documents, designs, etc.).
-</overview>
 
-<prompt_template>
+## Prompt Template
 ```xml
 <objective>
 {Clear statement of what to build/create/fix}
@@ -63,9 +62,9 @@ For Do prompts, include Files Created section with paths and descriptions. Empha
 ```
 </prompt_template>
 
-<key_principles>
+## Key Principles
 
-<reference_chain_artifacts>
+### Reference Chain Artifacts
 If research or plan exists, always reference them:
 ```xml
 <context>
@@ -73,9 +72,8 @@ Research findings: @.prompts/001-auth-research/auth-research.md
 Implementation plan: @.prompts/002-auth-plan/auth-plan.md
 </context>
 ```
-</reference_chain_artifacts>
 
-<explicit_output_location>
+### Explicit Output Location
 Every artifact needs a clear path:
 ```xml
 <output>
@@ -85,20 +83,16 @@ Create files in ./src/auth/:
 - `./src/auth/utils.ts` - Helper functions
 </output>
 ```
-</explicit_output_location>
 
-<verification_matching>
+### Verification Matching
 Include verification that matches the task:
 - Code: run tests, type check, lint
 - Documents: check structure, validate links
 - Designs: review against requirements
-</verification_matching>
 
-</key_principles>
+## Complexity Variations
 
-<complexity_variations>
-
-<simple_do>
+### Simple Do
 Single artifact example:
 ```xml
 <objective>
@@ -119,9 +113,8 @@ Create: `./src/utils/validate-email.ts`
 Test with: valid emails, invalid formats, edge cases
 </verification>
 ```
-</simple_do>
 
-<complex_do>
+### Complex Do
 Multiple artifacts with dependencies:
 ```xml
 <objective>
@@ -181,13 +174,10 @@ Create in ./src/auth/__tests__/:
 - Follows patterns from research
 </success_criteria>
 ```
-</complex_do>
 
-</complexity_variations>
+## Non-Code Examples
 
-<non_code_examples>
-
-<document_creation>
+### Document Creation
 ```xml
 <objective>
 Create API documentation for the authentication endpoints.
@@ -219,9 +209,8 @@ Types: @src/auth/types.ts
 - Verify examples match actual implementation
 </verification>
 ```
-</document_creation>
 
-<design_architecture>
+### Design/Architecture
 ```xml
 <objective>
 Design database schema for multi-tenant SaaS application.
@@ -253,6 +242,3 @@ Current schema: @prisma/schema.prisma
 - Performance acceptable with 1000 tenants
 </verification>
 ```
-</design_architecture>
-
-</non_code_examples>

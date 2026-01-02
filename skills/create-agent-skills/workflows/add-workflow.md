@@ -1,12 +1,11 @@
 # Workflow: Add a Workflow to Existing Skill
 
-<required_reading>
+## Required Reading
 **Read these reference files NOW:**
 1. references/recommended-structure.md
 2. references/workflows-and-validation.md
-</required_reading>
 
-<process>
+## Process
 ## Step 1: Select the Skill
 
 **DO NOT use AskUserQuestion** - there may be many skills.
@@ -106,9 +105,8 @@ Invoke the skill:
 - Does the workflow execute correctly?
 
 Report results to user.
-</process>
 
-<success_criteria>
+## Success Criteria
 Workflow addition is complete when:
 - [ ] Skill upgraded to router pattern (if needed)
 - [ ] Workflow file created with required_reading, process, success_criteria
@@ -117,4 +115,3 @@ Workflow addition is complete when:
 - [ ] SKILL.md workflows_index updated
 - [ ] Any needed references created
 - [ ] Tested and working
-</success_criteria>

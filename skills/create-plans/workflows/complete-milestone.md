@@ -1,21 +1,22 @@
 # Workflow: Complete Milestone
 
-<required_reading>
+## Required Reading
+
 **Read these files NOW:**
 1. templates/milestone.md
 2. `.planning/ROADMAP.md`
 3. `.planning/BRIEF.md`
-</required_reading>
 
-<purpose>
+## Purpose
+
 Mark a shipped version (v1.0, v1.1, v2.0) as complete. This creates a historical record in MILESTONES.md, updates BRIEF.md with current state, reorganizes ROADMAP.md with milestone groupings, and tags the release in git.
 
 This is the ritual that separates "development" from "shipped."
-</purpose>
 
-<process>
+## Process
 
-<step name="verify_readiness">
+### Step: Verify Readiness
+
 Check if milestone is truly complete:
 
 ```bash
@@ -49,9 +50,9 @@ Wait for confirmation.
 
 If "adjust scope": Ask which phases should be included.
 If "wait": Stop, user will return when ready.
-</step>
 
-<step name="gather_stats">
+### Step: Gather Stats
+
 Calculate milestone statistics:
 
 ```bash
@@ -85,9 +86,9 @@ Milestone Stats:
 ```
 
 Confirm before proceeding.
-</step>
 
-<step name="extract_accomplishments">
+### Step: Extract Accomplishments
+
 Read all phase SUMMARY.md files in milestone range:
 
 ```bash
@@ -111,9 +112,9 @@ Does this capture the milestone? (yes / adjust)
 ```
 
 If "adjust": User can add/remove/edit accomplishments.
-</step>
 
-<step name="create_milestone_entry">
+### Step: Create Milestone Entry
+
 Create or update `.planning/MILESTONES.md`.
 
 If file doesn't exist:
@@ -151,9 +152,9 @@ Use template from `templates/milestone.md`:
 ```
 
 Confirm entry looks correct.
-</step>
 
-<step name="update_brief">
+### Step: Update Brief
+
 Update `.planning/BRIEF.md` to reflect current state.
 
 Add/update "Current State" section at top (after YAML if present):
@@ -200,9 +201,9 @@ Just add "Current State" section, no need to archive original vision yet.
 Collapse previous version's content into `<details>` section.
 
 Show diff, confirm changes.
-</step>
 
-<step name="reorganize_roadmap">
+### Step: Reorganize Roadmap
+
 Update `.planning/ROADMAP.md` to group completed milestone phases.
 
 Add milestone headers and collapse completed work:
@@ -246,9 +247,9 @@ Add milestone headers and collapse completed work:
 ```
 
 Show diff, confirm changes.
-</step>
 
-<step name="git_tag">
+### Step: Git Tag
+
 Create git tag for milestone:
 
 ```bash
@@ -275,9 +276,9 @@ If yes:
 ```bash
 git push origin v[X.Y]
 ```
-</step>
 
-<step name="git_commit_milestone">
+### Step: Git Commit Milestone
+
 Commit milestone completion (MILESTONES.md + BRIEF.md + ROADMAP.md updates):
 
 ```bash
@@ -296,9 +297,9 @@ EOF
 ```
 
 Confirm: "Committed: chore: milestone v[X.Y] shipped"
-</step>
 
-<step name="offer_next">
+### Step: Offer Next
+
 ```
 ✅ Milestone v[X.Y] [Name] complete
 
@@ -319,11 +320,9 @@ Wait for user decision.
 
 If "1": Route to workflows/plan-phase.md (but ask about milestone scope first)
 If "2": Route to workflows/archive-planning.md (to be created)
-</step>
 
-</process>
+## Milestone Naming
 
-<milestone_naming>
 **Version conventions:**
 - **v1.0** - Initial MVP
 - **v1.1, v1.2, v1.3** - Minor updates, new features, fixes
@@ -337,9 +336,9 @@ If "2": Route to workflows/archive-planning.md (to be created)
 - v2.0 iOS Launch
 
 Keep names short (1-2 words describing the focus).
-</milestone_naming>
 
-<what_qualifies>
+## What Qualifies
+
 **Create milestones for:**
 - Initial release (v1.0)
 - Public releases
@@ -353,9 +352,9 @@ Keep names short (1-2 words describing the focus).
 
 If uncertain, ask: "Is this deployed/usable/shipped in some form?"
 If yes → milestone. If no → keep working.
-</what_qualifies>
 
-<success_criteria>
+## Success Criteria
+
 Milestone completion is successful when:
 - [ ] MILESTONES.md entry created with stats and accomplishments
 - [ ] BRIEF.md updated with current state
@@ -363,4 +362,3 @@ Milestone completion is successful when:
 - [ ] Git tag created (v[X.Y])
 - [ ] Milestone commit made
 - [ ] User knows next steps
-</success_criteria>

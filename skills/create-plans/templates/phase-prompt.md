@@ -11,30 +11,30 @@ type: execute
 domain: [optional - if domain skill loaded]
 ---
 
-<objective>
+## Objective
+
 [What this phase accomplishes - from roadmap phase goal]
 
 Purpose: [Why this matters for the project]
 Output: [What artifacts will be created]
-</objective>
 
-<execution_context>
+## Execution Context
+
 @~/.claude/skills/create-plans/workflows/execute-phase.md
 @~/.claude/skills/create-plans/templates/summary.md
 [If plan contains checkpoint tasks (type="checkpoint:*"), add:]
 @~/.claude/skills/create-plans/references/checkpoints.md
-</execution_context>
 
-<context>
+## Context
+
 @.planning/BRIEF.md
 @.planning/ROADMAP.md
 [If research exists:]
 @.planning/phases/XX-name/FINDINGS.md
 [Relevant source files:]
 @src/path/to/relevant.ts
-</context>
 
-<tasks>
+## Tasks
 
 <task type="auto">
   <name>Task 1: [Action-oriented name]</name>
@@ -134,7 +134,8 @@ After completion, create `.planning/phases/XX-name/{phase}-{plan}-SUMMARY.md`:
 </output>
 ```
 
-<key_elements>
+## Key Elements
+
 From create-meta-prompts patterns:
 - XML structure for Claude parsing
 - @context references for file loading
@@ -149,9 +150,9 @@ From create-meta-prompts patterns:
 - If planning >7 tasks, split into multiple plans (01-01, 01-02, etc.)
 - Target ~80% context usage maximum
 - See references/scope-estimation.md for splitting guidance
-</key_elements>
 
-<good_examples>
+## Good Examples
+
 ```markdown
 ---
 phase: 01-foundation
@@ -159,25 +160,25 @@ type: execute
 domain: next-js
 ---
 
-<objective>
+## Objective
+
 Set up Next.js project with authentication foundation.
 
 Purpose: Establish the core structure and auth patterns all features depend on.
 Output: Working Next.js app with JWT auth, protected routes, and user model.
-</objective>
 
-<execution_context>
+## Execution Context
+
 @~/.claude/skills/create-plans/workflows/execute-phase.md
 @~/.claude/skills/create-plans/templates/summary.md
-</execution_context>
 
-<context>
+## Context
+
 @.planning/BRIEF.md
 @.planning/ROADMAP.md
 @src/lib/db.ts
-</context>
 
-<tasks>
+## Tasks
 
 <task type="auto">
   <name>Task 1: Add User model to database schema</name>
@@ -216,9 +217,9 @@ Before declaring phase complete:
 After completion, create `.planning/phases/01-foundation/01-01-SUMMARY.md`
 </output>
 ```
-</good_examples>
 
-<bad_examples>
+## Bad Examples
+
 ```markdown
 # Phase 1: Foundation
 
@@ -230,4 +231,3 @@ After completion, create `.planning/phases/01-foundation/01-01-SUMMARY.md`
 ```
 
 This is useless. No XML structure, no @context, no verification, no specificity.
-</bad_examples>

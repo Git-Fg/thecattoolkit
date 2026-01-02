@@ -1,14 +1,14 @@
 # Workflow: Add a Feature to an Existing iOS App
 
-<required_reading>
+## Required Reading
+
 **Read these NOW:**
 1. references/app-architecture.md
 2. references/swiftui-patterns.md
 
 **Plus relevant refs based on feature** (see Step 2).
-</required_reading>
 
-<process>
+## Process
 ## Step 1: Understand the Feature
 
 Ask:
@@ -63,9 +63,8 @@ xcrun simctl launch booted com.company.AppName
 - Animations for transitions
 - Accessibility labels
 - Dynamic Type support
-</process>
 
-<integration_patterns>
+## Integration Patterns
 **Adding state:**
 ```swift
 @Observable
@@ -98,4 +97,3 @@ TabView {
         .tabItem { Label("New", systemImage: "star") }
 }
 ```
-</integration_patterns>
