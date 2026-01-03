@@ -1,6 +1,6 @@
 # THE CAT TOOLKIT
 
-**Version:** 1.1.5 | **License:** MIT | **Author:** Git-Fg
+**Version:** 1.1.6 | **License:** MIT | **Author:** Git-Fg
 
 A comprehensive collection of AI agent resources (primarily for Claude Code,
 adaptable to other AI assistants) built for real workflows.
@@ -85,7 +85,7 @@ Dream big. Happy building.
 
 - **File Protection**: Warn about edits to sensitive files (lock files, .env, .git)
 - **Security Check**: Warn about potential secrets before writes
-- **Auto-Format**: Format files on edit (Python with ruff, markdown only with markdownlint if .markdownlint.jsonc exists, JS/TS with prettier)
+
 - **Type-Check**: Type-check Python files when pyproject.toml is configured (pyrefly/mypy)
 
 ## Installation Options
@@ -469,7 +469,7 @@ Event-driven automation that triggers during Claude Code operations. All hooks u
   - `protect-files.py` - Warns about edits to lock files, .env, .git, credentials
   - `security-check.py` - Warns about potential secrets (API keys, passwords, tokens)
 - **PostToolUse (Edit/Write)**: Auto-formatting and type-checking
-  - `format-on-edit.py` - Formats files on edit (Python: uv run ruff, Markdown: markdownlint only if .markdownlint.jsonc exists, JS/TS/JSON: prettier)
+
   - `type-check-on-edit.py` - Type-checks Python files when pyproject.toml is configured (uv run pyrefly/mypy)
 
 **Hooks use uv with python3 fallback** - Automatically prefers `uv run` for formatters/type-checkers if available.
@@ -709,7 +709,7 @@ Event-driven automation that triggers during Claude Code operations. All hooks u
 |------|---------|--------|---------|
 | PreToolUse | Edit, Write | protect-files.py | Warn about edits to sensitive files |
 | PreToolUse | Edit, Write | security-check.py | Warn about potential secrets |
-| PostToolUse | Edit, Write | format-on-edit.py | Auto-format files |
+
 | PostToolUse | Edit, Write | type-check-on-edit.py | Type-check Python (config-aware) |
 
 ---

@@ -1,5 +1,5 @@
 {
-  "description": "thecattoolkit hooks: file protection, security checks, auto-formatting, and type-checking",
+  "description": "thecattoolkit hooks: file protection, security checks, and type-checking",
   "hooks": {
     "PreToolUse": [
       {
@@ -20,10 +20,6 @@
       {
         "matcher": "Edit|Write",
         "hooks": [
-          {
-            "type": "command",
-            "command": "sh -c 'command -v uv >/dev/null 2>&1 && uv run ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/format-on-edit.py || python3 ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/format-on-edit.py'"
-          },
           {
             "type": "command",
             "command": "sh -c 'command -v uv >/dev/null 2>&1 && uv run ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/type-check-on-edit.py || python3 ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/type-check-on-edit.py'",

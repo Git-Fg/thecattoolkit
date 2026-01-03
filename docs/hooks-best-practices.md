@@ -263,7 +263,7 @@ Use `[hook-name]` prefix for stderr messages:
 
 ```python
 print(f"[security-check] WARNING: Potential secret detected", file=sys.stderr)
-print(f"[format-on-edit] Ran prettier on {file_path}", file=sys.stderr)
+print(f"[auto-format] Ran prettier on {file_path}", file=sys.stderr)
 ```
 
 ### 3. Check Tool Availability Before Running
