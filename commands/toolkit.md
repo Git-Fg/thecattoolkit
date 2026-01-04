@@ -1,7 +1,7 @@
 ---
 description: Main entry point for The Cat Toolkit. Build, Audit, or Heal resources.
 argument-hint: [what you want to build, audit, or fix]
-allowed-tools: [Task, Skill, AskUserQuestion]
+allowed-tools: [Task, AskUserQuestion]
 ---
 
 # The Cat Toolkit Router

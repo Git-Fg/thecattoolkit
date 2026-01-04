@@ -180,7 +180,13 @@ allowed-tools: [Read, Grep, Glob]
 # Full access for trusted operations
 allowed-tools: [Read, Write, Edit, Bash]
 
-# Skill invocation only
+# Subagent delegation (RECOMMENDED)
+allowed-tools: [Task]
+
+# User interaction
+allowed-tools: [Task, AskUserQuestion]
+
+# Direct skill invocation
 allowed-tools: [Skill(create-agent-skills)]
 ---
 ```
