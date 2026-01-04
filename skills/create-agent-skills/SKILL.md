@@ -66,7 +66,55 @@ XML reserved for complex routing logic in router pattern skills.
 
 SKILL.md under 500 lines. Split detailed content into reference files. Load only what's needed for the current workflow.
 
-## Intake
+## Interaction Protocol
+
+**CRITICAL: Determine execution mode BEFORE proceeding**
+
+**IF invoked by User (Interactive Mode):**
+The user is directly asking for skill creation help. Follow the Intake and Routing sections below.
+
+**IF invoked by another Agent (Read-Only Mode):**
+1. **IGNORE** the Intake and Routing sections below.
+2. Read only the **Essential Principles** section above.
+3. Read the **Quick Reference** and **Reference Index** below.
+4. **DO NOT** ask the user any questions.
+5. Return the requested information to the invoking agent.
+
+---
+
+## Intake & Smart Routing (Interactive Mode Only)
+
+**SKIP this section in Read-Only Mode**
+
+### Step 1: Analyze Intent (Priority)
+
+Check arguments, conversation history, and context for keywords. **Auto-route immediately** if intent is clear.
+
+### Step 2: Auto-Route (Keyword-Based)
+
+**Skill Creation Keywords:**
+- `create domain expertise`, `exhaustive knowledge base`, `comprehensive`, `complete reference` → `workflows/create-domain-expertise-skill.md`
+- `create skill for X`, `build new skill`, `new skill`, `create skill` → `workflows/create-new-skill.md`
+- `upgrade to router`, `add routing`, `make router` → `workflows/upgrade-to-router.md`
+
+**Skill Modification Keywords:**
+- `audit this skill`, `check skill`, `review skill`, `evaluate` → `workflows/audit-skill.md`
+- `verify content`, `check if current`, `validate` → `workflows/verify-skill.md`
+- `modify`, `update`, `change`, `edit existing` → `workflows/audit-skill.md` (then modify based on findings)
+
+**Component Addition Keywords:**
+- `add workflow`, `new workflow`, `create workflow` → `workflows/add-workflow.md`
+- `add reference`, `new reference`, `create reference` → `workflows/add-reference.md`
+- `add template`, `new template`, `create template` → `workflows/add-template.md`
+- `add script`, `new script`, `create script` → `workflows/add-script.md`
+- `add component` → Proceed to Step 3 (ask for clarification)
+
+**Context/Read-Only Keywords:**
+- `guidance`, `help`, `explain`, `how do I`, `best practices`, `principles`, `structure` → Read **Essential Principles** and **Quick Reference** above and exit
+
+### Step 3: Fallback (Interactive - Ambiguous Intent)
+
+**ONLY if intent is completely unclear after keyword analysis:**
 
 What would you like to do?
 
@@ -75,9 +123,19 @@ What would you like to do?
 3. Add component (workflow/reference/template/script)
 4. Get guidance
 
+**Progressive disclosure:**
+- If option 1 selected: Ask "Task-execution skill or domain expertise skill?"
+- If option 3 selected: Ask "Add what? (workflow/reference/template/script)"
+
 **Wait for response before proceeding.**
 
-## Routing
+---
+
+## Routing Table (Interactive Mode - Reference Only)
+
+**SKIP this section in Read-Only Mode**
+
+This table documents the keyword mappings used in Step 2 above.
 
 | Response | Next Action | Workflow |
 |----------|-------------|----------|

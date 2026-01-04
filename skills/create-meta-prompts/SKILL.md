@@ -66,38 +66,42 @@ Next prompt number: ! `ls -d ./.prompts/*/ 2>/dev/null | wc -l | xargs -I {} exp
 
 # Automated Workflow
 
-## Step 0: Intake Gate
+## Interaction Protocol
 
-### Adaptive Requirements Gathering
+**CRITICAL: Determine execution mode BEFORE proceeding**
 
-**BEFORE analyzing anything**, check if context was provided.
+**IF invoked by User (Interactive Mode):**
+The user is directly asking to create meta-prompts. Follow the Intake Gate section below.
 
-IF no context provided (skill invoked without description):
-→ **IMMEDIATELY use AskUserQuestion** with:
+**IF invoked by another Agent (Read-Only Mode):**
+1. **IGNORE** the Intake Gate section below.
+2. Read only the **Objective** and **Quick Start** sections above.
+3. Read the **Reference Index** below for available patterns and templates.
+4. **DO NOT** use AskUserQuestion or ask the user any questions.
+5. Return the requested information to the invoking agent.
 
-- header: "Purpose"
-- question: "What is the purpose of this prompt?"
-- options:
-  - "Do" - Execute a task, produce an artifact
-  - "Plan" - Create an approach, roadmap, or strategy
-  - "Research" - Gather information or understand something
-  - "Refine" - Improve an existing research or plan output
+---
 
-After selection, ask: "Describe what you want to accomplish" (they select "Other" to provide free text).
+## Step 0: Intake & Smart Routing (Interactive Mode Only)
 
-IF context was provided:
-→ Check if purpose is inferable from keywords:
-  - `implement`, `build`, `create`, `fix`, `add`, `refactor` → Do
-  - `plan`, `roadmap`, `approach`, `strategy`, `decide`, `phases` → Plan
-  - `research`, `understand`, `learn`, `gather`, `analyze`, `explore` → Research
-  - `refine`, `improve`, `deepen`, `expand`, `iterate`, `update` → Refine
+**SKIP this section in Read-Only Mode**
 
-→ If unclear, ask the Purpose question above as first contextual question
-→ If clear, proceed to adaptive_analysis with inferred purpose
+### Step 1: Analyze Intent (Priority)
 
-### Adaptive Analysis
+**FIRST**, check arguments, conversation history, and context for keywords. **Auto-infer purpose immediately** if intent is clear.
 
-Extract and infer:
+**Purpose Detection Keywords:**
+- `implement`, `build`, `create`, `fix`, `add`, `refactor`, `generate`, `produce` → **Do** (Execute task, produce artifact)
+- `plan`, `roadmap`, `approach`, `strategy`, `decide`, `phases`, `design`, `architecture` → **Plan** (Create approach, roadmap)
+- `research`, `understand`, `learn`, `gather`, `analyze`, `explore`, `investigate`, `find out` → **Research** (Gather information)
+- `refine`, `improve`, `deepen`, `expand`, `iterate`, `update`, `revise` → **Refine** (Improve existing output)
+
+**Context/Read-Only Keywords:**
+- `guidance`, `help`, `explain`, `how do I`, `patterns`, `best practices` → Read **Objective** and **Quick Start** above, then exit
+
+### Step 2: Adaptive Analysis
+
+After purpose is inferred (from Step 1 or Step 3 fallback), extract:
 
 - **Purpose**: Do, Plan, Research, or Refine
 - **Topic identifier**: Kebab-case identifier for file naming (e.g., `auth`, `stripe-payments`)
@@ -113,21 +117,37 @@ If topic identifier not obvious, ask:
 
 For Refine purpose, also identify target output from `.prompts/*/` to improve.
 
-### Chain Detection
+### Step 3: Chain Detection
 
 Scan `.prompts/*/` for existing `*-research.md` and `*-plan.md` files.
 
-If found:
-1. List them: "Found existing files: auth-research.md (in 001-auth-research/), stripe-plan.md (in 005-stripe-plan/)"
-2. Use AskUserQuestion:
-   - header: "Reference"
-   - question: "Should this prompt reference any existing research or plans?"
-   - options: List found files + "None"
-   - multiSelect: true
+**Auto-reference if topic matches:**
+- If `auth-research.md` exists and topic is "auth" → Automatically reference it
+- If `stripe-plan.md` exists and topic is "stripe" → Automatically reference it
 
-Match by topic keyword when possible (e.g., "auth plan" → suggest auth-research.md).
+**If multiple matches exist OR manual reference desired:**
+Ask user: "Found existing related files. Reference any?"
+- Options: List found files + "None" + "Choose manually"
+- multiSelect: true
 
-### Contextual Questioning
+### Step 4: Fallback (Interactive - Ambiguous Intent)
+
+**ONLY if purpose is completely unclear after keyword analysis AND no conversation context:**
+
+Use AskUserQuestion:
+- header: "Purpose"
+- question: "What is the purpose of this prompt?"
+- options:
+  - "Do" - Execute a task, produce an artifact
+  - "Plan" - Create an approach, roadmap, or strategy
+  - "Research" - Gather information or understand something
+  - "Refine" - Improve an existing research or plan output
+
+After selection, ask: "Describe what you want to accomplish" (they select "Other" to provide free text).
+
+Then proceed to Step 2 (Adaptive Analysis) with inferred purpose.
+
+### Step 5: Contextual Questioning (Optional)
 
 Generate 2-4 questions using AskUserQuestion based on purpose and gaps.
 
@@ -139,7 +159,7 @@ Route by purpose:
 - Research → depth, sources, output format
 - Refine → target selection, feedback, preservation
 
-### Decision Gate
+### Step 6: Decision Gate
 
 After receiving answers, present decision gate using AskUserQuestion:
 
@@ -167,10 +187,10 @@ Then proceed to generation.
 ### Prompt Structure
 
 Load purpose-specific patterns:
-- Do: references/do-patterns.md
-- Plan: references/plan-patterns.md
-- Research: references/research-patterns.md
-- Refine: references/refine-patterns.md
+- Do: ../../../prompt-engineering-patterns/templates/do-patterns.md
+- Plan: ../../../prompt-engineering-patterns/templates/plan-patterns.md
+- Research: ../../../prompt-engineering-patterns/templates/research-patterns.md
+- Refine: ../../../prompt-engineering-patterns/templates/refine-patterns.md
 
 Load intelligence rules: references/intelligence-rules.md
 
@@ -537,11 +557,11 @@ If a prompt's output includes instructions to create more prompts:
 
 # Reference Guides
 
-**Prompt patterns by purpose:**
-- references/do-patterns.md - Execution prompts + output structure
-- references/plan-patterns.md - Planning prompts + plan.md structure
-- references/research-patterns.md - Research prompts + research.md structure
-- references/refine-patterns.md - Iteration prompts + versioning
+**Prompt patterns by purpose (consolidated in prompt-engineering-patterns/templates/):**
+- ../../../prompt-engineering-patterns/templates/do-patterns.md - Execution prompts + output structure
+- ../../../prompt-engineering-patterns/templates/plan-patterns.md - Planning prompts + plan.md structure
+- ../../../prompt-engineering-patterns/templates/research-patterns.md - Research prompts + research.md structure
+- ../../../prompt-engineering-patterns/templates/refine-patterns.md - Iteration prompts + versioning
 
 **Shared templates:**
 - references/summary-template.md - SUMMARY.md structure and field requirements

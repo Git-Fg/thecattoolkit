@@ -27,7 +27,7 @@ Try these commands to get started:
 /thecattoolkit:brainstorm Should I refactor this module now?
 
 # Code review
-> Use the code-reviewer agent to check my recent changes
+> Use the `code-reviewer` subagent to check my recent changes
 
 # Create a new skill
 /thecattoolkit:create-agent-skill Create a skill for database validation
@@ -72,8 +72,8 @@ Dream big. Happy building.
 - **Knowledge Domains**: Project analysis, architecture patterns, testing, performance, git workflow, API design
 - **Specialized**: Debug like expert, prompt engineering patterns
 
-**[Agents](#agents)** (11 total) - Specialized subagents for various workflows
-- **Operational**: Orchestrator, code-reviewer, debugger, docs-writer, security-auditor, refactorer, test-architect, brainstormer
+**[Agents](#agents)** (12 total) - Specialized subagents for various workflows
+- **Operational**: Orchestrator, code-reviewer, debugger, docs-writer, prompt-architect, refactorer, security-auditor, test-architect, brainstormer
 - **Quality Assurance**: skill-auditor, slash-command-auditor, subagent-auditor
 
 **[Hooks](#hooks)** (3 total) - Automation triggers (Claude Code-specific)
@@ -116,7 +116,7 @@ Commands install globally to `~/.claude/commands/`. Skills install to `~/.claude
 ### Code Review Workflow
 
 ```
-> Use the code-reviewer agent to review my changes
+> Use the `code-reviewer` subagent to review my changes
 ```
 
 The code-reviewer will:
@@ -143,7 +143,7 @@ The brainstorm command applies strategic thinking frameworks:
 ```
 
 This will:
-1. Invoke the create-agent-skills skill
+1. Invoke the `create-agent-skills` skill
 2. Guide through skill structure (simple vs router pattern)
 3. Help with YAML frontmatter and progressive disclosure
 4. Offer to create directory structure and files
@@ -259,12 +259,14 @@ Specialized subagents for various workflows.
 
 Active agents that perform specific tasks during development.
 
-- [`orchestrator`](./agents/orchestrator.md) - Master coordinator for complex multi-step tasks (uses Opus)
+- [`brainstormer`](./agents/brainstormer.md) - Strategic thinking and decision specialist using 12 mental models
 - [`code-reviewer`](./agents/code-reviewer.md) - Expert code review specialist for quality, security, and performance
 - [`debugger`](./agents/debugger.md) - Systematic bug investigation and fixing with 6-phase protocol
 - [`docs-writer`](./agents/docs-writer.md) - Technical documentation specialist
-- [`security-auditor`](./agents/security-auditor.md) - Security vulnerability detection specialist
+- [`orchestrator`](./agents/orchestrator.md) - Master coordinator for complex multi-step tasks
+- [`prompt-architect`](./agents/prompt-architect.md) - Expert prompt architect for creating optimized AI agent prompts
 - [`refactorer`](./agents/refactorer.md) - Code structure improvements and technical debt reduction
+- [`security-auditor`](./agents/security-auditor.md) - Security vulnerability detection specialist (OWASP Top 10)
 - [`test-architect`](./agents/test-architect.md) - Comprehensive test strategy design
 
 ### Quality Assurance Agents
@@ -592,21 +594,22 @@ Event-driven automation that triggers during Claude Code operations:
 | problem-analysis | 4 frameworks (5-whys, opportunity-cost, etc.) | Mental Model | skills/problem-analysis/ |
 | prioritization | 3 frameworks (pareto, one-thing, eisenhower) | Mental Model | skills/prioritization/ |
 
-### All Agents (11)
+### All Agents (12)
 
 | Agent | Purpose | Tools | Skills |
 |-------|---------|-------|--------|
-| brainstormer | Creative ideation | - | - |
+| brainstormer | Strategic thinking and decision specialist | Read, Write, Edit, Glob, Grep, Bash, TodoWrite, AskUserQuestion, SlashCommand | strategic-thinking, prioritization, problem-analysis |
 | code-reviewer | Code quality and security review | Read, Grep, Glob, Bash, SlashCommand | git-workflow, testing-strategy |
 | debugger | Root cause analysis | Read, Edit, Bash, Grep, Glob, Write, SlashCommand | debug-like-expert, performance-optimization, prompt-engineering-patterns |
-| docs-writer | Technical documentation | - | - |
-| orchestrator | Multi-agent coordination | Task, SlashCommand, TodoWrite, etc. | project-analysis, architecture-patterns, prompt-engineering-patterns, strategic-thinking |
-| refactorer | Code refactoring | - | - |
-| security-auditor | Security assessment | - | - |
+| docs-writer | Technical documentation | Read, Write, Edit, Glob, Grep, SlashCommand | project-analysis, api-design |
+| orchestrator | Multi-agent coordination | Read, Write, Edit, Task, SlashCommand, AskUserQuestion, TodoWrite, Grep, Glob | project-analysis, architecture-patterns, prompt-engineering-patterns, strategic-thinking |
+| prompt-architect | Prompt architect for AI agents | Read, Write, Glob, AskUserQuestion, SlashCommand | prompt-engineering-patterns |
+| refactorer | Code refactoring | Read, Write, Edit, Bash, Grep, Glob, SlashCommand | architecture-patterns, testing-strategy |
+| security-auditor | Security assessment (OWASP Top 10) | Read, Grep, Glob, SlashCommand | api-design |
 | skill-auditor | Skill compliance audit | Read, Grep, Glob, SlashCommand | create-agent-skills |
 | slash-command-auditor | Command configuration audit | Read, Grep, Glob, SlashCommand | create-slash-commands |
 | subagent-auditor | Agent prompt quality audit | Read, Grep, Glob, SlashCommand | create-subagents |
-| test-architect | Testing strategy specialist | - | - |
+| test-architect | Testing strategy specialist | Read, Write, Grep, Glob, Bash, SlashCommand | testing-strategy, prompt-engineering-patterns |
 
 ### All Commands (20)
 

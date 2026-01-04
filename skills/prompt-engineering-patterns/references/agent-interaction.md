@@ -125,37 +125,37 @@ Help me accomplish this by:
 
 Different tasks benefit from different agent specializations:
 
-1. **Exploration phase** → Use general-purpose agent
-2. **Code review** → Use code-reviewer agent
-3. **Testing** → Use test-runner agent
-4. **Documentation** → Use docs-writer agent
+1. **Exploration phase** → Use general-purpose subagent
+2. **Code review** → Use `code-reviewer` subagent
+3. **Testing** → Use test-runner subagent
+4. **Documentation** → Use docs-writer subagent
 
 ### Sequential Delegation
 
 ```
-First, use the analyzer agent to understand the current architecture.
+First, use the `analyzer` subagent to understand the current architecture.
 
-Then, use the refactorer agent to propose improvements based on the analysis.
+Then, use the `refactorer` subagent to propose improvements based on the analysis.
 
-Finally, use the test-architect agent to ensure test coverage for changes.
+Finally, use the `test-architect` subagent to ensure test coverage for changes.
 ```
 
 **Example workflow:**
 ```
 Phase 1: Architecture Analysis
-[Use general-purpose agent]
+[Use general-purpose subagent]
 Explore the codebase structure and identify the main components.
 
 Phase 2: Security Review
-[Use security-auditor agent]
+[Use `security-auditor` subagent]
 Review the authentication system for vulnerabilities.
 
 Phase 3: Code Review
-[Use code-reviewer agent]
+[Use `code-reviewer` subagent]
 Check the recent changes for code quality issues.
 
 Phase 4: Documentation
-[Use docs-writer agent]
+[Use docs-writer subagent]
 Document the updated authentication flow.
 ```
 

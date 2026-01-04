@@ -45,7 +45,7 @@ Original output: @.prompts/{num}-{topic}-{original_purpose}/{topic}-{original_pu
 <summary_requirements>
 Create `.prompts/{num}-{topic}-{original_purpose}/SUMMARY.md`
 
-Load template: [summary-template.md](summary-template.md)
+Load template: [summary-template.md](../../../create-meta-prompts/references/summary-template.md)
 
 For Refine, always include:
 - Version with iteration info (e.g., "v2 (refined from v1)")

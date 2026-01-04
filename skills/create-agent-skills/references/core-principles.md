@@ -2,8 +2,62 @@
 Core principles guide skill authoring decisions. These principles ensure skills are efficient, effective, and maintainable across different models and use cases.
 
 ## Markdown Structure Principle
+
 ## Description
 Skills use Markdown headings for structure to ensure readability and maintainability. XML is reserved only for highly structured elements like routing decisions in router pattern skills.
+
+## XML Avoidance Rule
+
+**Do not wrap standard instructions in XML tags. Use Markdown headings and lists instead.**
+
+❌ Bad (XML overuse):
+```markdown
+<instruction>
+Analyze the code for security issues. Check for:
+<list>
+  <item>SQL injection</item>
+  <item>XSS vulnerabilities</item>
+</list>
+</instruction>
+
+<guidance>
+Always provide remediation steps.
+</guidance>
+```
+
+This adds token cost without benefit. XML tags like `<instruction>`, `<guidance>`, `<description>` provide no structural value.
+
+✅ Good (Markdown structure):
+```markdown
+## Analysis Approach
+
+Analyze code for security issues:
+- SQL injection vulnerabilities
+- XSS attack vectors
+- Authentication and authorization flaws
+
+## Output Requirements
+
+Always provide:
+1. Severity rating (Critical/High/Medium/Low)
+2. Specific remediation steps
+3. Code examples showing the fix
+```
+
+**When XML is appropriate:**
+- Router pattern skills with complex conditional logic
+- Workflow configuration files requiring machine parsing
+- Strict output format specifications for automation
+- Nested structured data with validation schemas
+
+**When XML is NOT appropriate:**
+- General instructions and guidance
+- Role definitions and descriptions
+- Workflow steps and processes
+- Examples and demonstrations
+- All prose and explanatory content
+
+**Rule of thumb**: If you're tempted to wrap text in `<instruction>`, `<guidance>`, `<requirement>`, or similar tags, use a Markdown heading (## or ###) instead.
 
 ## Why Markdown Headings
 ## Consistency

@@ -357,6 +357,142 @@ If your subagent prompt includes "ask user", "present options", or "wait for con
 ## Best Practices
 
 
+### Practice: Separation of Knowledge ("Empty Brain" Principle)
+
+**Do not hardcode checklists, documentation, or reference knowledge in subagent prompts.**
+
+Subagents should be lightweight orchestration layers that read knowledge from Skills or Reference Files at runtime.
+
+❌ Bad (Fat Agent with embedded knowledge):
+```markdown
+---
+name: security-reviewer
+tools: Read, Grep, Glob
+---
+
+## Role
+
+You are a senior security engineer specializing in web application security.
+
+## OWASP Top 10 Checklist
+
+A01 - Broken Access Control
+- Authorization checks on all endpoints
+- Principle of least privilege
+- CORS properly configured
+
+A02 - Cryptographic Failures
+- Sensitive data encrypted at rest
+- TLS for data in transit
+... (70+ lines of embedded checklist)
+```
+
+This violates Single Source of Truth - the checklist is now duplicated, harder to update, and bloats the subagent context.
+
+✅ Good (Lean Agent that reads knowledge):
+```markdown
+---
+name: security-reviewer
+tools: Read, Grep, Glob
+skills: [api-design]
+---
+
+## Role
+
+Security engineer specializing in application security and vulnerability detection.
+
+## Core Responsibilities
+
+1. **Before ANY audit**: Read `@skills/api-design/references/security-checklist.md` to apply latest security standards
+2. Identify vulnerabilities following OWASP Top 10 framework
+3. Report findings with severity levels and specific remediation
+
+## Analysis Process
+
+1. Load security checklist from `@skills/api-design/references/security-checklist.md`
+2. Execute reconnaissance phase
+3. Review code against checklist categories
+4. Document findings with severity and remediation
+```
+
+**Benefits of Separation of Knowledge:**
+- Single Source of Truth - knowledge lives in one place (skills/)
+- Subagents stay lean and focused (typically <100 lines)
+- Knowledge updates automatically propagate to all agents
+- Easier to maintain and extend knowledge base
+- Subagent context is reserved for orchestration logic
+
+**When to use Separation of Knowledge:**
+- Checklists (OWASP, testing patterns, code review criteria)
+- Framework-specific documentation (testing frameworks, API patterns)
+- Standard operating procedures and workflows
+- Best practices and style guides
+- Domain knowledge (security, performance, database patterns)
+
+**What belongs in the subagent:**
+- Role definition and focus areas
+- Orchestration workflow (how to apply knowledge)
+- Constraints specific to this agent's behavior
+- Output format requirements
+- Quality standards for results
+
+
+### Practice: XML Parsimony
+
+**Use XML tags ONLY for strict output formats or complex routing logic. Use Markdown (# Headings) for the agent's role, workflow, and prose.**
+
+XML is for machines (parsing, routing, validation). Markdown is for the LLM's understanding (readability, context, reasoning).
+
+❌ Bad (XML overuse for prose):
+```markdown
+<role>You are a React performance optimizer.</role>
+<workflow>
+  <step>Read component files</step>
+  <step>Analyze hooks usage</step>
+</workflow>
+<constraints>
+  <item>NEVER mutate props directly</item>
+  <item>ALWAYS memoize expensive computations</item>
+</constraints>
+```
+
+This is unreadable and provides no benefit over Markdown. Claude understands Markdown better.
+
+✅ Good (Markdown for structure, XML only where needed):
+```markdown
+## Role
+
+You are a React performance optimizer specializing in hooks best practices and memoization.
+
+## Workflow
+
+1. Read component files to understand structure
+2. Analyze hooks usage for anti-patterns
+3. Identify memoization opportunities
+
+## Constraints
+
+- NEVER mutate props directly
+- ALWAYS memoize expensive computations with useMemo
+- AVOID inline function definitions in props
+```
+
+**When to use XML tags:**
+- Structured output that needs parsing (e.g., `<task><name>...</name></task>` for workflow engines)
+- Complex routing logic in router pattern skills
+- Strict format specifications for machine consumption
+- Nested structured data with validation requirements
+
+**When to use Markdown:**
+- Role definitions
+- Workflow instructions
+- Constraints and guidelines
+- Examples and demonstrations
+- All prose and explanatory content
+
+**Rule of thumb**: If you're wrapping general instructions in XML tags like `<instruction>`, `<guidance>`, or `<description>`, you're using XML wrong. Use Markdown headings (# ## ###) instead.
+
+
 ### Practice
 
 

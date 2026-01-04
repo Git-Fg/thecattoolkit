@@ -69,7 +69,7 @@ Structure the plan using this XML format:
 <summary_requirements>
 Create `.prompts/{num}-{topic}-plan/SUMMARY.md`
 
-Load template: [summary-template.md](summary-template.md)
+Load template: [summary-template.md](../../../create-meta-prompts/references/summary-template.md)
 
 For plans, emphasize phase breakdown with objectives and assumptions needing validation. Next step typically: Execute first phase.
 </summary_requirements>
@@ -252,4 +252,4 @@ Structure as process:
 ```
 
 ## Metadata Guidelines
-Load: [metadata-guidelines.md](metadata-guidelines.md)
+Load: [metadata-guidelines.md](../../../create-meta-prompts/references/metadata-guidelines.md)

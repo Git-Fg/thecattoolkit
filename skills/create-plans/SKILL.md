@@ -310,9 +310,61 @@ Domain expertise is NOT needed for:
 - Resuming from handoff (context already established)
 - Transition between phases (just updating status)
 
-## Intake
+## Interaction Protocol
 
-Based on scan results, present context-aware options:
+**CRITICAL: Determine execution mode BEFORE proceeding**
+
+**IF invoked by User (Interactive Mode):**
+The user is directly asking for planning help. Follow the Intake and Routing sections below.
+
+**IF invoked by another Agent (Read-Only Mode):**
+1. **IGNORE** the Intake and Routing sections below.
+2. Read only the **Essential Principles** section above.
+3. Read the **Reference Index** below for available workflows and templates.
+4. **DO NOT** ask the user any questions.
+5. Return the requested information to the invoking agent.
+
+---
+
+## Intake & Smart Routing (Interactive Mode Only)
+
+**SKIP this section in Read-Only Mode**
+
+### Step 1: Analyze Intent (Priority)
+
+Check arguments, conversation history, and context for keywords. **Auto-route immediately** if intent is clear.
+
+### Step 2: Auto-Route (Keyword-Based)
+
+**Project Creation Keywords:**
+- `brief`, `new project`, `start new`, `initiate`, `begin` → `workflows/create-brief.md`
+- `roadmap`, `phases`, `plan structure` → `workflows/create-roadmap.md`
+- `from existing brief` → `workflows/create-roadmap.md`
+
+**Phase Planning Keywords:**
+- `plan phase`, `next phase`, `plan the X phase`, `phase 1` → `workflows/plan-phase.md`
+- `chunk`, `next tasks`, `what's next`, `break down` → `workflows/plan-chunk.md`
+- `research`, `investigate`, `explore`, `unknowns` → `workflows/research-phase.md`
+
+**Execution Keywords:**
+- `execute`, `run`, `do it`, `build`, `implement` → **EXIT SKILL** → Use `/run-plan <path>`
+
+**Workflow Management Keywords:**
+- `handoff`, `pack up`, `stopping`, `pause`, `save state` → `workflows/handoff.md`
+- `resume`, `continue`, `pick up`, `restore` → `workflows/resume.md`
+- `transition`, `complete`, `done`, `next phase`, `finished` → `workflows/transition.md`
+- `milestone`, `ship`, `v1.0`, `release`, `deploy` → `workflows/complete-milestone.md`
+
+**Context/Read-Only Keywords:**
+- `guidance`, `help`, `explain`, `how do I`, `best practices`, `principles` → Read **Essential Principles** above and exit
+
+**Conditional Routing (Context-Aware):**
+- If handoff exists at `.planning/phases/XX/.continue-here.md` AND no keywords → `workflows/resume.md`
+- If planning structure exists AND no keywords → Proceed to Step 3 (Fallback)
+
+### Step 3: Fallback (Interactive - Ambiguous Intent)
+
+**ONLY if intent is completely unclear after keyword analysis:**
 
 **If handoff found:**
 ```
@@ -352,7 +404,13 @@ What would you like to do?
 
 **Wait for response before proceeding.**
 
-## Routing
+---
+
+## Routing Table (Interactive Mode - Reference Only)
+
+**SKIP this section in Read-Only Mode**
+
+This table documents the keyword mappings used in Step 2 above.
 
 | Response | Workflow |
 |----------|----------|

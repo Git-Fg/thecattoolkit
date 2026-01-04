@@ -288,7 +288,7 @@ hits token limits. Never generate the full output in memory first.
 ## Summary Requirements
 Create `.prompts/{num}-{topic}-research/SUMMARY.md`
 
-Load template: [summary-template.md](summary-template.md)
+Load template: [summary-template.md](../../../create-meta-prompts/references/summary-template.md)
 
 For research, emphasize key recommendation and decision readiness. Next step typically: Create plan.
 
@@ -553,7 +553,7 @@ For each option:
 ```
 
 ## Metadata Guidelines
-Load: [metadata-guidelines.md](metadata-guidelines.md)
+Load: [metadata-guidelines.md](../../../create-meta-prompts/references/metadata-guidelines.md)
 
 **Enhanced guidance**:
 - Use <quality_report> to distinguish verified facts from assumptions
@@ -590,7 +590,7 @@ Include tool usage hints in research prompts when specific sources are needed.
 
 ## Pitfalls Reference
 Before completing research, review common pitfalls:
-Load: [research-pitfalls.md](research-pitfalls.md)
+Load: [research-pitfalls.md](../../../create-meta-prompts/references/research-pitfalls.md)
 
 Key patterns to avoid:
 - Configuration scope assumptions - enumerate all scopes

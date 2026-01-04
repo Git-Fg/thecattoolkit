@@ -48,7 +48,7 @@ Before declaring complete:
 <summary_requirements>
 Create `.prompts/{num}-{topic}-{purpose}/SUMMARY.md`
 
-Load template: [summary-template.md](summary-template.md)
+Load template: [summary-template.md](../../../create-meta-prompts/references/summary-template.md)
 
 For Do prompts, include Files Created section with paths and descriptions. Emphasize what was implemented and test status. Next step typically: Run tests or execute next phase.
 </summary_requirements>

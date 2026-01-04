@@ -107,43 +107,41 @@ Before declaring phase complete:
 - [Phase-specific criteria]
 </success_criteria>
 
+<metadata>
+<confidence level="{high|medium|low}">
+{Why this confidence level - e.g., "All dependencies clear" or "API documentation unclear"}
+</confidence>
+<dependencies>
+{External dependencies needed for this phase - e.g., "API access", "Design approval"}
+</dependencies>
+<open_questions>
+{Uncertainties that may affect execution - e.g., "Database schema not finalized"}
+</open_questions>
+<assumptions>
+{What was assumed in creating this plan - e.g., "Next.js 14 available", "User has Docker"}
+</assumptions>
+</metadata>
+
 <output>
 After completion, create `.planning/phases/XX-name/{phase}-{plan}-SUMMARY.md`:
 
-# Phase [X] Plan [Y]: [Name] Summary
+Load template: [summary-template.md](../../../create-meta-prompts/references/summary-template.md)
 
-**[Substantive one-liner - what shipped, not "phase complete"]**
-
-## Accomplishments
-- [Key outcome 1]
-- [Key outcome 2]
-
-## Files Created/Modified
-- `path/to/file.ts` - Description
-- `path/to/another.ts` - Description
-
-## Decisions Made
-[Key decisions and rationale, or "None"]
-
-## Issues Encountered
-[Problems and resolutions, or "None"]
-
-## Next Step
-[If more plans in this phase: "Ready for {phase}-{next-plan}-PLAN.md"]
-[If phase complete: "Phase complete, ready for next phase"]
+For phase plans, emphasize accomplishments and files created. Next step typically: Next plan in phase or phase completion.
 </output>
 ```
 
 ## Key Elements
 
-From create-meta-prompts patterns:
+From prompt-engineering-patterns standards:
 - XML structure for Claude parsing
 - @context references for file loading
+- Metadata tags: `<confidence>`, `<dependencies>`, `<open_questions>`, `<assumptions>`
 - Task types: auto, checkpoint:human-action, checkpoint:human-verify, checkpoint:decision
 - Action includes "what to avoid and WHY" (from intelligence-rules)
 - Verification is specific and executable
 - Success criteria is measurable
-- Output specification includes SUMMARY.md structure
+- Output specification references standard summary-template.md
 
 **Scope guidance:**
 - Aim for 3-6 tasks per plan
@@ -213,8 +211,29 @@ Before declaring phase complete:
 - JWT auth flow works end-to-end
 </success_criteria>
 
+<metadata>
+<confidence level="high">
+All dependencies documented, jose library verified compatible with Next.js 14.
+</confidence>
+<dependencies>
+- Prisma schema access
+- bcrypt installed
+- jose library available
+</dependencies>
+<open_questions>
+- Session rotation strategy deferred to Phase 2
+</open_questions>
+<assumptions>
+- Next.js 14 with App Router
+- PostgreSQL database available
+- httpOnly cookies supported by deployment
+</assumptions>
+</metadata>
+
 <output>
 After completion, create `.planning/phases/01-foundation/01-01-SUMMARY.md`
+
+Load template: [summary-template.md](../../../create-meta-prompts/references/summary-template.md)
 </output>
 ```
 

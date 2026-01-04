@@ -34,19 +34,46 @@ Example: Database migration = low freedom (one safe path). Code review = high fr
 
 ## XML Usage
 
-Use XML sparingly and only for highly structured content:
+Use XML sparingly and only for highly structured content that requires machine parsing.
 
-XML is appropriate for:
-- Workflow configurations with strict steps
-- Agent command definitions with required fields
-- Highly structured output specifications
+**XML is appropriate for:**
+- Workflow configurations with strict steps and validation
+- Agent command definitions with required fields and schemas
+- Structured output specifications (e.g., `<output><files>...</files></output>`)
+- Router pattern skills with complex conditional logic
+- Meta-prompt chains where output feeds into subsequent prompts
 
-XML is NOT appropriate for:
+**XML is NOT appropriate for:**
 - General instructions and guidance
-- Explanations and descriptions
-- Most prompt content
+- Role definitions and descriptions
+- Workflow explanations and process descriptions
+- Most prompt content and prose
 
-Prefer text-based structure with clear headings and lists.
+**Examples:**
+
+❌ Bad (XML overuse):
+```xml
+<objective>Implement JWT authentication</objective>
+<instructions>
+  <step>Create login endpoint</step>
+  <step>Add JWT middleware</step>
+</instructions>
+```
+
+✅ Good (Markdown structure):
+```markdown
+## Objective
+
+Implement JWT authentication for API endpoints.
+
+## Implementation Steps
+
+1. Create login endpoint at `/api/auth/login`
+2. Add JWT middleware to protected routes
+3. Implement token verification logic
+```
+
+**Rule of thumb**: If you're wrapping text in `<instruction>`, `<guidance>`, `<description>`, or `<requirement>` tags, use Markdown headings instead. XML is for machine-readable structure, not for human-readable prose.
 
 # Quick Start
 
@@ -62,6 +89,26 @@ For quick prompt patterns:
 4. Add examples: Include 2-3 examples showing desired format
 
 See references/ for detailed patterns and templates.
+
+# Patterns Index
+
+## Templates Library
+
+All prompt templates are consolidated in `templates/`:
+
+**Simple Task Patterns:**
+- templates/simple-task-patterns.md - Coding, analysis, and research tasks for single prompts
+
+**Meta-Prompt Patterns:**
+- templates/do-patterns.md - Execution prompts that produce artifacts (code, docs, designs)
+- templates/research-patterns.md - Information gathering with quality controls and verification
+- templates/plan-patterns.md - Approaches, roadmaps, and strategies for implementation
+- templates/refine-patterns.md - Iteration and improvement of existing outputs
+
+**Usage Guide:**
+- Use simple-task-patterns for single, focused prompts (quick execution)
+- Use meta-prompt patterns for multi-stage workflows (research → plan → implement)
+- Meta-prompt patterns require `.prompts/` directory infrastructure and produce SUMMARY.md
 
 # Reference Index
 

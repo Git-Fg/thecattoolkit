@@ -6,6 +6,116 @@
 2. references/core-principles.md
 
 ## Process
+
+## Evaluation Areas
+
+### YAML Frontmatter
+- **name**: Lowercase-with-hyphens, max 64 chars, matches directory name, follows verb-noun convention (create-*, manage-*, setup-*, generate-*)
+- **description**: Max 1024 chars, third person, includes BOTH what it does AND when to use it, no XML tags, uses strong language (MUST USE/PROACTIVELY USE/CONSULT based on skill type)
+- **Strong language patterns**:
+  - "MUST USE" for creation/critical skills (create-*, debug-like-expert, prompt-engineering-patterns)
+  - "PROACTIVELY USE" for proactive usage skills (project-analysis, testing-strategy, performance-optimization, prioritization, problem-analysis, strategic-thinking, git-workflow)
+  - "CONSULT" for reference/expert guidance skills (api-design, architecture-patterns)
+
+### Structure and Organization
+- **Progressive disclosure**: SKILL.md is overview (<500 lines), detailed content in reference files, references one level deep
+- **Structure quality**:
+  - Required sections present (objective, quick_start, success_criteria)
+  - Markdown headings for structure (#, ##, ###)
+  - Proper heading hierarchy and organization
+  - Conditional sections appropriate for complexity level
+  - XML reserved only for highly structured elements (routing, complex workflows)
+- **File naming**: Descriptive, forward slashes, organized by domain
+
+### Content Quality
+- **Conciseness**: Only context Claude doesn't have. Apply critical test: "Does removing this reduce effectiveness?"
+- **Clarity**: Direct, specific instructions without analogies or motivational prose
+- **Specificity**: Matches degrees of freedom to task fragility
+- **Examples**: Concrete, minimal, directly applicable
+
+### Anti-Patterns (flag these issues)
+- **missing_required_sections**: Missing objective, quick_start, or success_criteria
+- **improper_heading_hierarchy**: Skipped heading levels, unclear organization
+- **mixed_formatting**: Inconsistent use of markdown and XML
+- **vague_descriptions**: "helps with", "processes data"
+- **wrong_pov**: First/second person instead of third person
+- **too_many_options**: Multiple options without clear default
+- **deeply_nested_references**: References more than one level deep from SKILL.md
+- **windows_paths**: Backslash paths instead of forward slashes
+- **bloat**: Obvious explanations, redundant content
+
+### Contextual Judgment
+
+Apply judgment based on skill complexity and purpose:
+
+**Simple skills** (single task, <100 lines):
+- Required tags only is appropriate - don't flag missing conditional tags
+- Minimal examples acceptable
+- Light validation sufficient
+
+**Complex skills** (multi-step, external APIs, security concerns):
+- Missing conditional tags (security_checklist, validation, error_handling) is a real issue
+- Comprehensive examples expected
+- Thorough validation required
+
+**Delegation skills** (invoke subagents):
+- Success criteria can focus on invocation success
+- Pre-validation may be redundant if subagent validates
+
+Always explain WHY something matters for this specific skill, not just that it violates a rule.
+
+### Output Format
+
+Audit reports use severity-based findings, not scores:
+
+```markdown
+## Audit Results: [skill-name]
+
+### Assessment
+[1-2 sentence overall assessment: Is this skill fit for purpose? What's the main takeaway?]
+
+### Critical Issues
+Issues that hurt effectiveness or violate required patterns:
+
+1. [Issue category] (file:line)
+   - Current: [What exists now]
+   - Should be: [What it should be]
+   - Why it matters: [Specific impact on this skill's effectiveness]
+   - Fix: [Specific action to take]
+
+2. ...
+
+(If none: "No critical issues found.")
+
+### Recommendations
+Improvements that would make this skill better:
+
+1. [Issue category] (file:line)
+   - Current: [What exists now]
+   - Recommendation: [What to change]
+   - Benefit: [How this improves the skill]
+
+2. ...
+
+(If none: "No recommendations - skill follows best practices well.")
+
+### Strengths
+What's working well (keep these):
+- [Specific strength with location]
+- ...
+
+### Quick Fixes
+Minor issues easily resolved:
+1. [Issue] at file:line → [One-line fix]
+2. ...
+
+### Context
+- Skill type: [simple/complex/delegation/etc.]
+- Line count: [number]
+- Estimated effort to address issues: [low/medium/high]
+```
+
+## Process
 ## Step 1: List Available Skills
 
 **DO NOT use AskUserQuestion** - there may be many skills.
