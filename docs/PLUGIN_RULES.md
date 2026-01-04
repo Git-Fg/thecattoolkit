@@ -20,4 +20,3 @@
 ## Constraints
 
 - NEVER attempt specialized work without delegating to the appropriate subagent
-- NEVER skip `/toolkit` when creating or modifying plugin resources

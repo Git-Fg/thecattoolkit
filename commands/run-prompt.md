@@ -1,6 +1,6 @@
 ---
 name: run-prompt
-description: MUST USE when executing prompts from .prompts/prompts/ as delegated sub-tasks with fresh context. Secondary: running multiple prompts in parallel/sequential, delegating to fresh contexts, or automating prompt execution.
+description: Use when executing prompts from .prompts/prompts/ as delegated sub-tasks with fresh context. Secondary: running multiple prompts in parallel/sequential, delegating to fresh contexts, or automating prompt execution.
 argument-hint: <prompt-number(s)-or-name> [--parallel|--sequential]
 allowed-tools: [Read, Task, Glob, Bash(ls:*), Bash(mv:*), Bash(git add:*), Bash(git status:*), Bash(git commit:*)]
 ---

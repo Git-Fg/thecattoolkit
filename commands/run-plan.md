@@ -1,5 +1,5 @@
 ---
-description: MUST USE when executing PLAN.md files created by the planning system. Secondary: running orchestrator agent, executing phase plans, or implementing planned tasks.
+description: Use when executing PLAN.md files created by the planning system. Secondary: running orchestrator subagent, executing phase plans, or implementing planned tasks.
 argument-hint: <plan-path>
 allowed-tools: [Read, Write, Task, Bash(git add:*), Bash(git status:*), Bash(git commit:*), Bash(ls:*)]
 ---
@@ -20,7 +20,7 @@ Execute the plan at `$ARGUMENTS` using the context-aware orchestrator agent.
    test -f "$(dirname "$ARGUMENTS")/SUMMARY.md" && echo "Plan already executed (SUMMARY.md exists)"
    ```
 
-3. **Invoke orchestrator agent:**
+3. **Invoke orchestrator subagent:**
    Use Task tool with subagent_type="orchestrator":
    ```
    Execute the plan located at: $ARGUMENTS
@@ -54,7 +54,7 @@ Execute the plan at `$ARGUMENTS` using the context-aware orchestrator agent.
    ```
 
 4. **Monitor completion:**
-   - Wait for agent to complete
+   - Wait for subagent to complete
    - Verify SUMMARY.md was created
    - Verify git commit was successful
 
@@ -65,14 +65,14 @@ Execute the plan at `$ARGUMENTS` using the context-aware orchestrator agent.
 
 ## Constraints
 
-- The orchestrator agent handles all context loading automatically
+- The orchestrator subagent handles all context loading automatically
 - Do NOT manually read BRIEF.md or ROADMAP.md in this command
-- Let the agent establish full context before execution
-- Trust the agent's Plan Execution Protocol
+- Let the subagent establish full context before execution
+- Trust the subagent's Plan Execution Protocol
 
 ## Success Criteria
 
-- Plan executed by orchestrator agent
+- Plan executed by orchestrator subagent
 - SUMMARY.md created in plan directory
 - Git commit successful
 - User receives completion report with next steps

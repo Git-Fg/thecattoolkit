@@ -10,8 +10,8 @@ I help you build, audit, and maintain Claude Code resources. **Select an action:
 
 ## **Create** - Build New Resources
 
-1. **Create a Skill** - Build new agent capabilities
-2. **Create an Agent** - Create specialized AI workers
+1. **Create a Skill** - Build new subagent capabilities
+2. **Create an Subagent** - Create specialized AI workers
 3. **Create a Command** - Build slash commands
 4. **Create a Hook** - Set up event listeners
 5. **Create a Prompt** - Design structured prompts
@@ -20,7 +20,7 @@ I help you build, audit, and maintain Claude Code resources. **Select an action:
 ## **Audit** - Review Existing Resources
 
 7. **Audit Skills** - Validate YAML compliance and best practices
-8. **Audit Agents** - Check structure and effectiveness
+8. **Audit Subagents** - Check structure and effectiveness
 9. **Audit Commands** - Review slash command configurations
 10. **Audit Subagents** - Review delegation patterns
 
@@ -34,8 +34,8 @@ I help you build, audit, and maintain Claude Code resources. **Select an action:
 
 Build something new:
 
-- **Skills** - Agent capabilities (e.g., "create a skill for API design")
-- **Agents** - Specialized AI workers (e.g., "create a code reviewer agent")
+- **Skills** - Subagent capabilities (e.g., "create a skill for API design")
+- **Agents** - Specialized AI workers (e.g., "create a code reviewer subagent")
 - **Commands** - Slash commands (e.g., "create a deployment command")
 - **Hooks** - Event listeners (e.g., "create a pre-commit hook")
 - **Prompts** - Structured prompts (e.g., "create a meta-prompt for planning")
