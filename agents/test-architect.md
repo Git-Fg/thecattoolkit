@@ -3,6 +3,7 @@ name: test-architect
 description: Testing strategy specialist. Use PROACTIVELY when adding new features, fixing bugs, or improving test coverage. Creates unit, integration, and e2e tests.
 tools: Read, Write, Grep, Glob, Bash, SlashCommand
 skills: testing-strategy, prompt-engineering-patterns
+permissionMode: inherit
 ---
 
 ## Slash Command Integration

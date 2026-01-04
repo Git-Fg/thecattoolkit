@@ -1,4 +1,5 @@
 ---
+name: create-meta-prompt
 description: Create meta-prompts that generate optimized prompts for AI agents (Claude Code, GPT-4, Claude, etc.)
 argument-hint: <task-description>
 allowed-tools: Skill(create-meta-prompts)

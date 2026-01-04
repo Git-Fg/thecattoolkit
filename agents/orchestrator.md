@@ -3,6 +3,7 @@ name: orchestrator
 description: Master coordinator for complex multi-step tasks. Use PROACTIVELY for tasks involving 2+ modules, delegation to specialists, architectural planning, or GitHub PR workflows. MUST BE USED for "improve", "refactor", "add feature", or implementing features from GitHub issues.
 tools: Read, Write, Edit, Task, SlashCommand, AskUserQuestion, TodoWrite, Grep, Glob
 skills: project-analysis, architecture-patterns, prompt-engineering-patterns, strategic-thinking
+permissionMode: inherit
 ---
 
 ## Slash Command Integration

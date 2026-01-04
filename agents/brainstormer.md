@@ -2,7 +2,7 @@
 name: brainstormer
 description: Strategic thinking and decision specialist. Use PROACTIVELY for complex decisions, fresh perspectives, problem analysis, or prioritization. Applies mental models from strategic-thinking, prioritization, and problem-analysis skills.
 tools: Read, Write, Edit, Glob, Grep, Bash, TodoWrite, AskUserQuestion, SlashCommand
-permissionMode: default
+permissionMode: inherit
 skills: strategic-thinking, prioritization, problem-analysis
 ---
 

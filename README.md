@@ -99,7 +99,7 @@ Start a new Claude Code session to use the commands and skills.
 
 ```bash
 # Clone the repo
-git clone https://github.com/glittercowboy/Git-Fg.git
+git clone https://github.com/Git-Fg/thecattoolkit.git
 cd thecattoolkit
 
 # Install commands
@@ -167,18 +167,6 @@ Each audit provides:
 - Recommendations (should-fix)
 - Strengths (what works well)
 - Context-specific guidance
-
-### Platform-Specific Development
-
-```
-> Build a native macOS menu bar app for monitoring system resources
-```
-
-The macos-apps skill provides:
-- CLI-only development (no Xcode required)
-- "Prove, don't promise" methodology
-- Verification with xcodebuild
-- Focus on outcomes, not code changes
 
 ## Commands
 
@@ -295,7 +283,7 @@ Hierarchical project planning optimized for solo developer + Claude. Create exec
 
 **PLAN.md IS the prompt** - not documentation that gets transformed later. Brief → Roadmap → Research (if needed) → PLAN.md → Execute → SUMMARY.md.
 
-**Domain-aware:** Optionally loads framework-specific expertise from `~/.claude/skills/expertise/` (e.g., macos-apps, iphone-apps) to make plans concrete instead of generic. Domain expertise skills are created with [create-agent-skills](#create-agent-skills) - exhaustive knowledge bases (5k-10k+ lines) that make task specifications framework-appropriate.
+**Domain-aware:** Optionally loads framework-specific expertise from `~/.claude/skills/expertise/` to make plans concrete instead of generic. Domain expertise skills are created with [create-agent-skills](#create-agent-skills) - exhaustive knowledge bases (5k-10k+ lines) that make task specifications framework-appropriate.
 
 **Quality controls:** Research includes verification checklists, blind spots review, critical claims audits, and streaming writes to prevent gaps and token limit failures.
 
@@ -582,7 +570,7 @@ Event-driven automation that triggers during Claude Code operations:
 
 ## Complete Component Reference
 
-### All Skills (19)
+### All Skills (17)
 
 | Skill | Purpose | Type | Location |
 |-------|---------|------|----------|
@@ -603,8 +591,6 @@ Event-driven automation that triggers during Claude Code operations:
 | strategic-thinking | 5 frameworks (first-principles, inversion, etc.) | Mental Model | skills/strategic-thinking/ |
 | problem-analysis | 4 frameworks (5-whys, opportunity-cost, etc.) | Mental Model | skills/problem-analysis/ |
 | prioritization | 3 frameworks (pareto, one-thing, eisenhower) | Mental Model | skills/prioritization/ |
-| macos-apps | Native macOS development (Swift/SwiftUI) | Platform | skills/expertise/macos-apps/ |
-| iphone-apps | Native iOS development (Swift/SwiftUI) | Platform | skills/expertise/iphone-apps/ |
 
 ### All Agents (11)
 

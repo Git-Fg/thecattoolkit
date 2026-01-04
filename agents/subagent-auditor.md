@@ -3,6 +3,7 @@ name: subagent-auditor
 description: Expert subagent auditor for AI subagents. MUST BE USED when user asks to audit a subagent for best practices compliance, prompt quality, and tool selection.
 tools: Read, Grep, Glob, SlashCommand
 skills: create-subagents
+permissionMode: inherit
 ---
 
 ## Slash Command Integration

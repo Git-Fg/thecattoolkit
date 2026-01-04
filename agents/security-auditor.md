@@ -3,6 +3,7 @@ name: security-auditor
 description: Security specialist for vulnerability detection, secure coding review, and security hardening. Use PROACTIVELY when handling authentication, authorization, user input, API keys, or sensitive data. Checks for OWASP Top 10 and common vulnerabilities.
 tools: Read, Grep, Glob, SlashCommand
 skills: api-design
+permissionMode: inherit
 ---
 
 ## Slash Command Integration

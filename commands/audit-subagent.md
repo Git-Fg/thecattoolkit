@@ -1,4 +1,5 @@
 ---
+name: audit-subagent
 description: Audit subagent configuration for role definition, prompt quality, tool selection, Markdown structure compliance, and effectiveness
 argument-hint: <subagent-path-or-name>
 ---

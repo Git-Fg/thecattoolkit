@@ -1,4 +1,5 @@
 ---
+name: rapid
 description: Fast-paced development mode for quick iterations. PROACTIVELY USE for prototypes, MVPs, and time-sensitive tasks where speed is prioritized.
 argument-hint: [task description]
 ---

@@ -3,6 +3,7 @@ name: debugger
 description: Expert debugging specialist for errors, test failures, crashes, and unexpected behavior. Use PROACTIVELY when encountering any error, exception, or failing test. Performs systematic root cause analysis.
 tools: Read, Edit, Bash, Grep, Glob, Write, SlashCommand
 skills: debug-like-expert, performance-optimization, prompt-engineering-patterns
+permissionMode: inherit
 ---
 
 ## Slash Command Integration

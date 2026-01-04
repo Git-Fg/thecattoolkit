@@ -1,4 +1,5 @@
 ---
+name: debug
 description: Apply expert debugging methodology to investigate a specific issue
 argument-hint: [issue description]
 allowed-tools: Skill(debug-like-expert)

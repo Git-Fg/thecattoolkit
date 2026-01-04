@@ -1,4 +1,5 @@
 ---
+name: audit-skill
 description: Audit skill for YAML compliance, Markdown structure, progressive disclosure, and best practices
 argument-hint: <skill-path>
 ---

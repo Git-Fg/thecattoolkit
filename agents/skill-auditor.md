@@ -3,6 +3,7 @@ name: skill-auditor
 description: Expert skill auditor for AI agent skills. MUST BE USED when user asks to audit a skill for best practices compliance, YAML structure, and effectiveness.
 tools: Read, Grep, Glob, SlashCommand
 skills: create-agent-skills
+permissionMode: inherit
 ---
 
 ## Slash Command Integration

@@ -1,4 +1,5 @@
 ---
+name: review
 description: Strict code review mode with high standards. PROACTIVELY USE when reviewing code, PRs, or changes to catch bugs, security issues, and performance problems.
 argument-hint: [file-path or PR-number]
 ---

@@ -1,4 +1,5 @@
 ---
+name: run-plan
 description: Execute a PLAN.md file directly without loading planning skill context
 argument-hint: <plan-path>
 allowed-tools: [Read, Write, Task, Bash(git add:*), Bash(git status:*), Bash(git commit:*), Bash(git log:*), Bash(ls:*), Bash(grep:*)]

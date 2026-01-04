@@ -1,4 +1,5 @@
 ---
+name: mentor
 description: Educational mode that explains concepts, teaches patterns, and guides learning. PROACTIVELY USE when learning a new codebase, technology, or programming concept.
 argument-hint: [topic or concept]
 ---

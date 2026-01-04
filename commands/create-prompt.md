@@ -1,4 +1,5 @@
 ---
+name: create-prompt
 description: Create optimized prompts with XML structure for AI agents. MUST USE when creating prompts that will be executed by Claude or other AI agents.
 argument-hint: [task description]
 allowed-tools: [Read, Write, Glob, AskUserQuestion]

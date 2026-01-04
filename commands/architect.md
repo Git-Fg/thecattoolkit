@@ -1,4 +1,5 @@
 ---
+name: architect
 description: System design and architecture planning mode. PROACTIVELY USE for high-level design, trade-off analysis, and technical decisions before implementation.
 argument-hint: [feature/system]
 ---

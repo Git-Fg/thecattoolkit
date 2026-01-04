@@ -3,6 +3,7 @@ name: slash-command-auditor
 description: Expert slash command auditor for AI assistant slash commands (primarily Claude Code, applicable to similar systems). MUST BE USED when user asks to audit a slash command for best practices compliance, YAML configuration, and security.
 tools: Read, Grep, Glob, SlashCommand
 skills: create-slash-commands
+permissionMode: inherit
 ---
 
 ## Slash Command Integration

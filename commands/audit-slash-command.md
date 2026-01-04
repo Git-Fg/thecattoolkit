@@ -1,4 +1,5 @@
 ---
+name: audit-slash-command
 description: Audit slash command for YAML frontmatter, argument handling, description clarity, and best practices
 argument-hint: <command-path-or-name>
 ---

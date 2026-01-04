@@ -3,6 +3,7 @@ name: docs-writer
 description: Technical documentation specialist. Use PROACTIVELY when writing README, API docs, guides, or inline documentation.
 tools: Read, Write, Edit, Glob, Grep, SlashCommand
 skills: project-analysis, api-design
+permissionMode: inherit
 ---
 
 ## Slash Command Integration

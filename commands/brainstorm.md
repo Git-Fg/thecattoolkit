@@ -1,4 +1,5 @@
 ---
+name: brainstorm
 description: Apply strategic thinking frameworks for decision-making, prioritization, and problem analysis
 argument-hint: [framework name or skill name, optional]
 allowed-tools: Skill(strategic-thinking), Skill(prioritization), Skill(problem-analysis), Task
