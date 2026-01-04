@@ -182,30 +182,29 @@ scripts/:
 
 ## Reference Index
 
-All in `references/`:
-
-Structure: skill-structure.md
-Principles: core-principles.md, be-clear-and-direct.md
-Patterns: common-patterns.md, workflows-and-validation.md
-Assets: using-templates.md, using-scripts.md
-Advanced: executable-code.md, api-security.md, iteration-and-testing.md
+- `references/skill-structure.md` - SKILL.md anatomy and requirements
+- `references/core-principles.md` - Fundamental skill design principles
+- `references/be-clear-and-direct.md` - Writing clear instructions
+- `references/common-patterns.md` - Common skill patterns
+- `references/workflows-and-validation.md` - Workflow design
+- `references/using-templates.md` - Template usage guide
+- `references/using-scripts.md` - Script integration
+- `references/executable-code.md` - Code execution patterns
+- `references/api-security.md` - API security considerations
+- `references/iteration-and-testing.md` - Testing skills
 
 ## Workflows Index
 
-All in `workflows/`:
-
-| Workflow | Purpose |
-|----------|---------|
-| create-new-skill.md | Build a skill from scratch |
-| create-domain-expertise-skill.md | Build exhaustive domain knowledge base for build/ |
-| audit-skill.md | Analyze skill against best practices |
-| verify-skill.md | Check if content is still accurate |
-| add-workflow.md | Add a workflow to existing skill |
-| add-reference.md | Add a reference to existing skill |
-| add-template.md | Add a template to existing skill |
-| add-script.md | Add a script to existing skill |
-| upgrade-to-router.md | Convert simple skill to router pattern |
-| get-guidance.md | Help decide what kind of skill to build |
+- `workflows/create-new-skill.md` - Build a skill from scratch
+- `workflows/create-domain-expertise-skill.md` - Build exhaustive domain knowledge base
+- `workflows/audit-skill.md` - Analyze skill against best practices
+- `workflows/verify-skill.md` - Check if content is still accurate
+- `workflows/add-workflow.md` - Add a workflow to existing skill
+- `workflows/add-reference.md` - Add a reference to existing skill
+- `workflows/add-template.md` - Add a template to existing skill
+- `workflows/add-script.md` - Add a script to existing skill
+- `workflows/upgrade-to-router.md` - Convert simple skill to router pattern
+- `workflows/get-guidance.md` - Help decide what kind of skill to build
 
 ## YAML Requirements
 

@@ -1,17 +1,27 @@
 {
   "description": "thecattoolkit hooks: file protection, security checks, and type-checking",
   "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh -c '${CLAUDE_PLUGIN_ROOT}/hooks/scripts/session-start.sh'"
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
         "matcher": "Edit|Write",
         "hooks": [
           {
             "type": "command",
-            "command": "sh -c 'command -v uv >/dev/null 2>&1 && uv run ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/protect-files.py || python3 ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/protect-files.py'"
+            "command": "sh -c 'if command -v uv >/dev/null 2>&1; then uv run ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/protect-files.py; elif command -v python3 >/dev/null 2>&1; then python3 ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/protect-files.py; else echo \"Skipping hook: python not found\" && exit 0; fi'"
           },
           {
             "type": "command",
-            "command": "sh -c 'command -v uv >/dev/null 2>&1 && uv run ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/security-check.py || python3 ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/security-check.py'"
+            "command": "sh -c 'if command -v uv >/dev/null 2>&1; then uv run ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/security-check.py; elif command -v python3 >/dev/null 2>&1; then python3 ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/security-check.py; else echo \"Skipping hook: python not found\" && exit 0; fi'"
           }
         ]
       }
@@ -22,7 +32,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "sh -c 'command -v uv >/dev/null 2>&1 && uv run ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/type-check-on-edit.py || python3 ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/type-check-on-edit.py'",
+            "command": "sh -c 'if command -v uv >/dev/null 2>&1; then uv run ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/type-check-on-edit.py; elif command -v python3 >/dev/null 2>&1; then python3 ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/type-check-on-edit.py; else echo \"Skipping hook: python not found\" && exit 0; fi'",
             "timeout": 30000
           }
         ]

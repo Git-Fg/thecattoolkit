@@ -5,6 +5,61 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.0.1] - 2026-01-04
+
+### Changed
+
+#### Structural Refactoring - Hybrid XML/Markdown & Semantic Containers
+
+This release consolidates thinking frameworks and refactors prompt engineering patterns for improved consistency and clarity.
+
+**Consolidated Thinking Frameworks**
+
+- Merged strategic-thinking, prioritization, and problem-analysis skills into unified `thinking-frameworks` skill
+- Router Pattern enables dynamic framework selection based on user needs
+- All 12 frameworks (first-principles, inversion, second-order, swot, 10-10-10, pareto, one-thing, eisenhower-matrix, 5-whys, opportunity-cost, occams-razor, via-negativa) now accessible via single skill
+- Removed duplicate skill directories: `skills/strategic-thinking/`, `skills/prioritization/`, `skills/problem-analysis/`
+
+**Prompt Engineering Patterns Refactored**
+
+- Introduced Hybrid XML/Markdown structure: XML for logic containers, Markdown for content
+- Semantic Container Principle: Use XML tags for machine-parsed or strictly isolated sections
+- Core XML containers defined: `<intake>`, `<routing>`, `<workflow>`, `<constraints>`, `<output_format>`
+- Maximum 5 high-level tag pairs per skill to prevent "XML soup"
+- Updated `prompt-engineering-patterns/SKILL.md` with Container Principle documentation
+- Updated `create-agent-skills/references/core-principles.md` with new semantic container guidelines
+
+**Domain Expertise Simplification**
+
+- Removed pre-built platform expertise skills (`skills/expertise/macos-apps/`, `skills/expertise/iphone-apps/`)
+- Domain expertise is now generated on-demand via `/toolkit` Create Domain Expertise Skill
+- Updated `create-plans/references/domain-expertise.md` with generic platform template examples
+- Fixed broken reference to deleted macOS expertise path
+
+**New Output Mode Agents**
+
+- **architect** - System design mode with read-only tools
+- **mentor** - Learning mode with educational approach
+- **rapid-developer** - Fast development mode with full tools
+- **qa-reviewer** - Code review mode with testing capabilities
+
+**New Central Toolkit Command**
+
+- **toolkit** - Central router for all create, audit, and heal operations
+- Replaces individual wrapper commands with unified entry point
+- Guides users to appropriate skills based on intent
+
+### Updated Documentation
+
+- README.md counts updated: 7 commands, 16 agents, 16 skills
+- Removed outdated references to deleted skills
+- Updated component reference tables
+
+### Fixed
+
+- Broken reference in `skills/create-plans/references/domain-expertise.md` (macOS expertise path)
+- Documentation consistency across skill descriptions
+
 ## [1.1.7] - 2026-01-03
 
 ### Added

@@ -6,14 +6,14 @@
   },
   "metadata": {
     "description": "Curated Claude Code skills and commands for prompt engineering and productivity",
-    "version": "1.1.6"
+    "version": "2.0.1"
   },
   "plugins": [
     {
       "name": "thecattoolkit",
       "source": "./",
       "description": "Skills and commands for prompt engineering, MCP servers, subagents, hooks, and productivity workflows (with permissive automation hooks: file protection, security checks, type-checking)",
-      "version": "1.1.6",
+      "version": "2.0.1",
       "strict": true
     }
   ]

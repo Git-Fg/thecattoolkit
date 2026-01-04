@@ -1,170 +1,159 @@
-# Domain Expertise Structure
+# Domain Expertise
 
-Guide for creating domain expertise skills that work efficiently with create-plans.
+## Overview
 
-## Purpose
+Domain expertise skills are comprehensive knowledge bases generated on-demand into user-space paths. They provide framework-specific patterns, best practices, and complete lifecycle workflows for various technology stacks.
 
-Domain expertise provides context-specific knowledge (Swift/macOS patterns, Next.js conventions, Unity workflows) that makes plans more accurate and actionable.
+**Critical:** Domain expertise is NOT shipped with the plugin. It is generated into your project or user space as needed.
 
-**Critical:** Domain skills must be context-efficient. Loading 20k+ tokens of references defeats the purpose.
+## Location Structure
 
-## File Structure
+Domain expertise lives in two possible locations:
 
+### Project-Level (Recommended)
 ```
-~/.claude/skills/expertise/[domain-name]/
-├── SKILL.md              # Core principles + references_index (5-7k tokens)
-├── references/           # Selective loading based on phase type
-│   ├── always-useful.md  # Conventions, patterns used in all phases
-│   ├── database.md       # Database-specific guidance
-│   ├── ui-layout.md      # UI-specific guidance
-│   ├── api-routes.md     # API-specific guidance
-│   └── ...
-└── workflows/            # Optional: domain-specific workflows
-    └── ...
-```
-
-## SKILL.md Template
-
-```markdown
----
-name: [domain-name]
-description: [What this expertise covers]
----
-
-<principles>
-## Core Principles
-
-[Fundamental patterns that apply to ALL work in this domain]
-[Should be complete enough to plan without loading references]
-
-Examples:
-- File organization patterns
-- Naming conventions
-- Architecture patterns
-- Common gotchas to avoid
-- Framework-specific requirements
-
-**Keep this section comprehensive but concise (~3-5k tokens).**
-</principles>
-
-<references_index>
-## Reference Loading Guide
-
-When planning phases, load references based on phase type:
-
-**For [phase-type-1] phases:**
-- references/[file1].md - [What it contains]
-- references/[file2].md - [What it contains]
-
-**For [phase-type-2] phases:**
-- references/[file3].md - [What it contains]
-- references/[file4].md - [What it contains]
-
-**Always useful (load for any phase):**
-- references/conventions.md - [What it contains]
-- references/common-patterns.md - [What it contains]
-
-**Examples of phase type mapping:**
-- Database/persistence phases → database.md, migrations.md
-- UI/layout phases → ui-patterns.md, design-system.md
-- API/backend phases → api-routes.md, auth.md
-- Integration phases → system-apis.md, third-party.md
-</references_index>
-
-<workflows>
-## Optional Workflows
-
-[If domain has specific workflows, list them here]
-[These are NOT auto-loaded - only used when specifically invoked]
-</workflows>
+.claude/skills/expertise/{domain-name}/
+├── SKILL.md                          # Router with essential principles
+├── workflows/
+│   ├── build-new-{thing}.md          # Create from scratch
+│   ├── add-feature.md                # Extend existing
+│   ├── debug-{thing}.md              # Find and fix bugs
+│   ├── write-tests.md                # Test for correctness
+│   ├── optimize-performance.md       # Profile and speed up
+│   └── ship-{thing}.md               # Deploy/distribute
+└── references/
+    ├── architecture.md               # Project structure patterns
+    ├── libraries.md                  # Ecosystem overview
+    ├── patterns.md                   # Design patterns
+    ├── testing-debugging.md          # Verification approaches
+    ├── performance.md                # Optimization strategies
+    └── anti-patterns.md              # Common mistakes
 ```
 
-## Reference File Guidelines
-
-Each reference file should be:
-
-**1. Focused** - Single concern (database patterns, UI layout, API design)
-
-**2. Actionable** - Contains patterns Claude can directly apply
-```markdown
-# Database Patterns
-
-## Table Naming
-- Singular nouns (User, not Users)
-- snake_case for SQL, PascalCase for models
-
-## Common Patterns
-- Soft deletes: deleted_at timestamp
-- Audit columns: created_at, updated_at
-- Foreign keys: [table]_id format
+### User-Level
+```
+~/.claude/skills/expertise/{domain-name}/
+[Same structure as project-level]
 ```
 
-**3. Sized appropriately** - 500-2000 lines (~1-5k tokens)
-   - Too small: Not worth separate file
-   - Too large: Split into more focused files
+## Generation
 
-**4. Self-contained** - Can be understood without reading other references
+**How to create domain expertise:**
 
-## Context Efficiency Examples
+1. Use the central router: `/toolkit` → Create → Domain Expertise Skill
+2. Specify your technology stack (e.g., "macOS apps with SwiftUI")
+3. Choose location (project-level or user-level)
+4. Skill generates comprehensive knowledge base with:
+   - 5+ research phases covering ecosystem, architecture, tooling, pitfalls
+   - Complete lifecycle workflows (build → debug → test → optimize → ship)
+   - Decision trees and library comparisons
+   - Platform-specific considerations
+   - Anti-patterns and common mistakes
 
-**Bad (old approach):**
+## Discovery
+
+The `create-plans` skill automatically scans for domain expertise:
+
+```bash
+# Check for project-level
+ls -la .claude/skills/expertise/
+
+# Check for user-level
+ls -la ~/.claude/skills/expertise/
 ```
-Load all references: 10,728 lines = ~27k tokens
-Result: 50% context before planning starts
+
+**If no expertise found for your stack:**
+create-plans will suggest: "No domain expertise found for this stack. Run `/toolkit` → Create → Domain Expertise Skill"
+
+## Usage
+
+### Direct Invocation
+Users can invoke domain expertise skills directly:
+```
+> Use the build-macos-apps skill to create a menu bar app
 ```
 
-**Good (new approach):**
-```
-Load SKILL.md: ~5k tokens
-Planning UI phase → load ui-layout.md + conventions.md: ~7k tokens
-Total: ~12k tokens (saves 15k for workspace)
-```
+The skill will:
+1. Route to appropriate workflow (build, debug, add feature, etc.)
+2. Load relevant reference files
+3. Provide step-by-step implementation
+4. Include verification steps
 
-## Phase Type Classification
+### Planning Integration
+The `create-plans` skill loads domain expertise references when:
+- Planning a project in that domain
+- Making framework-specific decisions
+- Choosing between libraries or patterns
+- Understanding best practices
 
-Help create-plans determine which references to load:
+## Examples
 
-**Common phase types:**
-- **Foundation/Setup** - Project structure, dependencies, configuration
-- **Database/Data** - Schema, models, migrations, queries
-- **API/Backend** - Routes, controllers, business logic, auth
-- **UI/Frontend** - Components, layouts, styling, interactions
-- **Integration** - External APIs, system services, third-party SDKs
-- **Features** - Domain-specific functionality
-- **Polish** - Performance, accessibility, error handling
+### Platform-Specific Expertise
+**Location:** `.claude/skills/expertise/{platform-name}/` (user-generated)
 
-**References should map to these types** so create-plans can load the right context.
+**Provides:**
+- Framework-specific patterns and best practices
+- Platform-specific APIs and frameworks
+- Tooling and build configuration
+- Distribution and signing workflows
+- Performance optimization strategies
+- Common pitfalls and anti-patterns
 
-## Migration Guide
+**Workflows:**
+- `build-new-{thing}.md` - Create from scratch
+- `debug-{thing}.md` - Debug and fix issues
+- `optimize-{thing}.md` - Performance tuning
+- `ship-{thing}.md` - Build and distribute
 
-If you have an existing domain skill with many references:
+### Python Games Expertise
+**Location:** `.claude/skills/expertise/python-games/`
 
-1. **Audit references** - What's actually useful vs. reference dumps?
+**Provides:**
+- Library comparisons (Pygame vs Arcade vs Panda3D)
+- Game loop patterns and state management
+- Physics and collision detection
+- Audio and graphics optimization
+- Asset pipeline management
+- Performance profiling
 
-2. **Consolidate principles** - Move core patterns into SKILL.md principles section
+**Workflows:**
+- `build-new-python-game.md` - Complete game from scratch
+- `add-game-mechanic.md` - Implement specific features
+- `optimize-game-performance.md` - Profile and optimize
 
-3. **Create references_index** - Map phase types to relevant references
+## Best Practices
 
-4. **Test loading** - Verify you can plan a phase with <15k token overhead
+### When to Create Domain Expertise
+- Working with unfamiliar technology stack
+- Need comprehensive guidance beyond basic tutorials
+- Want framework-specific patterns and best practices
+- Building complete projects (not just prototypes)
+- Need decision guidance (which library, approach, pattern)
 
-5. **Iterate** - Adjust groupings based on actual planning needs
+### What Makes Good Domain Expertise
+- **Comprehensive:** Covers full lifecycle (build → ship)
+- **Current:** Verified for 2024-2025 ecosystem
+- **Practical:** Decision trees and "when to use X vs Y"
+- **Actionable:** Workflows that execute real tasks
+- **Complete:** Anti-patterns and common mistakes documented
 
-## Example: macos-apps
+## Integration with Planning
 
-**Before (inefficient):**
-- 20 reference files
-- Load all: 10,728 lines (~27k tokens)
+Domain expertise enhances planning by:
 
-**After (efficient):**
+1. **Providing Context:** Framework-specific patterns inform task breakdown
+2. **Library Decisions:** Comparisons guide architecture choices
+3. **Best Practices:** Prevent common mistakes and anti-patterns
+4. **Verification:** Domain-specific testing and debugging approaches
+5. **Optimization:** Performance patterns and profiling techniques
 
-SKILL.md contains:
-- Swift/SwiftUI core principles
-- macOS app architecture patterns
-- Common patterns (MV VM, data flow)
-- references_index mapping:
-  - UI phases → swiftui-layout.md, appleHIG.md (~4k)
-  - Data phases → core-data.md, swift-concurrency.md (~5k)
-  - System phases → appkit-integration.md, menu-bar.md (~3k)
-  - Always → swift-conventions.md (~2k)
+## Success Criteria
 
-**Result:** 5-12k tokens instead of 27k (saves 15-22k for planning)
+Well-designed domain expertise:
+- [ ] Enables building professional projects from scratch
+- [ ] Covers complete lifecycle (build → debug → test → optimize → ship)
+- [ ] Includes current library comparisons and decision trees
+- [ ] Documents platform-specific considerations
+- [ ] Provides actionable workflows (not just reference material)
+- [ ] Located in user-space paths (project or user level)
+- [ ] Can be invoked directly AND loaded by create-plans

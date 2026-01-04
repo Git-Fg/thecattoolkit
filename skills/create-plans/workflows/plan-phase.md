@@ -9,14 +9,6 @@
 5. Read `.prompts/planning/ROADMAP.md`
 6. Read `.prompts/planning/BRIEF.md`
 
-**If domain expertise should be loaded (determined by intake):**
-7. Read domain SKILL.md from discovered location (search order: project → plugin → user):
-   - `.claude/skills/expertise/[domain]/SKILL.md`
-   - `{CLAUDE_PLUGIN_ROOT}/expertise/[domain]/SKILL.md`
-   - `~/.claude/skills/expertise/[domain]/SKILL.md`
-8. Determine phase type from ROADMAP (UI, database, API, etc.)
-9. Read ONLY relevant references from domain's `<references_index>` section
-
 ## Purpose
 Create an executable phase prompt (PLAN.md). This is where we get specific:
 objective, context, tasks, verification, success criteria, and output specification.
@@ -208,7 +200,6 @@ Each file follows the template structure:
 phase: XX-name
 plan: {plan-number}
 type: execute
-domain: [if domain expertise loaded]
 ---
 
 <objective>

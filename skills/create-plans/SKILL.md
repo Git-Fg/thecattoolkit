@@ -262,134 +262,99 @@ If yes: `git init`
 
 ## Domain Expertise
 
-Domain expertise lives in:
-- Global: `~/.claude/skills/expertise/`
-- Plugin relative: `{plugin_root}/expertise/`
-- Project local: `.claude/skills/expertise/`
-
-Before creating roadmap or phase plans, determine if domain expertise should be loaded.
-
-### Scan Domains
+**Scan for domain expertise** to provide framework-specific context for planning:
 
 ```bash
-# Scan global, plugin relative, and project local directories
-{ ls ~/.claude/skills/expertise/ 2>/dev/null; ls {plugin_root}/expertise/ 2>/dev/null; ls .claude/skills/expertise/ 2>/dev/null; } | sort -u
+# Check for project-level domain expertise
+ls -la .claude/skills/expertise/ 2>/dev/null
+
+# Check for user-level domain expertise
+ls -la ~/.claude/skills/expertise/ 2>/dev/null
 ```
 
-This reveals available domain expertise (e.g., macos-apps, iphone-apps, unity-games, nextjs-ecommerce).
+**Domain expertise locations:**
+- **Project-level**: `.claude/skills/expertise/{domain-name}/` (portable with project)
+- **User-level**: `~/.claude/skills/expertise/{domain-name}/` (available across projects)
 
-If no domain skills found: Proceed without domain expertise (graceful degradation). The skill works fine without domain-specific context.
+**If domain expertise found:**
+- Load relevant reference files to understand framework-specific patterns
+- Include domain knowledge in planning decisions
+- Reference domain workflows where appropriate
 
-### Inference Rules
-
-If user's request contains domain keywords, INFER the domain:
-
-| Keywords | Domain Skill |
-|----------|--------------|
-| "macOS", "Mac app", "menu bar", "AppKit", "SwiftUI desktop" | expertise/macos-apps |
-| "iPhone", "iOS", "iPad", "mobile app", "SwiftUI mobile" | expertise/iphone-apps |
-| "Unity", "game", "C#", "3D game", "2D game" | expertise/unity-games |
-| "MIDI", "MIDI tool", "sequencer", "MIDI controller", "music app", "MIDI 2.0", "MPE", "SysEx" | expertise/midi |
-| "Agent SDK", "Claude SDK", "agentic app" | expertise/with-agent-sdk |
-| "Python automation", "workflow", "API integration", "webhooks", "Celery", "Airflow", "Prefect" | expertise/python-workflow-automation |
-| "UI", "design", "frontend", "interface", "responsive", "visual design", "landing page", "website design", "Tailwind", "CSS", "web design" | expertise/ui-design |
-
-If domain inferred, confirm:
+**If NO domain expertise found for current project stack:**
+Present suggestion:
 ```
-Detected: [domain] project → expertise/[skill-name]
-Load this expertise for planning? (Y / see other options / none)
-```
+No domain expertise found for this stack. Consider generating custom expertise:
 
-### No Inference
+Run: /toolkit → Create → Domain Expertise Skill
 
-If no domain obvious from request, present options:
+This creates a comprehensive knowledge base for [Project Stack] in:
+- .claude/skills/expertise/{domain-name}/ (project-level)
+- ~/.claude/skills/expertise/{domain-name}/ (user-level)
 
-```
-What type of project is this?
-
-Available domain expertise:
-1. macos-apps - Native macOS with Swift/SwiftUI
-2. iphone-apps - Native iOS with Swift/SwiftUI
-3. unity-games - Unity game development
-4. swift-midi-apps - MIDI/audio apps
-5. with-agent-sdk - Claude Agent SDK apps
-6. ui-design - Stunning UI/UX design & frontend development
-[... any others found in global, plugin, or project expertise/]
-
-N. None - proceed without domain expertise
-C. Create domain skill first
-
-Select:
+Domain expertise provides:
+- Framework-specific patterns and best practices
+- Library comparisons and decision guidance
+- Complete lifecycle workflows (build → debug → optimize → ship)
+- Platform-specific considerations
 ```
 
-### Load Domain
+**Note:** Domain expertise is generated on-demand into user-space paths. It is NOT shipped with the plugin.
 
-When domain selected, use intelligent loading:
+## Planning Modes
 
-Step 1: Find domain SKILL.md (search in order: global → plugin → project local)
-```bash
-# Search for domain skill in all locations
-DOMAIN_SKILL=$(
-  cat ~/.claude/skills/expertise/[domain]/SKILL.md 2>/dev/null && echo "global" || \
-  cat {plugin_root}/expertise/[domain]/SKILL.md 2>/dev/null && echo "plugin" || \
-  cat .claude/skills/expertise/[domain]/SKILL.md 2>/dev/null && echo "local" || \
-  echo "not_found"
-)
-```
+<mode_selection>
+The create-plans skill offers two modes to accommodate different complexity levels:
 
-This loads core principles and routing guidance (~5k tokens).
+### Lite Mode
+For simple tasks and quick iterations, Lite Mode creates a single `PLAN.md` in the current directory with a straightforward checklist structure.
 
-Step 2: Determine what references are needed
+**Characteristics:**
+- Single file: `PLAN.md` in current directory
+- Simple checklist format with `- [ ]` tasks
+- Minimal ceremony - just the essentials
+- Best for: quick prototypes, small features, one-off tasks, or when you need to move fast
 
-Domain SKILL.md should contain a references section that maps planning contexts to specific references.
-
-Example:
+**Structure:**
 ```markdown
-## References Index
+# Objective
+[Clear goal statement]
 
-**For database/persistence phases:** references/core-data.md, references/swift-concurrency.md
-**For UI/layout phases:** references/swiftui-layout.md, references/appleHIG.md
-**For system integration:** references/appkit-integration.md
-**Always useful:** references/swift-conventions.md
+## Tasks
+- [ ] Task 1 with specific file references
+- [ ] Task 2 with specific file references
+- [ ] Task 3 with specific file references
+
+## Success Criteria
+- [ ] Measurable criterion 1
+- [ ] Measurable criterion 2
 ```
 
-Step 3: Load only relevant references
+### Standard Mode
+For complex projects requiring structured planning, Standard Mode maintains the full hierarchical approach (Brief → Roadmap → Phases).
 
-Based on the phase being planned (from ROADMAP), load ONLY the references mentioned for that type of work.
+**Characteristics:**
+- Hierarchical structure: Brief → Roadmap → Phases
+- Multiple planning artifacts
+- Detailed context management
+- Best for: multi-phase projects, complex architectures, team-level planning
 
-```bash
-# Example: Planning a database phase
-# Read from the location where SKILL.md was found
-cat {discovered_location}/references/core-data.md
-cat {discovered_location}/references/swift-conventions.md
+**Structure:**
 ```
-
-Context efficiency:
-- SKILL.md only: ~5k tokens
-- SKILL.md + selective references: ~8-12k tokens
-- All references (old approach): ~20-27k tokens
-
-Announce: "Loaded [domain] expertise ([X] references for [phase-type])."
-
-If domain skill not found: Inform user and offer to proceed without domain expertise.
-
-If SKILL.md doesn't have references_index: Fall back to loading all references with warning about context usage.
-
-### When to Load
-
-Domain expertise should be loaded BEFORE:
-- Creating roadmap (phases should be domain-appropriate)
-- Planning phases (tasks must be domain-specific)
-
-Domain expertise is NOT needed for:
-- Creating brief (vision is domain-agnostic)
-- Resuming from handoff (context already established)
-- Transition between phases (just updating status)
+.prompts/planning/
+├── BRIEF.md
+├── ROADMAP.md
+└── phases/
+    ├── 01-foundation/
+    └── 02-feature/
+```
+</mode_selection>
 
 ## Intake
 
 Based on scan results, present context-aware options:
 
+<handoff_protocol>
 **If handoff found:**
 ```
 Found handoff: .prompts/planning/phases/XX/.continue-here.md
@@ -399,6 +364,7 @@ Found handoff: .prompts/planning/phases/XX/.continue-here.md
 2. Discard handoff, start fresh
 3. Different action
 ```
+</handoff_protocol>
 
 **If planning structure exists:**
 ```
@@ -432,17 +398,30 @@ What would you like to do?
 
 | Response | Workflow |
 |----------|----------|
+| "lite", "simple", "quick", "single plan" | **CREATE SINGLE PLAN.MD** → Create a simple PLAN.md in current directory |
 | "brief", "new project", "start", 1 (no structure) | `workflows/create-brief.md` |
 | "roadmap", "phases", 2 (no structure) | `workflows/create-roadmap.md` |
 | "phase", "plan phase", "next phase", 1 (has structure) | `workflows/plan-phase.md` |
 | "chunk", "next tasks", "what's next" | `workflows/plan-chunk.md` |
 | "execute", "run", "do it", "build it", 2 (has structure) | **EXIT SKILL** → Use `/run-plan <path>` slash command |
 | "research", "investigate", "unknowns" | `workflows/research-phase.md` |
+<handoff_protocol>
 | "handoff", "pack up", "stopping", 3 (has structure) | `workflows/handoff.md` |
 | "resume", "continue", 1 (has handoff) | `workflows/resume.md` |
+</handoff_protocol>
 | "transition", "complete", "done", "next" | `workflows/transition.md` |
 | "milestone", "ship", "v1.0", "release" | `workflows/complete-milestone.md` |
 | "guidance", "help", 4 | `workflows/get-guidance.md` |
+
+**Lite Mode Routing:** When user requests Lite Mode (via "lite", "simple", "quick", etc.):
+1. Ask user to describe the task
+2. Create a single `PLAN.md` in the current directory with:
+   - `# Objective` - Clear goal
+   - `## Tasks` - Checklist with explicit file references
+   - `## Success Criteria` - Measurable completion criteria
+3. Exit skill - user can execute with `/run-plan PLAN.md`
+
+**Standard Mode Routing:** All other responses follow the hierarchical workflow.
 
 **Critical:** Plan execution should NOT invoke this skill. Use `/run-plan` for context efficiency (skill loads ~20k tokens, /run-plan loads ~5-7k).
 
@@ -505,47 +484,41 @@ Files sort chronologically. Related artifacts (plan + summary) are adjacent.
 
 ## Reference Index
 
-All in `references/`:
-
-Structure: directory-structure.md, hierarchy-rules.md
-Formats: handoff-format.md, plan-format.md
-Patterns: context-scanning.md, context-management.md
-Planning: scope-estimation.md, checkpoints.md, milestone-management.md
-Process: user-gates.md, git-integration.md, research-pitfalls.md
-Domain: domain-expertise.md (guide for creating context-efficient domain skills)
+- `references/hierarchy-rules.md` - How levels build on each other
+- `references/plan-format.md` - PLAN.md structure
+- `references/context-management.md` - Token usage monitoring
+- `references/scope-estimation.md` - Task sizing guidance
+- `references/checkpoints.md` - Checkpoint types and handling
+- `references/milestone-management.md` - Milestone completion
+- `references/user-gates.md` - When to pause and ask
+- `references/git-integration.md` - Version control patterns
+- `references/research-pitfalls.md` - Known research mistakes
+- `references/cli-automation.md` - CLI automation patterns
 
 ## Templates Index
 
-All in `templates/`:
-
-| Template | Purpose |
-|----------|---------|
-| brief.md | Project vision document with current state |
-| roadmap.md | Phase structure with milestone groupings |
-| phase-prompt.md | Executable phase prompt (PLAN.md) |
-| research-prompt.md | Research prompt (RESEARCH.md) |
-| summary.md | Phase outcome (SUMMARY.md) with deviations |
-| milestone.md | Milestone entry for MILESTONES.md |
-| issues.md | Deferred enhancements log (ISSUES.md) |
-| continue-here.md | Context handoff format |
+- `templates/brief.md` - Project vision document with current state
+- `templates/roadmap.md` - Phase structure with milestone groupings
+- `templates/phase-prompt.md` - Executable phase prompt (PLAN.md)
+- `templates/research-prompt.md` - Research prompt (RESEARCH.md)
+- `templates/summary.md` - Phase outcome (SUMMARY.md) with deviations
+- `templates/milestone.md` - Milestone entry for MILESTONES.md
+- `templates/issues.md` - Deferred enhancements log (ISSUES.md)
+- `templates/continue-here.md` - Context handoff format
 
 ## Workflows Index
 
-All in `workflows/`:
-
-| Workflow | Purpose |
-|----------|---------|
-| create-brief.md | Create project vision document |
-| create-roadmap.md | Define phases from brief |
-| plan-phase.md | Create executable phase prompt |
-| execute-phase.md | Run phase prompt, create summary |
-| research-phase.md | Create and run research prompt |
-| plan-chunk.md | Plan immediate next tasks |
-| transition.md | Mark phase complete, advance |
-| complete-milestone.md | Mark shipped version, create milestone entry |
-| handoff.md | Create context handoff for pausing |
-| resume.md | Load handoff, restore context |
-| get-guidance.md | Help decide planning approach |
+- `workflows/create-brief.md` - Create project vision document
+- `workflows/create-roadmap.md` - Define phases from brief
+- `workflows/plan-phase.md` - Create executable phase prompt
+- `workflows/execute-phase.md` - Run phase prompt, create summary
+- `workflows/research-phase.md` - Create and run research prompt
+- `workflows/plan-chunk.md` - Plan immediate next tasks
+- `workflows/transition.md` - Mark phase complete, advance
+- `workflows/complete-milestone.md` - Mark shipped version, create milestone entry
+- `workflows/handoff.md` - Create context handoff for pausing
+- `workflows/resume.md` - Load handoff, restore context
+- `workflows/get-guidance.md` - Help decide planning approach
 
 ## When To Use
 
@@ -575,5 +548,4 @@ Planning skill succeeds when:
 - [ ] Context limits are respected (auto-handoff at 10%)
 - [ ] Deviations handled automatically per embedded rules
 - [ ] All work (planned and discovered) fully documented
-- [ ] Domain expertise loaded intelligently (SKILL.md + selective references, not all files)
 - [ ] Plan execution uses /run-plan command (not skill invocation)

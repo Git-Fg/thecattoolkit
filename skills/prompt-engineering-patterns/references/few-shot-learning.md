@@ -2,6 +2,74 @@
 
 Zero-shot, one-shot, and few-shot learning strategies.
 
+## Preventing Example Leakage
+
+**Critical Rule:** Always wrap examples in `<example>` tags to prevent the model from following examples as instructions.
+
+**Example Leakage** occurs when the AI confuses examples with instructions, treating the example content as something to execute rather than a demonstration to follow.
+
+### XML Example Container
+
+**Mandatory Format for All Examples:**
+
+```xml
+<examples>
+<example>
+Input: [example input]
+Output: [example output]
+</example>
+<example>
+Input: [example input]
+Output: [example output]
+</example>
+</examples>
+```
+
+### Why This Matters
+
+Without XML isolation:
+```
+Extract prices from text.
+
+Example:
+Description: "Premium headphones, $199.99"
+Price: $199.99
+
+Description: "The price is $50"
+Price:
+```
+
+**Problem:** The AI may treat "Description: 'Premium headphones, $199.99'" as a task to execute, producing meta-commentary instead of learning the pattern.
+
+With XML isolation:
+```
+Extract prices from text.
+
+<examples>
+<example>
+Input: "Premium headphones, $199.99"
+Output: "$199.99"
+</example>
+<example>
+Input: "The price is $50"
+Output: "$50"
+</example>
+</examples>
+
+Description: "The price is $50"
+Price:
+```
+
+**Benefit:** The AI clearly recognizes examples as demonstrations, not instructions.
+
+### Best Practices for Example Tags
+
+1. **Always use `<examples>` wrapper** for multiple examples
+2. **Use `<example>` for each individual example**
+3. **Include "Input:" and "Output:" labels** inside each example
+4. **Keep examples concise** - focused on the pattern, not explanations
+5. **Separate examples from actual tasks** with clear demarcation
+
 ## Zero-Shot Prompting
 
 Direct requests without examples.

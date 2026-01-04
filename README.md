@@ -1,6 +1,6 @@
 # THE CAT TOOLKIT
 
-**Version:** 1.1.7 | **License:** MIT | **Author:** Git-Fg
+**Version:** 2.0.1 | **License:** MIT | **Author:** Git-Fg
 
 A comprehensive collection of AI agent resources (primarily for Claude Code,
 adaptable to other AI assistants) built for real workflows.
@@ -25,17 +25,20 @@ claude plugin install thecattoolkit
 Try these commands to get started:
 
 ```bash
+# Main toolkit router - build, audit, or heal any resource
+/thecattoolkit:toolkit Create a new skill for database validation
+
 # Strategic decision making
 /thecattoolkit:brainstorm Should I refactor this module now?
 
 # Code review
 > Use the code-reviewer agent to check my recent changes
 
-# Create a new skill
-/thecattoolkit:create-agent-skill Create a skill for database validation
-
 # System architecture
-/thecattoolkit:architect Design a user authentication system
+> Use the architect agent to design a user authentication system
+
+# Run a plan
+/thecattoolkit:run-plan path/to/PLAN.md
 ```
 
 ## Table of Contents
@@ -62,23 +65,24 @@ Dream big. Happy building.
 
 ## What's Inside
 
-**[Commands](#commands)** (21 total) - Slash commands that expand into structured workflows
+**[Commands](#commands)** (7 total) - Essential slash commands with central router
 
-- **Meta-Prompting**: Separate planning from execution with staged prompts
-- **Strategic Thinking**: Unified mental models framework with 12 thinking patterns
+- **Central Router**: Single entry point for building, auditing, and healing resources
+- **Strategic Thinking**: Unified thinking frameworks with 12 thinking patterns
 - **Deep Analysis**: Systematic debugging methodology with evidence and hypothesis testing
-- **Output Modes**: Architect, rapid, mentor, and review modes
+- **Planning & Execution**: Hierarchical project planning and execution
 
 **[Skills](#skills)** (16 total) - Autonomous workflows that research, generate, and self-heal
 
 - **Workflow Creation**: Create plans, meta-prompts, slash commands, subagents, hooks
-- **Strategic Thinking**: Strategic thinking, prioritization, problem analysis
+- **Unified Thinking**: Single thinking-frameworks skill with Router Pattern
 - **Knowledge Domains**: Project analysis, architecture patterns, testing, performance, git workflow, API design
 - **Specialized**: Debug like expert, prompt engineering patterns
 
-**[Agents](#agents)** (11 total) - Specialized subagents for various workflows
+**[Agents](#agents)** (16 total) - Specialized subagents for various workflows
 
 - **Operational**: Orchestrator, code-reviewer, debugger, docs-writer, security-auditor, refactorer, test-architect, brainstormer
+- **Output Modes**: Architect, Mentor, Rapid Developer, QA Reviewer
 - **Quality Assurance**: skill-auditor, slash-command-auditor, subagent-auditor
 
 **[Hooks](#hooks)** (4 total) - Automation triggers (Claude Code-specific)
@@ -148,12 +152,12 @@ The brainstorm command applies strategic thinking frameworks:
 ### Creating a New Skill
 
 ```
-/thecattoolkit:create-agent-skill Create a skill for React component testing
+/thecattoolkit:toolkit Create a skill for React component testing
 ```
 
 This will:
 
-1. Invoke the create-agent-skills skill
+1. Route to the create-agent-skills skill via central toolkit
 2. Guide through skill structure (simple vs router pattern)
 3. Help with YAML frontmatter and progressive disclosure
 4. Offer to create directory structure and files
@@ -161,23 +165,18 @@ This will:
 ### Auditing Components
 
 ```
-# Audit a skill
-/thecattoolkit:audit-skill ./skills/my-skill
-
-# Audit a command
-/thecattoolkit:audit-slash-command commands/my-command.md
-
-# Audit an agent
-/thecattoolkit:audit-subagent agents/my-agent.md
+# Use the central toolkit router for all audits
+/thecattoolkit:toolkit Audit my skill
 ```
 
-Each audit provides:
+The toolkit router guides you through:
 
-- Overall assessment
-- Critical issues (must-fix)
-- Recommendations (should-fix)
-- Strengths (what works well)
-- Context-specific guidance
+- Selecting the appropriate auditor (skill, command, or subagent)
+- Providing overall assessment
+- Identifying critical issues (must-fix)
+- Making recommendations (should-fix)
+- Highlighting strengths (what works well)
+- Giving context-specific guidance
 
 ### Platform-Specific Development
 
@@ -194,41 +193,18 @@ The macos-apps skill provides:
 
 ## Commands
 
-### Meta-Prompting
+### Central Toolkit Router
 
-Separate analysis from execution. Describe what you want in natural language, Claude generates a rigorous prompt, then runs it in a fresh sub-agent context.
+The main entry point for building, auditing, and healing resources. Use this instead of individual wrapper commands.
 
-- [`/create-prompt`](./commands/create-prompt.md) - Generate optimized prompts
-- [`/run-prompt`](./commands/run-prompt.md) - Execute saved prompts in sub-agent contexts
+- [`/toolkit`](./commands/toolkit.md) - Main router for create, audit, and heal operations
 
-### Context Handoff
+**Examples:**
 
-Create structured handoff documents to continue work in a fresh context. Reference with `@whats-next.md` to resume seamlessly.
-
-- [`/whats-next`](./commands/whats-next.md) - Create handoff document for fresh context
-
-### Create Extensions
-
-Wrapper commands that invoke the skills below.
-
-- [`/create-agent-skill`](./commands/create-agent-skill.md) - Create a new skill
-- [`/create-meta-prompt`](./commands/create-meta-prompt.md) - Create staged workflow prompts
-- [`/create-slash-command`](./commands/create-slash-command.md) - Create a new slash command
-- [`/create-subagent`](./commands/create-subagent.md) - Create a new subagent
-- [`/create-hook`](./commands/create-hook.md) - Create a new hook
-
-### Audit Extensions
-
-Invoke auditor subagents.
-
-- [`/audit-skill`](./commands/audit-skill.md) - Audit skill for best practices
-- [`/audit-slash-command`](./commands/audit-slash-command.md) - Audit command for best practices
-- [`/audit-subagent`](./commands/audit-subagent.md) - Audit subagent for best practices
-
-### Self-Improvement
-
-- [`/heal-skill`](./commands/heal-skill.md) - Fix skills based on execution issues
-- [`/uprules`](./commands/uprules.md) - Audit and update AI rule files to synchronize with code changes
+- `/toolkit Create a skill for database validation` → Routes to create-agent-skills
+- `/toolkit Audit my command` → Routes to appropriate auditor
+- `/toolkit Heal broken skill references` → Routes to heal-skill
+- `/toolkit Create a slash command for deployments` → Routes to create-slash-commands
 
 ### Strategic Thinking
 
@@ -236,7 +212,7 @@ Unified mental models framework for decision-making, prioritization, and problem
 
 - [`/brainstorm`](./commands/brainstorm.md) - Apply strategic thinking frameworks (auto-detect or specify)
 
-**12 Frameworks in 3 Skills:**
+**12 Frameworks in Unified Skill:**
 
 **Strategic Thinking** (5 frameworks) - Long-term perspective and big-picture analysis:
 
@@ -271,14 +247,16 @@ Systematic debugging with methodical investigation.
 
 - [`/debug`](./commands/debug.md) - Apply expert debugging methodology to investigate issues
 
-### Output Modes
+### Planning & Execution
 
-Switch Claude's behavior for different workflows.
+Hierarchical project planning and execution workflows.
 
-- [`/architect`](./commands/architect.md) - System design mode - focuses on architecture before code
-- [`/rapid`](./commands/rapid.md) - Fast development mode - ship quickly, iterate
-- [`/mentor`](./commands/mentor.md) - Learning mode - explains the "why"
-- [`/review`](./commands/review.md) - Code review mode - strict quality standards
+- [`/run-plan`](./commands/run-plan.md) - Execute generated plans (PLAN.md) with intelligent segmentation
+- [`/run-prompt`](./commands/run-prompt.md) - Execute saved prompts in sub-agent contexts
+
+### Self-Improvement
+
+- [`/uprules`](./commands/uprules.md) - Audit and update AI rule files to synchronize with code changes
 
 ## Agents
 
@@ -288,13 +266,23 @@ Specialized subagents for various workflows.
 
 Active agents that perform specific tasks during development.
 
-- [`orchestrator`](./agents/orchestrator.md) - Master coordinator for complex multi-step tasks (uses Opus)
+- [`orchestrator`](./agents/orchestrator.md) - Master coordinator for complex multi-step tasks with planning capabilities
 - [`code-reviewer`](./agents/code-reviewer.md) - Expert code review specialist for quality, security, and performance
 - [`debugger`](./agents/debugger.md) - Systematic bug investigation and fixing with 6-phase protocol
 - [`docs-writer`](./agents/docs-writer.md) - Technical documentation specialist
 - [`security-auditor`](./agents/security-auditor.md) - Security vulnerability detection specialist
 - [`refactorer`](./agents/refactorer.md) - Code structure improvements and technical debt reduction
 - [`test-architect`](./agents/test-architect.md) - Comprehensive test strategy design
+- [`brainstormer`](./agents/brainstormer.md) - Creative ideation and thinking frameworks specialist
+
+### Output Mode Agents
+
+Behavior modes for different workflows.
+
+- [`architect`](./agents/architect.md) - System design mode - focuses on architecture before code (read-only tools)
+- [`mentor`](./agents/mentor.md) - Learning mode - explains the "why" with educational approach (read-only tools)
+- [`rapid-developer`](./agents/rapid-developer.md) - Fast development mode - ship quickly, iterate (full tools)
+- [`qa-reviewer`](./agents/qa-reviewer.md) - Code review mode - strict quality standards with testing (read + test execution)
 
 ### Quality Assurance Agents
 
@@ -312,13 +300,13 @@ Hierarchical project planning optimized for solo developer + Claude. Create exec
 
 **PLAN.md IS the prompt** - not documentation that gets transformed later. Brief → Roadmap → Research (if needed) → PLAN.md → Execute → SUMMARY.md.
 
-**Domain-aware:** Optionally loads framework-specific expertise from `~/.claude/skills/expertise/` (e.g., macos-apps, iphone-apps) to make plans concrete instead of generic. Domain expertise skills are created with [create-agent-skills](#create-agent-skills) - exhaustive knowledge bases (5k-10k+ lines) that make task specifications framework-appropriate.
+**Two planning modes:** Lite Mode for simple tasks (single PLAN.md), Standard Mode for complex projects (hierarchical structure with phases).
 
 **Quality controls:** Research includes verification checklists, blind spots review, critical claims audits, and streaming writes to prevent gaps and token limit failures.
 
 **Context management:** Auto-handoff at 10% tokens remaining. Git versioning commits outcomes, not process.
 
-**Commands:** `/create-plan` (invoke skill), `/run-plan <path>` (execute PLAN.md with intelligent segmentation)
+**Commands:** `/run-plan <path>` (execute PLAN.md with intelligent segmentation via orchestrator agent)
 
 See [create-plans README](./skills/create-plans/README.md) for full documentation.
 
@@ -369,9 +357,13 @@ Commands: `/create-hook`
 
 Mental models and frameworks for decision-making, prioritization, and problem analysis.
 
-### [Strategic Thinking](./skills/strategic-thinking/)
+### [Thinking Frameworks](./skills/thinking-frameworks/)
 
-Long-term perspective and big-picture analysis with 5 frameworks:
+Unified mental models framework with Router Pattern for decision-making, prioritization, and problem analysis.
+
+**12 Frameworks across 3 categories:**
+
+**Strategic Thinking** (5 frameworks) - Long-term perspective and big-picture analysis:
 
 - first-principles - Break down to fundamentals and rebuild
 - inversion - Solve backwards (what guarantees failure?)
@@ -379,34 +371,22 @@ Long-term perspective and big-picture analysis with 5 frameworks:
 - swot - Map strengths, weaknesses, opportunities, threats
 - 10-10-10 - Evaluate across time horizons
 
-Use when making strategic decisions, business planning, or major life choices.
-
-Agent integration: Strategic Thinker agent (opus model)
-
-### [Prioritization](./skills/prioritization/)
-
-Focus resources on high-impact activities with 3 frameworks:
+**Prioritization** (3 frameworks) - Focus resources on high-impact activities:
 
 - pareto - Apply 80/20 rule to identify vital few
 - one-thing - Find highest-leverage domino action
 - eisenhower-matrix - Categorize by urgent/important
 
-Use when overwhelmed with tasks, need clarity on what to do first.
-
-Agent integration: Priority Strategist agent (sonnet model)
-
-### [Problem Analysis](./skills/problem-analysis/)
-
-Deep understanding and root causes with 4 frameworks:
+**Problem Analysis** (4 frameworks) - Deep understanding and root causes:
 
 - 5-whys - Drill to root cause by asking why repeatedly
 - opportunity-cost - Analyze what you give up by choosing
 - occams-razor - Find simplest explanation that fits all facts
 - via-negativa - Improve by removing rather than adding
 
-Use when analyzing problems, making constrained choices, or simplifying complexity.
+**Router Pattern:** Auto-detects best framework or routes to specific categories based on context.
 
-Agent integration: Problem Analyst agent (sonnet model)
+Agent integration: Brainstormer agent (unified access to all frameworks)
 
 ---
 
@@ -487,11 +467,11 @@ Event-driven automation that triggers during Claude Code operations. All hooks u
 
 ## Recommended Workflow
 
-**For building projects:** Use `/create-plan` to invoke the [create-plans](#create-plans) skill. After planning, use `/run-plan <path-to-PLAN.md>` to execute phases with intelligent segmentation. This provides hierarchical planning (BRIEF.md → ROADMAP.md → phases/PLAN.md), domain-aware task generation, context management with handoffs, and git versioning.
+**For building projects:** Use the central `/toolkit` router to create plans, or invoke the [create-plans](#create-plans) skill directly. After planning, use `/run-plan <path-to-PLAN.md>` to execute phases with intelligent segmentation via the orchestrator agent. This provides hierarchical planning (BRIEF.md → ROADMAP.md → phases/PLAN.md), two planning modes (Lite and Standard), context management with handoffs, and git versioning.
 
-**For domain expertise:** Use [create-agent-skills](#create-agent-skills) to create exhaustive knowledge bases in `~/.claude/skills/expertise/`. These skills are automatically loaded by create-plans to make task specifications framework-specific instead of generic.
+**For creating resources:** Use `/toolkit` as the main entry point for all create, audit, and heal operations. The router guides you to the appropriate skill based on your needs.
 
-**Other tools:** The [create-meta-prompts](#create-meta-prompts-1) skill and `/create-prompt` + `/run-prompt` commands are available for custom Claude→Claude pipelines that don't fit the project planning structure.
+**Other tools:** The [create-meta-prompts](#create-meta-prompts-1) skill and `/run-prompt` command are available for custom Claude→Claude pipelines that don't fit the project planning structure.
 
 ---
 
@@ -639,7 +619,7 @@ Event-driven automation that triggers during Claude Code operations. All hooks u
 
 ## Complete Component Reference
 
-### All Skills (19)
+### All Skills (16)
 
 | Skill | Purpose | Type | Location |
 |-------|---------|------|----------|
@@ -651,27 +631,27 @@ Event-driven automation that triggers during Claude Code operations. All hooks u
 | create-subagents | Agent creation guide | Creation | skills/create-subagents/ |
 | prompt-engineering-patterns | Effective prompts for AI-to-AI | Creation | skills/prompt-engineering-patterns/ |
 | debug-like-expert | Deep debugging methodology | Specialized | skills/debug-like-expert/ |
+| thinking-frameworks | 12 frameworks unified via Router Pattern | Strategic | skills/thinking-frameworks/ |
 | api-design | REST/GraphQL patterns | Domain | skills/api-design/ |
 | architecture-patterns | Software architecture | Domain | skills/architecture-patterns/ |
 | git-workflow | Git optimization | Domain | skills/git-workflow/ |
 | performance-optimization | Code performance | Domain | skills/performance-optimization/ |
 | project-analysis | Project structure | Domain | skills/project-analysis/ |
 | testing-strategy | Testing methodologies | Domain | skills/testing-strategy/ |
-| strategic-thinking | 5 frameworks (first-principles, inversion, etc.) | Mental Model | skills/strategic-thinking/ |
-| problem-analysis | 4 frameworks (5-whys, opportunity-cost, etc.) | Mental Model | skills/problem-analysis/ |
-| prioritization | 3 frameworks (pareto, one-thing, eisenhower) | Mental Model | skills/prioritization/ |
-| macos-apps | Native macOS development (Swift/SwiftUI) | Platform | skills/expertise/macos-apps/ |
-| iphone-apps | Native iOS development (Swift/SwiftUI) | Platform | skills/expertise/iphone-apps/ |
 
-### All Agents (11)
+### All Agents (16)
 
 | Agent | Purpose | Tools | Skills |
 |-------|---------|-------|--------|
-| brainstormer | Creative ideation | - | - |
+| architect | System design and architecture planning | Read, Grep, Glob | - |
+| brainstormer | Creative ideation and thinking frameworks | - | thinking-frameworks |
 | code-reviewer | Code quality and security review | Read, Grep, Glob, Bash, SlashCommand | git-workflow, testing-strategy |
 | debugger | Root cause analysis | Read, Edit, Bash, Grep, Glob, Write, SlashCommand | debug-like-expert, performance-optimization, prompt-engineering-patterns |
 | docs-writer | Technical documentation | - | - |
-| orchestrator | Multi-agent coordination | Task, SlashCommand, TodoWrite, etc. | project-analysis, architecture-patterns, prompt-engineering-patterns, strategic-thinking |
+| mentor | Educational guidance and explanations | Read, Grep, Glob | - |
+| orchestrator | Multi-agent coordination and planning | Task, SlashCommand, TodoWrite, etc. | project-analysis, architecture-patterns, prompt-engineering-patterns, thinking-frameworks, create-plans |
+| qa-reviewer | Quality assurance and testing | Read, Grep, Glob, Bash | - |
+| rapid-developer | Fast-paced development | Read, Write, Edit, Bash, Grep, Glob | - |
 | refactorer | Code refactoring | - | - |
 | security-auditor | Security assessment | - | - |
 | skill-auditor | Skill compliance audit | Read, Grep, Glob, SlashCommand | create-agent-skills |
@@ -679,31 +659,16 @@ Event-driven automation that triggers during Claude Code operations. All hooks u
 | subagent-auditor | Agent prompt quality audit | Read, Grep, Glob, SlashCommand | create-subagents |
 | test-architect | Testing strategy specialist | - | - |
 
-### All Commands (21)
+### All Commands (7)
 
 | Command | Purpose | Type |
 |---------|---------|------|
-| /thecattoolkit:architect | System design and architecture planning | Output Mode |
-| /thecattoolkit:audit-skill | Audit skills for best practices | Audit |
-| /thecattoolkit:audit-slash-command | Audit slash commands | Audit |
-| /thecattoolkit:audit-subagent | Audit subagents | Audit |
-| /thecattoolkit:brainstorm | Strategic thinking frameworks | Mental Model |
-| /thecattoolkit:create-agent-skill | Create new skills | Creation |
-| /thecattoolkit:create-hook | Create hooks | Creation |
-| /thecattoolkit:create-meta-prompt | AI-to-AI pipeline prompts | Creation |
-| /thecattoolkit:create-plan | Hierarchical project planning | Creation |
-| /thecattoolkit:create-prompt | Single prompt creation | Creation |
-| /thecattoolkit:create-slash-command | Create commands | Creation |
-| /thecattoolkit:create-subagent | Create agents | Creation |
+| /thecattoolkit:brainstorm | Strategic thinking frameworks | Strategic |
 | /thecattoolkit:debug | Deep debugging methodology | Deep Analysis |
-| /thecattoolkit:heal-skill | Fix skill documentation | Self-Improvement |
-| /thecattoolkit:mentor | Learning mode | Output Mode |
-| /thecattoolkit:rapid | Fast development mode | Output Mode |
-| /thecattoolkit:review | Strict code review mode | Output Mode |
-| /thecattoolkit:run-prompt | Execute saved prompts | Meta-Prompting |
 | /thecattoolkit:run-plan | Execute generated plans | Planning |
+| /thecattoolkit:run-prompt | Execute saved prompts | Meta-Prompting |
+| /thecattoolkit:toolkit | Central router for create, audit, heal | Router |
 | /thecattoolkit:uprules | Audit and update AI rule files | Self-Improvement |
-| /thecattoolkit:whats-next | Create handoff documents | Context Handoff |
 
 ### All Hooks (4)
 

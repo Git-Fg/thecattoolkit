@@ -49,21 +49,132 @@ Match specificity to task fragility:
 
 Example: Database migration = low freedom (one safe path). Code review = high freedom (context determines approach).
 
-## XML Usage
+## Hybrid XML/Markdown Structure
 
-Use XML sparingly and only for highly structured content:
+Use the **Hybrid Semantic Structure**: XML for logic containers, Markdown for content.
 
-XML is appropriate for:
-- Workflow configurations with strict steps
-- Agent command definitions with required fields
-- Highly structured output specifications
+See: `references/structural-patterns.md` for the complete Container Principle guide.
 
-XML is NOT appropriate for:
+**When to use XML:**
+- `<context>` - Large data dumps
+- `<workflow>` - Non-negotiable step sequences
+- `<constraints>` - Negative constraints (NEVER/MUST NOT)
+- `<output_format>` - Machine-parseable responses
+
+**When to use Markdown:**
 - General instructions and guidance
 - Explanations and descriptions
 - Most prompt content
 
-Prefer text-based structure with clear headings and lists.
+**Critical:** Limit to 3-5 XML tags maximum. Never nest XML tags (avoids "XML soup").
+
+# Meta-Prompting Structure
+
+Structure meta-prompts (prompts that generate prompts) using XML semantic containers to separate concerns.
+
+## Required Structure
+
+```xml
+<system_role>
+Define the AI's identity and core purpose
+</system_role>
+
+<task_context>
+Provide background, constraints, and domain knowledge
+</task_context>
+
+<examples>
+<example>
+Input: [demonstration input]
+Output: [demonstration output]
+</example>
+</examples>
+
+<user_input>
+The actual task to perform
+</user_input>
+```
+
+## Container Definitions
+
+### `<system_role>`
+Defines WHO the AI is for this task:
+- Core identity and expertise
+- Primary responsibilities
+- Behavioral guidelines
+- What the AI should and should not do
+
+### `<task_context>`
+Provides WHAT the AI needs to know:
+- Domain background
+- Constraints and requirements
+- Success criteria
+- Relevant patterns or frameworks
+- Important considerations
+
+### `<examples>`
+Demonstrates HOW to perform the task:
+- Use `<example>` tags inside (see few-shot learning guide)
+- Show input-output patterns
+- Demonstrate edge cases
+- Always use XML isolation to prevent example leakage
+
+### `<user_input>`
+Contains the actual task:
+- The specific request
+- Real data to process
+- Actual question to answer
+- Clear demarcation from examples
+
+## Structure Example
+
+```xml
+<system_role>
+You are a senior code reviewer specializing in security vulnerabilities.
+You identify security issues and provide actionable remediation steps.
+</system_role>
+
+<task_context>
+Review code for OWASP Top 10 vulnerabilities. Focus on:
+- SQL injection
+- XSS vulnerabilities
+- Authentication flaws
+- Insecure direct object references
+
+For each issue found:
+1. Severity (Critical/High/Medium/Low)
+2. Location (file:line)
+3. Vulnerability type
+4. Remediation steps
+</task_context>
+
+<examples>
+<example>
+Input: "function getUser(id) { return db.query('SELECT * FROM users WHERE id = ' + id) }"
+Output: "CRITICAL: SQL injection vulnerability
+Location: auth.js:42
+Fix: Use parameterized queries with prepared statements"
+</example>
+</examples>
+
+<user_input>
+Review this code for security issues:
+function login(username, password) {
+  if (password === storedPassword) {
+    return true;
+  }
+  return false;
+}
+</user_input>
+```
+
+## Benefits
+
+- **Clear separation** between role, context, examples, and task
+- **Prevents confusion** between demonstration and instruction
+- **Enables modular** prompt construction
+- **Improves consistency** across similar tasks
+- **Reduces example leakage** through XML isolation
 
 # Quick Start
 
@@ -82,14 +193,13 @@ See references/ for detailed patterns and templates.
 
 # Reference Index
 
-All in `references/`:
-
-Patterns: prompt-templates.md
-Learning: few-shot-learning.md
-Reasoning: chain-of-thought.md
-Advanced: advanced-techniques.md
-Interaction: agent-interaction.md
-Optimization: prompt-optimization.md
+- `references/structural-patterns.md` - Hybrid XML/Markdown structure and Container Principle
+- `references/prompt-templates.md` - Reusable prompt patterns
+- `references/few-shot-learning.md` - Example-based learning
+- `references/chain-of-thought.md` - Reasoning patterns
+- `references/advanced-techniques.md` - Advanced prompting
+- `references/agent-interaction.md` - Agent communication
+- `references/prompt-optimization.md` - Optimization techniques
 
 # Core Capabilities
 

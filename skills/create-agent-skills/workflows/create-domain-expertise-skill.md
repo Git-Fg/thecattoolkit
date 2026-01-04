@@ -49,23 +49,26 @@ Get specific: "Python games" or "Python games with Pygame specifically"?
 
 Explain:
 ```
-Domain expertise skills go in one of these locations:
+Domain expertise skills are generated into USER-SPACE paths only:
 
 **Project-level** (default, recommended): .claude/skills/expertise/{domain-name}/
 - Portable with the project
 - Shared with team via version control
 - Available only in this project
+- CANNOT write to plugin internal directories
 
 **User-level** (if specifically requested): ~/.claude/skills/expertise/{domain-name}/
 - Available across all your projects
 - Use only for personally useful domains
 - Shows as (user) in skill listings
+- CANNOT write to plugin internal directories
 
-These are comprehensive BUILD skills that:
-- Execute tasks (build, debug, optimize, ship)
-- Contain exhaustive domain knowledge
-- Can be invoked directly by users
-- Can be loaded by other skills for domain knowledge
+**CRITICAL:** These skills are generated on-demand into your project/user space.
+They are NOT shipped with the plugin. This ensures:
+- Each project can have custom expertise
+- You control all domain knowledge
+- Skills persist across sessions
+- Can be version controlled with your project
 
 Name suggestion: {suggested-name}
 Default location: .claude/skills/expertise/{suggested-name}/
@@ -280,30 +283,23 @@ Report to the user:
 </verification_loop>
 
 <reference_index>
-## Domain Knowledge
+## Reference Index
 
-All in `references/`:
-
-**Architecture:** {list files}
-**{Domain Area}:** {list files}
-**{Domain Area}:** {list files}
-**Development:** {list files}
-**Shipping:** {list files}
+- `references/{architecture-file}.md` - Architecture patterns
+- `references/{domain-area-file}.md` - {Domain area} knowledge
+- `references/{development-file}.md` - Development patterns
+- `references/{shipping-file}.md` - Deployment/distribution
 </reference_index>
 
 <workflows_index>
-## Workflows
+## Workflows Index
 
-All in `workflows/`:
-
-| File | Purpose |
-|------|---------|
-| build-new-{thing}.md | Create new {thing} from scratch |
-| debug-{thing}.md | Find and fix bugs |
-| add-feature.md | Add to existing {thing} |
-| write-tests.md | Write and run tests |
-| optimize-performance.md | Profile and speed up |
-| ship-{thing}.md | Deploy/distribute |
+- `workflows/build-new-{thing}.md` - Create new {thing} from scratch
+- `workflows/debug-{thing}.md` - Find and fix bugs
+- `workflows/add-feature.md` - Add to existing {thing}
+- `workflows/write-tests.md` - Write and run tests
+- `workflows/optimize-performance.md` - Profile and speed up
+- `workflows/ship-{thing}.md` - Deploy/distribute
 </workflows_index>
 ```
 
@@ -507,7 +503,9 @@ Test both use cases:
 ## Step 10: Create Directory and Files
 
 ```bash
-# Create structure (use chosen location from Step 2)
+# Create structure ONLY in user-space paths (from Step 2)
+# NEVER write to plugin internal directories
+
 # For project-level (default):
 mkdir -p .claude/skills/expertise/{domain-name}
 mkdir -p .claude/skills/expertise/{domain-name}/workflows
@@ -593,7 +591,8 @@ Domain expertise skill is complete when:
 - [ ] Anti-patterns documented throughout
 - [ ] Full lifecycle covered (build → debug → test → optimize → ship)
 - [ ] Platform-specific considerations included
-- [ ] Located in chosen location (.claude/skills/expertise/{domain-name}/ or ~/.claude/skills/expertise/{domain-name}/)
+- [ ] Located ONLY in user-space paths (.claude/skills/expertise/{domain-name}/ or ~/.claude/skills/expertise/{domain-name}/)
+- [ ] NEVER writes to plugin internal directories
 - [ ] For user-level skills: Referenced in create-plans domain inference table
 - [ ] Passes dual-purpose test: Can be invoked directly AND loaded for knowledge
 - [ ] User can build something professional from scratch through shipping

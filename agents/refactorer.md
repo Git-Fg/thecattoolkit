@@ -2,7 +2,7 @@
 name: refactorer
 description: Code structure specialist. Use PROACTIVELY when reducing technical debt, improving code organization, or cleaning up legacy code.
 tools: Read, Write, Edit, Bash, Grep, Glob, SlashCommand
-skills: architecture-patterns, testing-strategy
+skills: architecture-patterns, testing-strategy, performance-optimization
 ---
 
 ## Skill Usage

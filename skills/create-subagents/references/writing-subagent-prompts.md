@@ -3,11 +3,114 @@
 
 Subagent prompts should be task-specific, not generic. They define a specialized role with clear focus areas, workflows, and constraints.
 
-**Structure**: Subagent.md files use Markdown headings (##, ###) for clear organization and readability.
+**Structure**: Subagent.md files use **hybrid XML/Markdown structure**. Use Markdown for content and XML for structural logic.
+
+## Hybrid XML/Markdown for Subagents
+
+Simple subagents use pure Markdown. Complex subagents use XML tags for structural elements that must be machine-parsed or strictly isolated.
+
+### Core XML Containers for Subagents
+
+Use these XML tags when needed:
+
+- **`<state>`** - Track state across multi-turn conversations
+- **`<output_schema>`** - Define machine-parseable output format
+- **`<constraints>`** - Negative constraints (NEVER/MUST NOT)
+- **`<workflow>`** - Non-negotiable step sequences
+
+### Complex Agent Example
+
+```yaml
+---
+name: multi-step-analyzer
+description: Analyzes data through multiple phases. Use for complex analysis requiring state tracking.
+tools: Read, Grep, Bash
+model: sonnet
+---
+
+## Role
+
+You are a data analysis specialist that processes information through systematic phases.
+
+<state>
+Phase 1: Initial scan
+Phase 2: Deep analysis
+Phase 3: Report generation
+</state>
+
+<output_schema>
+{
+  "phase": "1|2|3",
+  "findings": [...],
+  "confidence": "high|medium|low",
+  "next_action": "string"
+}
+</output_schema>
+
+<workflow>
+1. Determine current phase from state
+2. Execute phase-specific analysis
+3. Update state for next phase
+4. Return structured output
+</workflow>
+
+<constraints>
+- NEVER proceed to next phase without completing current
+- MUST return valid JSON matching output_schema
+- ALWAYS include confidence level for findings
+</constraints>
+
+## Analysis Framework
+
+[Markdown content with detailed guidance...]
+```
+
+### When to Use XML in Subagents
+
+Use XML tags when:
+- **State tracking** needed across multi-turn conversations
+- **Output must be machine-parsed** by parent workflow
+- **Strict sequences** that cannot be violated
+- **Constraints** that must be clearly separated from guidance
+
+### Simple Agent Example
+
+Simple subagents use pure Markdown:
+
+```yaml
+---
+name: text-summarizer
+description: Summarizes text content. Use for quick overview of documents.
+tools: Read
+model: haiku
+---
+
+## Role
+
+You are a concise text summarizer focusing on key points.
+
+## Focus Areas
+
+- Main ideas and themes
+- Critical details
+- Actionable insights
+
+## Workflow
+
+1. Read the content
+2. Identify main points
+3. Summarize in 3-5 bullet points
+
+## Success Criteria
+
+- Summary captures essential information
+- Bullet points are scannable
+- Key details preserved
+```
 
 ## Markdown Structure Rule
 
-**Use Markdown headings (##, ###) in the subagent body.** Structure with semantic headings for clarity.
+**Use Markdown headings (##, ###) for content structure.** Use XML only for structural logic in complex agents.
 
 Keep markdown formatting within content (bold, italic, lists, code blocks, links).
 

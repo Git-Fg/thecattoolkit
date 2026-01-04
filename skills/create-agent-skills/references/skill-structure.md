@@ -180,6 +180,111 @@ Examples: `generate-ai-images`
 - Reserved words: `anthropic-helper`, `claude-tools`
 - Inconsistent: Directory `facebook-ads` but name `facebook-ads-manager`
 
+## Router Pattern
+
+Complex skills with multiple workflows use the Router Pattern to guide users through options and delegate to appropriate workflows.
+
+### Pattern Structure
+
+Router Pattern skills use **hybrid XML/Markdown structure**:
+
+- **Markdown**: Principles, guidance, and explanations
+- **XML**: `<intake>` for user questions and `<routing>` for decision tables
+
+### Required XML Elements
+
+```xml
+<intake>
+**Ask the user:**
+
+What would you like to do?
+1. Option one
+2. Option two
+3. Option three
+
+**Wait for response before proceeding.**
+</intake>
+
+<routing>
+| Response | Workflow |
+|----------|----------|
+| 1, "keyword1" | workflows/first-workflow.md |
+| 2, "keyword2" | workflows/second-workflow.md |
+| 3, "keyword3" | workflows/third-workflow.md |
+</routing>
+```
+
+### Complete Example
+
+```yaml
+---
+name: create-agent-skills
+description: Expert guidance for creating AI agent skills. MUST USE when working with SKILL.md files, authoring new skills, or understanding best practices.
+---
+
+# Essential Principles
+
+## Overview
+
+Skills are modular, filesystem-based capabilities that provide domain expertise on demand.
+
+## Router Pattern
+
+For complex skills, use this structure:
+
+```
+skill-name/
+├── SKILL.md              # Router + principles
+├── workflows/            # Step-by-step procedures
+├── references/           # Domain knowledge
+└── templates/            # Output structures
+```
+
+<intake>
+**Ask the user:**
+
+What would you like to do?
+1. Create new skill
+2. Audit existing skill
+3. Add component
+
+**Wait for response before proceeding.**
+</intake>
+
+<routing>
+| Response | Workflow |
+|----------|----------|
+| 1, "create", "new" | workflows/create-new-skill.md |
+| 2, "audit", "modify" | workflows/audit-skill.md |
+| 3, "add", "component" | workflows/add-component.md |
+</routing>
+
+## Reference Index
+
+- `references/core-principles.md` - Skill design principles
+- `references/skill-structure.md` - Structure requirements
+```
+
+### Pattern Requirements
+
+- **SKILL.md**: Must include `<intake>` and `<routing>` XML elements
+- **routing table**: Must use pipe table format for machine parsing
+- **workflows/**: Directory containing workflow files referenced in routing
+- **Progressive disclosure**: Workflows load specific reference files as needed
+
+### When to Use Router Pattern
+
+Use Router Pattern when:
+- Multiple distinct workflows exist
+- User needs to choose workflow direction
+- Complex decision trees required
+- Progressive disclosure needed across workflows
+
+Use Simple Pattern when:
+- Single workflow or task
+- Linear progression
+- No user choices needed
+
 ## Progressive Disclosure
 
 ### Principle
@@ -300,7 +405,7 @@ skill-name/
 
 ### Pure XML In Body
 
-❌ Do NOT use pure XML in skill body:
+❌ Do NOT use pure XML throughout skill body:
 
 ```xml
 <objective>
@@ -316,7 +421,7 @@ Form filling...
 </advanced_features>
 ```
 
-✅ Use Markdown structure:
+✅ Use hybrid structure (XML only where needed):
 
 ```markdown
 ## Objective
@@ -327,10 +432,45 @@ PDF processing with text extraction, form filling, and merging.
 
 Extract text...
 
-## Advanced Features
+<intake>
+What would you like to do?
+1. Extract text
+2. Fill forms
+3. Merge documents
+</intake>
 
-Form filling...
+<routing>
+| Response | Workflow |
+|----------|----------|
+| 1, "text" | workflows/extract-text.md |
+| 2, "forms" | workflows/fill-forms.md |
+| 3, "merge" | workflows/merge-docs.md |
+</routing>
 ```
+
+### XML Soup (Over-nesting)
+
+❌ Do NOT nest XML tags:
+
+```xml
+<context>
+  <data>
+    <users>
+      {"user_list": [...]}
+    </users>
+  </data>
+</context>
+```
+
+✅ Use flat structure:
+
+```xml
+<context>
+{"users": [...]}
+</context>
+```
+
+**Rule**: Never nest XML tags. Limit to 5 high-level tags maximum.
 
 ### Vague Descriptions
 
@@ -366,7 +506,11 @@ Every skill must have: `## Objective`, `## Quick Start`, and `## Success Criteri
 Before finalizing a skill, verify:
 
 - ✅ YAML frontmatter valid (name matches directory, description in third person)
-- ✅ Markdown headings used for structure (not pure XML)
+- ✅ Markdown headings used for general structure
+- ✅ XML tags used only for structural logic (intake, routing, constraints, output_format)
+- ✅ Router Pattern skills include `<intake>` and `<routing>` XML elements
+- ✅ Routing tables use pipe table format for machine parsing
+- ✅ Maximum 5 high-level XML tags (no nesting)
 - ✅ Required sections present: Objective, Quick Start, Success Criteria
 - ✅ Conditional sections appropriate for complexity level
 - ✅ Progressive disclosure applied (SKILL.md < 500 lines)

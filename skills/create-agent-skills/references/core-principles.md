@@ -1,6 +1,87 @@
 ## Overview
 Core principles guide skill authoring decisions. These principles ensure skills are efficient, effective, and maintainable across different models and use cases.
 
+## The Semantic Container Principle
+
+Use **XML tags as semantic containers** for sections that must be machine-parsed or strictly isolated. Reserve XML for structural logic, use Markdown for content.
+
+### When to Use XML Tags
+
+Use XML when content must be:
+- **Machine-parsed** - Routing tables, workflow decisions, configuration
+- **Strictly isolated** - Preventing confusion between data and instructions
+- **Non-negotiable** - Structural boundaries that must be preserved
+
+### Tag Limit Rule
+
+**Never use more than 5 high-level tag pairs** in a single skill. This prevents "XML soup" (nested tags inside tags).
+
+### Good Example
+
+```xml
+<intake>
+What would you like to do?
+1. Create new skill
+2. Audit existing skill
+</intake>
+
+<routing>
+| Response | Workflow |
+|----------|----------|
+| 1, "create" | workflows/create-new-skill.md |
+| 2, "audit" | workflows/audit-skill.md |
+</routing>
+```
+
+### Bad Example
+
+```xml
+<step>
+  <substep>
+    <action>Do X</action>
+  </substep>
+</step>
+```
+
+**Why it's bad**: Too granular. Use Markdown for detailed content.
+
+### Core XML Containers
+
+These are the primary XML tags for skills:
+
+- **`<intake>`** - User input questions
+- **`<routing>`** - Decision tables mapping responses to workflows
+- **`<workflow>`** - Non-negotiable step sequences
+- **`<constraints>`** - Negative constraints (NEVER/MUST NOT)
+- **`<output_format>`** - Machine-parseable response structures
+
+### Everything Else: Markdown
+
+Standard instructions, descriptions, explanations, and most content should use Markdown:
+
+```markdown
+## Objective
+
+Build skills from scratch with proper structure.
+
+## Process
+
+1. Design the skill architecture
+2. Write SKILL.md with routing
+3. Create workflows
+4. Add references
+```
+
+### Hybrid Approach in Practice
+
+**Router Pattern Skill**:
+- SKILL.md: Markdown for principles + XML for `<intake>`/`<routing>`
+- Workflows: Markdown for content + XML for `<constraints>`/`<output_format>`
+- References: Pure Markdown
+
+**Simple Skill**:
+- SKILL.md: Pure Markdown (no XML needed)
+
 ## Markdown Structure Principle
 ## Description
 Skills use Markdown headings for structure to ensure readability and maintainability. XML is reserved only for highly structured elements like routing decisions in router pattern skills.
@@ -341,6 +422,9 @@ Good validation scripts:
 See [workflows-and-validation.md](workflows-and-validation.md) for validation patterns.
 
 ## Principle Summary
+## Semantic Container
+Use XML for machine-parsed or strictly isolated sections (intake, routing, constraints, output_format). Limit to 5 high-level tags. Use Markdown for everything else.
+
 ## Markdown Structure
 Use Markdown headings for structure and readability. Required sections: Objective, Quick Start, Success Criteria. Reserve XML only for router pattern skills.
 

@@ -42,22 +42,15 @@ What would you like to do?
 {{Brief reference information always useful to have visible}}
 
 ## Reference Index
-## Domain Knowledge
 
-All in `references/`:
-- {{reference-1.md}} - {{purpose}}
-- {{reference-2.md}} - {{purpose}}
+- `references/{{reference-1}}.md` - {{purpose}}
+- `references/{{reference-2}}.md` - {{purpose}}
 
 ## Workflows Index
-## Workflows
 
-All in `workflows/`:
-
-| Workflow | Purpose |
-|----------|---------|
-| {{first-workflow}}.md | {{purpose}} |
-| {{second-workflow}}.md | {{purpose}} |
-| {{third-workflow}}.md | {{purpose}} |
+- `workflows/{{first-workflow}}.md` - {{purpose}}
+- `workflows/{{second-workflow}}.md` - {{purpose}}
+- `workflows/{{third-workflow}}.md` - {{purpose}}
 
 ## Success Criteria
 A well-executed {{skill name}}:
