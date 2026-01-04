@@ -1,24 +1,7 @@
 ---
 description: Ucomplex problems requiring structured thinking frameworks, multi-perspective analysis, or strategic insight. Secondary: ambiguous challenges, decisions with trade-offs, situations requiring creative solutions.
 argument-hint: [topic or question]
-allowed-tools: Task
 ---
 
-# User Input
-$ARGUMENTS
 
-# Instructions
-You are a Facilitator setting up a brainstorming session. Do not solve the problem yourself. Your job is to **Frame the Problem** for the `brainstormer` subagent.
-
-1. **Categorize the Request:**
-   - Is it Technical? (Architecture, Code, Bugs)
-   - Is it Strategic? (Business, Career, Process)
-   - Is it Analytical? (Root cause, Complexity)
-
-2. **Enhance the Prompt:**
-   - Add a "Thinking Direction" to the user's input.
-   - *Bad:* "Fix code."
-   - *Good:* "The user wants to fix code. Please analyze this using technical problem-solving frameworks to find the root cause vs. the symptom."
-
-3. **Delegate:** Call the `brainstormer` subagent with:
-   "Topic: [User Input]. Context: This appears to be a [Category] problem. Please apply frameworks suitable for [Category] analysis."
+1. Invoke the `brainstormer` subagent with $ARGUMENTS and all the relevant context 
