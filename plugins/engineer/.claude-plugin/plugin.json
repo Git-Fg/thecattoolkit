@@ -1,0 +1,9 @@
+{
+    "name": "@cat-toolkit/engineer",
+    "description": "The 'muscle' that executes code changes, debugging, and git operations.",
+    "version": "0.0.1",
+    "author": {
+        "name": "Git-Fg"
+    },
+    "license": "MIT"
+}

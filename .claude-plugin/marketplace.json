@@ -1,0 +1,54 @@
+{
+  "name": "cattoolkit",
+  "metadata": {
+    "description": "Official plugin marketplace for The Cat Toolkit - Vibecoding plugins for autonomous AI development.",
+    "version": "1.0.0",
+    "keywords": ["vibecoding", "ai-development", "plugins", "automation"]
+  },
+  "owner": {
+    "name": "Git-Fg",
+    "url": "https://github.com/Git-Fg/cat-toolkit-marketplace"
+  },
+  "plugins": [
+    {
+      "name": "planner",
+      "source": "./plugins/planner",
+      "description": "Hierarchical project planning (BRIEF/ROADMAP) and autonomous execution using the Orchestrator-Executor pattern."
+    },
+    {
+      "name": "context",
+      "source": "./plugins/context",
+      "description": "Session state management and scratchpad pattern for avoiding context overflow and enabling session handoffs."
+    },
+    {
+      "name": "meta",
+      "source": "./plugins/meta",
+      "description": "The Toolkit Builder: Create skills, agents, commands, and hooks for plugin development."
+    },
+    {
+      "name": "guard",
+      "source": "./plugins/guard",
+      "description": "The Immune System: File safety warnings, security checks, and type-checking hooks for Vibecoding safety."
+    },
+    {
+      "name": "engineer",
+      "source": "./plugins/engineer",
+      "description": "The 'muscle' that executes code changes, debugging, TDD, refactoring, security auditing, and git operations."
+    },
+    {
+      "name": "architect",
+      "source": "./plugins/architect",
+      "description": "The System Designer: Comprehensive system architecture, design patterns, and technical decision documentation."
+    },
+    {
+      "name": "think",
+      "source": "./plugins/think",
+      "description": "Mental models and thinking frameworks for structured problem analysis and decision-making. No code execution."
+    },
+    {
+      "name": "prompter",
+      "source": "./plugins/prompter",
+      "description": "Prompt engineering, meta-prompting, and prompt chain orchestration for AI-to-AI workflows."
+    }
+  ]
+}

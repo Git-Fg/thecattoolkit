@@ -1,0 +1,9 @@
+{
+    "name": "architect",
+    "description": "The System Designer: Comprehensive system architecture, design patterns, and technical decision documentation for complex software systems.",
+    "version": "0.0.1",
+    "author": {
+        "name": "Git-Fg"
+    },
+    "license": "MIT"
+}

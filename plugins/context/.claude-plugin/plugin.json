@@ -1,0 +1,10 @@
+{
+    "name": "context",
+    "description": "Session state management and scratchpad pattern for avoiding context overflow and enabling session handoffs.",
+    "version": "0.0.1",
+    "author": {
+        "name": "Git-Fg"
+    },
+    "license": "MIT",
+    "compatibility": "claude-code>=3.0"
+}

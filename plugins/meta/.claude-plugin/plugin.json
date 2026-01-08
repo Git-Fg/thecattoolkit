@@ -1,0 +1,10 @@
+{
+    "name": "@cat-toolkit/meta",
+    "description": "Tools to build, maintain, and audit the AI system itself. This is the 'Bootstrapper'.",
+    "version": "0.0.1",
+    "author": {
+        "name": "Git-Fg"
+    },
+    "license": "MIT",
+    "outputStyles": "./styles/"
+}

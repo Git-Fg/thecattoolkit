@@ -1,0 +1,16 @@
+# macOS
+.DS_Store
+**/.DS_Store
+
+# Temporary files
+*.tmp
+*.swp
+
+# IDE
+.idea/
+.vscode/
+
+# Archive
+.attic/
+.agent
+.claude

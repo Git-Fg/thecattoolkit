@@ -1,0 +1,11 @@
+{
+    "name": "think",
+    "description": "Mental models and thinking frameworks for structured problem analysis and decision-making. No code execution.",
+    "version": "0.0.1",
+    "author": {
+        "name": "Git-Fg"
+    },
+    "license": "MIT",
+    "allowed-tools": ["Skill(thinking-frameworks)", "Read", "Write"],
+    "compatibility": "claude>=3.5"
+}
