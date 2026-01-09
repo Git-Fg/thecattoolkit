@@ -21,5 +21,4 @@ The Plugin Developer / System Maintainer.
 ## Integration
 
 - **@cat-toolkit/guard** - Provides the actual running hooks (security, type-check, file protection)
-- **@cat-toolkit/planner** - Project planning and execution
-- **@cat-toolkit/engineer** - Code execution and debugging
+- **@cat-toolkit/builder** - Project planning and execution, code execution and debugging

@@ -1,5 +1,11 @@
 # Hooks Configuration Template
 
+## Environment Variable (Standard)
+Use `${CLAUDE_PLUGIN_ROOT}` for hooks that ship with plugins. This ensures:
+- Plugin updates automatically apply hook logic
+- Zero manual deployment for users
+- Consistent behavior across environments
+
 ## File Location
 
 ```bash
@@ -18,7 +24,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/.claude/hooks/scripts/{hook-name}.py",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/plugins/your-plugin/hooks/scripts/{hook-name}.py\"",
             "timeout": 30000
           }
         ]
@@ -131,9 +137,9 @@
 #### command
 - **Required when**: `type` is `"command"`
 - **Format**: Executable with arguments
-- **Required**: Use absolute paths with environment variables
-- **Example**: `"python3 ${CLAUDE_PLUGIN_ROOT}/.claude/hooks/scripts/security-check.py"`
-- **WHY**: Absolute paths prevent path injection vulnerabilities
+- **Required**: Use `${CLAUDE_PLUGIN_ROOT}` for plugin hooks
+- **Example**: `"python3 \"${CLAUDE_PLUGIN_ROOT}/plugins/your-plugin/hooks/scripts/security-check.py\""`
+- **WHY**: Ensures hooks work across different user environments
 
 #### prompt
 - **Required when**: `type` is `"prompt"`
@@ -151,10 +157,10 @@
   - Complex operations: 60000-120000ms
 - **WHY**: Prevents hanging hooks from blocking Claude indefinitely
 
-#### Environment Variables
-- **${CLAUDE_PLUGIN_ROOT}**: Root directory of the plugin
-- **${CLAUDE_PROJECT_DIR}**: Current working directory
-- **WHY**: Ensures hooks work regardless of where Claude is invoked
+#### Environment Variables (Standard)
+**Use `${CLAUDE_PLUGIN_ROOT}`** for plugin-distributed hooks
+- **Use absolute paths** only for local project-specific hooks (not distributed)
+- **WHY**: Reference Architecture requires portability
 
 ## Complete Example
 
@@ -168,7 +174,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/.claude/hooks/scripts/security-check.py",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/plugins/your-plugin/hooks/scripts/security-check.py\"",
             "timeout": 30000
           }
         ]
@@ -180,7 +186,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/.claude/hooks/scripts/type-check.py",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/plugins/your-plugin/hooks/scripts/type-check.py\"",
             "timeout": 60000
           }
         ]
@@ -192,7 +198,7 @@
 
 ## Security Checklist
 
-- [ ] Uses absolute paths with environment variables (${CLAUDE_PLUGIN_ROOT})
+- [ ] Uses `${CLAUDE_PLUGIN_ROOT}` for plugin hooks
 - [ ] Has timeout configured (default: 30000ms)
 - [ ] JSON validated with `jq . .claude/hooks/hooks.json`
 - [ ] Scripts have proper permissions if needed

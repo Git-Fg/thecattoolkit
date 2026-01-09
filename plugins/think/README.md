@@ -102,6 +102,5 @@ Deep thinking agent for comprehensive analysis in isolated context.
 
 ## Integration
 
-- **With @cat-toolkit/planner** - Apply strategic thinking to project planning
-- **With @cat-toolkit/engineer** - Guide architectural decisions with frameworks
+- **With @cat-toolkit/builder** - Apply strategic thinking to project planning and architectural decisions
 - **With @cat-toolkit/prompter** - Combine structured thinking with prompt engineering

@@ -17,7 +17,7 @@ description: |
   user: "How should I prioritize these competing tasks?"
   assistant: "I will use the thinking-frameworks skill for prioritization frameworks."
   </example>
-allowed-tools: [Read, Write, Edit, Glob, Grep]
+allowed-tools: Read Write Edit Glob Grep
 ---
 
 # Thinking Frameworks Standard

@@ -112,7 +112,7 @@ def run_hook(hook_name):
             cmd,
             shell=False,
             capture_output=False,  # Let the hook script output directly
-            timeout=15,  # 5 minute timeout
+            timeout=15,  # 15 second timeout
         )
         return result.returncode
 

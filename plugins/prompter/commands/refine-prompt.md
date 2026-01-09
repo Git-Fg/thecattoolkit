@@ -1,21 +1,7 @@
 ---
 description: |
-  [Prompts] Refine existing prompts through fast edit, improvement, or full refactoring using meta-prompt optimization.
-  <example>
-  Context: User wants quick fix
-  user: "Fix the output format in my code-review prompt"
-  assistant: "I will use /refine-prompt for a fast edit."
-  </example>
-  <example>
-  Context: User wants enhancement
-  user: "Improve my analysis prompt with better examples"
-  assistant: "I will use /refine-prompt to improve the prompt."
-  </example>
-  <example>
-  Context: User wants comprehensive optimization
-  user: "My prompt is producing inconsistent results, refactor it completely"
-  assistant: "I will use /refine-prompt with meta-prompt optimization."
-  </example>
+  [Prompts] Refine existing prompts through fast edit, improvement, or full refactoring using meta-prompt optimization. Examples: Fix the output format in my code-review prompt | Improve my analysis prompt with better examples | My prompt is producing inconsistent results, refactor it completely.
+disable-model-invocation: true
 allowed-tools: Skill(prompt-library), AskUserQuestion, Read, Write, Edit
 argument-hint: [prompt-name or path to .md file]
 ---
@@ -152,9 +138,7 @@ Ask: "What level of refinement? (fast / improve / refactor)"
 
 **Process:**
 1. Load the prompt-optimizer meta-prompt:
-   ```
-   Read: assets/templates/meta/optimizer.md from the prompt-library skill
-   ```
+   Load the optimizer template from the prompt-library skill
 
 2. Gather context for optimization:
    - Ask: "What problems are you seeing with this prompt?"

@@ -1,44 +1,72 @@
-#!/usr/bin/env python3
-"""
-PreCompact Hook: Compacts memory before context overflow.
-This runs when context window is near capacity to preserve critical information.
-"""
 import sys
-import json
+import os
 import datetime
-import re
 from pathlib import Path
+
+# BOILERPLATE: Add the current script's directory to sys.path
+# This allows importing sibling modules (like path_validator)
+# regardless of where the plugin is installed.
+current_dir = Path(__file__).resolve().parent
+sys.path.insert(0, str(current_dir))
+
+# Security: Detect Plugin Root to prevent self-modification
+CLAUDE_PLUGIN_ROOT = os.environ.get("CLAUDE_PLUGIN_ROOT")
+
+
+def is_safe_write(file_path: str) -> bool:
+    """
+    Check if writing to a file is safe.
+    BLOCKS writes to the Plugin Root (cache) to prevent tampering.
+    ALLOWS writes to Project Root.
+    """
+    try:
+        abs_path = os.path.abspath(file_path)
+        if CLAUDE_PLUGIN_ROOT and abs_path.startswith(CLAUDE_PLUGIN_ROOT):
+            return False
+        return True
+    except Exception:
+        return False
+
 
 def read_file_safe(path):
     """Safely read a file, return empty string if not found or error."""
     try:
+        if not validate_path(path):
+            # Path traversal attempt detected
+            return ""
         if os.path.exists(path):
-            with open(path, 'r') as f:
+            with open(path, "r") as f:
                 return f.read()
-    except:
+    except Exception:
         pass
     return ""
+
 
 def write_file_safe(path, content):
     """Safely write a file, creating directories if needed."""
     try:
+        if not validate_path(path):
+            # Path traversal attempt detected
+            return False
         Path(path).parent.mkdir(parents=True, exist_ok=True)
-        with open(path, 'w') as f:
+        with open(path, "w") as f:
             f.write(content)
         return True
     except Exception as e:
         return False
 
+
 def extract_key_actions(context_log):
     """Extract meaningful actions from context log."""
     actions = []
-    lines = context_log.split('\n')
+    lines = context_log.split("\n")
 
     for line in lines:
-        if '[20' in line and 'Tool:' in line:
+        if "[20" in line and "Tool:" in line:
             actions.append(line)
 
     return actions[-20:]  # Last 20 actions
+
 
 def summarize_actions(actions):
     """Create a summary of recent actions."""
@@ -50,6 +78,7 @@ def summarize_actions(actions):
         summary += f"- {action}\n"
 
     return summary
+
 
 def main():
     """Compact memory by creating a summary and updating scratchpad."""
@@ -78,7 +107,7 @@ def main():
 
 ## Original Scratchpad Content
 
-{scratchpad[:500]}{'...' if len(scratchpad) > 500 else ''}
+{scratchpad[:500]}{"..." if len(scratchpad) > 500 else ""}
 
 ---
 *Checkpoint created automatically by PreCompact hook*
@@ -88,11 +117,11 @@ def main():
         write_file_safe(checkpoint_file, checkpoint_summary)
 
         if scratchpad:
-            lines = scratchpad.split('\n')
+            lines = scratchpad.split("\n")
 
             memory_section_index = -1
             for i, line in enumerate(lines):
-                if '## Recent Actions' in line or '## Memory Summary' in line:
+                if "## Recent Actions" in line or "## Memory Summary" in line:
                     memory_section_index = i
                     break
 
@@ -104,28 +133,40 @@ def main():
             lines.append(f"\n### {timestamp}")
             lines.append(actions_summary)
 
-            new_scratchpad = '\n'.join(lines)
+            new_scratchpad = "\n".join(lines)
 
             write_file_safe(scratchpad_path, new_scratchpad)
 
-        if os.path.exists(context_log_path):
-            with open(context_log_path, 'w') as f:
+        if os.path.exists(context_log_path) and validate_path(context_log_path):
+            with open(context_log_path, "w") as f:
                 f.write(f"[{timestamp}] Memory checkpoint created\n")
-                f.write(f"[{timestamp}] Context compacted - summary moved to scratchpad\n\n")
+                f.write(
+                    f"[{timestamp}] Context compacted - summary moved to scratchpad\n\n"
+                )
 
-        print(json.dumps({
-            "status": "success",
-            "message": f"Memory compacted at {timestamp}",
-            "checkpoint": checkpoint_file,
-            "actions_summarized": len(actions)
-        }))
+        print(
+            json.dumps(
+                {
+                    "status": "success",
+                    "message": f"Memory compacted at {timestamp}",
+                    "checkpoint": checkpoint_file,
+                    "actions_summarized": len(actions),
+                }
+            )
+        )
 
     except Exception as e:
-        print(json.dumps({
-            "status": "success",
-            "message": f"Memory compaction completed with warnings: {str(e)}"
-        }))
+        print(
+            json.dumps(
+                {
+                    "status": "success",
+                    "message": f"Memory compaction completed with warnings: {str(e)}",
+                }
+            )
+        )
+
 
 if __name__ == "__main__":
     import os
+
     main()

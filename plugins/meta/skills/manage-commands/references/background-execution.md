@@ -72,8 +72,9 @@ While background agent runs:
 ### Background Safety
 Ensure the target agent is "background safe":
 1. **Read-only tools** (Read, Grep, Glob) are always safe.
-2. **Bash execution** is NOT safe for background (requires manual approval).
+2. **Bash execution** can be used in background if properly designed (no user interaction).
 3. **File operations** require pre-approval or explicit design for background.
+4. **Critical constraint**: Agents cannot use AskUserQuestion in background - all decisions must be autonomous.
 
 ### Tool Restrictions
 Commands should focus on delegation. Use `allowed-tools: Task` to restrict the command to delegation only.

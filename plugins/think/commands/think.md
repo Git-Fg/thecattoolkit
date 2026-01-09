@@ -1,4 +1,5 @@
 ---
+disable-model-invocation: true
 description: |
   Guide framework selection and apply thinking frameworks to analyze problems in the current conversation context using the thinking-frameworks skill resources.
   <example>

@@ -89,8 +89,7 @@ Persistent session state management using the scratchpad pattern.
 
 ## Integration
 
-- **With @cat-toolkit/planner** - Track plan execution progress
-- **With @cat-toolkit/engineer** - Preserve debugging and review context
+- **With @cat-toolkit/builder** - Track plan execution progress and preserve debugging/review context
 - **With @cat-toolkit/think** - Track strategic thinking
 
 ## Benefits

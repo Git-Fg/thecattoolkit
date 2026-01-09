@@ -1,21 +1,6 @@
 ---
 description: |
-  Delegate to prompt-engineer for prompt optimization and design.
-  <example>
-  Context: User needs prompt improvement
-  user: "Optimize this prompt for better results"
-  assistant: "I'll delegate to the prompt-engineer for prompt optimization."
-  </example>
-  <example>
-  Context: Prompt design from scratch
-  user: "Design a prompt for code review"
-  assistant: "I'll use the prompt-engineer command for prompt creation."
-  </example>
-  <example>
-  Context: Prompt debugging
-  user: "Fix this prompt that's not working"
-  assistant: "I'll delegate for prompt analysis and improvement."
-  </example>
+  Delegate to prompt-engineer for prompt optimization and design. Examples: Optimize this prompt for better results | Design a prompt for code review | Fix this prompt that's not working.
 allowed-tools: Skill(prompt-engineering), Task, Read, Glob, Grep
 argument-hint: [prompt or task requiring prompt engineering]
 disable-model-invocation: true
@@ -63,7 +48,7 @@ Your job is to ORCHESTRATE:
 ```markdown
 <context>
 [All relevant context discovered]
-- @files/referenced
+- Referenced files
 - Background information
 - Constraints and requirements
 </context>

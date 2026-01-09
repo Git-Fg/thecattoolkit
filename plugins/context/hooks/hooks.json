@@ -1,12 +1,17 @@
 {
   "description": "Hook-Powered Context System: Command + Prompt Hooks with XML Output",
+  "imports": [
+    "auto_log",
+    "restore_context",
+    "compact_memory"
+  ],
   "hooks": {
     "SessionStart": [
       {
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/plugins/context/hooks/scripts/restore_context.py",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/plugins/context/hooks/scripts/restore_context.py\"",
             "timeout": 30
           }
         ]
@@ -18,7 +23,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/plugins/context/hooks/scripts/auto_log.py",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/plugins/context/hooks/scripts/auto_log.py\"",
             "timeout": 10
           }
         ]
@@ -29,7 +34,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 ${CLAUDE_PLUGIN_ROOT}/plugins/context/hooks/scripts/compact_memory.py",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/plugins/context/hooks/scripts/compact_memory.py\"",
             "timeout": 60
           }
         ]
@@ -39,8 +44,8 @@
       {
         "hooks": [
           {
-            "type": "prompt",
-            "prompt": "You are evaluating if Claude should stop working.\n\nAnalyze the session:\n1. Is this a meaningful end of work session?\n2. Has context been actively used (files edited, commands run)?\n3. Is this a logout/pause or natural completion?\n\nExtract your decision and reason into this EXACT XML structure:\n\n<decision>\n<approve>true</approve>\n<reason>Brief explanation of why this session should/shouldn't stop</reason>\n</decision>\n\nCRITICAL REQUIREMENTS:\n- You MUST include the <decision> tags in your response\n- The <approve> tag must contain exactly \"true\" or \"false\"\n- You may add explanation before or after the XML tags\n- The XML tags must be present for the system to work correctly\n\nExample format:\n[Your analysis here]\n<decision>\n<approve>false</approve>\n<reason>This session has active context usage and meaningful work</reason>\n</decision>\n[Additional context if needed]",
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/plugins/context/hooks/scripts/evaluate_stop.py\"",
             "timeout": 20
           }
         ]
@@ -50,8 +55,8 @@
       {
         "hooks": [
           {
-            "type": "prompt",
-            "prompt": "You are evaluating if a subagent task completed successfully.\n\nCheck:\n1. Was the subagent performing context operations (scribe agent, context management)?\n2. Did it complete its task successfully?\n3. Any errors that need addressing?\n\nExtract your evaluation into this EXACT XML structure:\n\n<evaluation>\n<complete>true</complete>\n<reason>Brief explanation of completion status</reason>\n</evaluation>\n\nCRITICAL REQUIREMENTS:\n- You MUST include the <evaluation> tags in your response\n- The <complete> tag must contain exactly \"true\" or \"false\"\n- You may add explanation before or after the XML tags\n- The XML tags must be present for the system to work correctly\n\nExample format:\n[Your analysis here]\n<evaluation>\n<complete>true</complete>\n<reason>Scribe agent successfully created handoff document</reason>\n</evaluation>\n[Additional context if needed]",
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/plugins/context/hooks/scripts/evaluate_subagent.py\"",
             "timeout": 15
           }
         ]

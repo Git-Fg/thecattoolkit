@@ -7,12 +7,12 @@
                 "hooks": [
                     {
                         "type": "command",
-                        "command": "node ${CLAUDE_PLUGIN_ROOT}/plugins/guard-ts/hooks/scripts/protect-files.js",
+                        "command": "node \"${CLAUDE_PLUGIN_ROOT}/plugins/guard-ts/hooks/scripts/protect-files.js\"",
                         "timeout": 10000
                     },
                     {
                         "type": "command",
-                        "command": "node ${CLAUDE_PLUGIN_ROOT}/plugins/guard-ts/hooks/scripts/security-check.js",
+                        "command": "node \"${CLAUDE_PLUGIN_ROOT}/plugins/guard-ts/hooks/scripts/security-check.js\"",
                         "timeout": 10000
                     }
                 ]
@@ -24,7 +24,7 @@
                 "hooks": [
                     {
                         "type": "command",
-                        "command": "node ${CLAUDE_PLUGIN_ROOT}/plugins/guard-ts/hooks/scripts/type-check.js",
+                        "command": "node \"${CLAUDE_PLUGIN_ROOT}/plugins/guard-ts/hooks/scripts/type-check.js\"",
                         "timeout": 30000
                     }
                 ]

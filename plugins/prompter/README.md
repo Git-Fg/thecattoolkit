@@ -118,5 +118,4 @@ Advanced prompt engineering and optimization agent.
 
 - **With @cat-toolkit/meta** - Build prompt creation and optimization tools
 - **With @cat-toolkit/think** - Apply structured thinking to prompt design
-- **With @cat-toolkit/planner** - Create prompts for planning workflows
-- **With @cat-toolkit/engineer** - Build prompts for code generation and debugging
+- **With @cat-toolkit/builder** - Create prompts for planning workflows and code generation

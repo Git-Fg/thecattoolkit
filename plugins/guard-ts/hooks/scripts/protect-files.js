@@ -6,7 +6,6 @@
  */
 const fs = require('fs');
 const path = require('path');
-const { Minimatch } = require('minimatch');
 
 // Files/patterns to warn about
 const PROTECTED_PATTERNS = [

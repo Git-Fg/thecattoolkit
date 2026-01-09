@@ -159,6 +159,13 @@ Solution: Focus on value delivery measurement, not just usage metrics
 5. **Prioritize ruthlessly** - Focus on the One Thing
 6. **Implement** - Do the One Thing first
 
+**Common Pitfalls:**
+- Picking something comfortable rather than highest-impact
+- Confusing urgent with important
+- Selecting too broad an action (not specific enough)
+- Abandoning the One Thing when it gets difficult
+- Not asking the focusing question recursively (what's the one thing for THIS one thing?)
+
 **Output Structure:**
 - Goal Statement
 - Potential Actions (comprehensive list)
@@ -167,6 +174,25 @@ Solution: Focus on value delivery measurement, not just usage metrics
 - Why It's Highest Leverage
 - Implementation Plan
 - Supporting Actions (if needed)
+
+**Example Application:**
+```
+Goal: "Increase monthly revenue by 50%"
+Potential Actions:
+- Launch new product line
+- Increase marketing spend
+- Hire more salespeople
+- Improve conversion rate
+- Raise prices
+- Expand to new markets
+Leverage Analysis:
+- Marketing spend: 1.2x return (measured)
+- Conversion rate: Currently 2%, industry avg 4%
+- New product: 6-month lead time
+The One Thing: "Fix the checkout flow to improve conversion rate"
+Why: Doubles revenue with existing traffic, no acquisition cost, enables all other growth
+Implementation: 2-week sprint focused only on checkout UX
+```
 
 ### Eisenhower Matrix
 **Purpose:** Categorize by urgency vs importance
@@ -275,6 +301,13 @@ Solution: Focus on value delivery measurement, not just usage metrics
 5. **Remove systematically** - Eliminate identified elements
 6. **Assess improvement** - Did removal solve or improve the problem?
 
+**Common Pitfalls:**
+- Defaulting to "add more" before considering "remove what hurts"
+- Removing too much too fast (no baseline to measure)
+- Confusing "nice to have" with "essential"
+- Not tracking what was removed (can't reverse if needed)
+- Stopping at obvious removals without digging deeper
+
 **Output Structure:**
 - Problem Statement
 - Current State Analysis
@@ -283,6 +316,27 @@ Solution: Focus on value delivery measurement, not just usage metrics
 - Prioritized Removal List
 - Implementation Plan
 - Improvement Assessment
+
+**Example Application:**
+```
+Problem: "Team velocity is declining despite adding process"
+Current State:
+- Daily standups (15 min)
+- Sprint planning (2 hrs)
+- Retrospectives (1 hr)
+- Code review meetings (3 hrs/week)
+- Architecture review board (1 hr/week)
+- Status reports (2 hrs/week)
+Candidates for Removal:
+- Architecture review board: delays decisions, rubber-stamps anyway
+- Status reports: duplicate of standup content
+- Code review meetings: could be async
+Prioritized Removal:
+1. Architecture board → async Slack channel
+2. Status reports → eliminated
+3. Code review meetings → async PR comments
+Result: 6 hrs/week recovered, velocity increased 20%
+```
 
 ## Application Templates
 

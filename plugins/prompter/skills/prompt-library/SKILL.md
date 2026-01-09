@@ -17,7 +17,7 @@ description: |
   user: "Run my competitive-analysis prompt"
   assistant: "I will use the prompt-library skill execution workflow to run the saved prompt."
   </example>
-allowed-tools: [Read, Write, Edit, Bash]
+allowed-tools: Read
 ---
 
 # Prompt Library & Lifecycle Management

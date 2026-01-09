@@ -1,0 +1,55 @@
+{
+    "name": "builder",
+    "description": "The Unified Builder. Consolidates planning and engineering into a single cohesive workflow. Features: Plan Creation, Plan Execution, TDD, Debugging, and Code Review.",
+    "version": "1.0.0",
+    "author": {
+        "name": "Claude Toolkit"
+    },
+    "license": "MIT",
+    "commands": [
+        {
+            "name": "plan",
+            "description": "Create hierarchical project plans"
+        },
+        {
+            "name": "execute",
+            "description": "Execute project plans"
+        },
+        {
+            "name": "debug",
+            "description": "Systematic debugging protocol"
+        },
+        {
+            "name": "tdd",
+            "description": "Test-Driven Development workflow"
+        },
+        {
+            "name": "review",
+            "description": "Code review and quality assessment"
+        }
+    ],
+    "skills": [
+        {
+            "name": "execution-core",
+            "description": "Universal behavioral standards for autonomous agents"
+        },
+        {
+            "name": "project-strategy",
+            "description": "Project planning standards and document templates"
+        },
+        {
+            "name": "software-engineering",
+            "description": "Code manipulation patterns and engineering protocols"
+        }
+    ],
+    "agents": [
+        {
+            "name": "director",
+            "description": "Orchestrates plan execution with dependency analysis"
+        },
+        {
+            "name": "worker",
+            "description": "Universal builder worker for autonomous execution"
+        }
+    ]
+}

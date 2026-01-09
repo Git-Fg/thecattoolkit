@@ -1,10 +1,12 @@
 ---
+name: contexteng
 description: |
   Use when managing persistent session state,
   avoiding context overflow, or enabling session handoffs to ensure architectural
   compliance and state continuity. Now powered by **Hybrid Hook System** (Command + Prompt hooks with XML output) for automatic and intelligent context management.
+  Use `setup` to deploy hooks with absolute paths for reliable operation.
 allowed-tools: Skill(context-engineering), Agent(scribe)
-argument-hint: [create-handoff|archive-session]
+argument-hint: [create-handoff|archive-session|setup]
 disable-model-invocation: true
 ---
 
@@ -24,6 +26,9 @@ disable-model-invocation: true
 - ✅ **SubagentStop**: Verifies context operations completed successfully (XML-based response)
 
 ## Operations
+
+**Deployment** (run once when installing context plugin):
+- `setup` - Deploy context hooks to .cattoolkit/hooks/ with absolute paths (no ${CLAUDE_PLUGIN_ROOT} needed)
 
 **Manual Operations** (use when needed):
 - `create-handoff` - Consolidate memory into portable handoff document

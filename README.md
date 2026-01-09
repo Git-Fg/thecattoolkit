@@ -62,31 +62,33 @@ claude plugin install project-orchestrator@thecattoolkit
 
 ## Available Plugins
 
-### Planner (Project Orchestrator)
+### Builder (The Unified Builder)
 
 **License:** MIT
 
-End-to-end project planning and execution suite using the Orchestrator-Executor pattern.
+Unified planning and engineering suite that consolidates project strategy with code execution. Features autonomous execution, systematic debugging, and test-driven development.
 
 **Features:**
 - Hierarchical Planning: BRIEF.md → ROADMAP.md → phased PLAN.md structure
-- Autonomous Execution: Agents execute tasks with fresh context each session
-- Quality Assurance: Orchestrators verify all outputs by reading modified files
+- Autonomous Execution: Agents execute in Uninterrupted Flow with self-verification
+- Quality Assurance: Systematic protocols for debugging, TDD, and code review
 - State-in-Files: All decisions and progress tracked in disk-based files
 
 **Commands:**
-- `/create-plan` [project description] - Creates hierarchical project plans
-- `/run-plan` [path to PLAN.md] - Orchestrates plan execution with QA
-- `/sync-rules` - Synchronizes project rules across the toolkit
-- `/contexteng` - Engineering context management
+- `/plan` [project description] - Creates hierarchical project plans
+- `/execute` [path to PLAN.md] - Orchestrates plan execution
+- `/debug` - Systematic debugging protocol
+- `/tdd` - Test-Driven Development workflow
+- `/review` - Code review and quality assessment
 
 **Agents:**
-- `plan-author` - Creates hierarchical project plans (BRIEF, ROADMAP, PHASES)
-- `phase-executor` - Executes individual tasks within a phase (The Project Worker)
+- `director` - Orchestrates complex plan execution with dependency analysis
+- `worker` - Universal builder for autonomous implementation
 
 **Skills:**
-- `project-standards` - Document templates and format standards (BRIEF.md, ROADMAP.md, PLAN.md, SUMMARY.md, HANDOFF.md)
-- `plan-authoring` - Planning standards and best practices (plan types, task structure, evaluation criteria)
+- `execution-core` - Universal behavioral standards (Uninterrupted Flow, Self-Verification, Handoffs)
+- `project-strategy` - Document templates and format standards (BRIEF.md, ROADMAP.md, PLAN.md, SUMMARY.md, HANDOFF.md)
+- `software-engineering` - Engineering protocols (TDD, Debugging, Code Review, Security)
 
 ### Strategist (The Brain)
 
@@ -116,36 +118,6 @@ Interactive thinking, analysis, and prompt crafting system.
 **Skills:**
 - `thinking-frameworks` - Framework selection prompts, methodology, and templates
 - `prompt-crafting` - Prompt structure, patterns, and best practices
-
-### Engineer (The Builder)
-
-**License:** MIT
-
-Code execution, debugging, testing, and git operations.
-
-**Features:**
-- Test-Driven Development workflow
-- Comprehensive code review and debugging protocols
-- System design and architecture analysis
-- Git workflow automation
-- Code mentorship and explanation
-
-**Commands:**
-- `/debug` - Debugging with systematic protocols
-- `/review` - Comprehensive code review
-- `/tdd` - Test-Driven Development workflow
-- `/commit` - Git commit with message standards
-- `/mentor` - Code explanation and concept teaching
-- `/system-design` - System architecture and design analysis
-
-**Agents:**
-- `code-implementer` - Executes engineering tasks (code, tests, debugging) (The Muscle)
-- `architect` - System design and architecture analysis
-
-**Skills:**
-- `engineering` - TDD protocols, debugging, code review, security audit
-- `git-workflow` - Commit standards, PR workflows
-- `mentorship` - Teaching workflows, code explanation
 
 ### Meta (The Toolkit Builder)
 
@@ -238,9 +210,8 @@ See [CLAUDE.md](CLAUDE.md) for complete development guidelines and forbidden pat
 - **[CLAUDE.md](CLAUDE.md)** - Development standards and forbidden patterns
 
 ### Plugin-Specific
-- **[plugins/planner/README.md](plugins/planner/README.md)** - Planner plugin documentation
+- **[plugins/builder/README.md](plugins/builder/README.md)** - Builder plugin documentation
 - **[plugins/think/README.md](plugins/think/README.md)** - Strategist plugin documentation
-- **[plugins/engineer/README.md](plugins/engineer/README.md)** - Engineer plugin documentation
 - **[plugins/meta/README.md](plugins/meta/README.md)** - Meta plugin documentation
 
 ## Contributing

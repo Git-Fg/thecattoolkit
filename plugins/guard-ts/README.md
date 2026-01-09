@@ -27,25 +27,18 @@ Provides passive safety and quality hooks for TypeScript projects. These hooks r
 ## Installation
 
 ```bash
-claude plugin install @cat-toolkit/guard-typescript
+claude plugin install @cat-toolkit/guard-ts
 ```
 
-### Setup Protocol (Recommended)
+### How Hooks Work
 
-Hooks are deployed to `.cattoolkit/hooks/` for project-specific customization:
+Hooks run automatically via Claude Code's plugin system:
 
-```bash
-# Deploy hooks using the setup-ts command (recommended)
-cd your-project
-/setup-ts
-```
+1. **Install the plugin** - hooks are registered automatically
+2. **No setup required** - hooks execute from the plugin cache via `${CLAUDE_PLUGIN_ROOT}`
+3. **Immediate protection** - guards activate on your first edit
 
-**Benefits of .cattoolkit/hooks/ deployment:**
-- Project-specific hook customization
-- Version-controlled hook configurations
-- Portable hook setup
-- Centralized runtime environment
-- **No environment variables required** - Uses absolute paths
+> **Note:** Hooks are Claude Code specific. Other MCP clients can use the marketplace but won't have automatic hook protection.
 
 ## Requirements
 

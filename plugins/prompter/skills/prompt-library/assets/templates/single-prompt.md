@@ -11,9 +11,8 @@ Use this prompt when you need to:
 
 ## Input
 
-<context>
+**Input Description:**
 {INPUT_DESCRIPTION}
-</context>
 
 ## Instructions
 

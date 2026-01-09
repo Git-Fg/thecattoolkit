@@ -79,25 +79,18 @@ The guard plugin is lightweight and can be installed alongside any other plugin:
 claude plugin install @cat-toolkit/guard
 ```
 
-### Setup Protocol (Recommended)
+### How Hooks Work
 
-Hooks are deployed to `.cattoolkit/hooks/` for project-specific customization:
+Hooks run automatically via Claude Code's plugin system:
 
-```bash
-# Deploy hooks using the setup-py command (recommended)
-cd your-project
-/setup-py
-```
+1. **Install the plugin** - hooks are registered automatically
+2. **No setup required** - hooks execute from the plugin cache via `${CLAUDE_PLUGIN_ROOT}`
+3. **Immediate protection** - guards activate on your first edit
 
-**Benefits of .cattoolkit/hooks/ deployment:**
-- Project-specific hook customization
-- Version-controlled hook configurations
-- Portable hook setup
-- Centralized runtime environment
-- **No environment variables required** - Uses absolute paths
+> **Note:** Hooks are Claude Code specific. Other MCP clients can use the marketplace but won't have automatic hook protection.
 
 **Configuration:**
-Hooks automatically check for `.cattoolkit/hooks/scripts/` before running. If hooks are not deployed, they skip silently.
+Hooks check for patterns and type-checker configuration in your project. No additional setup needed.
 
 ## Usage
 
@@ -129,17 +122,16 @@ warn_return_any = true
 ```
 
 **Secret Patterns:**
-Edit `.cattoolkit/hooks/scripts/security-check.py` to customize `SECRET_PATTERNS` or `SKIP_FILES`.
+Customize patterns via project-level configuration. Plugin scripts in `~/.claude/plugins/cache/` cannot be edited directly—updates will overwrite changes.
 
 **Protected Files:**
-Edit `.cattoolkit/hooks/scripts/protect-files.py` to customize `PROTECTED_PATTERNS` or `WARN_PATTERNS`.
+Override protection patterns in your `pyproject.toml` or create a `.cattoolkit/guard-config.json` for project-specific settings.
 
 ## Integration
 
 The guard plugin integrates seamlessly with all other Cat Toolkit plugins:
 
-- **With @cat-toolkit/engineer** - Automatic type checking during development
-- **With @cat-toolkit/planner** - File protection during project setup
+- **With @cat-toolkit/builder** - Automatic type checking and file protection during project execution
 - **With @cat-toolkit/context** - Security awareness during context management
 
 ## Best Practices

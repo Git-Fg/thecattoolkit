@@ -43,12 +43,8 @@ Hooks are event-driven automation for Claude Code. They execute shell commands o
 
 #### Utilities (`assets/scripts/`)
 
-- **`path-validator.py`** - Utility for preventing traversal attacks
+- **`path_validator.py`** - Utility for preventing traversal attacks
 - **`hook-tester.py`** - Automated validation tool for all hook events
-
-#### Deployment Guide
-
-- **`references/deployment-guide.md`** - Complete guide for deploying hooks with absolute paths (recommended)
 
 ---
 
@@ -56,4 +52,4 @@ Hooks are event-driven automation for Claude Code. They execute shell commands o
 
 **Hook Types & Matchers**: [hook-types.md](references/hook-types.md) - Events, schemas, regex matchers, and MCP naming
 **Debugging Hooks**: [debugging-hooks.md](references/debugging-hooks.md) - Comprehensive debugging workflows and diagnostics
-**Deploying Hooks**: [deployment-guide.md](references/deployment-guide.md) - Static path deployment to avoid environment variable dependencies
+**Claude Hooks Architecture**: [claude-hooks.md](../../../../docs/claude-hooks.md) - Reference Architecture using `${CLAUDE_PLUGIN_ROOT}`

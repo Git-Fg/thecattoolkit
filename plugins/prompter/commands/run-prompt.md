@@ -6,6 +6,7 @@ description: |
   user: "Run my code-review prompt on this file"
   assistant: "I will use /run-prompt to execute the saved prompt."
   </example>
+disable-model-invocation: true
 allowed-tools: Skill(prompt-library), Read, Write, AskUserQuestion
 argument-hint: [prompt-name or path to .md file]
 ---
@@ -42,7 +43,7 @@ You are the **Prompt Executor**. You load and run saved prompts with proper cont
 
 ## Step 3: Gather Context
 
-- Load any @ referenced files using Read tool
+- Load any referenced context files
 - If prompt requires user inputs, use AskUserQuestion to collect them
 - Prepare context package with all required inputs
 

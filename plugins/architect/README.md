@@ -147,7 +147,7 @@ Performs deep system mapping, dependency analysis, and technical debt assessment
 
 ## Best Practices
 
-1. **Design Before Planning** - Use architect before planner for new systems
+1. **Design Before Planning** - Use architect before builder for new systems
 2. **Document Decisions** - Always create ADRs for significant architectural choices
 3. **Analyze Trade-offs** - Every pattern has pros and cons; document them explicitly
 4. **Think Long-Term** - Design for 10x growth and team expansion

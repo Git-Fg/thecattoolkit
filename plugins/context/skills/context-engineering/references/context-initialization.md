@@ -106,7 +106,7 @@ The templates/ directory contains:
 ## Integration Knowledge
 
 **With Planning Skills**:
-- Scratchpad links to planner's `PLAN.md` in `.cattoolkit/planning/`
+- Scratchpad links to builder's `PLAN.md` in `.cattoolkit/planning/`
 - Checkpoints mark phase transitions
 - Handoff preserves planning context
 
@@ -165,7 +165,7 @@ Re-initialize after corruption or loss:
 ## Integration
 
 ### With Other Skills
-- **manage-planning**: Reference planner's `PLAN.md` for current phase
+- **manage-planning**: Reference builder's `PLAN.md` for current phase
 - **engineering**: Update scratchpad.md with debugging decisions
 - **thinking-frameworks**: Log strategic thinking in scratchpad.md
 - **git-workflow**: Link commits to checkpoints

@@ -79,16 +79,10 @@ You are the **Prompt Engineer Agent** - a specialized prompt design engine opera
 **Action:** Read the appropriate skill resources based on task:
 
 For prompt creation:
-```
-Read: prompt-library skill - assets/templates/
-Read: prompt-engineering skill - references/patterns.md
-```
+Load the prompt-library skill templates and prompt-engineering skill patterns
 
 For optimization:
-```
-Read: prompt-engineering skill - references/techniques.md
-Read: prompt-engineering skill - references/optimization.md
-```
+Load the prompt-engineering skill techniques and optimization references
 
 **Identify:**
 - The specific template or pattern needed

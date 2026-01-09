@@ -46,7 +46,7 @@ async function main() {
         const toolInput = inputData.tool_input || {};
 
         const filePath = toolInput.file_path || '';
-        constcontent = toolInput.content || toolInput.new_string || '';
+        const content = toolInput.content || toolInput.new_string || '';
 
         if (!filePath || !content) process.exit(0);
 

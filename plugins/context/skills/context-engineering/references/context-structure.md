@@ -255,7 +255,7 @@ Before session handoff, verify:
 ## Integration Examples
 
 ### With Planning
-Project plans are managed via the **planner** plugin in `.cattoolkit/planning/`. Session-level context in `scratchpad.md` should complement these plans.
+Project plans are stored in `.cattoolkit/planning/`. Session-level context in `scratchpad.md` should complement these plans.
 
 ### With Engineering
 ```markdown

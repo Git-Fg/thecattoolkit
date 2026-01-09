@@ -105,39 +105,21 @@ Analyze the request to identify:
 - → Apply `references/standards-architecture.md` and `references/standards-quality.md`
 - → Update description using standards
 
-**"setup hooks guard-python":**
+**"verify hooks guard-python":**
 - Component Type: hooks
 - Plugin: guard-python
-- Action: deploy
-- → Load `manage-hooks` skill
-- → Create `.cattoolkit/hooks/` directory
-- → Copy scripts from plugin to `.cattoolkit/hooks/scripts/`
-- → Generate hooks.json with ABSOLUTE PATHS (no ${CLAUDE_PLUGIN_ROOT})
+- Action: verify
+- → Confirm plugin is installed in cache
+- → Verify hooks.json references `${CLAUDE_PLUGIN_ROOT}` correctly
+- → No script copying needed - hooks run from plugin cache
 
-**"setup hooks guard-ts":**
+**"verify hooks guard-ts":**
 - Component Type: hooks
 - Plugin: guard-ts
-- Action: deploy
-- → Load `manage-hooks` skill
-- → Create `.cattoolkit/hooks/` directory
-- → Copy scripts from plugin to `.cattoolkit/hooks/scripts/`
-- → Generate hooks.json with ABSOLUTE PATHS (no ${CLAUDE_PLUGIN_ROOT})
-
-**"setup-py" (from guard-python):**
-- Component Type: hooks
-- Plugin: guard-python
-- Action: deploy
-- → Deploy Python hooks from plugins/guard-python/hooks/scripts/
-- → Copy scripts to .cattoolkit/hooks/scripts/
-- → Generate hooks.json with ABSOLUTE PATHS
-
-**"setup-ts" (from guard-ts):**
-- Component Type: hooks
-- Plugin: guard-ts
-- Action: deploy
-- → Deploy TypeScript hooks from plugins/guard-ts/hooks/scripts/
-- → Copy scripts to .cattoolkit/hooks/scripts/
-- → Generate hooks.json with ABSOLUTE PATHS
+- Action: verify
+- → Confirm plugin is installed in cache
+- → Verify hooks.json references `${CLAUDE_PLUGIN_ROOT}` correctly
+- → No script copying needed - hooks run from plugin cache
 
 ## System vs Project Components
 
@@ -169,120 +151,30 @@ This agent specializes in maintaining the AI system infrastructure by applying *
 
 **For SETUP operations (deploy hooks):**
 
-Three patterns:
-1. "setup hooks {plugin-name}" (generic)
-2. "setup-py" (from guard-python command)
-3. "setup-ts" (from guard-ts command)
-
-Component Type: hooks
-Action: deploy
-→ Load `manage-hooks` skill
-→ Create `.cattoolkit/hooks/` directory
-→ Copy scripts from plugin source to `.cattoolkit/hooks/scripts/`
-→ Generate hooks.json with ABSOLUTE PATHS (no environment variables)
-→ Set execute permissions on all scripts
-→ Validate deployment with path checks
+Use Reference Architecture:
+1. Verify plugin is installed in `${CLAUDE_PLUGIN_ROOT}`
+2. Verify `hooks.json` uses `${CLAUDE_PLUGIN_ROOT}` for script paths
+3. DO NOT copy scripts to local project (except for custom project-specific hooks)
 
 ## Implementation Guidelines
 
-### Deploying Hooks with Static Paths
+### Verifying Guard Hooks
 
-**When deploying guard hooks:**
+**When verifying guard hooks:**
 
 1. **Detect Plugin Type:**
    - From command context or plugin source directory
-   - `guard-python` → Python hooks (.py files)
-   - `guard-ts` → TypeScript hooks (.js files)
+   - `guard-python` → Python hooks
+   - `guard-ts` → TypeScript hooks
 
-2. **Create Deployment Structure:**
-   ```bash
-   mkdir -p .cattoolkit/hooks/scripts
-   ```
+2. **Verify Configuration:**
+   - Check `hooks.json` exists in plugin directory
+   - Confirm paths use `${CLAUDE_PLUGIN_ROOT}`
+   - Confirm no hardcoded absolute paths to other users' machines
 
-3. **Copy Scripts from Plugin:**
-   - For `guard-python`: Copy from `plugins/guard-python/hooks/scripts/*.py`
-   - For `guard-ts`: Copy from `plugins/guard-ts/hooks/scripts/*.js`
+3. **Validate:**
+   - Run `hook-tester.py validate` on the plugin's `hooks.json`
 
-4. **Generate hooks.json with ABSOLUTE PATHS:**
-   - Use `pwd` to get current working directory
-   - Construct absolute paths: `{pwd}/.cattoolkit/hooks/scripts/{script}`
-   - DO NOT use `${CLAUDE_PLUGIN_ROOT}` or environment variables
-   - Example: `/Users/felix/my-project/.cattoolkit/hooks/scripts/protect-files.py`
-
-5. **Set Execute Permissions:**
-   ```bash
-   chmod +x .cattoolkit/hooks/scripts/*
-   ```
-
-6. **Validate Deployment:**
-   - Verify all scripts copied
-   - Check permissions
-   - Validate JSON syntax
-   - Test script execution
-
-**Python Hooks Example (guard-python):**
-
-```python
-# hooks.json content
-{
-  "description": "Guard hooks deployed with static paths",
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 {pwd}/.cattoolkit/hooks/scripts/protect-files.py",
-            "timeout": 10000
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-**TypeScript Hooks Example (guard-ts):**
-
-```python
-# hooks.json content
-{
-  "description": "Guard hooks deployed with static paths",
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "node {pwd}/.cattoolkit/hooks/scripts/protect-files.js",
-            "timeout": 10000
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-### Guard Plugin Setup Commands
-
-**When handling setup-py (from guard-python):**
-
-1. Parse command context to identify plugin type
-2. Source: `plugins/guard-python/hooks/scripts/`
-3. Scripts: `hook_runner.py`, `protect-files.py`, `security-check.py`, `type-check-on-edit.py`
-4. Generate Python-specific hooks.json with python3 commands
-5. Deploy to `.cattoolkit/hooks/`
-
-**When handling setup-ts (from guard-ts):**
-
-1. Parse command context to identify plugin type
-2. Source: `plugins/guard-ts/hooks/scripts/`
-3. Scripts: `protect-files.js`, `security-check.js`, `type-check.js`
-4. Generate TypeScript-specific hooks.json with node commands
-5. Deploy to `.cattoolkit/hooks/`
 
 ## Autonomous Execution
 
@@ -312,103 +204,34 @@ Action: deploy
 
 ## Debug Hooks Capability
 
-When debugging hook failures, follow this systematic workflow:
+When debugging hook failures, focus on systematic validation of the hook system components:
 
-### Step 1: Locate Hook Configuration
-Find the hooks.json configuration file:
-- `.claude/hooks/hooks.json` (project-level)
-- `${CLAUDE_PLUGIN_ROOT}/.claude/hooks/hooks.json` (plugin-level)
+### Validate Hook Configuration
+Locate and verify the hooks.json configuration file exists in the correct location (.claude/hooks/hooks.json). Validate the JSON structure is well-formed and matches the expected schema for the hook events being used.
 
-### Step 2: Check Configuration Validity
-Validate the hooks.json structure:
-```bash
-jq . .claude/hooks/hooks.json
-python3 manage-hooks/assets/scripts/hook-tester.py validate .claude/hooks/hooks.json
-```
+### Verify Hook Script Readiness
+Ensure all referenced hook scripts are present in the .cattoolkit/hooks/scripts/ directory and have proper execute permissions. Check that scripts can be invoked without permission errors.
 
-### Step 3: Verify Script Permissions
-Ensure hook scripts are executable:
-```bash
-find .claude/hooks/scripts -type f -name "*.py" -exec ls -la {} \;
-# Fix permissions if needed:
-chmod +x .claude/hooks/scripts/*.py
-```
+### Test Hook Functionality
+Validate hook scripts by testing them with appropriate JSON payloads matching their expected event types. Verify that each script outputs valid JSON responses conforming to Claude Code's requirements:
+- Blocking hooks (PreToolUse, Stop) must return approve, block with reason, or approve with updatedInput
+- Observer hooks (PostToolUse, SessionStart) must return success with optional systemMessage
 
-### Step 4: Test Individual Hooks
-Run hook scripts manually with dummy JSON payload:
-```bash
-# Test with sample PreToolUse event
-echo '{"tool": "Edit", "arguments": {"file_path": "test.txt"}}' | \
-  python3 .claude/hooks/scripts/{hook-name}.py
+### Diagnose Common Issues
+Identify and resolve common failure patterns:
+- Missing execute permissions on scripts
+- Syntax errors or import failures in hook scripts
+- Invalid JSON input or output formatting
+- Timeout issues from long-running scripts
+- File path resolution problems
+- Missing dependencies in hook environments
+- Mismatched event type handlers
 
-# Test with sample Stop event
-echo '{"stop_hook_active": false}' | \
-  python3 .claude/hooks/scripts/{hook-name}.py
-```
+### Validate Security and Compliance
+Ensure hooks implement appropriate security patterns including path validation, error handling, and proper checking of flags like stop_hook_active for stop events.
 
-### Step 5: Verify JSON Output Structure
-Check that hook outputs valid JSON matching Claude Code requirements:
-
-**Blocking hooks (PreToolUse, Stop) must output:**
-```json
-{"status": "approve"}
-{"status": "block", "reason": "...", "message": "..."}
-{"status": "approve", "updatedInput": {...}}
-```
-
-**Observer hooks (PostToolUse, SessionStart) must output:**
-```json
-{"status": "success", "systemMessage": "..."}
-```
-
-### Step 6: Run Full Hook Suite
-Execute comprehensive testing:
-```bash
-python3 manage-hooks/assets/scripts/hook-tester.py test .claude/hooks/hooks.json
-python3 manage-hooks/assets/scripts/hook-tester.py security-check .claude/hooks/hooks.json
-```
-
-### Common Failure Modes & Fixes
-
-| Failure Mode | Symptom | Detection | Fix |
-|-------------|---------|-----------|-----|
-| **Missing Permissions** | Script won't execute | `ls -la` shows missing `x` bit | `chmod +x script.py` |
-| **Syntax Error** | Script crashes on import | Non-zero exit code, Python traceback | Fix syntax, test with `python3 script.py` |
-| **Invalid JSON Input** | Script receives empty/malformed data | Check `sys.stdin.read()` in hook | Verify JSON structure matches hook type |
-| **Invalid JSON Output** | Hook produces non-JSON or malformed JSON | Claude reports hook output parsing error | Ensure `json.dumps()` produces valid JSON |
-| **Timeout** | Hook hangs or takes too long | `timeout` exceeded | Optimize script or increase timeout in config |
-| **Path Issues** | Script can't find files | FileNotFoundError | Use `${CLAUDE_PLUGIN_ROOT}` and `${CLAUDE_PROJECT_DIR}` |
-| **Missing Dependencies** | ImportError or module not found | Python traceback on import | Install dependencies or use stdlib alternatives |
-| **Wrong Hook Type** | Mismatched event handler | Unexpected input structure | Verify hook handles correct event type |
-
-### Debug Output Analysis
-
-When a hook fails, analyze the output:
-
-**✓ Success Pattern:**
-```json
-{"status": "approve"}
-# or
-{"status": "success"}
-```
-
-**✗ Common Errors:**
-- `"Hook failed: ..."` - Script threw an exception
-- `"No input data received"` - Hook received empty stdin
-- `"Invalid JSON: ..."` - Hook output malformed JSON
-- Exit code != 0 - Script crashed or returned error
-
-### Validation Checklist
-
-After fixing issues, verify:
-- [ ] All scripts have execute permissions
-- [ ] `jq . .claude/hooks/hooks.json` validates successfully
-- [ ] Each script runs without errors when tested independently
-- [ ] All scripts output valid JSON
-- [ ] Security patterns are implemented (path validation, error handling)
-- [ ] Stop hooks check `stop_hook_active` flag
-- [ ] Hook suite passes `hook-tester.py test`
-- [ ] Hook suite passes `hook-tester.py security-check`
+### Run Comprehensive Testing
+Execute full validation using the hook testing tools to verify the complete hook suite functions correctly across all configured events.
 
 ## Handoff Protocol
 

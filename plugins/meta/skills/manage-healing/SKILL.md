@@ -54,8 +54,15 @@ If the model hallucinated a file path:
 
 **Action:** Verify the actual path using `ls/find` and update the reference in the documentation.
 
+## Bootstrap Protocol (Emergency Recovery)
+
+When core tools (`/build`, `/heal`, `hook-tester.py`) are broken, use the Safe Mode Bootstrap to restore system integrity via git.
+
+**Action:** Invoke `/bootstrap <path>` to restore files from HEAD, bypassing complex agent logic.
+
 ## Knowledge Base
 
 | Reference | Purpose |
 |-----------|---------|
 | [diagnosis-patterns.md](references/diagnosis-patterns.md) | Decision tree for root cause analysis |
+| [bootstrap-protocol.md](references/bootstrap-protocol.md) | Emergency git-based recovery procedures |

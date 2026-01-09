@@ -1,21 +1,7 @@
 ---
 description: |
-  [Prompts] Create single prompts, prompt chains (sequential workflows), or meta-prompts (prompts that generate other prompts).
-  <example>
-  Context: User wants a reusable prompt
-  user: "Create a prompt for security code review"
-  assistant: "I will use /create-prompt to create a single reusable prompt."
-  </example>
-  <example>
-  Context: User needs multi-step workflow
-  user: "Create a prompt chain for competitive analysis"
-  assistant: "I will use /create-prompt to create a prompt chain."
-  </example>
-  <example>
-  Context: User wants a prompt generator
-  user: "Create a meta-prompt that generates task-specific prompts"
-  assistant: "I will use /create-prompt to create a meta-prompt."
-  </example>
+  [Prompts] Create single prompts, prompt chains (sequential workflows), or meta-prompts (prompts that generate other prompts). Examples: Create a prompt for security code review | Create a prompt chain for competitive analysis | Create a meta-prompt that generates task-specific prompts.
+disable-model-invocation: true
 allowed-tools: Skill(prompt-library), AskUserQuestion, Read, Write, Bash
 argument-hint: [prompt description or 'auto' for guided creation]
 ---
