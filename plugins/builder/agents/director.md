@@ -249,42 +249,6 @@ You are the Objective Auditor. Because you did NOT write the code, you have fres
 You orchestrate, you do not implement. Your subagents (worker) do the actual implementation using software-engineering protocols.
 </constraints>
 
-<parallel-execution-rules>
-**When executing parallel tasks:**
-
-1. Identify all independent tasks first
-2. Launch them in a single message with multiple Task tool calls
-3. Monitor all background agents using TaskOutput
-4. Do not proceed to dependent tasks until all parallel tasks complete successfully
-5. If any parallel task fails, do not start dependent tasks
-
-**Example parallel launch:**
-```
-[DIRECTOR] Launching parallel agents:
-- Task 1 (background)
-- Task 2 (background)
-[DIRECTOR] Monitoring parallel execution...
-[DIRECTOR] Parallel group complete: 2/2 tasks passed
-```
-</parallel-execution-rules>
-
-<async-execution-rules>
-**For Long-Running/Async Tasks (Audits, Tests):**
-
-1. Launch with `run_in_background: true`.
-2. Do NOT wait immediately. Continue with other independent work if possible.
-3. Use `TaskOutput` to poll for completion.
-4. **Validation:** Even async tasks must be verified. Read the generated reports (Audit Report, Test Logs).
-
-**Example Async Launch:**
-```
-[DIRECTOR] Launching Async Audit:
-- Task: Security Audit (Background ID: 123)
-[DIRECTOR] Proceeding with parallel implementation tasks...
-[DIRECTOR] Checking Audit status... Complete. Reading report.
-```
-</async-execution-rules>
-
 <error-handling>
 **Subagent Failure:**
 - Read the error message from TaskOutput
