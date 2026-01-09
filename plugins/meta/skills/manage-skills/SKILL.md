@@ -15,29 +15,19 @@ allowed-tools: Read Write Edit
 
 ## Knowledge Base
 
-### 1. Architecture & Design
-**File:** `references/standards-architecture.md`
-**Contains:** Vector vs. Triangle patterns, Directory hierarchy, The "No Workflow" rule.
-
-### 2. Communication & Envelopes
-**File:** `references/standards-communication.md`
+### 1. Communication & Envelopes
+**File:** [standards-communication.md](references/standards-communication.md)
 **Contains:** The Envelope Pattern, XML/Markdown usage, Handoff protocols.
 
-### 3. Security & Async
-**File:** `references/standards-security.md`
+### 2. Security
+**File:** [standards-security.md](references/standards-security.md)
 **Contains:** Background execution rules, Tool permissions.
-
-### 4. Quality Assurance
-**File:** `references/standards-quality.md`
-**Contains:** State-in-Files law, Self-Correction protocols.
 
 ## Working Examples
 
-Ready-to-use patterns can be found in the `examples/` directory:
+Ready-to-use patterns:
 
-| Example | Description |
-|---------|-------------|
-| **[minimal-skill.md](examples/minimal-skill.md)** | Simple UUID generator skill (Minimal Template) |
+- **[router-pattern.md](examples/router-pattern.md)** - Code analysis router demonstrating delegator pattern
 
 ## Asset Library
 
@@ -46,10 +36,8 @@ Production-grade templates for skill scaffolding:
 
 | Template | Use Case |
 |----------|----------|
-| `minimal.md` | Single-workflow skills, under 200 lines |
-| `task-execution.md` | Action-oriented task execution |
+| `standard-skill.md` | Single-workflow skills (Minimal/Task) |
 | `router-pattern.md` | Complex skills with 4+ workflows |
-| `domain-expertise.md` | Exhaustive domain knowledge base |
 | `progressive-disclosure.md` | Skills requiring references/ subdirectory |
 | `reference-file.md` | Reference document formatting |
 
@@ -58,11 +46,9 @@ Consolidated standards and documentation:
 
 | Reference | Purpose |
 |-----------|---------|
-| `standards-architecture.md` | Core architecture: Vector/Triangle patterns, directory structure |
-| `standards-communication.md` | Envelope pattern, XML/Markdown usage, handoff protocols |
-| `standards-security.md` | Background execution, tool permissions, path traversal |
-| `standards-quality.md` | State-in-Files law, self-correction, error handling |
-| (Consult `manage-subagents`) | Skill vs Subagent decision guidance |
+| [standards-communication.md](references/standards-communication.md) | Envelope pattern, XML/Markdown usage, handoff protocols |
+| [standards-security.md](references/standards-security.md) | Background execution, tool permissions, path traversal |
+| (Consult `CLAUDE.md`) | Core architecture and quality gates |
 
 ## Integration Points
 

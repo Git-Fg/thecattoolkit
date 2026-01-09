@@ -1,7 +1,7 @@
 ---
 name: plugin-expert
 description: |
-  System Maintainer. MUST USE when auditing, creating, or fixing AI components (agents, skills, commands, hooks). Applies declarative standards from management skills to ensure compliance. For fixing broken components based on recent runtime errors, use /heal command (Vector pattern) instead of delegating here.
+  System Maintainer. MUST USE when auditing, creating, or fixing AI components (agents, skills, commands, hooks). Applies declarative standards from management skills to ensure compliance.
   <example>
   Context: User needs to audit plugin infrastructure
   user: "Audit our plugin architecture for compliance issues"
@@ -105,6 +105,40 @@ Analyze the request to identify:
 - → Apply `references/standards-architecture.md` and `references/standards-quality.md`
 - → Update description using standards
 
+**"setup hooks guard-python":**
+- Component Type: hooks
+- Plugin: guard-python
+- Action: deploy
+- → Load `manage-hooks` skill
+- → Create `.cattoolkit/hooks/` directory
+- → Copy scripts from plugin to `.cattoolkit/hooks/scripts/`
+- → Generate hooks.json with ABSOLUTE PATHS (no ${CLAUDE_PLUGIN_ROOT})
+
+**"setup hooks guard-ts":**
+- Component Type: hooks
+- Plugin: guard-ts
+- Action: deploy
+- → Load `manage-hooks` skill
+- → Create `.cattoolkit/hooks/` directory
+- → Copy scripts from plugin to `.cattoolkit/hooks/scripts/`
+- → Generate hooks.json with ABSOLUTE PATHS (no ${CLAUDE_PLUGIN_ROOT})
+
+**"setup-py" (from guard-python):**
+- Component Type: hooks
+- Plugin: guard-python
+- Action: deploy
+- → Deploy Python hooks from plugins/guard-python/hooks/scripts/
+- → Copy scripts to .cattoolkit/hooks/scripts/
+- → Generate hooks.json with ABSOLUTE PATHS
+
+**"setup-ts" (from guard-ts):**
+- Component Type: hooks
+- Plugin: guard-ts
+- Action: deploy
+- → Deploy TypeScript hooks from plugins/guard-ts/hooks/scripts/
+- → Copy scripts to .cattoolkit/hooks/scripts/
+- → Generate hooks.json with ABSOLUTE PATHS
+
 ## System vs Project Components
 
 - **System Components** (plugin-expert scope): Skills, Agents, Commands, Hooks
@@ -132,6 +166,123 @@ This agent specializes in maintaining the AI system infrastructure by applying *
 5. **Use Templates**: Apply templates from assets/templates/
 6. **Validate**: Check against validation protocols
 7. **Complete**: Return results with evidence of standards compliance
+
+**For SETUP operations (deploy hooks):**
+
+Three patterns:
+1. "setup hooks {plugin-name}" (generic)
+2. "setup-py" (from guard-python command)
+3. "setup-ts" (from guard-ts command)
+
+Component Type: hooks
+Action: deploy
+→ Load `manage-hooks` skill
+→ Create `.cattoolkit/hooks/` directory
+→ Copy scripts from plugin source to `.cattoolkit/hooks/scripts/`
+→ Generate hooks.json with ABSOLUTE PATHS (no environment variables)
+→ Set execute permissions on all scripts
+→ Validate deployment with path checks
+
+## Implementation Guidelines
+
+### Deploying Hooks with Static Paths
+
+**When deploying guard hooks:**
+
+1. **Detect Plugin Type:**
+   - From command context or plugin source directory
+   - `guard-python` → Python hooks (.py files)
+   - `guard-ts` → TypeScript hooks (.js files)
+
+2. **Create Deployment Structure:**
+   ```bash
+   mkdir -p .cattoolkit/hooks/scripts
+   ```
+
+3. **Copy Scripts from Plugin:**
+   - For `guard-python`: Copy from `plugins/guard-python/hooks/scripts/*.py`
+   - For `guard-ts`: Copy from `plugins/guard-ts/hooks/scripts/*.js`
+
+4. **Generate hooks.json with ABSOLUTE PATHS:**
+   - Use `pwd` to get current working directory
+   - Construct absolute paths: `{pwd}/.cattoolkit/hooks/scripts/{script}`
+   - DO NOT use `${CLAUDE_PLUGIN_ROOT}` or environment variables
+   - Example: `/Users/felix/my-project/.cattoolkit/hooks/scripts/protect-files.py`
+
+5. **Set Execute Permissions:**
+   ```bash
+   chmod +x .cattoolkit/hooks/scripts/*
+   ```
+
+6. **Validate Deployment:**
+   - Verify all scripts copied
+   - Check permissions
+   - Validate JSON syntax
+   - Test script execution
+
+**Python Hooks Example (guard-python):**
+
+```python
+# hooks.json content
+{
+  "description": "Guard hooks deployed with static paths",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 {pwd}/.cattoolkit/hooks/scripts/protect-files.py",
+            "timeout": 10000
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**TypeScript Hooks Example (guard-ts):**
+
+```python
+# hooks.json content
+{
+  "description": "Guard hooks deployed with static paths",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node {pwd}/.cattoolkit/hooks/scripts/protect-files.js",
+            "timeout": 10000
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+### Guard Plugin Setup Commands
+
+**When handling setup-py (from guard-python):**
+
+1. Parse command context to identify plugin type
+2. Source: `plugins/guard-python/hooks/scripts/`
+3. Scripts: `hook_runner.py`, `protect-files.py`, `security-check.py`, `type-check-on-edit.py`
+4. Generate Python-specific hooks.json with python3 commands
+5. Deploy to `.cattoolkit/hooks/`
+
+**When handling setup-ts (from guard-ts):**
+
+1. Parse command context to identify plugin type
+2. Source: `plugins/guard-ts/hooks/scripts/`
+3. Scripts: `protect-files.js`, `security-check.js`, `type-check.js`
+4. Generate TypeScript-specific hooks.json with node commands
+5. Deploy to `.cattoolkit/hooks/`
 
 ## Autonomous Execution
 

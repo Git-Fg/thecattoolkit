@@ -1,4 +1,4 @@
-# @cat-toolkit/think
+# @cattoolkit/think
 
 **Mental models and thinking frameworks for structured problem analysis and decision-making.**
 

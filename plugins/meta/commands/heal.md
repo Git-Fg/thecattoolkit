@@ -11,7 +11,7 @@ description: |
   user: "/heal the agent keeps looping"
   assistant: "I'll diagnose the missing constraint in the agent definition and propose a fix."
   </example>
-allowed-tools: [Read, Edit, Bash(ls:*), Bash(git:*), AskUserQuestion, Skill(manage-healing)]
+allowed-tools: [Read, Edit, Bash, AskUserQuestion, Skill(manage-healing)]
 argument-hint: [optional: what triggered the need for healing]
 disable-model-invocation: true
 ---

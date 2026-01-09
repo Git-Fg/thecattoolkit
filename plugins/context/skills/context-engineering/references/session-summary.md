@@ -149,9 +149,8 @@ Append to `.cattoolkit/context/todos.md`:
 Calculate context health across four dimensions (25 points each):
 
 **Completeness (25 points):**
-- 10 points: scratchpad.md exists and has substantial content (>10 lines)
+- 15 points: scratchpad.md exists and has substantial content (>10 lines)
 - 10 points: todos.md exists
-- 5 points: plan.md exists
 
 **Relevance (25 points):**
 - 10 points: Technical Decisions section present

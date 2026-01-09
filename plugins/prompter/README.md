@@ -1,4 +1,4 @@
-# @cat-toolkit/prompter
+# @cattoolkit/prompter
 
 **Prompt engineering, meta-prompting, and prompt chain orchestration for AI-to-AI workflows.**
 

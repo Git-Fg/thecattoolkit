@@ -36,11 +36,6 @@ Use context initialization when:
 **When to use**: When tasks change state
 **Knowledge**: Separates tasks from thinking - todos are actionable, scratchpad is context
 
-### plan.md - Execution Blueprint
-**What it is**: Current implementation approach
-**Contains**: Overview, current phase, dependencies, success criteria
-**When to use**: When plan changes or phase transitions
-**Knowledge**: Links your thinking to actionable execution
 
 ### context.log - Historical Timeline
 **What it is**: Session history and event tracking
@@ -105,14 +100,13 @@ The templates/ directory contains:
 
 **What to initialize?**
 - Always: scratchpad.md, todos.md
-- If planning: plan.md
 - If long-running: context.log
 - If switching tools: handoff.md
 
 ## Integration Knowledge
 
 **With Planning Skills**:
-- Plan.md links to planning documents
+- Scratchpad links to planner's `PLAN.md` in `.cattoolkit/planning/`
 - Checkpoints mark phase transitions
 - Handoff preserves planning context
 
@@ -171,7 +165,7 @@ Re-initialize after corruption or loss:
 ## Integration
 
 ### With Other Skills
-- **manage-planning**: Reference plan.md for current phase
+- **manage-planning**: Reference planner's `PLAN.md` for current phase
 - **engineering**: Update scratchpad.md with debugging decisions
 - **thinking-frameworks**: Log strategic thinking in scratchpad.md
 - **git-workflow**: Link commits to checkpoints
@@ -181,7 +175,6 @@ When referring to context files in other workflows:
 ```
 @ .cattoolkit/context/scratchpad.md
 @ .cattoolkit/context/todos.md
-@ .cattoolkit/context/plan.md
 ```
 
 ## Knowledge Check

@@ -82,7 +82,7 @@ End-to-end project planning and execution suite using the Orchestrator-Executor 
 
 **Agents:**
 - `plan-author` - Creates hierarchical project plans (BRIEF, ROADMAP, PHASES)
-- `task-executor` - Executes individual tasks within a phase
+- `phase-executor` - Executes individual tasks within a phase (The Project Worker)
 
 **Skills:**
 - `project-standards` - Document templates and format standards (BRIEF.md, ROADMAP.md, PLAN.md, SUMMARY.md, HANDOFF.md)
@@ -139,7 +139,7 @@ Code execution, debugging, testing, and git operations.
 - `/system-design` - System architecture and design analysis
 
 **Agents:**
-- `task-executor` - Executes engineering tasks (code, tests, debugging)
+- `code-implementer` - Executes engineering tasks (code, tests, debugging) (The Muscle)
 - `architect` - System design and architecture analysis
 
 **Skills:**
@@ -161,6 +161,9 @@ Tools to build, maintain, and audit the AI system itself.
 
 **Commands:**
 - `/build` - Universal entry point for building commands, agents, and skills
+- `/setup` - Generic deployment command for hooks and scripts
+- `/setup-py` - Deploy Python guard hooks (in guard-python plugin)
+- `/setup-ts` - Deploy TypeScript guard hooks (in guard-ts plugin)
 - `/expert` - Access plugin expert for system maintenance
 
 **Agents:**

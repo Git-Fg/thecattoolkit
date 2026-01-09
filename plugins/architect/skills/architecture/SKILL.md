@@ -42,6 +42,20 @@ allowed-tools: Read Write Edit Glob Grep Bash TodoWrite
 - **Template**: `references/adr-template.md` - ADR template and documentation standards
 - **When to Apply**: Documenting significant architectural decisions
 
+**ADR Creation Protocol:**
+1. **Auto-increment**: Count existing ADR entries and add 1
+2. **Append**: Add to bottom of ADR.md (never delete or modify old entries)
+3. **File location**: `.cattoolkit/planning/{project-slug}/ADR.md`
+4. **Numbering**: Sequential (ADR-001, ADR-002, etc.)
+5. **Append-Only Rule**: Never delete, modify, or reorder entries
+
+**When to Create ADR:**
+- Technology stack changes (frameworks, databases)
+- Major architectural patterns (auth strategy, state management)
+- Breaking API changes (protocol changes, data format changes)
+- Infrastructure additions (caching, message queues)
+- Significant refactors (directory structure, module organization)
+
 ## Workflow Selection
 
 **Protocol Chain:**

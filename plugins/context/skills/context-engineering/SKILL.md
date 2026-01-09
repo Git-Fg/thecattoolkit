@@ -1,7 +1,17 @@
 ---
 name: context-engineering
 description: |
-  The Authority on Session Persistence. MUST USE when managing persistent session state, avoiding context overflow, or enabling session handoffs to ensure architectural compliance and state continuity.
+  The Authority on Session Persistence with **Passive Hook System**. MUST USE when managing persistent session state, avoiding context overflow, or enabling session handoffs. Context is now auto-managed via hooks - no initialization needed!
+  <example>
+  Context: User needs to preserve work across sessions
+  user: "Set up context tracking for this project"
+  assistant: "The context-engineering skill is already active via hooks. Session context will auto-load on startup."
+  </example>
+  <example>
+  Context: Session approaching context limit
+  user: "Context is getting full, help me handoff"
+  assistant: "The PreCompact hook will auto-trigger. I can also use the context-engineering skill to create a manual handoff document."
+  </example>
 allowed-tools: [Read, Write, Edit, Bash]
 ---
 
@@ -16,22 +26,69 @@ allowed-tools: [Read, Write, Edit, Bash]
 
 ## Core Purpose
 
-Manage persistent session state independent of the LLM context window using the **Scratchpad Pattern**. Preserve decisions, track progress, and enable seamless session handoffs.
+Manage persistent session state independent of the LLM context window using the **Passive Hook System**. Preserve decisions, track progress, and enable seamless session handoffs with zero manual intervention.
+
+## 🆕 Hybrid Hook-Powered Architecture
+
+**NEW**: The Context plugin uses a **hybrid approach** combining command and prompt hooks for optimal performance and intelligence.
+
+### The Hybrid Hook System
+
+**Command Hooks** (Deterministic, Fast):
+| Hook | Trigger | Action |
+|:-----|:--------|:-------|
+| **SessionStart** | Session begins | Auto-loads active plan from Planner + scratchpad state |
+| **PostToolUse** | After Edit/Write/Bash | Auto-logs every state change to context.log |
+| **PreCompact** | Context near overflow | Auto-creates memory checkpoint + compacts scratchpad |
+
+**Prompt Hooks** (Intelligent, LLM-Powered, XML Output):
+| Hook | Trigger | Action |
+|:-----|:--------|:-------|
+| **Stop** | Session stopping | Decides if handoff needed before stopping (XML-based response) |
+| **SubagentStop** | Agent stops | Verifies context operations completed successfully (XML-based response) |
+
+### Why Hybrid Hooks?
+
+**OLD WAY (Active Commands):**
+- User/Agent must run `/contexteng initialize` → Often forgotten
+- Manual context updates → Context rot
+- Duplicate `plan.md` files → Conflicting sources of truth
+
+**NEW WAY (Hybrid Hooks):**
+- ✅ **Zero Friction**: Automatic operations via command hooks
+- ✅ **Intelligent**: Smart decisions via prompt hooks with XML output
+- ✅ **Robust Parsing**: XML tags ensure reliable response parsing
+- ✅ **Single Source**: Reads Planner files directly, no duplicates
+- ✅ **Perfect Memory**: Every action logged, nothing lost
+- ✅ **Token Efficient**: File-based memory vs. chat history bloat
+- ✅ **Context-Aware**: LLM evaluates when handoffs are needed
 
 ## When to Use
 
+**The hooks auto-handle everything - use context-engineering for:**
+
+**Automatic (via hooks):**
+- ✅ Initializing session context (SessionStart hook)
+- ✅ Logging state changes (PostToolUse hook)
+- ✅ Context compaction (PreCompact hook)
+
+**Manual operations (when needed):**
+- Creating comprehensive handoff documents
+- Archiving completed sessions
+- Manual scratchpad edits for complex decisions
+- Emergency context management
+
 **Use context-engineering when:**
 - Working on complex, multi-step tasks
-- Context window approaching 60% capacity
-- Need to preserve state across sessions
+- Need to create portable handoffs
+- Session approaching completion (archive work)
 - Managing multiple parallel workstreams
 - Switching between different tools (Claude Code, Cursor, Codex)
-- Need to track decisions and thinking over time
 
-**Don't use when:**
-- Simple, single-step tasks
-- Context usage <30%
-- No state preservation needed
+**Don't use for:**
+- Initialization (automatic via hooks)
+- Routine logging (automatic via hooks)
+- Context tracking (automatic via hooks)
 
 ## The Scratchpad Pattern
 
@@ -87,7 +144,6 @@ Manage persistent session state independent of the LLM context window using the 
 .cattoolkit/context/
 ├── scratchpad.md          # Current thinking and decisions
 ├── todos.md              # Persistent task tracking
-├── plan.md               # Current implementation plan
 ├── context.log           # Session context history
 ├── handoff.md            # Session handoff summary
 └── checkpoints/          # Critical state snapshots

@@ -47,12 +47,10 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, TodoWrite]
 
 ### Debugging
 - **Protocol**: `references/debug.md` - The 6-Phase Debug Protocol
-- **Reference**: `references/debugging-protocol.md` - Detailed debugging methodologies
 - **When to Apply**: Errors, crashes, unexpected behavior, performance issues
 
 ### Code Review
 - **Protocol**: `references/code-review.md` - PR Review Workflow
-- **Reference**: `references/review-checklist.md` - Correctness, Security, Performance checklist
 - **When to Apply**: Before merging PRs, peer review, quality assurance
 
 ### Refactoring

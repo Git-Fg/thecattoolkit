@@ -1,4 +1,4 @@
-# @cat-toolkit/engineer (The Builder)
+# @cattoolkit/engineer (The Builder)
 
 **Purpose**: The "muscle" that executes code changes, debugging, TDD, refactoring, security auditing, and git operations.
 
@@ -110,7 +110,7 @@ The Engineer plugin provides comprehensive development workflow capabilities inc
 
 ## Agents
 
-### task-executor
+### code-implementer
 **Purpose**: Execute engineering tasks with fresh context
 
 **Capabilities:**
@@ -231,7 +231,7 @@ The Engineer plugin provides comprehensive development workflow capabilities inc
 ### /refactor
 **Purpose**: Systematic code refactoring with safety protocols
 
-**Pattern**: Sovereign Triangle (delegates to task-executor agent)
+**Pattern**: Sovereign Triangle (delegates to code-implementer agent)
 
 **Usage:**
 ```bash
@@ -254,7 +254,7 @@ The Engineer plugin provides comprehensive development workflow capabilities inc
 ### /security-audit
 **Purpose**: Comprehensive security vulnerability assessment
 
-**Pattern**: Sovereign Triangle (delegates to task-executor agent)
+**Pattern**: Sovereign Triangle (delegates to code-implementer agent)
 
 **Usage:**
 ```bash
@@ -288,10 +288,10 @@ Used for quick, interactive tasks:
 
 ### Sovereign Triangle Usage
 Used for complex, deep-dive tasks:
-- `/debug` - Comprehensive debugging protocol (task-executor agent)
-- `/tdd` - Test-Driven Development workflow (task-executor agent)
-- `/refactor` - Safe code refactoring (task-executor agent)
-- `/security-audit` - Security vulnerability assessment (task-executor agent)
+- `/debug` - Comprehensive debugging protocol (code-implementer agent)
+- `/tdd` - Test-Driven Development workflow (code-implementer agent)
+- `/refactor` - Safe code refactoring (code-implementer agent)
+- `/security-audit` - Security vulnerability assessment (code-implementer agent)
 
 ## Example Workflows
 

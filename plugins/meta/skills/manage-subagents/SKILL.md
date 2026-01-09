@@ -8,11 +8,7 @@ allowed-tools: Read Write Edit Bash Grep
 
 **Default to Pure Markdown.** Most subagents work well with simple Markdown structure (`## Role`, `## Workflow`, `## Constraints`). Add XML tags only when complexity genuinely requires it (multi-phase state tracking, critical safety constraints).
 
-Use the XML/Markdown decision framework:
-- **Pure Markdown (0 tags)**: Default for simple, linear workflows
-- **Hybrid XML/Markdown (1-5 tags)**: When AI needs to organize multiple pathways, track state, or enforce critical constraints
-
-For detailed XML/Markdown guidelines, see `references/prompt-writing.md`.
+For core architecture and authoring guidance, consult `CLAUDE.md`.
 
 # Activation Triggers
 
@@ -32,7 +28,7 @@ Use subagents for **isolated context** and **specialized expertise**:
 2. **System Maintenance**: Maintaining AI infrastructure
 3. **Specialized Expertise**: Domain-specific knowledge
 
-See `references/management-guide.md` for comprehensive decision matrix.
+Consult `CLAUDE.md` for the comprehensive decision matrix.
 
 ## Subagent Creation Pattern
 
@@ -58,7 +54,7 @@ See `references/management-guide.md` for comprehensive decision matrix.
 - Require user interaction or confirmation
 - Perform destructive operations
 
-See `references/permissions-security.md` for comprehensive guidance.
+See `references/agent-security.md` for comprehensive guidance.
 
 # File Structure
 
@@ -117,7 +113,7 @@ Subagents run in isolated contexts and return their final output to the main con
 
 - ✅ Can use tools like Read, Write, Edit, Bash, Grep, Glob
 - ✅ Can access MCP servers and other non-interactive tools
-- ✅ **CAN use AskUserQuestion** to gather input or clarification (if `tools` field is omitted or includes it)
+- ❌ **CAN NOT use AskUserQuestion** to gather input or clarification
 - ❌ **User never sees subagent's intermediate steps** (only final output)
 
 The main conversation sees only the subagent's final report/output.
@@ -126,59 +122,26 @@ The main conversation sees only the subagent's final report/output.
 
 **MANDATORY: When creating or editing subagents, always read and use the appropriate template from `assets/templates/`.**
 
-Subagent templates in `assets/templates/`:
-
 | Template | Use Case |
 |----------|----------|
-| `base-agent.md` | Simple, focused subagent with basic role and minimal structure |
-| `specialized-agent.md` | Domain-specific expertise with focused knowledge areas |
-| `coordinator-agent.md` | Multi-step orchestration, coordinates multiple subagents/subtasks |
-| `research-agent.md` | Research, analysis, and verification with systematic methodology |
-| `explorer-agent.md` | Read-only code exploration, safe for background execution |
-
-**Template Selection Logic:**
-1. Orchestration/multi-step workflows → `coordinator-agent.md`
-2. Research/analysis/verification → `research-agent.md`
-3. Read-only exploration/background-safe → `explorer-agent.md`
-4. Domain-specific expertise → `specialized-agent.md`
-5. Otherwise → `base-agent.md`
-
-*WHY: Templates ensure subagents follow consistent YAML frontmatter patterns, proper tool permissions, and clear role definitions.*
+| `universal-agent.md` | Core, Specialized, or Research agents (Default) |
+| `coordinator-agent.md` | Multi-step orchestration |
+| `explorer-agent.md` | Read-only code exploration |
 
 # Working Examples
-Ready-to-use patterns can be found in the `examples/` directory:
 
-| Example | Description |
-|---------|-------------|
-| **[plugin-expert-excerpt.md](examples/plugin-expert-excerpt.md)** | Complex system maintenance agent (Autonomous) |
-| **[background-safe-agent.md](examples/background-safe-agent.md)** | Read-only code explorer (Background Safe) |
+Ready-to-use canonical patterns:
+
+- **[background-safe-agent.md](examples/background-safe-agent.md)** - Read-only code explorer (Background Safe)
 
 # References
 
-**Core References:**
-
-**Prompt writing**: `references/prompt-writing.md`
-- XML/Markdown decision framework
-- Writing effective system prompts
-- YAML frontmatter standards
-- Example templates
-
-**Permissions & Security**: `references/permissions-security.md`
+**Security**: [agent-security.md](references/agent-security.md)
 - Tool permissions and least privilege
 - Background execution safety
 - AskUserQuestion guidelines
-- Security principles
 
-**Management**: `references/management-guide.md`
-- Skill vs Agent decision matrix
-- Subagent creation and modification
-- Context management strategies
-- Error handling patterns
-
-**Decision Guidance**: `references/skill-vs-subagent-decision.md`
-- When to use skills vs subagents
-- Decision matrix and key principles
-- Deduplication guidelines
+*Consult `CLAUDE.md` for core architecture and quality gates.*
 
 # Success Criteria
 

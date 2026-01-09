@@ -18,6 +18,7 @@ description: |
   </example>
 allowed-tools: Task, Read, Write, Edit, Glob, Grep, Bash
 argument-hint: [files, PR, or changes to review]
+disable-model-invocation: true
 ---
 
 ## Objective
@@ -75,7 +76,7 @@ Clarify the primary review concerns:
 
 ### Step 4: Delegation Package
 
-Compile all gathered context into a comprehensive assignment for the task-executor agent.
+Compile all gathered context into a comprehensive assignment for the code-implementer agent.
 
 ## Delegation Phase
 
@@ -131,7 +132,7 @@ You are executing in isolated context to perform comprehensive code review. The 
 All relevant project context has been gathered for you.
 </context>
 
-Execute via task-executor agent.
+Execute via code-implementer agent.
 
 ## Success Criteria
 

@@ -4,12 +4,12 @@ description: |
   System Architecture Agent. Performs comprehensive system design and architectural analysis with autonomous deep-dive capability. Can be invoked directly for any architecture, design, or system analysis task.
   <example>
   Context: User needs to design a new system from scratch
-  user: "/system-design design a real-time collaborative document editing service"
+  user: "Design a real-time collaborative document editing service"
   assistant: "I'll delegate to the architect agent to design the system architecture for the collaborative editing service."
   </example>
   <example>
   Context: User wants to analyze existing architecture
-  user: "/system-design analyze our current microservices architecture for scalability issues"
+  user: "Analyze our current microservices architecture for scalability issues"
   assistant: "I'll use the architect agent to perform comprehensive architecture analysis of the microservices system."
   </example>
   <example>

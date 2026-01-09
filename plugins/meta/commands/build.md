@@ -16,7 +16,7 @@ description: |
   user: "Build command create new-review"
   assistant: "I'll orchestrate creating a new review command using the manage-commands standards."
   </example>
-allowed-tools: Task, Read, Glob, Grep, Skill(manage-skills), Skill(manage-commands), Skill(manage-subagents), Skill(manage-hooks)
+allowed-tools: Task, Read, Glob, Grep, Skill(manage-skills), Skill(manage-commands), Skill(manage-subagents), Skill(manage-hooks), Skill(manage-styles)
 argument-hint: [type] [name] [intent]
 disable-model-invocation: true
 ---

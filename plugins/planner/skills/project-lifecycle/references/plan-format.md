@@ -20,49 +20,7 @@ If Claude has to guess, interpret, or make assumptions - the task is too vague.
 
 ## Prompt Structure
 
-Every PLAN.md follows this Markdown structure with YAML frontmatter:
-
-```markdown
----
-phase: XX-name
-type: execute
-domain: [optional]
----
-
-## Objective
-[What and why]
-Purpose: [...]
-Output: [...]
-
-## Context
-@.cattoolkit/planning/{project-slug}/BRIEF.md
-@.cattoolkit/planning/{project-slug}/ROADMAP.md
-@.cattoolkit/planning/{project-slug}/ADR.md
-@.cattoolkit/planning/{project-slug}/ISSUES.md
-@relevant/source/files.ts
-
-## Tasks
-
-### Task 1: [Name]
-**Scope**: [Optional - describe the scope: files, directories, or architectural concepts]
-**Action**: [Natural language description of what needs to be implemented - written as narrative prose]
-**Verify**: [command/check]
-**Done**: [criteria]
-
-### Self-Verification Point
-**Verification**: [automated check]
-**Evidence**: [what to log in SUMMARY.md]
-**Proceed**: [next task or phase boundary]
-
-## Verification
-[Overall phase checks]
-
-## Success Criteria
-[Measurable completion]
-
-## Output
-[SUMMARY.md specification]
-```
+Use `assets/templates/phase-plan.md` for PLAN.md structure.
 
 ## Task Anatomy
 
@@ -117,17 +75,7 @@ All tasks use a single format. Agents execute autonomously in Uninterrupted Flow
 
 ### Task Format
 
-```markdown
-### Task 1: Create login endpoint with JWT
-
-**Scope**: Authentication endpoint
-
-**Action**: Implement a POST endpoint that accepts {email, password} credentials. The endpoint should query the User table to find the user by email, then securely compare the provided password with the stored hash. If the credentials match, generate a JWT token and set it as an httpOnly cookie with 15-minute expiry. Return 200. On password mismatch, return 401.
-
-**Verify**: `curl -X POST localhost:3000/api/auth/login` returns 200 with Set-Cookie header
-
-**Done**: Valid credentials → 200 + cookie. Invalid → 401.
-```
+See `assets/templates/phase-plan.md` for the exact task format.
 
 ### Self-Verification Points
 

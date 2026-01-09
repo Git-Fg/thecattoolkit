@@ -82,7 +82,7 @@ $ARGUMENTS
 
 Perform a thorough analysis using the selected framework. Explore multiple angles, consider second-order effects, and provide evidence-based insights.
 
-Create ANALYSIS.md with comprehensive findings, recommendations, and supporting evidence.
+Create a timestamped analysis file with comprehensive findings, recommendations, and supporting evidence. Use topic-based naming: analysis-{kebab-case-topic}-{timestamp}.md
 </assignment>
 ```
 
@@ -90,11 +90,12 @@ Create ANALYSIS.md with comprehensive findings, recommendations, and supporting 
 Use Task tool with subagent_type: "brainstormer" and the envelope prompt.
 
 **Wait for completion and capture results.**
+**Extract the generated filename from the agent's response.**
 
 ## Validation & Presentation
 
 **Verify output:**
-- ANALYSIS.md created successfully
+- Timestamped analysis file created successfully
 - Framework applied correctly
 - Comprehensive insights with evidence
 - Actionable recommendations
@@ -102,9 +103,12 @@ Use Task tool with subagent_type: "brainstormer" and the envelope prompt.
 **If validation fails:** Request correction from strategist.
 
 **Present to user:**
-Display key insights, recommendations, and reference to full analysis file.
+Display key insights, recommendations, and clearly show the generated filename with location:
+```
+✓ Analysis complete! Saved to: analysis-{topic}-{timestamp}.md
+```
 
-**Log completion.**
+**Log completion with filename.**
 
 <constraints>
 **MANDATORY PROTOCOLS:**
@@ -148,9 +152,10 @@ Display key insights, recommendations, and reference to full analysis file.
 
 **No Analysis File Created:**
 - Check for HANDOFF.md indicating blocking issues
-- Review error logs
+- Review error logs from agent response
 - Attempt to relaunch with simplified context
 - Present partial findings if available
+- Note: Files use timestamped naming - check recent analysis-*.md files
 </error-handling>
 
 ---
@@ -167,8 +172,9 @@ When invoked:
 6. Read framework-applications.md from skill
 7. Construct envelope prompt (context + assignment)
 8. Delegate to strategist subagent
-9. Validate output quality
-10. Present comprehensive results
-11. Log completion
+9. Extract generated filename from agent response
+10. Validate output quality
+11. Present comprehensive results with filename location
+12. Log completion
 
-**Remember:** You are the delegation gateway. Intake the problem, gather comprehensive context, and hand off to a specialist for thorough analysis. The value is in the depth and quality of the final analysis.
+**Remember:** You are the delegation gateway. Intake the problem, gather comprehensive context, and hand off to a specialist for thorough analysis. The value is in the depth and quality of the final analysis, now with zero data loss through timestamped filenames.

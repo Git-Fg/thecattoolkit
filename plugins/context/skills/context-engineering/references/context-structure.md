@@ -27,7 +27,6 @@ Persistent session state management independent of LLM context window. Enables c
 .cattoolkit/context/
 ├── scratchpad.md          # Current thinking and decisions
 ├── todos.md              # Persistent task tracking
-├── plan.md               # Current implementation plan
 ├── context.log           # Session context history
 ├── handoff.md            # Session handoff summary
 └── checkpoints/          # Critical state snapshots
@@ -89,16 +88,6 @@ Persistent session state management independent of LLM context window. Enables c
 
 **Update Frequency**: When tasks change state
 
-#### plan.md
-**Purpose**: Current implementation plan
-
-**Contents**:
-- High-level plan overview
-- Current phase
-- Dependencies
-- Success criteria
-
-**Update Frequency**: When plan changes
 
 #### context.log
 **Purpose**: Session history and timeline
@@ -163,7 +152,6 @@ mkdir -p .cattoolkit/context/checkpoints
 # Initialize core files
 touch .cattoolkit/context/scratchpad.md
 touch .cattoolkit/context/todos.md
-touch .cattoolkit/context/plan.md
 touch .cattoolkit/context/context.log
 touch .cattoolkit/context/handoff.md
 ```
@@ -267,15 +255,7 @@ Before session handoff, verify:
 ## Integration Examples
 
 ### With Planning
-```markdown
-# In plan.md
-## Current Phase: Authentication Implementation
-
-Reference context in .cattoolkit/context/scratchpad.md for:
-- Authentication decisions
-- Open questions about auth flow
-- Related technical choices
-```
+Project plans are managed via the **planner** plugin in `.cattoolkit/planning/`. Session-level context in `scratchpad.md` should complement these plans.
 
 ### With Engineering
 ```markdown

@@ -1,4 +1,4 @@
-# @cat-toolkit/meta (The Toolkit Builder)
+# @cattoolkit/meta (The Toolkit Builder)
 
 **Purpose**: Tools to build, maintain, and audit the AI system itself. This is the "Bootstrapper."
 

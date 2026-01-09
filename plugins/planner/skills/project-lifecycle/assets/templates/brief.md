@@ -8,7 +8,7 @@
 
 **Related Files:**
 - `@.cattoolkit/planning/{project-slug}/ROADMAP.md` - Project roadmap
-- `@.cattoolkit/planning/{project-slug}/ADR.md` - Architecture Decision Records
+- `@.cattoolkit/planning/{project-slug}/ADR.md` - Architecture Decision Records (created by Architect plugin)
 - `@.cattoolkit/planning/{project-slug}/ISSUES.md` - Deferred enhancements
 
 ## Greenfield Brief (v1.0)

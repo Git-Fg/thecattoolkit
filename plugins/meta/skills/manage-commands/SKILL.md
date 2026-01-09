@@ -16,7 +16,7 @@ allowed-tools: Read Write Edit Bash
 ## Capability Index
 
 ### Command Standards
-**File:** `references/command-standards.md`
+**File:** [command-standards.md](references/command-standards.md)
 **Use for:** Creating new slash commands, selecting templates, semantic categorization, YAML frontmatter, security patterns.
 
 **Covers:**
@@ -33,15 +33,10 @@ allowed-tools: Read Write Edit Bash
 
 | Reference | Purpose |
 |-----------|---------|
-| `ultra-minimalist-commands.md` | Minimal command patterns |
-| `semantic-categories.md` | Naming and categorization |
-| `patterns.md` | Common patterns and examples |
-| `background-patterns.md` | Background execution patterns |
-| `tool-restrictions.md` | Security and permission patterns |
-| `arguments.md` | Argument handling patterns |
-| `cross-platform.md` | OS-specific considerations |
-| `frontmatter.md` | YAML frontmatter specifications |
-| `xml-markdown-decision-framework.md` | Prompt formatting guidance |
+| [syntax-guide.md](references/syntax-guide.md) | Arguments, Frontmatter, and Categories |
+| [background-execution.md](references/background-execution.md) | Background execution patterns |
+| [permissions-guide.md](references/permissions-guide.md) | Security and tool restrictions |
+| [cross-platform.md](references/cross-platform.md) | OS-specific considerations |
 
 ## Asset Library
 
@@ -54,98 +49,13 @@ Production-grade templates for command scaffolding:
 | `skill-delegator_minimalistic.md` | One-line skill wrapper (default) |
 | `skill-delegator_structured.md` | Skill wrapper with structure |
 | `agent-delegator.md` | Agent delegation |
-| `background-agent-delegator.md` | Long-running background tasks |
-| `parallel-fan-out.md` | Multiple parallel agents |
+| `complex-delegation.md` | Single/Parallel background agents |
 | `hybrid-workflow.md` | Foreground + background work |
 | `context-loader.md` | Dynamic context loading |
-| `argument-handler.md` | Positional arguments |
 
-## Working Examples
+### Examples (`examples/`)
 
-Ready-to-use patterns can be found in the `examples/` directory:
-
-| Example | Description |
-|---------|-------------|
-| **[git-commit-full.md](examples/git-commit-full.md)** | Commit with full context (status, diff, logs) |
-| **[performance-optimization.md](examples/performance-optimization.md)** | Analyze code performance |
-| **[security-review.md](examples/security-review.md)** | Scan for vulnerabilities |
-| **[fix-issue.md](examples/fix-issue.md)** | Systematically fix issues with workflow |
-| **[feature-workflow.md](examples/feature-workflow.md)** | End-to-end feature development |
-| **[background-agent.md](examples/background-agent.md)** | Run analysis in background |
-| **[parallel-fan-out.md](examples/parallel-fan-out.md)** | Run multiple background agents |
-| **[project-health.md](examples/project-health.md)** | Dynamic environment loading |
-
-### User-Centric Wrapper Commands
-
-**For ALL wrapper commands** (skill AND agent wrappers):
-
-```yaml
----
-disable-model-invocation: true
----
-```
-
-**What it does:**
-- Prevents SlashCommand tool from programmatically invoking
-- Removes command metadata from context
-- Still allows manual invocation via `/command-name`
-
-**Why use it:**
-- AI can already use Skill/Task tools directly
-- Wrapper commands are convenience for human users
-- Prevents unnecessary context loading
-
-**When to use:**
-- ✅ Skill wrappers (Verbs, Objects, Execution)
-- ✅ Agent wrappers (Personas)
-- ❌ Commands that need programmatic invocation
-
-### Dynamic Context Standards
-
-**Use `!` prefix for state-dependent commands:**
-- Git status: `! `git status``
-- File listings: `! `find . -name "*.py"``
-- Environment variables: `! `echo $PATH``
-
-**Example:**
-```yaml
----
-description: Create git commit
-allowed-tools: Bash(git add:*), Bash(git status:*), Bash(git commit:*)
----
-
-## Context
-Current git status: ! `git status`
-
-## Objective
-Create a well-structured git commit
-```
-
-### Security Standards
-
-**Security-sensitive operations require `allowed-tools`:**
-
-| Operation Type | Restriction Pattern |
-|----------------|-------------------|
-| Git operations | `Bash(git add:*)`, `Bash(git commit:*)` |
-| Read-only analysis | `Read`, `Grep`, `Glob` only |
-| Deployment | Specific deployment tools only |
-
-### Minimalistic vs Structured Decision
-
-**Default to minimalistic when:**
-- ✅ Skill is self-documenting
-- ✅ Single clear purpose
-- ✅ Skill is well-established
-- ✅ You value speed over ceremony
-- ✅ Skill changes frequently
-
-**Use structured only when:**
-- ⚠️ Skill has complex pre-work
-- ⚠️ Skill is new/unknown to users
-- ⚠️ Success criteria are non-obvious
-- ⚠️ Skill creates artifacts
-- ⚠️ Users need mental preparation
+- **[bash-logic.md](examples/bash-logic.md)** - Git commits and deployment gates with dynamic context
 
 ## Anti-Patterns
 
@@ -199,52 +109,11 @@ Commands should avoid calling other commands:
 
 ## Best Practices
 
-### Command Naming
-
-**Good names:**
-- `optimize` - Clear action
-- `create-plan` - Clear action and output
-- `code-review` - Clear purpose
-- `git-commit` - Specific operation
-
-**Poor names:**
-- `helper` - Too generic
-- `stuff` - Not descriptive
-- `my-command` - Not informative
-
-### Argument Handling
-
-**$ARGUMENTS (simple, default):**
-```yaml
----
-argument-hint: [code or file to review]
----
-
-Review $ARGUMENTS for security issues
-```
-
-**$1, $2, $3 (structured input):**
-```yaml
----
-argument-hint: [operation] [target] [options]
----
-
-Perform $1 on $2 with options: $3
-```
-
-### Description Standards
-
-**Strong language patterns:**
-- Clear action verbs (Create, Review, Optimize, Analyze)
-- Specific context (git commits, code security, performance)
-- Avoid vague terms (helps with, assists with, useful for)
-
-**Examples:**
-```
-description: Create git commits following conventional format
-description: Review code for security vulnerabilities
-description: Generate comprehensive test suites
-```
+See `references/command-standards.md` for comprehensive best practices including:
+- Command naming conventions
+- Argument handling patterns
+- Description standards
+- Template selection logic
 
 ## Continuous Improvement
 

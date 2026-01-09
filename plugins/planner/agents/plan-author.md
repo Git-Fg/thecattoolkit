@@ -61,6 +61,9 @@ Discovery findings:
 - Existing codebase: [Summary of what exists]
 - Clarifications needed: [Any questions that needed user input]
 
+**Architectural Context:**
+- ADR.md: [Read and summarize key architectural decisions if present. If no ADR exists, note: "No architectural decisions documented yet - Architect plugin should be consulted first."]
+
 **Template Location:**
 - Use templates from the `project-lifecycle` skill.
 - Resolve relative paths from your skill binding (e.g., `assets/templates/`).
@@ -83,8 +86,10 @@ User's original request: [The full request text]
 - BRIEF.md (project vision, goals, constraints)
 - ROADMAP.md (phases, architecture)
 - Phased PLAN.md files (2-3 tasks per phase)
-- ADR.md (architecture decisions)
 - ISSUES.md (deferred items)
+
+**INPUT CONTEXT:**
+If an existing ADR.md exists in the project directory, read it and incorporate architectural decisions into your planning. Reference the ADR decisions in your ROADMAP.md to ensure architectural consistency. Do NOT generate new ADRs - the Architect plugin owns ADR creation.
 
 **TEMPLATE ACCESS:**
 Use relative paths from the project-lifecycle skill:

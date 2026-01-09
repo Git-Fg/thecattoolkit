@@ -16,8 +16,17 @@ allowed-tools: Read Write Edit Bash
 ## Knowledge Base
 
 ### 1. Style Standards
-**File:** `references/style-standards.md`
-**Contains:** Communication tone, Ambiguity protocol, Truth-first rules, Summary formatting.
+**File:** [style-standards.md](references/style-standards.md)
+**Contains:** Communication tone, Ambiguity protocol, Truth-first rules, Summary formatting, and Anti-patterns.
+
+### 2. Examples
+Ready-to-use communication patterns:
+
+| Example | Use Case |
+|---------|----------|
+| **[error-reporting.md](examples/error-reporting.md)** | Bug reports and diagnostics |
+| **[code-review.md](examples/code-review.md)** | Code feedback and reviews |
+| **[solo-developer-tone.md](examples/solo-developer-tone.md)** | Personal projects and internal docs |
 
 ## Asset Library
 
@@ -27,4 +36,16 @@ allowed-tools: Read Write Edit Bash
 ## Integration Points
 
 ### With Agents
-Agents load this skill to ensure their output matches the expected toolkit "vibe" and structure.
+Agents load this skill to ensure output matches the toolkit "vibe" and structure. Apply truth-first, solo-developer focused tone by default.
+
+### With Commands
+Commands reference style standards for user communication, error messages, and status reports.
+
+## Success Criteria
+
+A well-configured style document has:
+- [ ] Truth-first language (no diplomatic softening)
+- [ ] Solo-developer focus (no corporate speak)
+- [ ] Analytical summaries included (Reflection + Next Tasks)
+- [ ] Direct communication (imperative mood)
+- [ ] No excessive/empty politeness

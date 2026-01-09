@@ -18,6 +18,7 @@ description: |
   </example>
 allowed-tools: Task, Read, Write, Edit, Glob, Grep, Bash
 argument-hint: [feature or bug description]
+disable-model-invocation: true
 ---
 
 ## Objective
@@ -97,7 +98,7 @@ Check development environment state:
 
 ### Step 5: Delegation Package
 
-Compile all gathered context into a comprehensive assignment for the task-executor agent.
+Compile all gathered context into a comprehensive assignment for the code-implementer agent.
 
 ## Delegation Phase
 
@@ -146,7 +147,7 @@ You are executing in isolated context to prevent main chat overflow. The enginee
 All relevant project context has been gathered for you.
 </context>
 
-Execute via task-executor agent.
+Execute via code-implementer agent.
 
 ## Success Criteria
 

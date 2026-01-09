@@ -1,7 +1,7 @@
 ---
 name: project-lifecycle
 description: |
-  Project planning standards, templates, execution protocols, verification standards, and handoff procedures for BRIEF.md, ROADMAP.md, PLAN.md, ADR, phase execution, verification points, and authentication gates.
+  Project planning standards, templates, execution protocols, verification standards, and handoff procedures for BRIEF.md, ROADMAP.md, PLAN.md, phase execution, verification points, and authentication gates.
   <example>
   Context: User wants to create a project plan
   user: "Create a project plan for our new feature"
@@ -49,7 +49,6 @@ allowed-tools: Bash Edit Read Write Glob Grep
 | Project Brief | `assets/templates/brief.md` | Project starts |
 | Roadmap | `assets/templates/roadmap.md` | Multi-phase projects |
 | Phase Plan | `assets/templates/phase-plan.md` | Executable phases |
-| ADR Entry | `assets/templates/adr-entry.md` | Architecture decisions |
 | Issue Entry | `assets/templates/issue-entry.md` | Deferred enhancements |
 | Issues File | `assets/templates/issues.md` | ISSUES.md creation |
 | Phase Summary | `assets/templates/summary.md` | Phase completions |
@@ -60,7 +59,6 @@ allowed-tools: Bash Edit Read Write Glob Grep
 **Project Documents:** `.cattoolkit/planning/{project-slug}/`
 - BRIEF.md - Template: `assets/templates/brief.md`
 - ROADMAP.md - Template: `assets/templates/roadmap.md`
-- ADR.md - Template: `assets/templates/adr-entry.md`
 - ISSUES.md - Template: `assets/templates/issues.md`
 
 **Phase Documents:** `.cattoolkit/planning/{project-slug}/phases/XX-name/`

@@ -24,7 +24,7 @@ Rather than hardcoding specific files, the orchestrator:
 1. **Autonomous Detection:** Agents should use their natural language and reasoning capabilities to identify dependency management systems
 2. **Technology Agnostic:** Approach works for any language: JavaScript, Python, Rust, Go, Ruby, PHP, etc.
 3. **Consistency:** Use the detected package manager consistently throughout the project
-4. **Documentation:** All dependency changes must be documented in ADR.md with:
+4. **Documentation:** All dependency changes must be documented. If architectural in nature, flag for Architect to document in ADR.md with:
    - What was added/changed
    - Why it was necessary
    - Package management approach used
@@ -37,6 +37,6 @@ Task executors autonomously:
 - Identify and use the appropriate tool for the project's ecosystem
 - Update configuration files using their natural language understanding
 - Verify installations through testing and validation
-- Document all changes in ADR.md
+- Document implementation changes (not architectural - flag those to Architect)
 
 **Remember:** Trust your AI capabilities to identify the right package manager for any technology stack, rather than following hardcoded lists.

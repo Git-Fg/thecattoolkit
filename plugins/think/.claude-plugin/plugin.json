@@ -5,7 +5,5 @@
     "author": {
         "name": "Git-Fg"
     },
-    "license": "MIT",
-    "allowed-tools": ["Skill(thinking-frameworks)", "Read", "Write"],
-    "compatibility": "claude>=3.5"
+    "license": "MIT"
 }

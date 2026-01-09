@@ -32,7 +32,7 @@ Output: [What artifacts will be created]
 
 @.cattoolkit/planning/{project-slug}/BRIEF.md
 @.cattoolkit/planning/{project-slug}/ROADMAP.md
-@.cattoolkit/planning/{project-slug}/ADR.md
+@.cattoolkit/planning/{project-slug}/ADR.md (if exists - created by Architect plugin)
 @relevant/source/files
 
 ## Tasks

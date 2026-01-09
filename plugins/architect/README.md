@@ -1,4 +1,4 @@
-# @cat-toolkit/architect (The System Designer)
+# @cattoolkit/architect (The System Designer)
 
 **Purpose**: Comprehensive system architecture, design patterns, and technical decision documentation for complex software systems.
 

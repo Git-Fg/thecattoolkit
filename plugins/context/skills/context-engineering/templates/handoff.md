@@ -321,8 +321,7 @@ For full context, review these files in order:
 2. **scratchpad.md** - Current thinking and decisions
 3. **session-summary-YYYYMMDD-HHMM.md** - Session summary
 4. **todos.md** - Task tracking
-5. **plan.md** - Implementation plan
-6. **context.log** - Session history
+5. **context.log** - Session history
 
 ### Checkpoints
 - **Current:** .cattoolkit/context/checkpoints/{current-checkpoint}

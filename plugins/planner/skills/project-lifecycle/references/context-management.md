@@ -66,7 +66,7 @@ Aim for balanced context usage:
 @.cattoolkit/planning/user-auth-system/ROADMAP.md
 
 **Architecture:**
-@.cattoolkit/planning/user-auth-system/ADR.md
+@.cattoolkit/planning/user-auth-system/ADR.md (if exists - created by Architect plugin)
 
 **Source Files:**
 @src/lib/db.ts

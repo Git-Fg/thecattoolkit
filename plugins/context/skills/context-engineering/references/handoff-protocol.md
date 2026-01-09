@@ -235,7 +235,6 @@ Share .cattoolkit/context/ files with Cursor AI for context
 **Files:**
 - [ ] Scratchpad available
 - [ ] Todos available
-- [ ] Plan available
 
 ### 4b: Generate Handoff Summary
 
@@ -272,7 +271,6 @@ Create compressed archive: `.cattoolkit/context/archives/session-{YYYYMMDD-HHMM}
 Include:
 - scratchpad.md
 - todos.md
-- plan.md
 - context.log
 - handoff.md
 

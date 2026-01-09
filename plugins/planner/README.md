@@ -1,4 +1,4 @@
-# Project Orchestrator Plugin
+# @cattoolkit/planner (The Project Orchestrator)   
 
 **License:** MIT
 
@@ -76,7 +76,7 @@ AI: Project plan created!
 
 Orchestrates the execution of a detailed project plan with quality assurance.
 
-**Pattern:** Sovereign Triangle (delegates to task-executor agent)
+**Pattern:** Sovereign Triangle (delegates to plan-director agent)
 
 **Usage:**
 ```bash
@@ -111,6 +111,24 @@ Plan execution complete! All tasks verified.
 
 ## Agents
 
+### plan-director
+
+Orchestrates plan execution by delegating to phase-executor subagents.
+
+**Responsibilities:**
+- Reads and validates project context (BRIEF.md, PLAN.md, ADR.md)
+- Analyzes task dependencies (sequential vs parallel)
+- Coordinates execution with quality assurance
+- Manages project state updates
+
+**Skills:**
+- `project-lifecycle` - Document templates, planning methodology, and best practices
+
+**Output:**
+- Orchestrated execution with fresh context
+- Quality assurance verification
+- Project state management
+
 ### plan-author
 
 Specialized in creating hierarchical project plans.
@@ -129,7 +147,7 @@ Specialized in creating hierarchical project plans.
 - Structured execution plan
 - Task breakdowns with dependencies
 
-### task-executor
+### phase-executor
 
 Executes individual tasks within a plan phase.
 

@@ -1,4 +1,4 @@
-# @cat-toolkit/context
+# @cattoolkit/context
 
 **Session state management and scratchpad pattern for avoiding context overflow and enabling session handoffs.**
 
@@ -57,7 +57,6 @@ Persistent session state management using the scratchpad pattern.
 .cattoolkit/context/
 ├── scratchpad.md          # Current thinking and decisions
 ├── todos.md              # Persistent task tracking
-├── plan.md               # Current implementation plan
 ├── context.log           # Session context history
 ├── handoff.md            # Session handoff summary
 └── checkpoints/          # Critical state snapshots

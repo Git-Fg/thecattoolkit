@@ -1,5 +1,5 @@
 {
-    "name": "@cat-toolkit/planner",
+    "name": "planner",
     "description": "Planning & Long-Running Execution. The Tech Lead.",
     "version": "0.0.1",
     "author": {

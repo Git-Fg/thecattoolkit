@@ -75,7 +75,7 @@ Ensure refactoring can be performed safely:
 
 ### Step 4: Delegation Package
 
-Compile all gathered context into a comprehensive assignment for the task-executor agent.
+Compile all gathered context into a comprehensive assignment for the code-implementer agent.
 
 ## Delegation Phase
 
@@ -114,7 +114,7 @@ You are executing in isolated context to perform safe refactoring. The engineeri
 All relevant project context has been gathered for you.
 </context>
 
-Execute via task-executor agent.
+Execute via code-implementer agent.
 
 ## Success Criteria
 
