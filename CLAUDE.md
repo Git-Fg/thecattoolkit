@@ -110,8 +110,13 @@ Context is ephemeral; files are eternal. Decisions → ADR. Tasks → Status fil
 - File locking (parallel agents never edit same file)
 - Synthesis obligation (orchestrator merges outputs)
 
-### Law 7: Passive Skills
-Skills are cookbooks, not wizards. AskUserQuestion FORBIDDEN in skills. If input missing → agent judgment or HANDOFF.md.
+### Law 7: Hybrid Skills (Passive Knowledge, Active Execution)
+Skills have a dual nature: **passive knowledge** (auto-discovered standards) and **active execution** (via `context: fork` or user invocation).
+
+- **Passive Mode:** Skills auto-load when descriptions match user requests. They provide guidance without executing.
+- **Active Mode:** Skills with `context: fork` run as isolated subagents. User-invocable skills execute when typed `/skill-name`.
+
+**Constraint:** `AskUserQuestion` FORBIDDEN in skills. If input missing → agent judgment or HANDOFF.md.
 
 ### Law 8: Native Capabilities
 Trust the model. Declarative over procedural. Universal over specific.
@@ -316,9 +321,15 @@ tools: Read, Grep, Glob
 
 ## 4.1 What Skills Are
 
-Skills are **Knowledge Bases**—passive procedural knowledge packages. They provide standards, templates, and methodologies that agents "put on" like a lens to view a task.
+Skills are **Hybrid Capability Units**—they combine passive knowledge with optional active execution.
 
-**Key Principle:** Skills are cookbooks, not wizards. They inform but do not execute.
+| Mode | Trigger | Behavior |
+|:-----|:--------|:---------|
+| **Passive** | Description matches user request | Standards/guidance loaded into context |
+| **Active (Fork)** | `context: fork` set | Runs as isolated subagent with own context |
+| **Active (User)** | User types `/skill-name` | Direct invocation, appears in slash menu |
+
+**Key Principle:** Skills provide knowledge. With `context: fork`, they also execute autonomously.
 
 ---
 
@@ -364,6 +375,9 @@ Skills use a **3-level loading hierarchy** to minimize context usage:
 ---
 
 ## 4.5 Discovery Tiering Matrix
+
+> [!IMPORTANT]
+> The tiers below are **pattern guidance** for writing effective descriptions. do NOT include `[Tier X: Name]` as a literal prefix in the description field.
 
 | Tier | Use Case | Pattern |
 |:-----|:---------|:--------|
@@ -666,27 +680,27 @@ graph TB
 - **Clean up after operations** - Remove any temp files, caches, build artifacts
 - **Move to .attic IN THE ROOT PATH (thecattoolkit/.attic) instead of deleting** - When removing code/files during refactoring
 - **No file pollution** - If a file wasn't requested, don't create it
+- **Run toolkit validation after changes** - After modifying Skills/Commands/Agents, run `./scripts/toolkit-lint.sh`
 
 IMPORTANT: If you have access to claude-code-guide agent, you MUST use it PROACTIVELY. Spawn as much parallel background claude-code-guide agents with short and concise prompts descriptions as needed to verify and confirm any doubt.
 
-You can and should also manually fetch content (curl and/or native tool) from : 
-- [Changelog](https://code.claude.com/docs/en/changelog)
-- [CLI reference](https://code.claude.com/docs/en/cli-reference): Complete reference for Claude Code command-line interface, including commands and flags.
-- [Common workflows](https://code.claude.com/docs/en/common-workflows): Learn about common workflows with Claude Code.
-- [Discover and install prebuilt plugins through marketplaces](https://code.claude.com/docs/en/discover-plugins): Find and install plugins from marketplaces to extend Claude Code with new commands, agents, and capabilities.
-- [Run Claude Code programmatically](https://code.claude.com/docs/en/headless): Use the Agent SDK to run Claude Code programmatically from the CLI, Python, or TypeScript.
-- [Hooks reference](https://code.claude.com/docs/en/hooks): This page provides reference documentation for implementing hooks in Claude Code.
-- [Get started with Claude Code hooks](https://code.claude.com/docs/en/hooks-guide): Learn how to customize and extend Claude Code's behavior by registering shell commands
-- [Connect Claude Code to tools via MCP](https://code.claude.com/docs/en/mcp): Learn how to connect Claude Code to your tools with the Model Context Protocol.
+If you don't have access to claude-code-guide agent, you MUST fetch content (always prefer `curl`) from : 
+- [Changelog](https://raw.githubusercontent.com/anthropics/claude-code/refs/heads/main/CHANGELOG.md)
+- [CLI reference](https://code.claude.com/docs/en/cli-reference.md): Complete reference for Claude Code command-line interface, including commands and flags.
+- [Common workflows](https://code.claude.com/docs/en/common-workflows.md): Learn about common workflows with Claude Code.
+- [Discover and install prebuilt plugins through marketplaces](https://code.claude.com/docs/en/discover-plugins.md): Find and install plugins from marketplaces to extend Claude Code with new commands, agents, and capabilities.
+- [Run Claude Code programmatically](https://code.claude.com/docs/en/headless.md): Use the Agent SDK to run Claude Code programmatically from the CLI, Python, or TypeScript.
+- [Hooks reference](https://code.claude.com/docs/en/hooks.md): This page provides reference documentation for implementing hooks in Claude Code.
+- [Get started with Claude Code hooks](https://code.claude.com/docs/en/hooks-guide.md): Learn how to customize and extend Claude Code's behavior by registering shell commands
+- [Connect Claude Code to tools via MCP](https://code.claude.com/docs/en/mcp.md): Learn how to connect Claude Code to your tools with the Model Context Protocol.
 - [Create and distribute a plugin marketplace](https://code.claude.com/docs/en/plugin-marketplaces): Build and host plugin marketplaces to distribute Claude Code extensions across teams and communities.
-- [Create plugins](https://code.claude.com/docs/en/plugins): Create custom plugins to extend Claude Code with slash commands, agents, hooks, Skills, and MCP servers.
-- [Plugins reference](https://code.claude.com/docs/en/plugins-reference): Complete technical reference for Claude Code plugin system, including schemas, CLI commands, and component specifications.
-- [Quickstart](https://code.claude.com/docs/en/quickstart): Welcome to Claude Code!
-- [Agent Skills](https://code.claude.com/docs/en/skills): Create, manage, and share Skills to extend Claude's capabilities in Claude Code.
-- [Slash commands](https://code.claude.com/docs/en/slash-commands): Control Claude's behavior during an interactive session with slash commands.
-- [Status line configuration](https://code.claude.com/docs/en/statusline): Create a custom status line for Claude Code to display contextual information
-- [Subagents](https://code.claude.com/docs/en/sub-agents): Create and use specialized AI subagents in Claude Code for task-specific workflows and improved context management.
-- [Troubleshooting](https://code.claude.com/docs/en/troubleshooting): Discover solutions to common issues with Claude Code installation and usage.
+- [Create plugins](https://code.claude.com/docs/en/plugins.md): Create custom plugins to extend Claude Code with slash commands, agents, hooks, Skills, and MCP servers.
+- [Plugins reference](https://code.claude.com/docs/en/plugins-reference.md): Complete technical reference for Claude Code plugin system, including schemas, CLI commands, and component specifications.
+- [Quickstart](https://code.claude.com/docs/en/quickstart.md): Welcome to Claude Code!
+- [Agent Skills](https://code.claude.com/docs/en/skills.md): Create, manage, and share Skills to extend Claude's capabilities in Claude Code.
+- [Slash commands](https://code.claude.com/docs/en/slash-commands.md): Control Claude's behavior during an interactive session with slash commands.
+- [Status line configuration](https://code.claude.com/docs/en/statusline.md): Create a custom status line for Claude Code to display contextual information
+- [Subagents](https://code.claude.com/docs/en/sub-agents.md): Create and use specialized AI subagents in Claude Code for task-specific workflows and improved context management.
 
 
 ---
@@ -703,7 +717,7 @@ You can and should also manually fetch content (curl and/or native tool) from :
 
 ### Cross-Component
 ```
-✅ "from the planning skill"
+✅ "from the project-strategy skill"
 ✅ "the guide.md in the architect skill references"
 ❌ ../../../other-skill/assets/template.md
 ❌ plugins/plugin/skills/skill/...

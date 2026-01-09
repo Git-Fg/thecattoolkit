@@ -17,23 +17,6 @@
           }
         ]
       }
-    ],
-    "PostToolUse": [
-      {
-        "matcher": "Edit|Write",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/plugins/verify/hooks/scripts/type-check-python.py\"",
-            "timeout": 30000
-          },
-          {
-            "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/plugins/verify/hooks/scripts/type-check-ts.js\"",
-            "timeout": 15000
-          }
-        ]
-      }
     ]
   }
 }

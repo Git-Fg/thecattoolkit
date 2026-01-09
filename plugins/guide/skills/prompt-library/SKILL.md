@@ -37,8 +37,13 @@ Higher-order prompts that generate, optimize, or analyze other prompts.
 
 ### Creation
 - `assets/templates/single-prompt.md`: General purpose template.
-- `assets/templates/chain/`: Step-specific templates (research, plan, execute, refine).
-- `assets/templates/meta/`: Specialized generators and optimizers.
+- `assets/templates/chain/research.md`: Research step template
+- `assets/templates/chain/plan.md`: Planning step template
+- `assets/templates/chain/execute.md`: Execution step template
+- `assets/templates/chain/refine.md`: Refinement step template
+- `assets/templates/chain-summary.md`: Chain result summary
+- `assets/templates/meta/generator.md`: Prompt generator template
+- `assets/templates/meta/optimizer.md`: Prompt optimizer template
 
 ### Metadata
 - `references/metadata.md`: Guidelines for YAML frontmatter and SUMMARY.md.

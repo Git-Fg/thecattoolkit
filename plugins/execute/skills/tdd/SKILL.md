@@ -5,6 +5,7 @@ description: |
   Keywords: test-driven development, TDD, red-green-refactor, write tests first
 context: fork
 agent: worker
+user-invocable: true
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 
@@ -163,10 +164,11 @@ Be specific about what you're implementing:
 
 ## The Iron Law (Non-Negotiable)
 
-- Write test first
-- Watch it fail
-- Write minimal code
-- Refactor while green
-- Repeat
+1. **Delete any production code written before a failing test.**
+2. Write test first
+3. Watch it fail
+4. Write minimal code
+5. Refactor while green
+6. Repeat
 
 Violate the rules, and you violate the spirit of TDD.

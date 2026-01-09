@@ -54,7 +54,7 @@ Write the completed prompt to:
 ## Key Resources
 - **prompt-engineering skill**: Theory, patterns, and optimization techniques
 - **prompt-library skill**: Templates and taxonomy
-- **Template**: Use `assets/templates/single-prompt.md` from prompt-library
+- **Template**: Use single-prompt.md from prompt-library skill
 
 ## Output
 Complete prompt saved to `PROMPT.md` with:

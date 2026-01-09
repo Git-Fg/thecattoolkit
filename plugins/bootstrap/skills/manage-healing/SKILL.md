@@ -1,72 +1,47 @@
 ---
 name: manage-healing
-description: USE when diagnosing failures or applying repair protocols for self-correcting AI components.
-allowed-tools: Read
+description: |
+  USE when diagnosing component failures, hallucinations, or instruction drift.
+  Performs forensic investigation of session logs, scratchpads, and tool prompts to apply permanent fixes.
+  Keywords: forensic audit, repair component, fix hallucination, log analysis
+context: fork
+agent: plugin-expert
+user-invocable: true
+allowed-tools: [Task, Read, Write, Edit, Glob, Grep]
 ---
 
-# Healing Protocols
+# Forensic Healing Protocol
 
-Diagnostic logic for identifying why an AI component failed and repair strategies to fix it. Used by the `/heal` command in main context.
+## Phase 0: Target Acquisition
+You MUST first resolve the user's input to a concrete file path:
+1. **Validation**: Check if the input is already a valid absolute or relative path.
+2. **Search**: If it's a name (e.g., "manage-healing"), use `find_by_name` to locate the `SKILL.md` or component definition.
+3. **Ambiguity Resolution**: If multiple files match, pick the one in `plugins/` that matches the component type (Agent, Skill, Command).
 
-## Shared Standards
+## Phase 1: Evidence Retrieval (Forensics)
+You MUST analyze the "Black Box" of the failure by reading the following state files:
+1. **The Pulse**: `.cattoolkit/context/context.log` (Find the exact timestamp of the error).
+2. **The Memory**: `.cattoolkit/context/scratchpad.md` (Check the agent's intent vs. its tool usage).
+3. **The Guard**: `hooks/hooks.json` (Verify if a hook intercepted the tool call).
+4. **The Manifesto**: The failing `SKILL.md`, `agent.md`, or `command.md`.
 
-For common principles, integration patterns, and anti-patterns, see:
-- **[shared-standards.md](references/shared-standards.md)** - Common standards for all management skills
+## Phase 2: Diagnosis (Drift Detection)
+Compare the **Tool Prompt** (from context.log) against the **Instructions** (from the manifesto).
+- **Hallucination**: The model used a tool argument not defined in the skill.
+- **Interception**: A hook returned a `block` status that the agent didn't handle.
+- **Instruction Drift**: The skill provides an example that is incompatible with the current toolkit version.
 
-## Diagnostic Reference
+## Phase 3: The Healing Fix
+DO NOT revert files. Update the logic to be more resilient:
+1. **Correct the Example**: Update the Markdown code block to show the correct tool signature.
+2. **Harden Constraints**: Add a `<constraints>` block with a `MUST NOT` instruction specifically addressing the error.
+3. **Path Sanitization**: If the error was a "File Not Found," add a "Context Discovery" step to the protocol.
 
-### 1. Skill Drifts
+## Phase 4: Prevention (Immunization)
+Update the component's **Description** keywords to better match its actual successful triggers, and add a "Troubleshooting" section to the bottom of the component's file documenting this fix.
 
-**Symptom:** AI tries to use a specific tool/workflow mentioned in the Skill but fails (e.g., "Tool not found" or "Invalid arguments").
-
-**Diagnosis:** The `SKILL.md` examples or instructions are out of sync with the actual tools available.
-
-**Repair:** Update `SKILL.md` examples to match the actual tool signature found in the environment.
-
-### 2. Agent Constraints
-
-**Symptom:** Subagent enters an infinite loop, asks user questions when prohibited, or fails to create output.
-
-**Diagnosis:** Weak negative constraints in `agents/*.md`.
-
-**Repair:** Add explicit `<constraints>` or `NEVER` clauses to the agent definition.
-
-### 3. Command Hallucinations
-
-**Symptom:** Command invents arguments or fails to gather necessary context before delegation.
-
-**Diagnosis:** `argument-hint` or `description` is vague.
-
-**Repair:** Update frontmatter `argument-hint` and add explicit context gathering steps.
-
-## Repair Patterns
-
-### The "Add Example" Fix
-
-If the model failed to format an output correctly:
-
-**Action:** Do not just change instructions. Add a concrete example block using Markdown to the component's definition showing the *correct* input/output pair based on the recent failure.
-
-### The "Constraint Hardening" Fix
-
-If the model violated a rule (e.g., edited a protected file):
-
-**Action:** Move the rule from "Instructions" to a dedicated `<constraints>` XML block or use uppercase "MUST/NEVER" language.
-
-### The "Path Correction" Fix
-
-If the model hallucinated a file path:
-
-**Action:** Verify the actual path using `ls/find` and update the reference in the documentation.
-
-## Bootstrap Protocol (Emergency Recovery)
-
-When core tools (`/build`, `/heal`) are corrupted, use git restore to recover. See `/heal` command's "Emergency Bootstrap Recovery" section for protocols.
-
-## Knowledge Base
-
-| Reference | Purpose |
-|-----------|---------|
-| [shared-standards.md](references/shared-standards.md) | Common standards for all management skills |
-| [diagnosis-patterns.md](references/diagnosis-patterns.md) | Decision tree for root cause analysis |
-| [bootstrap-protocol.md](references/bootstrap-protocol.md) | Emergency git-based recovery procedures |
+## Reference Assets
+- [bootstrap-protocol.md](references/bootstrap-protocol.md): Protocol for initializing healing environment
+- [shared-standards.md](references/shared-standards.md): Cross-skill standards
+- [diagnosis-patterns.md](references/diagnosis-patterns.md): Common error patterns
+- [bootstrap.sh](assets/scripts/bootstrap.sh): Environment setup script

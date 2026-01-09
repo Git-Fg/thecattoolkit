@@ -22,23 +22,23 @@ All necessary context is provided directly in the `# Context` section. Do NOT at
 **Determine the appropriate engineering approach:**
 
 ### For Debugging Tasks:
-1. Read `references/debug.md` to understand the 6-phase protocol
-2. Read `references/security-checklist.md` (mandatory for code modifications)
+1. Apply the 6-phase debugging protocol
+2. Apply security checklist (scanning for secrets and vulnerabilities)
 3. Follow the scientific method: Capture → Analyze → Hypothesize → Test → Fix → Verify
 
 ### For TDD Tasks:
-1. Read `references/test-driven-development.md` for Red-Green-Refactor cycle
-2. Read `references/tdd-protocol.md` for methodology details
+1. Follow Red-Green-Refactor cycle
+2. Apply TDD methodology details
 3. Cycle: Write failing test → Write minimal code → Refactor
 
 ### For Implementation Tasks:
-1. Read relevant sections from `references/` based on task type
+1. Read relevant reference documentation
 2. Apply appropriate engineering patterns
 3. Use tests to verify functionality
 
 ### For Code Review Tasks:
-1. Read `references/code-review.md` for review workflow
-2. Apply security checklist from `references/security-checklist.md`
+1. Follow code review workflow
+2. Apply security checklist
 3. Focus on correctness, security, and maintainability
 
 ## 4. Execute in Uninterrupted Flow

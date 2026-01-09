@@ -3,11 +3,20 @@ import os
 import datetime
 import json
 from pathlib import Path
-from path_validator import validate_path
 
-# BOILERPLATE: Add the current script's directory to sys.path
-# This allows importing sibling modules (like path_validator)
-# regardless of where the plugin is installed.
+plugin_root = os.environ.get("CLAUDE_PLUGIN_ROOT")
+if plugin_root and plugin_root not in sys.path:
+    sys.path.insert(0, plugin_root)
+
+# Try to import path_validator if available
+try:
+    from path_validator import validate_path
+except ImportError:
+    # Fallback if path_validator is not in python path
+    def validate_path(path):
+        return True
+
+
 current_dir = Path(__file__).resolve().parent
 sys.path.insert(0, str(current_dir))
 
@@ -19,12 +28,20 @@ def is_safe_write(file_path: str) -> bool:
     """
     Check if writing to a file is safe.
     BLOCKS writes to the Plugin Root (cache) to prevent tampering.
+    BLOCKS writes to .git directories.
     ALLOWS writes to Project Root.
     """
     try:
         abs_path = os.path.abspath(file_path)
+
+        # Block Plugin Root
         if CLAUDE_PLUGIN_ROOT and abs_path.startswith(CLAUDE_PLUGIN_ROOT):
             return False
+
+        # Block .git
+        if ".git" in abs_path.split(os.sep):
+            return False
+
         return True
     except Exception:
         return False
@@ -34,7 +51,6 @@ def read_file_safe(path):
     """Safely read a file, return empty string if not found or error."""
     try:
         if not validate_path(path):
-            # Path traversal attempt detected
             return ""
         if os.path.exists(path):
             with open(path, "r") as f:
@@ -48,8 +64,11 @@ def write_file_safe(path, content):
     """Safely write a file, creating directories if needed."""
     try:
         if not validate_path(path):
-            # Path traversal attempt detected
             return False
+
+        if not is_safe_write(path):
+            return False
+
         Path(path).parent.mkdir(parents=True, exist_ok=True)
         with open(path, "w") as f:
             f.write(content)
@@ -108,7 +127,14 @@ def main():
         scratchpad = read_file_safe(scratchpad_path)
 
         if not context_log and not scratchpad:
-            print(json.dumps({"status": "success", "message": "No context to compact"}))
+            print(
+                json.dumps(
+                    {
+                        "continue": True,
+                        "systemMessage": "Memory compaction: No context to compact",
+                    }
+                )
+            )
             sys.exit(0)
 
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -154,7 +180,11 @@ def main():
 
             write_file_safe(scratchpad_path, new_scratchpad)
 
-        if os.path.exists(context_log_path) and validate_path(context_log_path):
+        if (
+            os.path.exists(context_log_path)
+            and validate_path(context_log_path)
+            and is_safe_write(str(context_log_path))
+        ):
             with open(context_log_path, "w") as f:
                 f.write(f"[{timestamp}] Memory checkpoint created\n")
                 f.write(
@@ -164,10 +194,12 @@ def main():
         print(
             json.dumps(
                 {
-                    "status": "success",
-                    "message": f"Memory compacted at {timestamp}",
-                    "checkpoint": checkpoint_file,
-                    "actions_summarized": len(actions),
+                    "continue": True,
+                    "systemMessage": f"Memory compacted at {timestamp}. Checkpoint created.",
+                    "hookSpecificOutput": {
+                        "checkpoint": str(checkpoint_file),
+                        "actions_summarized": len(actions),
+                    },
                 }
             )
         )
@@ -176,14 +208,12 @@ def main():
         print(
             json.dumps(
                 {
-                    "status": "success",
-                    "message": f"Memory compaction completed with warnings: {str(e)}",
+                    "continue": True,
+                    "systemMessage": f"Memory compaction warning: {str(e)}",
                 }
             )
         )
 
 
 if __name__ == "__main__":
-    import os
-
     main()

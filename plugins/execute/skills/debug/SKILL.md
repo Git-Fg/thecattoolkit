@@ -5,6 +5,7 @@ description: |
   Keywords: fix bug, debug error, investigate crash, solve issue
 context: fork
 agent: worker
+user-invocable: true
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 

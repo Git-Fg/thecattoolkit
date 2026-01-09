@@ -2,9 +2,12 @@
 name: project-strategy
 description: |
   USE when creating project plans, BRIEF.md, ROADMAP.md, or phase PLAN.md documents.
-  Project planning standards, document templates (BRIEF, ROADMAP, PLAN), and format specifications.
-user-invocable: false
-allowed-tools: Read, Write, Edit
+  Defines project planning standards, document templates (BRIEF, ROADMAP, PLAN), and format specifications for structured execution.
+  Keywords: project plan, brief, roadmap, phase plan, planning, strategy, templates
+user-invocable: true
+context: fork
+agent: designer
+allowed-tools: [Task, Read, Write, Edit, Glob, Grep, Bash]
 ---
 
 # Project Strategy Standards
@@ -26,6 +29,8 @@ It answers: "What templates and formats should I use?" (not "How to execute them
 - `assets/templates/handoff.md` - Session handoff template
 - `assets/templates/summary.md` - Phase completion summary
 - `assets/templates/issues.md` - Deferred enhancements tracking
+- `assets/templates/issue-entry.md` - Individual issue template
+- `assets/templates/discovery.md` - Project discovery template
 
 **Format Standards:**
 - `references/plan-format.md` - PLAN.md structure guidelines
@@ -252,3 +257,47 @@ Reference execution-core for behavioral protocols during execution
 3. **Progressive Enhancement:** Brownfield builds on greenfield
 4. **Behavioral Separation:** WHAT (strategy) separate from HOW (execution-core)
 5. **State-in-Files:** All decisions and progress in files
+
+# Protocol: Plan Creation
+
+**Trigger:** User requests a new project plan ("Create a plan for...", "I need a roadmap for...").
+
+## 1. Context Discovery
+**Action:** Analyze the request and available context to extract:
+- Project type (web service, CLI, library)
+- Main features/constraints
+- Tech stack preferences
+
+**Sources to check:**
+- Existing BRIEF.md or DISCOVERY.md in `.cattoolkit/planning/`
+- README.md and project documentation
+- Package manifests (package.json, Cargo.toml, etc.)
+
+**If critical information is missing:** Make a Strategic Assumption and document it clearly in the plan output. If entirely blocked, create HANDOFF.md per `execution-core` protocol.
+
+## 2. Deep Discovery
+**Action:** If this is an existing codebase, perform discovery:
+1. Map directory structure and architecture.
+2. Identify current stack and patterns.
+3. Create/Update `DISCOVERY.md`.
+
+## 3. Plan Generation Strategy
+**Determine Plan Type:**
+- **Lite Plan:** Simple feature (2-3 tasks). Create `PLAN.md` directly.
+- **Standard Plan:** Complex project. Create full hierarchy (`BRIEF.md`, `ROADMAP.md`, Phase `PLAN.md`s).
+
+## 4. Execution
+**Lite Plan:**
+- Create `PLAN.md` using `assets/templates/phase-plan.md` structure.
+
+**Standard Plan:**
+- Create `BRIEF.md` (Project goals).
+- Create `ROADMAP.md` (Phases and milestones).
+- Create subdirectory structure (`.cattoolkit/planning/...`).
+- Create initial `PLAN.md` for Phase 1.
+
+## 5. Validation & Presentation
+- Verify all created files exist and follow templates.
+- Present the plan structure in output.
+- Include any Strategic Assumptions made due to missing context.
+

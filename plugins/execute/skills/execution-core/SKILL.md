@@ -1,7 +1,8 @@
 ---
 name: execution-core
 description: |
-  Universal behavioral standards for autonomous agents. Defines Uninterrupted Flow, Self-Verification, Auth-Gates, and Handoff protocols.
+  USE to apply universal behavioral standards for autonomous agents.
+  Defines Uninterrupted Flow, Self-Verification, Auth-Gates, and Handoff protocols.
   Keywords: execution behavior, autonomous agent, verification, handoff protocol
 user-invocable: false
 allowed-tools: Bash, Edit, Read, Write, Glob, Grep
@@ -21,6 +22,7 @@ It answers: "HOW should agents behave?" (not "WHAT should they do").
 - `references/observation-points.md` - Self-verification and evidence collection
 - `references/auth-gates.md` - Authentication error handling
 - `references/handoff-protocol.md` - Standard handoff format
+- `references/execution-protocol.md` - Universal worker execution steps
 
 ## Core Behavioral Standards
 

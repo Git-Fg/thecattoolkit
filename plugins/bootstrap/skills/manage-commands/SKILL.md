@@ -1,7 +1,7 @@
 ---
 name: manage-commands
 description: USE when creating or auditing slash commands to ensure compliance with command structure standards, semantic categorization, and permission patterns.
-allowed-tools: Read, Write, Edit, Bash
+allowed-tools: [Read, Write, Edit, Bash(ls:*), Bash(grep:*), Bash(find:*)]
 ---
 
 # Command Management Standards
@@ -46,14 +46,14 @@ For common principles, integration patterns, and anti-patterns, see:
 
 ### Templates (`assets/templates/`)
 
-Production-grade templates for command scaffolding:
+> [!CAUTION]
+> **Law 2 Enforcement:** Single-skill wrappers are glue code. Before creating a Command, verify it orchestrates 2+ distinct Skills. If it only wraps one Skill, configure that Skill with `user-invocable: true` and `context: fork` instead.
 
-| Template | Use Case |
-|----------|----------|
-| `forked-skill.md` | Skill binding to specialized agent (Unified Capability) |
-| `context-loader.md` | Dynamic context loading |
+**Deprecated Templates (Moved to .attic):**
+- ~~`context-loader.md`~~ - Dynamic context loading is now handled by `context: fork` Skills
+- ~~`forked-skill.md`~~ - Skill binding is achieved via `agent: [name]` in Skill frontmatter
 
-**Removed Templates (Anti-Patterns):**
+**Removed Anti-Pattern Templates:**
 - ~~`skill-delegator_*.md`~~ - Single-skill wrappers are glue code. Use `user-invocable: true` on the skill instead.
 - ~~`agent-delegator.md`~~ - Single-agent wrappers are glue code. Use `context: fork` with `agent: [name]` on the skill instead.
 

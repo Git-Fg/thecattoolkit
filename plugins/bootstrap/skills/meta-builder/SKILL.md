@@ -1,11 +1,18 @@
 ---
 name: meta-builder
 description: |
-  USE when building, auditing, or modifying toolkit components (skills, agents, or commands) using natural language.
-  Keywords: build, create, audit, scaffold, generate component
+  USE when building or auditing components.
+  Proactively fetches live Claude Code documentation via curl to prevent instructional drift.
 context: fork
 agent: plugin-expert
-allowed-tools: Read Write Edit Glob Grep Bash TodoWrite
+allowed-tools:
+  - Read
+  - Write
+  - Edit
+  - Glob
+  - Grep
+  - Bash(curl *)
+  - TodoWrite
 ---
 
 # Meta Builder Skill
@@ -44,3 +51,7 @@ You are the execution engine for the `plugin-expert` persona. Your goal is to in
 **Modification:**
 - "Update plugin-expert to use new shared standards"
 - "Update build to support natural language"
+
+## Knowledge Base
+- [Official Docs Index](references/official-docs.md)
+- [Expert Protocol](references/expert-protocol.md)

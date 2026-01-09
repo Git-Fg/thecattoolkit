@@ -10,8 +10,12 @@ Current logic:
 """
 
 import sys
-import json
 import os
+import json
+
+plugin_root = os.environ.get("CLAUDE_PLUGIN_ROOT")
+if plugin_root and plugin_root not in sys.path:
+    sys.path.insert(0, plugin_root)
 
 
 def main():

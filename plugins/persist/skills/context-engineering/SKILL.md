@@ -16,6 +16,7 @@ allowed-tools: [Read, Write, Edit, Bash]
 - **[Scratchpad Maintenance](references/scratchpad-maintenance.md)**: Procedures for tracking decisions and progress.
 - **[Session Summary](references/session-summary.md)**: Protocols for consolidating session state.
 - **[Handoff Protocol](references/handoff-protocol.md)**: Standards for seamless session rotation.
+- **[Execution Protocol](references/execution-protocol.md)**: Guidelines for context-aware execution.
 
 ## Core Purpose
 

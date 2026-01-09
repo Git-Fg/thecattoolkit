@@ -1,94 +1,110 @@
 ---
 name: thinking-frameworks
 description: |
-  USE when user asks to 'apply a framework', 'think strategically', 'analyze a decision', 'brainstorm', or 'prioritize options'.
-  Structured thinking patterns for analysis, decision-making, and prioritization (first-principles, SWOT, Pareto, 5-whys, Eisenhower).
-context: fork
-agent: strategist
-allowed-tools: Read, Write, Edit, Glob, Grep
+  USE when a reasoning engine needs structured methodologies for analysis.
+  Contains 12 passive frameworks (Strategic, Prioritization, Problem Analysis).
+allowed-tools: [Read]
 ---
 
-# Thinking Frameworks Standard
+# Thinking Frameworks Methodology Library
 
-Provide the theoretical basis and methodology for structured analysis. This skill contains no active execution logic - only passive reference documentation.
+## AI Selection Rationale (Internal)
+- **Use First-Principles + Inversion**: For greenfield projects or "impossible" bugs.
+- **Use Pareto + Eisenhower**: For task overwhelm or roadmap prioritization.
+- **Use 5-Whys + Occam's Razor**: For recurring system failures or root cause analysis.
+- **Use Second-Order + 10-10-10**: For high-stakes architectural or business pivots.
 
-## Framework Index
+## Framework Methodologies
 
-### Strategic Thinking (5 frameworks)
-**For long-term perspective, big-picture analysis, and foundational decisions**
+### 1. First-Principles Thinking
+*Method*: Break down complex problems into basic elements and reassemble them from the ground up.
+*Application*:
+- Identify every assumption you are making.
+- Break down the problem into fundamental truths (physics, math, logic).
+- Creates new solutions rather than iterating on existing ones.
 
-- **first-principles**: Challenge assumptions, rebuild from fundamentals (references/strategic.md)
-- **inversion**: Identify failure modes to avoid them (references/strategic.md)
-- **second-order**: Understand cascading consequences and long-term impacts (references/strategic.md)
-- **swot**: Analyze strengths, weaknesses, opportunities, threats (references/strategic.md)
-- **10-10-10**: Evaluate across three time horizons (references/strategic.md)
+### 2. Inversion
+*Method*: Solve problems backwards; instead of "how do I succeed?", ask "how do I avoid failure?".
+*Application*:
+- Define the "Worst Case Scenario" in detail.
+- Identify the specific actions that would lead to that failure.
+- Avoid those actions at all costs.
 
-### Prioritization & Focus (3 frameworks)
-**For identifying high-impact activities and resource allocation**
+### 3. Second-Order Thinking
+*Method*: Think through the consequences of the consequences.
+*Application*:
+- Ask "And then what?" for immediate results.
+- Look for non-obvious long-term effects (1-3 years out).
+- Evaluate if short-term gain leads to long-term pain.
 
-- **pareto**: Apply 80/20 rule to identify vital few factors (references/prioritization.md)
-- **one-thing**: Find single highest-leverage action (references/prioritization.md)
-- **eisenhower-matrix**: Categorize by urgency vs importance (references/prioritization.md)
+### 4. SWOT Analysis
+*Method*: Map Strengths, Weaknesses, Opportunities, and Threats.
+*Application*:
+- **Internal**: Strengths & Weaknesses (Team, Codebase, Resources).
+- **External**: Opportunities & Threats (Market, Competitors, Technology changes).
 
-### Problem Analysis (4 frameworks)
-**For root cause analysis, simplification, and optimal decision-making**
+### 5. 10-10-10 Framework
+*Method*: Evaluate decisions across three time horizons.
+*Application*:
+- How will I feel about this in 10 minutes? (Immediate emotional reaction)
+- How will I feel about this in 10 months? (Medium-term consequences)
+- How will I feel about this in 10 years? (Long-term legacy/impact)
 
-- **5-whys**: Drill to root cause by asking "why" repeatedly (references/problem-analysis.md)
-- **opportunity-cost**: Analyze trade-offs and what you give up (references/problem-analysis.md)
-- **occams-razor**: Find simplest explanation that fits all facts (references/problem-analysis.md)
-- **via-negativa**: Improve by removing rather than adding (references/problem-analysis.md)
+### 6. Pareto Principle (80/20)
+*Method*: Identify the vital few factors that drive the majority of results.
+*Application*:
+- List all inputs/activities.
+- Identify which top 20% generate 80% of the value/bugs/load.
+- ruthlessly cut or deprioritize the bottom 80%.
 
-## Skill Resources
+### 7. One-Thing Method
+*Method*: Identify the single domino that makes everything else easier or unnecessary.
+*Application*:
+- Ask: "What is the ONE thing I can do such that by doing it, everything else will be easier or unnecessary?"
+- Focus execution solely on that lead domino.
 
-### Selection Process
-- **references/framework-selection.md**: Standardized framework selection prompts and workflow for both Direct and Delegated patterns
+### 8. Eisenhower Matrix
+*Method*: Categorize tasks by Urgency vs. Importance.
+*Application*:
+- Important & Urgent: Do it now.
+- Important & Not Urgent: Schedule it (Deep Work).
+- Not Important & Urgent: Delegate it.
+- Not Important & Not Urgent: Delete it.
 
-### Application Methodology
-- **references/framework-applications.md**: Detailed step-by-step instructions for applying each framework, with examples and templates
+### 9. 5-Whys
+*Method*: Ask "Why?" five times to drill down to the root cause.
+*Application*:
+- State the problem.
+- Ask "Why did this happen?" -> [Reason 1]
+- Ask "Why did [Reason 1] happen?" -> [Reason 2]
+- Continue until you reach the system-level root cause (process failing).
 
-### Individual Framework Details
-- **references/strategic.md**: In-depth coverage of strategic thinking frameworks
-- **references/prioritization.md**: In-depth coverage of prioritization frameworks
-- **references/problem-analysis.md**: In-depth coverage of problem analysis frameworks
+### 10. Opportunity-Cost Analysis
+*Method*: Evaluate what you are giving up to choose an option.
+*Application*:
+- Clearly define the "Next Best Alternative".
+- Quantify the value of that alternative.
+- Ensure the chosen path exceeds the value of what is sacrificed.
+
+### 11. Occam's Razor
+*Method*: The simplest explanation is usually the correct one.
+*Application*:
+- When facing competing hypotheses, choose the one with fewest assumptions.
+- Cut unnecessary complexity in code and architecture.
+
+### 12. Via Negativa
+*Method*: Improvement by subtraction.
+*Application*:
+- Instead of adding features to solve a problem, remove the friction/bloat causing it.
+- Simplify systems to increase reliability.
+
+## Reference Resources
+
+### Deep Dives
+- `references/prioritization.md`: Advanced prioritization techniques
+- `references/strategic.md`: Strategic thinking patterns
+- `references/problem-analysis.md`: Root cause analysis methods
+- `references/framework-applications.md`: Application examples
 
 ### Templates
-- **assets/templates/analysis-summary.md**: Standard output template for all framework analyses
-
-## Compliance Rule
-
-**Any agent or command using this skill MUST produce a final output file:**
-- Use `assets/templates/analysis-summary.md` as the template
-- Write complete analysis to `ANALYSIS.md` (or specified output file)
-- Include framework name, category, context, analysis, insights, and recommendations
-- Follow the template structure exactly
-
-## Framework Combinations
-
-For complex problems, these combinations are effective:
-- first-principles + inversion: Rebuilding while avoiding failure modes
-- second-order + 10-10-10: Understanding cascading impacts across time
-- pareto + one-thing: Identifying leverage points
-- 5-whys + occams-razor: Root cause analysis with simple solutions
-- eisenhower-matrix + pareto: Task triage with impact focus
-
-## Usage Patterns
-
-### For Sovereign Direct Commands (Foreground)
-1. Reference `references/framework-selection.md` for user interaction prompts
-2. Read `references/framework-applications.md` for methodology
-3. Apply framework interactively with user guidance
-4. Write output following `assets/templates/analysis-summary.md`
-
-### For Sovereign Delegated Commands (Delegation)
-1. Reference `references/framework-selection.md` for user interaction prompts
-2. Gather comprehensive context
-3. Delegate to agent with framework selection
-4. Agent reads `references/framework-applications.md` for autonomous execution
-5. Agent writes output following `assets/templates/analysis-summary.md`
-
-### For Agents
-1. Load skill via `skills: [thinking-frameworks]`
-2. Read `references/framework-applications.md` for methodology
-3. Apply framework autonomously to provided context
-4. Write output following `assets/templates/analysis-summary.md`
-
+- `assets/templates/analysis-summary.md`: Standard format for analysis outputs

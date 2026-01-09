@@ -56,12 +56,6 @@ Save improvements to:
 - Maintain original intent while enhancing execution
 - Apply template structure from prompt-library skill
 
-## Key Resources
-- **prompt-engineering skill**: Optimization techniques and frameworks
-- **prompt-library skill**: Templates and best practices
-- **Anti-patterns**: `references/anti-patterns.md` from prompt-engineering
-- **Quality criteria**: `references/quality.md` from prompt-library
-
 ## Output
 Optimized prompt saved to `OPTIMIZED_PROMPT.md` with:
 - Clearer instructions

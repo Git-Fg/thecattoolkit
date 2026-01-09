@@ -1,7 +1,7 @@
 ---
 name: architecture
 description: |
-  USE when designing new systems, analyzing existing architecture, or making architectural decisions applying System Architecture and Design Frameworks.
+  MUST USE when designing new systems, analyzing existing architecture, or making architectural decisions applying System Architecture and Design Frameworks.
   Keywords: system design, architecture analysis, scalability, technical decisions, ADR
 context: fork
 agent: designer

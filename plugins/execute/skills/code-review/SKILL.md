@@ -5,6 +5,7 @@ description: |
   Keywords: code review, PR review, quality assessment, security review
 context: fork
 agent: worker
+user-invocable: true
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 

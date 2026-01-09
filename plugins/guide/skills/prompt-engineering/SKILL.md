@@ -76,6 +76,7 @@ Upgrade to a **Hybrid XML/Markdown** structure only when the prompt hits these "
 - `references/patterns.md`: Detailed library of prompt structure patterns.
 - `references/optimization.md`: Systematic refinement and troubleshooting.
 - `references/anti-patterns.md`: Common pitfalls and how to avoid them.
+- `references/execution-protocol.md`: Step-by-step execution guidelines.
 
 ## Assets
 - `assets/examples/few-shot.json`: Curated example datasets for various domains.

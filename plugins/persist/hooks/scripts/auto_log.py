@@ -5,11 +5,15 @@ This runs after Edit, Write, and Bash operations to maintain session history.
 """
 
 import sys
+import os
 import json
 import datetime
 import subprocess
-import os
 from pathlib import Path
+
+plugin_root = os.environ.get("CLAUDE_PLUGIN_ROOT")
+if plugin_root and plugin_root not in sys.path:
+    sys.path.insert(0, plugin_root)
 
 
 def get_project_root():
@@ -48,22 +52,22 @@ def main():
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
         log_entry = f"[{timestamp}] Tool: {tool}\n"
+        log_entry += "<forensics>\n"
+        log_entry += f"  <raw_input>{json.dumps(parameters, default=str)}</raw_input>\n"
 
         if tool == "Edit":
             file_path = parameters.get("file_path", "unknown")
-            log_entry += f"  File: {file_path}\n"
+            log_entry += f"  <target>{file_path}</target>\n"
 
         elif tool == "Write":
-            file_path = parameters.get("file_path", "unknown")
-            log_entry += f"  File: {file_path}\n"
+            file_path = parameters.get("TargetFile", "unknown")
+            log_entry += f"  <target>{file_path}</target>\n"
 
         elif tool == "Bash":
             command = parameters.get("command", "unknown")
-            description = parameters.get("description", "no description")
-            log_entry += f"  Command: {command[:100]}\n"
-            log_entry += f"  Description: {description}\n"
+            log_entry += f"  <command>{command[:200]}</command>\n"
 
-        log_entry += "\n"
+        log_entry += "</forensics>\n\n"
 
         log_path = get_project_root() / ".cattoolkit/context/context.log"
         log_path.parent.mkdir(parents=True, exist_ok=True)
@@ -75,7 +79,7 @@ def main():
 
     except json.JSONDecodeError:
         print(json.dumps({"status": "success"}))
-    except Exception as e:
+    except Exception:
         print(json.dumps({"status": "success"}))
 
 

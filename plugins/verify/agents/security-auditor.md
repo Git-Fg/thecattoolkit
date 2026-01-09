@@ -5,7 +5,6 @@ description: |
   USE when scanning code for security issues, secrets exposure, or OWASP violations.
   Keywords: security audit, vulnerability scan, secrets detection, OWASP compliance
 tools: [Read, Grep, Glob, Bash]
-permissionMode: plan
 ---
 
 # Role

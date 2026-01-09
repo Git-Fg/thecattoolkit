@@ -3,7 +3,7 @@ name: worker
 description: |
   MUST USE when executing plans, implementing features, debugging code, or performing engineering tasks following execution-core behavioral standards as the Universal Builder Worker.
   Keywords: plan execution, implement feature, debug error, fix bug, TDD, refactor, code review
-
+permissionMode: acceptEdits
 tools: [Read, Write, Edit, Bash, Glob, Grep, TodoWrite]
 skills: [execution-core, software-engineering, project-strategy]
 capabilities: ["plan-execution", "tdd-workflow", "debugging-protocol", "uninterrupted-flow", "self-verification"]

@@ -19,21 +19,29 @@ A plan is Claude-executable when Claude can read the PLAN.md and immediately sta
 If Claude has to guess, interpret, or make assumptions - the task is too vague.
 
 ## Prompt Structure
+**Template:** `assets/templates/phase-plan.md`
 
-Use `assets/templates/phase-plan.md` for PLAN.md structure.
+## 3. Plan Components
 
-## Task Anatomy
+### Header Validation
+Every plan MUST start with specific metadata.
 
-Every task has three to four fields (Scope is optional):
+**Required Fields:**
+- `id`: Unique identifier (e.g., `feature-auth-login`)
+- `parent`: ID of parent roadmap item (e.g., `roadmap-q1-2024`)
+- `status`: [proposed | approved | in-progress | complete | blocked]
+- `owner`: Agent responsible (e.g., `executor`)
+- `mode`: [plan | act] (default: `plan`)
 
-### Field: Scope (Optional)
+### Context Section
+**Must include:**
+- **Objective**: Clear 1-sentence goal
+- **Dependencies**: Prerequisite files/PRs
+- **Constraints**: Security, performance, or tech stack limits
+- **Outcome**: Verifiable definition of done
 
-**What it is**: Describe the scope of work - can be file paths, directories, or architectural concepts.
-
-**Good**: `src/app/api/auth/login/route.ts`, "Authentication module", "User database schema"
-**Flexible**: You can be specific with paths or conceptual with module names
-
-Use this to provide context. If the scope is obvious from the Action, you can omit this field.
+### Task List
+**Format:** `assets/templates/phase-plan.md` (See Tasks section), you can omit this field.
 
 ### Field: Action
 
@@ -240,4 +248,4 @@ Good task size: 15-60 minutes of Claude work.
 If a task takes multiple sessions, break it down.
 If a task is trivial, combine with related tasks.
 
-**Note on scope:** If a phase has >7 tasks or spans multiple subsystems, split into multiple plans using the naming convention `{phase}-{plan}-PLAN.md`. See `references/scope-estimation.md` for guidance.
+**Note on scope:** If a phase has >7 tasks or spans multiple subsystems, split into multiple plans using the naming convention `{phase}-{plan}-PLAN.md`.

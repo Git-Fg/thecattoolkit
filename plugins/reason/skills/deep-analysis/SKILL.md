@@ -1,11 +1,13 @@
 ---
 name: deep-analysis
 description: |
-  USE when user requests 'deep analysis', 'strategic analysis', 'comprehensive problem analysis', or 'systematic exploration of complex issues'.
-  Performs autonomous deep discovery using structured thinking frameworks to analyze complex problems comprehensively.
+  MUST use when performing deep analysis, strategic analysis, comprehensive problem analysis, or systematic exploration of complex issues.
+  Applies structured thinking frameworks (First Principles, Inversion, Pareto, 5-Whys) to generate actionable insights autonomously.
+  Keywords: deep analysis, strategic analysis, problem solving, frameworks, first principles, root cause
 context: fork
 agent: strategist
-allowed-tools: Read, Write, Edit, Glob, Grep
+user-invocable: true
+allowed-tools: [Read, Write, Edit, Glob, Grep]
 ---
 
 # Deep Analysis Protocol
@@ -22,6 +24,17 @@ Analyze the provided problem statement and gather relevant context:
 - Map the problem scope and boundaries
 - Collect available data, constraints, and requirements
 - Determine relevant frameworks based on problem type
+
+### Phase 1.5: Discovery Checklist (Autonomous)
+**Objective:** Ensure comprehensive understanding before analysis.
+
+**Protocol:**
+1. Check for existing BRIEF.md, DISCOVERY.md, or context files in `.cattoolkit/planning/`
+2. Scan for related documentation, README files, and architectural decision records
+3. If critical information is missing, document the gap and proceed with **Strategic Assumption** (logged in analysis output)
+4. If analysis is blocked entirely, create HANDOFF.md per `execution-core` protocol
+
+**Never stop to ask the user. Use available context or make documented assumptions.**
 
 ### Phase 2: Multi-Framework Analysis
 Apply multiple thinking frameworks to ensure comprehensive coverage:
@@ -151,23 +164,27 @@ As the brainstormer agent executing this skill:
 5. **Generate actionable recommendations** with clear priorities
 6. **Write complete analysis** to ANALYSIS.md following the output template above
 
-## Framework Selection Guide
+## Framework Selection Guide: Standard Combos
 
-**Complex Strategic Decisions:**
-- Combine: first-principles + second-order + SWOT
-- Add: inversion for risk identification
+**1. "The Hardening Combo" (Robustness & Innovation)**
+- **Frameworks**: First Principles + Inversion
+- **Use when**: Solving "impossible" bugs, architectural refactors, or greenfield design.
+- **Why**: First Principles builds the perfect solution; Inversion ensures it cannot fail.
 
-**Resource Prioritization:**
-- Combine: Pareto + Eisenhower + one-thing
-- Add: opportunity cost analysis
+**2. "The Efficiency Combo" (Speed & Focus)**
+- **Frameworks**: Pareto Principle + Via Negativa
+- **Use when**: Overwhelmed, optimizing performance, or reducing technical debt.
+- **Why**: Pareto identifies the 20% that matters; Via Negativa removes the friction stopping it.
 
-**Problem Diagnosis:**
-- Combine: 5-whys + Occam's Razor + second-order
-- Add: SWOT for situational context
+**3. "The Foresight Combo" (Strategy & Risk)**
+- **Frameworks**: Second-Order Thinking + 10-10-10
+- **Use when**: Making irreversible decisions (migrations, stack choices, hiring).
+- **Why**: Second-Order sees the hidden consequences; 10-10-10 forces long-term honesty.
 
-**Innovation Challenges:**
-- Combine: first-principles + inversion + 10-10-10
-- Add: opportunity cost for trade-offs
+**4. "The Diagnostic Combo" (Root Cause)**
+- **Frameworks**: 5-Whys + Occam's Razor
+- **Use when**: Debugging recurring issues or post-mortems.
+- **Why**: 5-Whys digs deep; Occam's Razor stops you from over-complicating the diagnosis.
 
 ## Quality Standards
 
