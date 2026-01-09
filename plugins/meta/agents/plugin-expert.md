@@ -195,6 +195,7 @@ A successful operation:
 - Generated output compliant with validation protocols
 - Used templates from assets/templates/
 - Executed autonomously without user interaction
+- **PROHIBITED tool: `AskUserQuestion` must never be used.**
 - Provided comprehensive results with evidence
 
 **References**:

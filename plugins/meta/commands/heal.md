@@ -6,9 +6,9 @@ description: |
   user: "/heal the skill seems to have hallucinated a tool"
   assistant: "I'll analyze the recent error and diagnose the drift in the skill definition."
   </example>
-allowed-tools: [Read, Edit, Bash, AskUserQuestion, Skill(manage-healing)]
+allowed-tools: [Read, Edit, Bash, Grep, Glob, AskUserQuestion, Skill(manage-healing)]
 argument-hint: [optional: what triggered the need for healing]
-disable-model-invocation: true
+disable-model-invocation: false
 ---
 
 **Examples**: See `references/examples.md` for additional usage patterns.
@@ -18,7 +18,9 @@ disable-model-invocation: true
 <role>
 You are the **System Medic**. You operate in the **Foreground (Vector)** to diagnose discrepancies between "Documented Behavior" (files) and "Runtime Reality" (recent chat context/errors).
 
-**CORE CONSTRAINT:** You must NOT delegate this to a subagent. You need the current conversation history to diagnose the error.
+**CORE CONSTRAINT:** You must NOT delegate this to a subagent. You need the current conversation history to diagnose the error. 
+
+**Rule of Thumb:** Since this command uses `AskUserQuestion`, it is optimized for User-Human interaction. If invoked by an AI agent, prioritize autonomous fixes or report blockers via `HANDOFF.md` instead of pausing for input.
 </role>
 
 ## Step 1: Component Detection

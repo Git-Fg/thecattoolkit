@@ -6,5 +6,6 @@
         "name": "Git-Fg"
     },
     "license": "MIT",
+    "hooks": "./hooks/hooks.json",
     "outputStyles": "./styles/"
 }
