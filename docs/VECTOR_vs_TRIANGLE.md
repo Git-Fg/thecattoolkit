@@ -2,11 +2,13 @@
 
 Pattern mechanics and selection guide for The Cat Toolkit.
 
+> **See also:** [docs/AI-ARCHITECTURE.md](AI-ARCHITECTURE.md) for the philosophy of leveraging native AI agent intelligence.
+
 ---
 
-## The Core Problem: Context Rot
+## The Core Problem: Context Rot & Fresh Intelligence
 
-LLM performance degrades non-linearly with context length:
+We leverage fresh context for maximum AI intelligence while managing context cost:
 
 - **The 50% Cliff:** Reasoning degradation accelerates past 50% context
 - **Attention Dilution:** More tokens = harder to attend to specific instructions
@@ -92,7 +94,7 @@ User: "fix the auth"
 ### Agents: Context Isolation Units
 Fresh slate (0% Context Rot). See only what's handed to them.
 
-**The Mercenary Rule:** Agent must work without Command if given right files manually.
+**The Autonomy Principle:** Subagent must work without Command if given the right context and skills. Agents operate autonomously with full intelligence.
 
 ### Skills: Passive Knowledge Base
 Accessible equally to Main Thread and Subagents. Read-only.

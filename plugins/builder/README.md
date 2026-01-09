@@ -46,7 +46,7 @@ claude-code "Implement the auth module using TDD"
 
 ## Architecture
 
-The Builder enforces the **Sovereign Triangle** pattern:
+The Builder follows the **Triangle Pattern**:
 - **Command**: `/execute` (implied)
 - **Agent**: `director` (Orchestrator) -> `worker` (Executor)
 - **Skill**: `execution-core` (Behavior), `software-engineering` (Quality)

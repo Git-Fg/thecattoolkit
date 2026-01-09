@@ -82,7 +82,7 @@ Comprehensive delegated analysis with deep exploration.
 ### brainstormer
 Deep thinking agent for comprehensive analysis in isolated context.
 
-**Pattern:** Sovereign Triangle (delegated)
+**Pattern:** Triangle Pattern (delegated)
 
 **Capabilities:**
 - Applies thinking frameworks to complex problems

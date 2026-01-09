@@ -3,20 +3,21 @@
 Official plugin marketplace for **The Cat Toolkit** - Vibecoding plugins for autonomous AI development.
 Huge thanks to https://github.com/glittercowboy/taches-cc-resources ; https://github.com/muratcankoylan/Agent-Skills-for-Context-Engineering and many other for inspiration. 
 
-## Core Philosophy: Atomic Independence & Context Economics
+## Core Philosophy: Native Intelligence & Delegation
 
-This toolkit is built on three non-negotiable pillars that separate "Scripting" from "Agentic Engineering."
+This toolkit is built on three non-negotiable pillars that separate "CLI Tool Thinking" from "AI-Native Engineering."
 
 ### 1. The Law of Atomic Independence
 Every component is a sovereign entity.
-*   **Agents are Mercenaries:** They do not know who called them. They can be hired by a Command, by a User, or by another Agent. They work given an input, produce an output, and vanish.
-*   **Skills are Libraries:** They are passive. They do not contain "active" logic. They are books that can be read by anyone (User or Agent).
-*   **Commands are Receptionists:** They are optional interfaces. They take a messy user request, tidy it up, gather the files, and hand it to an Agent. If the Command is deleted, the Agent still works.
+*   **Agents are Intelligent:** They operate autonomously with full context. They can parse natural language, make decisions, and execute tasks without micromanagement.
+*   **Skills are Libraries:** They are passive. They provide declarative standards and templates. They are books that can be read by anyone (User or Agent).
+*   **Commands are Minimal Wrappers:** They force new tasks while preserving context. They delegate to agents, trusting their intelligence. If the Command is deleted, the Agent still works.
 
-### 2. The Physics of Context Rot
-We acknowledge that LLM intelligence drops significantly as the context window fills.
-*   **The Vector Pattern (/think):** Uses the *current* context. Fast, interactive, but degrades main chat performance. Use for quick thoughts.
-*   **The Triangle Pattern (/brainstorm):** Spawns a Subagent. The Subagent starts with a **Fresh Context (0% Rot)**. Use this for heavy lifting (coding, planning, searching) to ensure maximum intelligence.
+### 2. The Pattern of Fresh Context
+We leverage fresh context for maximum AI intelligence.
+*   **Vector Pattern (/think):** Uses current context with user interaction. Fast, interactive, perfect for surgical tasks.
+*   **Triangle Pattern (/brainstorm):** Spawns a Subagent with **Fresh Context (0% Rot)**. Use this for heavy lifting (coding, planning, searching) to ensure maximum intelligence.
+*   **Time-Server Pattern:** Background execution for long-running tasks with minimal context cost.
 
 ### 3. The Mathematics of Parallelism
 We leverage the "Task" tool to run **Swarm Architectures**.
@@ -28,17 +29,29 @@ We leverage the "Task" tool to run **Swarm Architectures**.
 
 ## Architecture Patterns
 
-### Sovereign Triangle (The Anti-Rot Pattern)
-**Components:** `Command (Generalizer) → Agent (Sanitizer) → Skill (Standard)`
+### Triangle Pattern (Fresh Context)
+**Components:** `Command → Agent → Skill`
 *   **Standard Mode:** One agent solves a complex problem.
 *   **Swarm Mode:** The Command acts as a Load Balancer, spawning multiple agents to attack a problem in parallel (Map-Reduce).
 *   **Why:** Maximum speed, minimum cost, zero context rot.
 
-### Sovereign Vector (The Interactive Pattern)
-**Components:** `Command (Guide) → Skill (Standard)`
+### Vector Pattern (Interactive)
+**Components:** `Command → Skill`
 *   **Logic:** The Command guides the user through a workflow in the main thread.
 *   **Why:** For tasks requiring human feedback loops or teaching.
 *   **Example:** `/think` asks the user questions to select a mental framework.
+
+### Time-Server Pattern (Background Execution)
+**Components:** `Command → Async Agent → Poll → Result`
+*   **Logic:** Background execution for long-running tasks.
+*   **Why:** For tasks >1 minute, side effects, or external dependencies.
+*   **Example:** `/setup` commands for deployment.
+
+### Swarm Pattern (Parallel Execution)
+**Components:** `Command → [Agent A, B, C] → Synthesis`
+*   **Logic:** Multiple agents working in parallel on atomic tasks.
+*   **Why:** For search, audit, or batch operations across large codebases.
+*   **Example:** Auditing all plugins simultaneously.
 
 **[Read the full Architecture Guide (VECTOR_vs_TRIANGLE.md)](docs/VECTOR_vs_TRIANGLE.md)**
 
@@ -132,11 +145,11 @@ Tools to build, maintain, and audit the AI system itself.
 - Plugin building automation
 
 **Commands:**
-- `/build` - Universal entry point for building commands, agents, and skills
+- `/build` - Natural language entry point for building commands, agents, and skills
+- `/heal` - Self-correction and diagnostic protocol
 - `/setup` - Generic deployment command for hooks and scripts
 - `/setup-py` - Deploy Python guard hooks (in guard-python plugin)
 - `/setup-ts` - Deploy TypeScript guard hooks (in guard-ts plugin)
-- `/expert` - Access plugin expert for system maintenance
 
 **Agents:**
 - `plugin-expert` - System maintainer persona for plugin development
@@ -193,7 +206,8 @@ To register your plugin, add it to `.claude-plugin/marketplace.json`:
 
 All plugins must follow these architectural standards:
 
-- **Follow the Sovereign Triangle or Sovereign Vector patterns** (see [docs/VECTOR_vs_TRIANGLE.md](docs/VECTOR_vs_TRIANGLE.md))
+- **Follow the Triangle, Vector, Time-Server, or Swarm patterns** (see [docs/VECTOR_vs_TRIANGLE.md](docs/VECTOR_vs_TRIANGLE.md))
+- **Trust agent intelligence** - Don't micromanage or treat agents like CLI tools (see [docs/AI-ARCHITECTURE.md](docs/AI-ARCHITECTURE.md))
 - **No "Zombie Skill" logic** - Skills must be passive (no active execution or AskUserQuestion)
 - **No Skill-Command Coupling** - Skills don't reference Commands
 - **No Skill-to-Skill Coupling** - Skills must be self-contained (no `../` references)
@@ -206,6 +220,7 @@ See [CLAUDE.md](CLAUDE.md) for complete development guidelines and forbidden pat
 ## Documentation
 
 ### Core Architecture
+- **[docs/AI-ARCHITECTURE.md](docs/AI-ARCHITECTURE.md)** - Native AI agent intelligence vs CLI tools philosophy
 - **[docs/VECTOR_vs_TRIANGLE.md](docs/VECTOR_vs_TRIANGLE.md)** - Comprehensive guide to architectural patterns with examples
 - **[CLAUDE.md](CLAUDE.md)** - Development standards and forbidden patterns
 
@@ -218,14 +233,15 @@ See [CLAUDE.md](CLAUDE.md) for complete development guidelines and forbidden pat
 
 We welcome contributions! Please ensure your plugins:
 
-1. Follow the Sovereign Triangle or Vector architecture patterns
-2. Have no Zombie Skill logic (active execution in Skills)
-3. Have no Skill-Command Coupling (Skills don't reference Commands)
-4. Have no Skill-to-Skill Coupling (Skills must be self-contained)
-5. Have single-purpose skills (agents can leverage multiple skills)
-6. Include comprehensive documentation
-7. Follow the standard directory structure
-8. Use relative paths (no hardcoded absolute paths)
+1. Follow the Triangle, Vector, Time-Server, or Swarm architecture patterns
+2. Trust agent intelligence (don't treat them like CLI tools)
+3. Have no Zombie Skill logic (active execution in Skills)
+4. Have no Skill-Command Coupling (Skills don't reference Commands)
+5. Have no Skill-to-Skill Coupling (Skills must be self-contained)
+6. Have single-purpose skills (agents can leverage multiple skills)
+7. Include comprehensive documentation
+8. Follow the standard directory structure
+9. Use relative paths (no hardcoded absolute paths)
 
 ## License
 

@@ -8,7 +8,7 @@
 The System Designer, Software Architect, or Technical Lead.
 
 ## Overview
-The Architect plugin provides comprehensive system design capabilities including greenfield architecture design, brownfield analysis, architecture pattern selection, and Architecture Decision Record (ADR) documentation. It operates in isolated context (Sovereign Triangle pattern) to perform deep architectural analysis without polluting the main chat context.
+The Architect plugin provides comprehensive system design capabilities including greenfield architecture design, brownfield analysis, architecture pattern selection, and Architecture Decision Record (ADR) documentation. It operates in isolated context (Triangle Pattern) to perform deep architectural analysis without polluting the main chat context.
 
 ## Quick Start
 
@@ -88,14 +88,14 @@ Comprehensive evaluation across Scalability, Reliability, Security, Performance,
 **Skills Used:**
 - architecture (system design workflows, quality criteria)
 
-**Pattern**: Sovereign Triangle (specialized analyst)
+**Pattern**: Triangle Pattern (specialized analyst)
 
 ## Commands
 
 ### /system-design
 **Purpose**: System architecture and design analysis
 
-**Pattern**: Sovereign Triangle (delegates to architect agent)
+**Pattern**: Triangle Pattern (delegates to architect agent)
 
 **Usage:**
 ```bash

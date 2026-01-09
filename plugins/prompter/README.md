@@ -90,7 +90,7 @@ Templates and lifecycle management for prompt artifacts.
 ### prompt-engineer
 Advanced prompt engineering and optimization agent.
 
-**Pattern:** Sovereign Triangle (specialized engineer)
+**Pattern:** Triangle Pattern (specialized engineer)
 
 **Capabilities:**
 - Creates sophisticated prompt structures

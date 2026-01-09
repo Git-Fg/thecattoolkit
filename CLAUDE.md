@@ -115,9 +115,9 @@ See `docs/VECTOR_vs_TRIANGLE.md` for detailed mechanics and examples.
 | Pattern | Composition | Use Case | Context Cost |
 |:--------|:------------|:---------|:-------------|
 | **Vector** | Command + Skill | Surgical edits, <30% context, user guidance needed | Spends current |
-| **Triangle** | Command → Agent → Skill | Heavy lifting, >50% context, no user input needed | New context |
-| **Time-Server** | Command → Async Agent | Long-running (>1 min), fire-and-forget | Background |
-| **Swarm** | Command → [Agent A, B, C] | Parallel search/audit, non-overlapping work | Multiple new |
+| **Triangle** | Command → Subagent → Skill | Heavy lifting, >50% context, no user input needed | New context |
+| **Time-Server** | Command → Async Subagent | Long-running (>1 min), fire-and-forget | Background |
+| **Swarm** | Command → [Subagent A, B, C] | Parallel search/audit, non-overlapping work | Multiple new |
 | **Lazy Discovery** | Agent + Skill | Self-sufficient context acquisition | Fallback |
 
 ### Swarm Orchestration (Map-Reduce)
@@ -129,11 +129,15 @@ See `docs/VECTOR_vs_TRIANGLE.md` for detailed mechanics and examples.
 
 ## V. Command Types
 
+Commands work with both humans and AI agents using natural language:
+
 | Type | Consumer | `disable-model-invocation` | AskUserQuestion |
 |:-----|:---------|:---------------------------|:----------------|
-| A: User-Centric | Human only | `true` | Yes |
-| B: Agent-Ready | AI agents | No | No |
-| C: Hybrid | Both | No | Conditional |
+| User-Centric | Human only | `true` | Yes |
+| Subagent-Ready | AI subagents | `false` | No |
+| Hybrid | Both | `false` | Conditional |
+
+**Key Principle:** Modern commands use natural language and work for both humans and AI subagents. The command type determines interaction patterns, not rigid argument parsing.
 
 ---
 
@@ -307,6 +311,7 @@ Instruction: Analyze login flow.
 
 ## Documentation References
 
+- **docs/AI-ARCHITECTURE.md** - Native AI agent intelligence vs CLI tools philosophy
 - **docs/VECTOR_vs_TRIANGLE.md** - Pattern mechanics and selection guide
 - **README.md** - Installation and marketplace
 - **Plugin READMEs** - Individual plugin documentation
