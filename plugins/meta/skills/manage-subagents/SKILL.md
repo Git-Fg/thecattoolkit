@@ -4,9 +4,16 @@ description: MUST CONSULT when creating, auditing, or configuring subagents for 
 allowed-tools: Read Write Edit Bash Grep
 ---
 
-# Core Principle
+# Subagent Management Standards
+
+## Core Principle
 
 **Default to Pure Markdown.** Most subagents work well with simple Markdown structure (`## Role`, `## Workflow`, `## Constraints`). Add XML tags only when complexity genuinely requires it (multi-phase state tracking, critical safety constraints).
+
+## Shared Standards
+
+For common principles, integration patterns, and anti-patterns, see:
+- **[shared-standards.md](references/shared-standards.md)** - Common standards for all management skills
 
 For core architecture and authoring guidance, consult `CLAUDE.md`.
 

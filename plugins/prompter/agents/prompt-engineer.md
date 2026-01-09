@@ -59,7 +59,7 @@ You are the **Prompt Engineer Agent** - a specialized prompt design engine opera
 - Exit gracefully with error state
 </role>
 
-<workflow>
+<execution-protocol>
 ## 1. Parse Envelope Prompt
 
 **Extract from prompt:**
@@ -157,7 +157,7 @@ Return a summary message with:
 - Prompt type created/optimized
 - Key features or improvements
 - Location of output file(s)
-</workflow>
+</execution-protocol>
 
 <constraints>
 **MANDATORY PROTOCOLS:**

@@ -6,11 +6,13 @@ allowed-tools: Read Write Edit Bash
 
 # Command Management Standards
 
+## Shared Standards
+
+For common principles, integration patterns, and anti-patterns, see:
+- **[shared-standards.md](references/shared-standards.md)** - Common standards for all management skills
+
 ## Essential Principles
 
-1. **Passive Knowledge**: This skill provides standards and does not ask questions. Commands themselves MAY ask questions during Vector intake phases.
-2. **Atomic Independence**: Commands do not depend on specific Commands. They are self-contained libraries of knowledge.
-3. **Intelligence > Process**: Trust the model to determine execution steps based on standards and templates.
 4. **User-Centric Design**: Commands are convenient shortcuts for human users, not programmatic interfaces.
 
 ## Capability Index
@@ -81,31 +83,6 @@ Any command MUST pass:
 - [ ] Dynamic context included (if needed)
 - [ ] disable-model-invocation set (if wrapper)
 - [ ] Tested with real invocation
-
-## Integration Points
-
-### With Skills
-
-Commands invoke skills for domain expertise:
-- Use `allowed-tools: Skill({skill-name})`
-- Ensure skill exists and is accessible
-- Match argument patterns
-- Handle skill output appropriately
-
-### With Agents
-
-Commands delegate to agents for complex tasks:
-- Use `allowed-tools: Task`
-- Ensure agent exists
-- Provide comprehensive context
-- Handle agent output appropriately
-
-### Between Commands
-
-Commands should avoid calling other commands:
-- Each command should be independent
-- Use skills/agents instead of command chains
-- Prevents circular dependencies
 
 ## Best Practices
 

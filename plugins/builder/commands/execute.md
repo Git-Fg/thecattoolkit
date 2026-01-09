@@ -17,6 +17,7 @@ description: |
   assistant: "I'll prepare the context envelope and delegate to director."
   </example>
 allowed-tools: [Task, Read]
+disable-model-invocation: true
 ---
 
 # Plan Execution Wrapper

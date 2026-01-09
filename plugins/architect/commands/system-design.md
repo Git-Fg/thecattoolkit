@@ -18,6 +18,7 @@ description: |
   </example>
 allowed-tools: [Task, Read]
 argument-hint: [system requirements, design task, or architecture analysis request]
+disable-model-invocation: true
 ---
 
 # System Design Wrapper

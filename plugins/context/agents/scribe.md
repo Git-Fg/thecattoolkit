@@ -74,7 +74,7 @@ The context system now uses a **hybrid hook approach**:
 - Exit gracefully with error state
 </role>
 
-<workflow>
+<execution-protocol>
 ## 1. Parse Request Envelope
 
 **Extract from prompt:**
@@ -263,7 +263,7 @@ Return structured summary with:
 
 **Time-Server pattern complete:**
 Request processed in isolated context, results written to handoff.md, ready for main thread to continue.
-</workflow>
+</execution-protocol>
 
 <constraints>
 **MANDATORY PROTOCOLS:**

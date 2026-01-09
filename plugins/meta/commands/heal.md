@@ -6,15 +6,12 @@ description: |
   user: "/heal the skill seems to have hallucinated a tool"
   assistant: "I'll analyze the recent error and diagnose the drift in the skill definition."
   </example>
-  <example>
-  Context: An agent entered an infinite loop
-  user: "/heal the agent keeps looping"
-  assistant: "I'll diagnose the missing constraint in the agent definition and propose a fix."
-  </example>
 allowed-tools: [Read, Edit, Bash, AskUserQuestion, Skill(manage-healing)]
 argument-hint: [optional: what triggered the need for healing]
 disable-model-invocation: true
 ---
+
+**Examples**: See `references/examples.md` for additional usage patterns.
 
 # Self-Correction Orchestrator (Vector)
 
@@ -70,5 +67,23 @@ Present the fix to the user using the **Diff Presentation Standard**:
 2. **Apply Only:** Edit file, leave unstaged.
 3. **Refine:** User provides feedback on the fix.
 4. **Cancel:** Abort.
+
+## Emergency Bootstrap Recovery
+
+If `/build` or `/heal` commands are corrupted and cannot be repaired through normal diagnosis:
+
+**Action:**
+1. **Detect Corruption:** Attempt to read the command file - if unreadable or invalid YAML/XML
+2. **Restore from Git:** Use `git checkout HEAD -- plugins/meta/commands/[filename].md`
+3. **Verify Restoration:** Read the restored file to ensure it's valid
+4. **Proceed with Healing:** Now that tools are restored, continue with normal healing protocol
+
+**Example:**
+```
+Corrupted file detected: plugins/meta/commands/build.md
+Recovery: git checkout HEAD -- plugins/meta/commands/build.md
+Status: File restored from HEAD
+Next: Run /heal to ensure all components are functioning
+```
 
 **Constraint:** Do not edit without explicit approval.

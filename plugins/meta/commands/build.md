@@ -1,22 +1,12 @@
 ---
 description: |
-  [Execution] Orchestrate the creation or audit of a toolkit component (Skill, Agent, Command). Use /expert for ad-hoc maintenance tasks.
+  [Execution] Orchestrate the creation or audit of a toolkit component (Skill, Agent, Command, Hook).
   <example>
   Context: User wants to create a component
   user: "Build a new skill for database validation"
   assistant: "I'll orchestrate the creation of a database validation skill using the manage-skills standards."
   </example>
-  <example>
-  Context: Component audit
-  user: "Build audit our agents for compliance"
-  assistant: "I'll use the build command to audit agent configurations against standards."
-  </example>
-  <example>
-  Context: Structured component creation
-  user: "Build command create new-review"
-  assistant: "I'll orchestrate creating a new review command using the manage-commands standards."
-  </example>
-allowed-tools: Task, Read, Glob, Grep, Skill(manage-skills), Skill(manage-commands), Skill(manage-subagents), Skill(manage-hooks), Skill(manage-styles)
+allowed-tools: Task, Read, Glob, Grep, Bash, Skill(manage-skills), Skill(manage-commands), Skill(manage-subagents), Skill(manage-hooks), Skill(manage-styles)
 argument-hint: [type] [name] [intent]
 disable-model-invocation: true
 ---
@@ -42,6 +32,16 @@ Locate the relevant management skill for the component type:
 
 Identify existing similar components as reference patterns to ensure structural consistency.
 
+## State Check (Idempotency)
+
+Before delegating, check if this operation has already been completed:
+
+1. **Read cache**: Load `.cattoolkit/state/build-cache.json`
+2. **Generate operation key**: Create fingerprint from `$1` (type), `$2` (name), `$3` (intent)
+3. **Check cache**: Does this key exist with a completion status?
+4. **If cached and completed**: Return message: "Operation `$2` ($1) was already completed on [timestamp]. No changes needed."
+5. **If not cached**: Proceed with delegation and update cache after completion.
+
 ## 3. The Envelope (Triangle Phase)
 
 Launch the `plugin-expert` subagent with the following flat semantic structure:
@@ -64,3 +64,25 @@ Use templates from the skill's assets as your baseline.
 ## 4. Report Results
 
 Return the agent's findings to the user with clear explanation of what was accomplished and any relevant findings from the standards application.
+
+## 5. Update Cache (Post-Execution)
+
+After successful completion:
+
+1. **Generate operation key**: Create fingerprint from `$1`, `$2`, `$3`
+2. **Update cache**: Append to `.cattoolkit/state/build-cache.json`:
+   ```json
+   {
+     "operations": {
+       "operation_key": {
+         "type": "$1",
+         "name": "$2",
+         "intent": "$3",
+         "timestamp": "[current timestamp]",
+         "status": "completed"
+       }
+     },
+     "lastUpdated": "[current timestamp]"
+   }
+   ```
+3. **Persist**: Save updated cache to disk

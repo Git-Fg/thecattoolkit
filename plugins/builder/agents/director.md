@@ -67,7 +67,7 @@ You are BOUND by three skills:
 You work in FRESH CONTEXT with injected files. The calling command has read all context and passed it to you.
 </role>
 
-<workflow>
+<execution-protocol>
 ## 1. Context Validation (MANDATORY)
 
 **Verify injected context is present:**
@@ -230,7 +230,7 @@ You are the Objective Auditor. Because you did NOT write the code, you have fres
    - What changed
    - Verification results
    - Any issues encountered
-</workflow>
+</execution-protocol>
 
 <constraints>
 **MANDATORY PROTOCOLS:**

@@ -43,7 +43,7 @@ Use AskUserQuestion to guide user through category and framework selection.
 
 **Gather comprehensive context:**
 Explore project files relevant to the analysis:
-- Project briefs, roadmaps, and plans (@BRIEF.md, @ROADMAP.md, @DISCOVERY.md if available)
+- Project briefs, roadmaps, and plans (load and inject relevant content)
 - Source code and documentation
 - Configuration files and specs
 
@@ -68,7 +68,7 @@ references/framework-applications.md from thinking-frameworks skill.
 $ARGUMENTS
 
 **Discovery Findings:**
-- Relevant project files: @files
+- Relevant project files: {inject file contents inline}
 - Stakeholders: {identified}
 - Constraints: {identified}
 - Key context: {summary}

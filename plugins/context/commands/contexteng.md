@@ -10,12 +10,11 @@ argument-hint: [create-handoff|archive-session|setup]
 disable-model-invocation: true
 ---
 
-# Context Engineering Command
-
+<role>
 **🆕 HYBRID HOOK-POWERED ARCHITECTURE**: Command hooks handle deterministic operations, prompt hooks provide intelligent decisions with robust XML output.
+</role>
 
-## Hook System Architecture
-
+<architecture>
 **Command Hooks** (deterministic, fast):
 - ✅ **SessionStart**: Auto-loads plan and scratchpad from Planner
 - ✅ **PostToolUse**: Auto-logs all Edit/Write/Bash operations
@@ -24,25 +23,25 @@ disable-model-invocation: true
 **Prompt Hooks** (intelligent, LLM-powered, XML output):
 - ✅ **Stop**: Decides if handoff needed before stopping (XML-based response)
 - ✅ **SubagentStop**: Verifies context operations completed successfully (XML-based response)
+</architecture>
 
-## Operations
-
+<operations>
 **Deployment** (run once when installing context plugin):
 - `setup` - Deploy context hooks to .cattoolkit/hooks/ with absolute paths (no ${CLAUDE_PLUGIN_ROOT} needed)
 
 **Manual Operations** (use when needed):
 - `create-handoff` - Consolidate memory into portable handoff document
 - `archive-session` - Create complete session archive (zip context.log + scratchpad)
+</operations>
 
-## Hook System Benefits
-
+<benefits>
 - **Zero Friction**: No more "forgot to initialize" - it's automatic
 - **Single Source of Truth**: Context reads Planner files directly
 - **Perfect Memory**: Every action logged automatically
 - **Token Efficiency**: File-based context vs. chat history
+</benefits>
 
-## When to Use
-
+<usage-guidelines>
 **Use this command for:**
 - Creating portable handoffs for next session/agent
 - Archiving completed work
@@ -52,3 +51,4 @@ disable-model-invocation: true
 - Initialization (automatic via SessionStart hook)
 - Logging (automatic via PostToolUse hook)
 - Context tracking (automatic via hooks)
+</usage-guidelines>

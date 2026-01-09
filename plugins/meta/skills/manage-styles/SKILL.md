@@ -13,6 +13,11 @@ allowed-tools: Read Write Edit Bash
 3. **Analytical Summaries**: Significant outputs must include Reflection and Next Relevant Tasks.
 4. **Passive Knowledge**: This skill provides standards; it does not execute them.
 
+## Shared Standards
+
+For common principles, integration patterns, and anti-patterns, see:
+- **[shared-standards.md](references/shared-standards.md)** - Common standards for all management skills
+
 ## Knowledge Base
 
 ### 1. Style Standards
@@ -32,14 +37,6 @@ Ready-to-use communication patterns:
 
 ### Templates (`assets/templates/`)
 - `persona-style.md`: Template for creating new persona-based output styles.
-
-## Integration Points
-
-### With Agents
-Agents load this skill to ensure output matches the toolkit "vibe" and structure. Apply truth-first, solo-developer focused tone by default.
-
-### With Commands
-Commands reference style standards for user communication, error messages, and status reports.
 
 ## Success Criteria
 

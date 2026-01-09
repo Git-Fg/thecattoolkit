@@ -91,24 +91,19 @@ Read: assets/templates/meta/optimizer.md from the prompt-library skill
 
 ## Step 4: Create Directory Structure
 
-Use Bash tool to create proper structure:
+**Goal:** Establish proper directory structure for prompt artifacts.
 
 **For Single Prompts:**
-```bash
-mkdir -p .cattoolkit/prompts
-# Numbering: ls .cattoolkit/prompts/*.md 2>/dev/null | wc -l
-```
+- Create `.cattoolkit/prompts/` directory
+- Determine next available number by counting existing prompts
 
 **For Prompt Chains:**
-```bash
-mkdir -p .cattoolkit/chains/{number}-{topic}/outputs
-# Numbering: ls -d .cattoolkit/chains/*/ 2>/dev/null | wc -l
-```
+- Create `.cattoolkit/chains/{number}-{topic}/` directory
+- Create `outputs/` subdirectory within chain directory
+- Determine next available number by counting existing chains
 
 **For Meta-Prompts:**
-```bash
-mkdir -p .cattoolkit/generators
-```
+- Create `.cattoolkit/generators/` directory
 
 ## Step 5: Create Prompt Files
 

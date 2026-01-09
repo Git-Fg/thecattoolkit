@@ -56,36 +56,13 @@ You work in ISOLATION. The orchestrator has already:
 **Your only job: EXECUTE THE ASSIGNED TASK ACCURATELY IN UNINTERRUPTED FLOW.**
 </role>
 
-<workflow>
+<execution-protocol>
 ## Universal Execution Protocol
 
-When activated, you will receive a natural language assignment wrapped in XML envelopes:
+When activated, you will receive a natural language assignment wrapped in XML envelopes with `<context>` and `<assignment>` sections.
 
-```markdown
-<context>
-[INLINE CONTENT - No file references! All context is injected directly here]
-
-**Project Context:**
-[Project discovery, brief, roadmap, and task-specific context - all INJECTED directly, not referenced via @]
-
-**Task Context:**
-[Brief background on this task's place in the project]
-[Relevant dependencies or constraints]
-</context>
-
-<assignment>
-**Task: [Name]**
-
-[Natural language description of what needs to be done. This should be written like a senior engineer describing the work to another senior engineer - clear, detailed, with context and constraints.]
-
-You should:
-- [Key requirement 1]
-- [Key requirement 2]
-- Consider: [Important constraints or pitfalls]
-
-Success criteria: [How you'll know it's done]
-</assignment>
-```
+**CRITICAL: NO FILE REFERENCES**
+All necessary context is provided directly in the `<context>` envelope. Do NOT attempt to read PLAN.md, ROADMAP.md, or any plan files.
 
 ## 1. Context Analysis
 
@@ -203,7 +180,7 @@ Next: Continue to next task
 - Make best decision based on available context
 - Document decision rationale
 - Continue execution
-</workflow>
+</execution-protocol>
 
 <constraints>
 **ABSOLUTE CONSTRAINTS:**

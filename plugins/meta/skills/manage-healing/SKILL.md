@@ -8,6 +8,11 @@ allowed-tools: Read
 
 Diagnostic logic for identifying why an AI component failed and repair strategies to fix it. Used by the `/heal` command in main context.
 
+## Shared Standards
+
+For common principles, integration patterns, and anti-patterns, see:
+- **[shared-standards.md](references/shared-standards.md)** - Common standards for all management skills
+
 ## Diagnostic Reference
 
 ### 1. Skill Drifts
@@ -56,13 +61,12 @@ If the model hallucinated a file path:
 
 ## Bootstrap Protocol (Emergency Recovery)
 
-When core tools (`/build`, `/heal`, `hook-tester.py`) are broken, use the Safe Mode Bootstrap to restore system integrity via git.
-
-**Action:** Invoke `/bootstrap <path>` to restore files from HEAD, bypassing complex agent logic.
+When core tools (`/build`, `/heal`) are corrupted, use git restore to recover. See `/heal` command's "Emergency Bootstrap Recovery" section for protocols.
 
 ## Knowledge Base
 
 | Reference | Purpose |
 |-----------|---------|
+| [shared-standards.md](references/shared-standards.md) | Common standards for all management skills |
 | [diagnosis-patterns.md](references/diagnosis-patterns.md) | Decision tree for root cause analysis |
 | [bootstrap-protocol.md](references/bootstrap-protocol.md) | Emergency git-based recovery procedures |
