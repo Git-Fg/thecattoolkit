@@ -4,7 +4,7 @@ description: |
   USE when user asks to 'apply a framework', 'think strategically', 'analyze a decision', 'brainstorm', or 'prioritize options'.
   Structured thinking patterns for analysis, decision-making, and prioritization (first-principles, SWOT, Pareto, 5-whys, Eisenhower).
 context: fork
-agent: brainstormer
+agent: strategist
 allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
