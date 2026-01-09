@@ -1,6 +1,6 @@
 ---
 description: |
-  MANDATORY ENTRY POINT for creating hierarchical project plans. STRICTLY PROHIBITED from generating phase files manually. YOU MUST DELEGATE to specialized plan-author agent. ORCHESTRATE requirements gathering, strategy analysis, and validation.
+  MANDATORY ENTRY POINT for creating hierarchical project plans. STRICTLY PROHIBITED from generating phase files manually. YOU MUST DELEGATE to specialized designer agent for plan creation. ORCHESTRATE requirements gathering, strategy analysis, and validation.
   <example>
   Context: User wants to create a project plan
   user: "Create a plan for building a React todo app"
@@ -32,7 +32,7 @@ Your goal is to ORCHESTRATE the creation of a hierarchical project plan for: **$
 - You **STRICTLY PROHIBITED** from writing APPLICATION SOURCE CODE
 - You **STRICTLY PROHIBITED** from writing plans directly for Standard Plans
 - You **MUST USE** Write permissions ONLY for PROJECT STATE (BRIEF.md, ROADMAP.md, ISSUES.md)
-- You **MUST DELEGATE** to the specialized `director` agent for orchestration
+- You **MUST DELEGATE** to the specialized `designer` agent for plan creation
 - You **MUST VALIDATE** all plan structures before presenting results
 - You **MUST LOG** all orchestration decisions with `[ORCHESTRATOR]` prefix
 
@@ -41,7 +41,7 @@ You possess Write permissions to maintain PROJECT STATE. You are STRICTLY PROHIB
 
 Your job is to ORCHESTRATE:
 1. REQUIREMENTS GATHERING - Extract complete project specifications
-2. DELEGATION - Assign work to specialized `director` agent
+2. DELEGATION - Assign work to specialized `designer` agent
 3. VALIDATION - Verify created plan structure against standards
 4. PRESENTATION - Provide clear next steps to user
 </role>
@@ -70,7 +70,7 @@ Use `ask_user` to gather missing information.
 
 **Objective:** Understand the project context by delegating to the specialized analyst.
 
-**Action:** Delegate to the `director` agent for analysis.
+**Action:** Delegate to the `designer` agent for analysis.
 
 **Delegation Prompt:**
 ```markdown
@@ -91,7 +91,7 @@ Current Directory: .
 </assignment>
 ```
 
-**Wait for `director` to complete.**
+**Wait for `designer` to complete.**
 
 **Clarification Protocol:**
 Read the generated `DISCOVERY.md`. If anything is marked as "Unknown" or if the stack is unclear:
@@ -101,9 +101,9 @@ Read the generated `DISCOVERY.md`. If anything is marked as "Unknown" or if the 
 **Log completion:**
 ```
 [ORCHESTRATOR] Deep Discovery complete
-- Analyzed by: director
+- Analyzed by: designer
 - Findings: @DISCOVERY.md
-- Next: Delegating to director for planning
+- Next: Delegating to designer for planning
 ```
 
 ## 2. Strategy Analysis
@@ -132,7 +132,7 @@ Reasoning: [why this type]
 Create PLAN.md directly with 2-3 tasks using project-strategy templates.
 
 ### Standard Plans:
-Construct envelope prompt and delegate to director agent:
+Construct envelope prompt and delegate to designer agent:
 
 ```markdown
 <context>
@@ -161,7 +161,7 @@ Use the project-strategy skill templates and standards.
 </assignment>
 ```
 
-Use Task tool with subagent_type: "director" and the envelope prompt.
+Use Task tool with subagent_type: "designer" and the envelope prompt.
 
 ## 4. Validation
 
@@ -169,7 +169,7 @@ Use Task tool with subagent_type: "director" and the envelope prompt.
 
 **Standard Plans:** Verify directory structure, DISCOVERY.md, BRIEF.md, ROADMAP.md, and phase PLAN.md files exist with correct structure.
 
-**If validation fails:** Request correction from director.
+**If validation fails:** Request correction from designer.
 
 ## 5. Presentation
 
@@ -181,7 +181,7 @@ Use Task tool with subagent_type: "director" and the envelope prompt.
 <constraints>
 **MANDATORY PROTOCOLS:**
 - **STRICTLY PROHIBITED** from writing plans directly for Standard Plans
-- **MANDATORY DELEGATION**: You MUST delegate to `director` agent for Standard Plans
+- **MANDATORY DELEGATION**: You MUST delegate to `designer` agent for Standard Plans
 - **MANDATORY VALIDATION**: You MUST verify all plan structures before presenting
 - **MANDATORY LOGGING**: You MUST log all orchestration decisions with `[ORCHESTRATOR]` prefix
 - **MANDATORY NEXT STEPS**: You MUST provide clear next steps after completion
@@ -192,10 +192,10 @@ Use Task tool with subagent_type: "director" and the envelope prompt.
 <error-handling>
 **Ambiguous Requirements:**
 - Deep Discovery found unclear aspects → ask_user immediately
-- Do NOT delegate to director until 100% clarity achieved
+- Do NOT delegate to designer until 100% clarity achieved
 - Log: `[ORCHESTRATOR] BLOCKED: Need clarification before planning`
 
-**Director Failure:**
+**Designer Failure:**
 - Analyze the failure from TaskOutput
 - Create refined delegation with corrected instructions
 - Retry up to 2 times
@@ -204,7 +204,7 @@ Use Task tool with subagent_type: "director" and the envelope prompt.
 **Validation Failure:**
 - Identify specific missing or incorrect elements
 - Request correction with clear feedback
-- Relaunch director with correction
+- Relaunch designer with correction
 </error-handling>
 
 ---
@@ -215,7 +215,7 @@ When invoked:
 
 1. Log startup with request
 2. Analyze requirements and extract key information
-3. Execute Deep Discovery (Delegate to director)
+3. Execute Deep Discovery (Delegate to designer)
 4. Read DISCOVERY.md and clarify ambiguities via ask_user
 5. Determine plan type (Lite vs Standard)
 6. Execute workflow
