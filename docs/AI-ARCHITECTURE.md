@@ -19,9 +19,9 @@ This document defines the architecture of AI-powered development where the AI is
 
 ### Cognitive Capabilities
 
-- **Slash Commands are "Intent Envelopes":** Templates that wrap user's raw intent into a format the Native Intelligence can process.
-- **Agents are "Contextual Personas":** State-shifts in the same conversation. When an agent is spawned, Claude puts on a specialized pair of glasses.
-- **Skills are "Procedural Lenses":** Standard operating procedures. The agent doesn't "run" a skill; it "adopts the mindset."
+- **Slash Commands are "Prompt Definitions":** Markdown files containing instructions FOR Claude. They scope capabilities via `allowed-tools`.
+- **Agents are "Autonomous Specialists":** Triggered via the **Task tool** when their `description` matches the need. Claude launches them as sub-processes.
+- **Skills are "Procedural Lenses":** Standards and methodologies auto-loaded when listed in agent frontmatter.
 - **The SlashCommand Tool is "Self-Recursion":** An agent can invoke pre-defined workflows autonomously.
 
 ---
@@ -30,26 +30,38 @@ This document defines the architecture of AI-powered development where the AI is
 
 The architecture is defined by the **Recursive Invocation Path** with clear separation of State, Autonomy, and Protocol:
 
-### 1. Commands = State Manager
-User input triggers a Command. The Command doesn't execute; it **Contextualizes** and manages the "Where we are" in any multi-phase workflow.
+### 1. Commands = Prompt Templates
+User input triggers a Command. The Command provides instructions that guide Claude's orchestration.
 
 - Uses `!` syntax to gather "Ground Truth" (git status, file lists)
-- Injects context into the conversation via XML envelopes
+- Injects context through natural language prompting
 - Captures natural language with `$ARGUMENTS`
 - Manages `.local.md` files that track workflow phase state
 
-### 2. Agents = Task Specialist
-The Command uses the `Task` tool to spawn an Agent. The Agent doesn't need to know about other phases; it just needs to be the best specialist for 5 minutes.
+### 2. Agents = Task Specialists (via Task Tool)
+The Command instructs Claude to use the **Task tool** to spawn an Agent. The Agent is selected based on its `description` frontmatter—this is the API.
 
 **Native Capacities:**
 - Agent reads its own `description` and `examples` to understand its "Start State"
 - Agent automatically adopts any `skills` listed in its frontmatter
 - Agent has full intelligence—trust it to select tools
+- Agent reports back to orchestrator when complete
 
 ### 3. Skills = Procedural Anchor
 If an Agent discovers it needs a standard workflow (e.g., a `feature-dev` agent realizes it needs to commit code), it uses the SlashCommand tool to invoke `/commit` programmatically. Skills ensure the Agent's execution matches the project's specific style and standards.
 
 **This is the "Collective Intelligence" pattern:** The toolkit's own commands become tools for the agents.
+
+### 4. The Hook System (Governance)
+Hooks are the **Immune System**—they run BEFORE the AI acts.
+
+| Hook Event | Trigger | Use Case |
+|:-----------|:--------|:---------|
+| `PreToolUse` | Before tool execution | Block risky ops, modify inputs |
+| `PostToolUse` | After tool success | Run linters, formatters |
+| `UserPromptSubmit` | Before prompt processing | Auto-activate skills |
+
+Hooks are defined in `hooks.json` files and map events to enforcement scripts. See `docs/HOOKS-STANDARDS.md` for implementation details.
 
 ---
 
@@ -62,11 +74,11 @@ If an Agent discovers it needs a standard workflow (e.g., a `feature-dev` agent 
 | Component | Context Visibility |
 |:----------|:-------------------|
 | Main Thread | Full conversation history |
-| Subagent | Fresh context + explicit envelope content |
-| Nested Subagent | Envelope from parent only |
+| Agent (via Task tool) | Fresh context + explicit prompt content |
+| Nested Agent | Instructions from parent only |
 
 ### Benefits
-- Subagents can reference user preferences or errors from earlier messages
+- Agents can reference project context passed via prompts
 - Commands can inject precise context without repetition
 - Skills are accessible equally to any context level
 
@@ -94,25 +106,43 @@ We leverage native capacity by not "Dumping" all information at once.
 | Path | Leverage Strategy |
 |:-----|:------------------|
 | **Cmd → Skill** | "Global Guards" or "Standards" visible to user (Vector Pattern). |
-| **Cmd → Subagent** | "Heavy Lifting" where user only wants result (Triangle Pattern). |
-| **Subagent → Skill** | Agent "Self-Onboards" by reading skill. No manual loading needed. |
-| **Subagent → Cmd** | Agent uses toolkit commands for standardized side-effects (e.g., `/heal`). |
-| **Subagent → Subagent** | **Swarm Logic:** One "Director" spawns multiple "Worker" agents for parallel operations. |
+| **Cmd → Agent** | Uses Task tool. "Heavy Lifting" where user only wants result (Triangle Pattern). |
+| **Agent → Skill** | Agent "Self-Onboards" by reading skill. No manual loading needed. |
+| **Agent → Cmd** | Agent uses toolkit commands for standardized side-effects (e.g., `/heal`). |
+| **Agent → Agent** | **Swarm Logic:** Orchestrator spawns multiple "Worker" agents for parallel operations. |
+
+### Swarm Orchestration (Map-Reduce)
+
+The most powerful pattern for parallel work:
+
+```
+1. Command instructs: "Launch X agents in parallel to do Y"
+     ↓
+2. Claude uses Task tool to spawn multiple agents
+     ↓
+3. Each agent executes independently (shared-nothing)
+     ↓
+4. Agents report back to orchestrator
+     ↓
+5. Command synthesizes final result
+```
+
+> **Native Instruction:** Claude natively understands "launch X agents in parallel" instructions. No special syntax required.
 
 ### The Triangle of Trust
 
-The most powerful interaction is the **Triangle of Trust**:
+The fundamental interaction pattern:
 
 ```
 1. User types Command
      ↓
-2. Command spawns Subagent (Triangle pattern for isolated context)
+2. Command uses Task tool to launch Agent (fresh context)
      ↓
-3. Subagent auto-loads Skill (to get the "rules")
+3. Agent auto-loads Skills from frontmatter
      ↓
-4. Subagent uses Tools (MCP/Bash) to execute
+4. Agent uses Tools (MCP/Bash) to execute
      ↓
-5. Subagent reports back to Command, which updates State for User
+5. Agent reports back to Command, which updates State for User
 ```
 
 > **Philosophy:** Trust the AI's **Native Reasoning** (Agent) but verify it against your **Documented Protocol** (Skill), all while maintaining the **User's Context** (Command). This separation prevents "Prompt Bloat" and makes the system modular and easy to debug.
@@ -196,9 +226,9 @@ The most powerful interaction is the **Triangle of Trust**:
 **Solution:** `argument-hint: [natural language request]` with `$ARGUMENTS`.
 
 ### 3. Black Box Assumption
-**Problem:** Treating subagents as completely isolated processes.
+**Problem:** Treating agents as completely isolated processes.
 
-**Solution:** Understand they inherit conversation awareness. Use phase boundaries.
+**Solution:** Understand agents report back to orchestrators. Use phase boundaries.
 
 ### 4. Over-Prescription
 **Problem:** "Run ls, then grep, then parse output..."

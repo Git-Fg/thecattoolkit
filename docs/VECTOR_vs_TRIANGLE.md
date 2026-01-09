@@ -36,7 +36,7 @@ Executes inside current context window. Interacts with user directly.
 ### Triangle (Cold Path)
 **Composition:** `Command → Agent → Skill`
 
-Launches subagent in fresh context with full attention capacity.
+Command uses **Task tool** to launch agent in a new branch of context which don't reduce attention capacity of main Ai Agent.
 
 **When to use:**
 - Context >50%
@@ -44,7 +44,6 @@ Launches subagent in fresh context with full attention capacity.
 - Fire-and-forget (no user input)
 - Output matters, not process
 
-**Why it works:** Subagent starts at ~2k tokens. Full attention capacity.
 
 ### Swarm (Parallel Triangle)
 **Composition:** `Command → [Agent A, B, C] → Skill`
@@ -60,6 +59,8 @@ Multiple specialized agents simultaneously.
 - 5 agents searching 5 dirs = 1/5th time
 - Zero context bleed (enforced modularity)
 - Shared-Nothing: If Agent A needs Agent B's output → cannot parallelize
+
+**Native Syntax:** Command instructs Claude: *"Launch X agents in parallel to do Y."* or "spawn X async subagents to do Y." Claude natively understands this instruction.
 
 ### Time-Server (Async)
 **Composition:** `Command → Async Agent → Poll → Result`
@@ -81,23 +82,25 @@ Background execution with `run_in_background: true`.
 
 ## Component Roles
 
-### Commands: Prompt Generalizers
-Transform vague requests into crystalline envelopes.
+### Commands: Prompt Definitions
+Provide instructions FOR Claude that transform vague requests into orchestrated workflows.
 
 ```
 User: "fix the auth"
-    ↓ Command sanitizes
-<context>@src/auth/user.ts @docs/architecture.md</context>
-<assignment>Analyze auth flow. Return security audit.</assignment>
+    ↓ Command instructs Claude
+"Analyze the authentication flow in src/auth/.
+Identify the source of the login failures.
+Fix any security vulnerabilities found.
+Report what was changed."
 ```
 
-### Agents: Context Isolation Units
-Fresh slate (0% Context Rot). See only what's handed to them.
+### Agents: Autonomous Specialists
+Triggered via Task tool based on `description` frontmatter. Fresh context (0% Context Rot).
 
-**The Autonomy Principle:** Subagent must work without Command if given the right context and skills. Agents operate autonomously with full intelligence.
+**The Autonomy Principle:** Agent must work without Command if given the right context and skills. Agents operate autonomously with full intelligence.
 
 ### Skills: Passive Knowledge Base
-Accessible equally to Main Thread and Subagents. Read-only.
+Accessible equally to Main Thread and Agents. Read-only. Auto-loaded when listed in agent frontmatter.
 
 ---
 

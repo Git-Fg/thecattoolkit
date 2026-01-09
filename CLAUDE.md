@@ -84,13 +84,13 @@ Scripts must be self-contained, include error messages, and handle edge cases. V
 
 The architecture is defined by **Separation of Concerns between Intent, Intelligence, and Protocol**:
 
-| Component | Role | Anchor | Where Logic Lives |
-|:----------|:-----|:-------|:------------------|
-| **Command** | Intent & State | The Human's Will | Orchestration: defines the "What" and manages user interaction |
-| **Agent** | Intelligence & Autonomy | The Expert's Mind | Execution: determines the "How" dynamically |
-| **Skill** | Protocol & Knowledge | The System's Laws | Guidelines: defines the "Rules of the Game" |
+| Component | Role | Native Mechanic | Where Logic Lives |
+|:----------|:-----|:----------------|:------------------|
+| **Command** | Prompt Definition | Markdown file with instructions FOR Claude | Orchestration: defines the "What" via `allowed-tools` |
+| **Agent** | Autonomous Capability | Triggered via **Task tool** when `description` matches | Execution: determines the "How" dynamically |
+| **Skill** | Passive Knowledge | Auto-loaded if listed in agent frontmatter | Guidelines: defines the "Rules of the Game" |
 
-> **The Skill-Informed Agent Pattern:** Commands are thin wrappers that gather context and delegate. Skills are passive libraries containing standards, not execution logic. Agents bridge intent and protocol—they read Skills to ensure quality, but determine execution autonomously.
+> **The Skill-Informed Agent Pattern:** Commands are prompt templates that instruct Claude to orchestrate. Skills are passive libraries. Agents are triggered by their `description` frontmatter—this field is the API.
 
 ### The .cattoolkit Root
 All runtime artifacts stored in `.cattoolkit/`:
@@ -103,7 +103,7 @@ All runtime artifacts stored in `.cattoolkit/`:
 Agents must be **mercenary**: they should never assume they are part of a specific command.
 
 - **Caller Independence:** Agents MUST NOT reference plugin-specific files in system prompts
-- **Envelope Injection:** Commands inject content via envelope pattern, never `@file` references
+- **Context via Prompting:** Commands inject content via natural language prompts, not XML envelopes
 - **Zero Shared State:** Plugins function independently
 - **Eternal Skills:** Commands are transient; Skills are eternal. Domain expertise lives in Skills, not Agent system prompts.
 
@@ -247,13 +247,25 @@ Trust the model. Declarative over procedural. Universal over specific.
 | "Execute these grep commands: ..." | "Search for authentication patterns" |
 | "Use the Read tool on path/to/file.ts" | "Read the config file in the src folder" |
 
-### 6. Hook Safety Standards
+### 6. Law of Description
+> **"Agents are triggered by their `description` frontmatter. This field is the API."**
+
+The `description` must contain examples of when to trigger. Claude uses this field to determine which agent to spawn via the Task tool.
+
+### 7. Task Tool Primitive
+> **"Complex workflows use the Task tool to launch agents."**
+
+Commands orchestrate by instructing Claude to spawn specialists. Native instruction format:
+- Single agent: "Launch an agent to analyze the authentication flow"
+- Parallel agents: "Launch 3 agents in parallel to audit directories X, Y, Z"
+
+### 8. Hook Safety Standards
 - **Portability:** ALWAYS use `${CLAUDE_PLUGIN_ROOT}` for script paths. Never hardcode absolute paths.
 - **Input Hygiene:** Command hooks MUST read stdin as JSON, validate inputs using `jq`, and quote ALL variables.
 - **Output Protocol:** Return valid JSON (`continue`, `systemMessage`). Use Exit Code `0` for success, `2` for blocking errors.
 - **Prompt First:** Prefer Prompt-Based hooks for logic requiring reasoning; reserve Command hooks for performance/determinism.
 
-### 7. Law of Native Delegation
+### 9. Law of Native Delegation
 > **"Never write in code what can be described in intent."**
 
 If a task requires searching, analyzing, and editing, do not write a bash script in a command. Describe the goal and launch a specialized agent. Trust the agent to select the tools.
@@ -289,23 +301,38 @@ Only works in Slash Commands / User Input. FORBIDDEN in static Skill/Agent files
 
 ---
 
-## X. Envelope Theory
+## X. Prompt Engineering for Orchestration
 
-Use semantic XML tags for context engineering. Flat structure only.
+Commands instruct Claude using natural language prompts, not XML parsing.
 
-**Agent Definitions:** `<role>`, `<constraints>`, `<system_prompt>`
-**Task Delegation:** `<assignment>`, `<context>`
+### Writing Orchestration Prompts
 
-```xml
-✅ Flat & Semantic:
-<context>
-Authentication files: src/auth.ts, src/user.ts
-Instruction: Analyze login flow.
-</context>
-
-❌ Nested (Forbidden):
-<context><files><file path="..."/></files></context>
+**Single Agent Delegation:**
 ```
+Launch an agent to analyze the authentication flow in src/auth/.
+The agent should identify security vulnerabilities and report findings.
+```
+
+**Parallel Swarm Execution:**
+```
+Launch 4 agents in parallel to:
+- Agent 1: Audit src/api/ for input validation
+- Agent 2: Audit src/auth/ for session handling  
+- Agent 3: Audit src/db/ for SQL injection
+- Agent 4: Audit src/utils/ for unsafe operations
+
+Each agent reports independently. Synthesize findings after all complete.
+```
+
+**Context Injection (Native):**
+```
+Here is the current project brief:
+[content of BRIEF.md]
+
+Analyze the codebase against these requirements.
+```
+
+> **Key Insight:** Claude natively understands "launch X agents in parallel" instructions. No special syntax required.
 
 ---
 
