@@ -1,0 +1,5 @@
+{
+  "name": "@cattoolkit/guide",
+  "version": "1.0.0",
+  "description": "Prompt engineering as a guidance mechanism - steering agents through structured prompts"
+}

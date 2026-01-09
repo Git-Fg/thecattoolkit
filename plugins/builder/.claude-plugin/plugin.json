@@ -1,9 +1,0 @@
-{
-    "name": "builder",
-    "description": "The Unified Builder. Consolidates planning and engineering into a single cohesive workflow. Features: Plan Creation, Plan Execution, TDD, Debugging, and Code Review.",
-    "version": "1.0.0",
-    "author": {
-        "name": "Claude Toolkit"
-    },
-    "license": "MIT"
-}
