@@ -28,25 +28,26 @@ This document defines the architecture of AI-powered development where the AI is
 
 ## II. The Interaction Trinity (Native Flow)
 
-The architecture is defined by the **Recursive Invocation Path**:
+The architecture is defined by the **Recursive Invocation Path** with clear separation of State, Autonomy, and Protocol:
 
-### 1. Orchestration (Commands)
-User input triggers a Command. The Command doesn't execute; it **Contextualizes**.
+### 1. Commands = State Manager
+User input triggers a Command. The Command doesn't execute; it **Contextualizes** and manages the "Where we are" in any multi-phase workflow.
 
 - Uses `!` syntax to gather "Ground Truth" (git status, file lists)
 - Injects context into the conversation via XML envelopes
 - Captures natural language with `$ARGUMENTS`
+- Manages `.local.md` files that track workflow phase state
 
-### 2. Autonomous Execution (Agents)
-The Command uses the `Task` tool to spawn an Agent.
+### 2. Agents = Task Specialist
+The Command uses the `Task` tool to spawn an Agent. The Agent doesn't need to know about other phases; it just needs to be the best specialist for 5 minutes.
 
 **Native Capacities:**
 - Agent reads its own `description` and `examples` to understand its "Start State"
 - Agent automatically adopts any `skills` listed in its frontmatter
 - Agent has full intelligence—trust it to select tools
 
-### 3. Self-Correction (SlashCommand Tool)
-If an Agent discovers it needs a standard workflow (e.g., a `feature-dev` agent realizes it needs to commit code), it uses the SlashCommand tool to invoke `/commit` programmatically.
+### 3. Skills = Procedural Anchor
+If an Agent discovers it needs a standard workflow (e.g., a `feature-dev` agent realizes it needs to commit code), it uses the SlashCommand tool to invoke `/commit` programmatically. Skills ensure the Agent's execution matches the project's specific style and standards.
 
 **This is the "Collective Intelligence" pattern:** The toolkit's own commands become tools for the agents.
 
@@ -97,6 +98,24 @@ We leverage native capacity by not "Dumping" all information at once.
 | **Subagent → Skill** | Agent "Self-Onboards" by reading skill. No manual loading needed. |
 | **Subagent → Cmd** | Agent uses toolkit commands for standardized side-effects (e.g., `/heal`). |
 | **Subagent → Subagent** | **Swarm Logic:** One "Director" spawns multiple "Worker" agents for parallel operations. |
+
+### The Triangle of Trust
+
+The most powerful interaction is the **Triangle of Trust**:
+
+```
+1. User types Command
+     ↓
+2. Command spawns Subagent (Triangle pattern for isolated context)
+     ↓
+3. Subagent auto-loads Skill (to get the "rules")
+     ↓
+4. Subagent uses Tools (MCP/Bash) to execute
+     ↓
+5. Subagent reports back to Command, which updates State for User
+```
+
+> **Philosophy:** Trust the AI's **Native Reasoning** (Agent) but verify it against your **Documented Protocol** (Skill), all while maintaining the **User's Context** (Command). This separation prevents "Prompt Bloat" and makes the system modular and easy to debug.
 
 ---
 

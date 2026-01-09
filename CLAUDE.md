@@ -80,6 +80,18 @@ Scripts must be self-contained, include error messages, and handle edge cases. V
 
 ## II. Toolkit Standards
 
+### The Trinity Philosophy
+
+The architecture is defined by **Separation of Concerns between Intent, Intelligence, and Protocol**:
+
+| Component | Role | Anchor | Where Logic Lives |
+|:----------|:-----|:-------|:------------------|
+| **Command** | Intent & State | The Human's Will | Orchestration: defines the "What" and manages user interaction |
+| **Agent** | Intelligence & Autonomy | The Expert's Mind | Execution: determines the "How" dynamically |
+| **Skill** | Protocol & Knowledge | The System's Laws | Guidelines: defines the "Rules of the Game" |
+
+> **The Skill-Informed Agent Pattern:** Commands are thin wrappers that gather context and delegate. Skills are passive libraries containing standards, not execution logic. Agents bridge intent and protocol—they read Skills to ensure quality, but determine execution autonomously.
+
 ### The .cattoolkit Root
 All runtime artifacts stored in `.cattoolkit/`:
 - **Session State**: `.cattoolkit/context/`
@@ -87,9 +99,19 @@ All runtime artifacts stored in `.cattoolkit/`:
 - **Hooks**: `.cattoolkit/hooks/`
 
 ### Mercenary Isolation
-- Agents MUST NOT reference plugin-specific files in system prompts
-- Commands inject content via envelope pattern, never @file references
-- Plugins function independently (zero shared state)
+
+Agents must be **mercenary**: they should never assume they are part of a specific command.
+
+- **Caller Independence:** Agents MUST NOT reference plugin-specific files in system prompts
+- **Envelope Injection:** Commands inject content via envelope pattern, never `@file` references
+- **Zero Shared State:** Plugins function independently
+- **Eternal Skills:** Commands are transient; Skills are eternal. Domain expertise lives in Skills, not Agent system prompts.
+
+### Progressive Disclosure Enforcement
+
+> **Rule:** Never exceed 500 words in an Agent's system prompt. If more instructions are needed, create a **Skill** and move procedural knowledge to `references/`.
+
+This prevents "Agent Bloat" and keeps system prompts focused on identity and constraints, not methodology.
 
 ---
 
@@ -165,6 +187,17 @@ Commands work with both humans and AI agents using natural language:
 **Constraint:** If Command is deleted, Agent + Skill must still work via Task tool.
 
 **Agent Tool Restriction:** Define `tools` in Agent frontmatter to enforce "Privilege Restriction" (e.g., a `code-explorer` agent should restrict `Write` to prevent accidental drift).
+
+### Complexity vs. Result Decision Matrix
+
+Use this logic to determine where code or logic belongs:
+
+| Question | Answer | Component |
+|:---------|:-------|:----------|
+| Does this require user interaction? | Yes | **Command** (`AskUserQuestion`) |
+| Does this require parallel thinking or Opus-level reasoning? | Yes | **Agent** (subagent) |
+| Is this a rule, template, or standard way of doing things? | Yes | **Skill** |
+| Is this a long-running background task? | Yes | Delegate to **Agent** via **Command** |
 
 ---
 
