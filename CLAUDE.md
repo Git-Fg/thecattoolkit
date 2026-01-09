@@ -346,7 +346,7 @@ Instruction: Analyze login flow.
 
 ## Documentation References
 
-- **docs/AI-ARCHITECTURE.md** - Native AI agent intelligence vs CLI tools philosophy
+- **docs/AI-ARCHITECTURE.md** - Agentic Runtime paradigm and cognitive capabilities
 - **docs/VECTOR_vs_TRIANGLE.md** - Pattern mechanics and selection guide
 - **README.md** - Installation and marketplace
 - **Plugin READMEs** - Individual plugin documentation

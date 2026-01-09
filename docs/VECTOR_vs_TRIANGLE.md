@@ -36,7 +36,7 @@ Executes inside current context window. Interacts with user directly.
 ### Triangle (Cold Path)
 **Composition:** `Command → Agent → Skill`
 
-Launches subagent in fresh, isolated context.
+Launches subagent in fresh context with full attention capacity.
 
 **When to use:**
 - Context >50%
