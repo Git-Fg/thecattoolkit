@@ -1,23 +1,10 @@
 ---
 name: project-strategy
 description: |
-  Project planning standards, document templates, and format specifications. Defines WHAT documents to create (BRIEF, ROADMAP, PLAN) and their structure. Execution HOW is defined by execution-core skill.
-  <example>
-  Context: Creating project plan
-  user: "Create a project plan"
-  assistant: "I'll use project-strategy to structure the BRIEF.md and ROADMAP.md documents."
-  </example>
-  <example>
-  Context: Document format validation
-  user: "Validate this plan structure"
-  assistant: "I'll check against project-strategy format specifications."
-  </example>
-  <example>
-  Context: Template reference
-  user: "Need the BRIEF.md template"
-  assistant: "I'll reference the project-strategy template at assets/templates/brief.md."
-  </example>
-allowed-tools: Read Write Edit
+  USE when creating project plans, BRIEF.md, ROADMAP.md, or phase PLAN.md documents.
+  Project planning standards, document templates (BRIEF, ROADMAP, PLAN), and format specifications.
+user-invocable: false
+allowed-tools: Read, Write, Edit
 ---
 
 # Project Strategy Standards

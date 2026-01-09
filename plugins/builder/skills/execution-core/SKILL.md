@@ -1,23 +1,10 @@
 ---
 name: execution-core
 description: |
-  Universal behavioral standards for autonomous agents. Defines HOW agents execute work: Uninterrupted Flow, Self-Verification, and Handoff protocols. This is the behavioral brain shared across all builder operations.
-  <example>
-  Context: Any autonomous execution
-  user: "Execute this task autonomously"
-  assistant: "I'll use execution-core standards to run in Uninterrupted Flow with self-verification."
-  </example>
-  <example>
-  Context: Task encounters blocker
-  user: "Task failed with auth error"
-  assistant: "Following execution-core auth-gate protocol, I'll create HANDOFF.md and exit."
-  </example>
-  <example>
-  Context: Verifying task completion
-  user: "Check if the task is done"
-  assistant: "Using execution-core observation-points, I'll verify programmatically and log evidence."
-  </example>
-allowed-tools: Bash Edit Read Write Glob Grep
+  Universal behavioral standards for autonomous agents. Defines Uninterrupted Flow, Self-Verification, Auth-Gates, and Handoff protocols.
+  Keywords: execution behavior, autonomous agent, verification, handoff protocol
+user-invocable: false
+allowed-tools: Bash, Edit, Read, Write, Glob, Grep
 ---
 
 # Execution Core Standards

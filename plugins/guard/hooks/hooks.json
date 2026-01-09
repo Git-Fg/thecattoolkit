@@ -1,0 +1,39 @@
+{
+  "description": "Safety layer: file protection, secret detection, and type checking",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/plugins/guard/hooks/scripts/protect-files.py\"",
+            "timeout": 5000
+          },
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/plugins/guard/hooks/scripts/security-check.py\"",
+            "timeout": 5000
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/plugins/guard/hooks/scripts/type-check-python.py\"",
+            "timeout": 30000
+          },
+          {
+            "type": "command",
+            "command": "node \"${CLAUDE_PLUGIN_ROOT}/plugins/guard/hooks/scripts/type-check-ts.js\"",
+            "timeout": 15000
+          }
+        ]
+      }
+    ]
+  }
+}

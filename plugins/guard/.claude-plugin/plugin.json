@@ -1,0 +1,5 @@
+{
+  "name": "@cattoolkit/guard",
+  "version": "1.0.0",
+  "description": "Safety layer - file protection, secret detection, and language-specific type checking"
+}

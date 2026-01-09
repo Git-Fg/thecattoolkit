@@ -1,23 +1,10 @@
 ---
 name: software-engineering
 description: |
-  Code manipulation patterns, engineering protocols, and development methodologies. Defines WHAT code patterns to apply (TDD, Debugging, Refactoring, Security). HOW to execute is defined by execution-core skill.
-  <example>
-  Context: Need to debug code
-  user: "Debug this error"
-  assistant: "I'll apply software-engineering debugging protocols to identify and fix the issue."
-  </example>
-  <example>
-  Context: Code review needed
-  user: "Review my changes"
-  assistant: "I'll use software-engineering code review patterns to assess the changes."
-  </example>
-  <example>
-  Context: TDD workflow
-  user: "Implement with TDD"
-  assistant: "I'll follow software-engineering TDD protocols (Red-Green-Refactor)."
-  </example>
-allowed-tools: Read Write Edit Bash Glob Grep
+  USE when applying engineering patterns: TDD, debugging, refactoring, security audit, code review.
+  Code manipulation patterns and development methodologies. Security checklist is mandatory for code modifications.
+user-invocable: false
+allowed-tools: Read, Write, Edit, Bash, Glob, Grep
 ---
 
 # Software Engineering Protocols
