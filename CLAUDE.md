@@ -65,25 +65,30 @@ Components function standalone. Synergy is a side effect.
 - **Context via Prompting:** Commands inject content via natural language prompts
 - **Eternal Skills:** Commands are transient; Skills are eternal. Domain expertise lives in Skills, not Agent system prompts.
 
-### Law 2: Law of Unification
-**A Skill that defines its own context (`context: fork`) and trigger (`user-invocable`) requires no Command wrapper.**
+### Law 2: The Law of Atomic Capabilities
+**Eliminate Glue Code.** A Skill that defines its own context (`context: fork`) and is user-invocable requires NO Command wrapper.
 
-Skills are now **atomic capability units** that can operate independently:
-- **Forked Skills:** Use `context: fork` to run in isolation, replacing Task tool delegation
-- **User-Invocable Skills:** Use `user-invocable: true` to appear in slash commands
+Skills are now **active atomic capability units** that execute independently:
+- **Forked Skills:** Use `context: fork` to run in isolation—**THIS IS THE PRIMARY DELEGATION METHOD**
+- **User-Invocable Skills:** Appears in slash commands by default (set `user-invocable: false` only to hide)
 - **Agent-Bound Skills:** Use `agent: [name]` to bind to reusable personas
 
-This eliminates glue code where Commands exist solely to wrap single Skills.
+**Commands are for orchestration only** (multi-skill workflows). Never create a Command that wraps a single Skill—this is pure glue code.
 
 ### Law 3: Native Delegation
 **"Never write in code what can be described in intent."**
-If it involves reasoning, delegate to an Agent. Don't script it.
+Delegate atomic tasks to Forked Skills, complex workflows to Commands.
 
 | Anti-Pattern | Native Pattern |
 |:-------------|:---------------|
 | `find . -name "*.ts" -exec grep "todo" {} \;` | "Find all TypeScript files containing TODO comments" |
-| Parsing JSON → condition → action in Command | Delegate to agent with goal description |
-| Step-by-step tool micromanagement | Goal-oriented natural language delegation |
+| Command wrapping single Skill (`Task(...)`) | Forked Skill with `context: fork` |
+| Step-by-step tool micromanagement | Goal-oriented: "Audit security in src/" |
+
+**Primary Delegation Flow:**
+1. **Atomic task** → Forked Skill (`context: fork`)
+2. **Multi-phase workflow** → Command orchestrating multiple Skills
+3. **Persona-based reasoning** → Agent-bound Skill (`agent: [name]`)
 
 ### Law 4: Law of Description
 **"The `description` field is the API."**
@@ -373,7 +378,7 @@ description: |            # Required. Follow Discovery Tiering Matrix
 allowed-tools: Read Edit  # Optional. Space-delimited pre-approved tools
 context: fork             # Optional. Run in isolated sub-agent context
 agent: security-reviewer  # Optional. Bind to agent persona when forked
-user-invocable: true      # Optional. Show in slash menu (default: true)
+# user-invocable: false   # Optional. Set to false to hide from slash menu (defaults to true)
 disable-model-invocation: false  # Optional. Block Skill tool invocation
 hooks:                    # Optional. Skill-scoped hooks
   PreToolUse:
@@ -554,28 +559,26 @@ graph TB
     User["👤 User"]
     MainAgent["🤖 Main Agent<br/>(Claude)"]
     Commands["📋 Commands<br/>(Orchestrator)"]
-    Subagents["🔧 Subagents<br/>(Agent-bound Skills)"]
+    ForkedSkills["🔧 Forked Skills<br/>(context: fork)"]
     Skills["📚 Skills<br/>(Atomic Capabilities)"]
+    Agents["👥 Agents<br/>(Personas)"]
     Tools["🛠️ Tools<br/>(Read, Write, Bash, etc.)"]
     Hooks["🪝 Hooks<br/>(Event Interception)"]
 
-    User -->|"Invokes (/skill)"| Skills
+    User -->|"Invokes (/skill)"| ForkedSkills
     User -->|"Invokes (/command)"| Commands
     User -->|"Natural Language"| MainAgent
 
     Commands -->|"Orchestrates"| Skills
     Commands -->|"Injects Instructions"| MainAgent
 
-    MainAgent -->|"Spawns via Task tool"| Subagents
     MainAgent -->|"Auto-loads via Description"| Skills
     MainAgent -->|"Uses"| Tools
 
-    Skills -->|"context: fork"| Subagents
+    Skills -->|"context: fork"| ForkedSkills
+    ForkedSkills -.->|"Binds Persona"| Agents
+    ForkedSkills -->|"Executes"| Tools
     Skills -->|"Auto-discoverable"| MainAgent
-
-    Subagents -->|"Return Results"| MainAgent
-    Subagents -->|"Auto-load"| Skills
-    Subagents -->|"Uses"| Tools
 
     Tools -->|"Triggers"| Hooks
     Hooks -.->|"Blocks/Warns/Injects"| MainAgent
@@ -594,6 +597,26 @@ graph TB
 - **No file pollution** - If a file wasn't requested, don't create it
 
 IMPORTANT: If you have access to claude-code-guide agent, you MUST use it PROACTIVELY. Spawn as much parallel background claude-code-guide agents with short and concise prompts descriptions as needed to verify and confirm any doubt.
+
+You can and should also manually fetch content (curl and/or native tool) from : 
+- [Changelog](https://code.claude.com/docs/en/changelog)
+- [CLI reference](https://code.claude.com/docs/en/cli-reference): Complete reference for Claude Code command-line interface, including commands and flags.
+- [Common workflows](https://code.claude.com/docs/en/common-workflows): Learn about common workflows with Claude Code.
+- [Discover and install prebuilt plugins through marketplaces](https://code.claude.com/docs/en/discover-plugins): Find and install plugins from marketplaces to extend Claude Code with new commands, agents, and capabilities.
+- [Run Claude Code programmatically](https://code.claude.com/docs/en/headless): Use the Agent SDK to run Claude Code programmatically from the CLI, Python, or TypeScript.
+- [Hooks reference](https://code.claude.com/docs/en/hooks): This page provides reference documentation for implementing hooks in Claude Code.
+- [Get started with Claude Code hooks](https://code.claude.com/docs/en/hooks-guide): Learn how to customize and extend Claude Code's behavior by registering shell commands
+- [Connect Claude Code to tools via MCP](https://code.claude.com/docs/en/mcp): Learn how to connect Claude Code to your tools with the Model Context Protocol.
+- [Create and distribute a plugin marketplace](https://code.claude.com/docs/en/plugin-marketplaces): Build and host plugin marketplaces to distribute Claude Code extensions across teams and communities.
+- [Create plugins](https://code.claude.com/docs/en/plugins): Create custom plugins to extend Claude Code with slash commands, agents, hooks, Skills, and MCP servers.
+- [Plugins reference](https://code.claude.com/docs/en/plugins-reference): Complete technical reference for Claude Code plugin system, including schemas, CLI commands, and component specifications.
+- [Quickstart](https://code.claude.com/docs/en/quickstart): Welcome to Claude Code!
+- [Agent Skills](https://code.claude.com/docs/en/skills): Create, manage, and share Skills to extend Claude's capabilities in Claude Code.
+- [Slash commands](https://code.claude.com/docs/en/slash-commands): Control Claude's behavior during an interactive session with slash commands.
+- [Status line configuration](https://code.claude.com/docs/en/statusline): Create a custom status line for Claude Code to display contextual information
+- [Subagents](https://code.claude.com/docs/en/sub-agents): Create and use specialized AI subagents in Claude Code for task-specific workflows and improved context management.
+- [Troubleshooting](https://code.claude.com/docs/en/troubleshooting): Discover solutions to common issues with Claude Code installation and usage.
+
 
 ---
 
@@ -762,6 +785,27 @@ description: "Format code using industry standards"
 ```
 # Problem: A → B → C → D
 # ✅ Solution: A → D directly
+```
+
+#### Anti-Pattern 4: The Single-Skill Wrapper
+```yaml
+# Problem: Command exists only to wrap a single Skill
+---
+name: analyze-security
+description: "Analyze code for security issues"
+---
+# Just calls a single Skill
+Use skill: security-analyzer with $ARGUMENTS
+
+# ✅ Solution: Make the Skill user-invocable
+---
+name: security-analyzer
+description: "Analyze code for security issues"
+context: fork
+agent: security-expert
+user-invocable: true
+---
+# Delete the wrapper command
 ```
 
 ### Refactoring Strategies

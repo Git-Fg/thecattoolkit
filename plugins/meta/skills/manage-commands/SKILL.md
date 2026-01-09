@@ -13,7 +13,9 @@ For common principles, integration patterns, and anti-patterns, see:
 
 ## Essential Principles
 
-4. **User-Centric Design**: Commands are convenient shortcuts for human users, not programmatic interfaces.
+1. **Wrapper Commands are Anti-Patterns:** If a command only delegates to a single skill/agent, delete the command and configure the skill with `user-invocable: true` and `context: fork`.
+2. **Commands Orchestrate Multi-Skill Workflows:** Commands exist to sequence multiple Skills or provide complex delegation patterns.
+3. **User-Centric Design:** Commands are convenient shortcuts for human users, not programmatic interfaces.
 
 ## Capability Index
 
@@ -48,12 +50,13 @@ Production-grade templates for command scaffolding:
 
 | Template | Use Case |
 |----------|----------|
-| `skill-delegator_minimalistic.md` | One-line skill wrapper (default) |
-| `skill-delegator_structured.md` | Skill wrapper with structure |
-| `agent-delegator.md` | Agent delegation |
 | `complex-delegation.md` | Single/Parallel background agents |
 | `hybrid-workflow.md` | Foreground + background work |
 | `context-loader.md` | Dynamic context loading |
+
+**Removed Templates (Anti-Patterns):**
+- ~~`skill-delegator_*.md`~~ - Single-skill wrappers are glue code. Use `user-invocable: true` on the skill instead.
+- ~~`agent-delegator.md`~~ - Single-agent wrappers are glue code. Use `context: fork` with `agent: [name]` on the skill instead.
 
 ### Examples (`examples/`)
 

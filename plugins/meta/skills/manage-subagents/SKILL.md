@@ -8,6 +8,8 @@ allowed-tools: Read Write Edit Bash Grep
 
 ## Core Principle
 
+**Agents are Primarily Personas for Skills.** When defining an agent, primarily design it to be bound to a Skill via `agent: [name]` in the skill frontmatter. This enables Skills to inherit a specialized identity without creating wrapper commands.
+
 **Default to Pure Markdown.** Most subagents work well with simple Markdown structure (`## Role`, `## Workflow`, `## Constraints`). Add XML tags only when complexity genuinely requires it (multi-phase state tracking, critical safety constraints).
 
 ## Shared Standards
@@ -31,9 +33,10 @@ User asks about Skills or Commands.
 
 Use subagents for **isolated context** and **specialized expertise**:
 
-1. **Separate Context Required**: Deep thinking and analysis
-2. **System Maintenance**: Maintaining AI infrastructure
-3. **Specialized Expertise**: Domain-specific knowledge
+1. **Persona Binding:** Define agents that Skills can bind to via `agent: [name]` in skill frontmatter.
+2. **Separate Context Required:** Deep thinking and analysis requiring isolated context.
+3. **System Maintenance:** Maintaining AI infrastructure.
+4. **Specialized Expertise:** Domain-specific knowledge.
 
 Consult `CLAUDE.md` for the comprehensive decision matrix.
 

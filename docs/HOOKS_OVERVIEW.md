@@ -19,11 +19,10 @@ Hooks are the **Governance Layer** of the Agentic Runtime. They run *outside* th
 | **PostToolUse** | After tool success | Run linters, formatters, automated testing |
 | **Notification** | System notifications | External alerting/logging |
 | **Stop** | Main agent finishes | Final cleanup, session summary |
+| **SubagentStart** | Subagent starts | Initialize sub-environment or logging |
 | **SubagentStop** | After subagent completes | Synthesis, teardown of specialized agents |
 | **PreCompact** | Before context compaction | Protect critical history from truncation |
 | **SessionEnd** | Session ends | Final state cleanup |
-
-**Note:** `SubagentStart` does NOT exist—only `SubagentStop`.
 
 ---
 

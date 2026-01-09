@@ -2,7 +2,7 @@
 
 ## 1. Philosophy: Commands Orchestrate Multi-Skill Workflows
 
-**IMPORTANT:** With the Unified Skill Capability model, most simple tasks no longer require Command wrappers. Use `user-invocable: true` in your Skill instead.
+**IMPORTANT:** With the Unified Skill Capability model, most simple tasks no longer require Command wrappers. Make your Skill user-invocable (default) with `context: fork` instead.
 
 Commands are **Orchestration Layer** components that manage multi-phase workflows by sequencing multiple Skills together.
 
@@ -168,18 +168,7 @@ This restriction cascades: subagents spawned via `Task` inherit these restrictio
 
 ---
 
-## 5. The Skill Tool (Recursive Pattern)
-
-Agents can invoke Commands via the `Skill` tool, turning Commands into a **Standard Library**:
-
-- An Agent handling a feature can call `/commit` to save its work
-- An Agent debugging can call `/test` to verify
-
-**Syntax:** `Skill(/command-name args)`
-
----
-
-## 6. Command Types
+## 5. Command Types
 
 | Type | Consumer | `disable-model-invocation` | AskUserQuestion |
 |:-----|:---------|:---------------------------|:----------------|
@@ -189,7 +178,7 @@ Agents can invoke Commands via the `Skill` tool, turning Commands into a **Stand
 
 ---
 
-## 7. Valid Frontmatter Fields
+## 6. Valid Frontmatter Fields
 
 ```yaml
 ---

@@ -1,17 +1,10 @@
 ---
 description: |
-  [Maintenance] Interactive self-correction protocol. Diagnoses the last error or drift in Skills, Agents, or Commands and applies fixes to source files.
-  <example>
-  Context: A skill just failed or produced incorrect output
-  user: "/heal the skill seems to have hallucinated a tool"
-  assistant: "I'll analyze the recent error and diagnose the drift in the skill definition."
-  </example>
-allowed-tools: [Read, Edit, Bash, Grep, Glob, AskUserQuestion, Skill(manage-healing)]
-argument-hint: [optional: what triggered the need for healing]
-disable-model-invocation: false
+  [Maintenance] Interactive self-correction protocol. Diagnoses the last error or drift in Skills, Agents, or Commands and applies fixes.
+  USE when a component fails, hallucinates, or errors out.
+allowed-tools: [Read, Edit, Bash, Grep, Glob, AskUserQuestion]
+argument-hint: [optional context]
 ---
-
-**Examples**: See `references/examples.md` for additional usage patterns.
 
 # Self-Correction Orchestrator (Vector)
 

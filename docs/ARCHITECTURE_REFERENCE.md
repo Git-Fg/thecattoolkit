@@ -51,6 +51,16 @@ Claude Code uses a standardized Markdown format for Skills. This is the **recomm
 name: pdf-processing  # Max 64 chars, lowercase, hyphens only
 description: Extract text and tables from PDF files.
 allowed-tools: [Read, Write, Bash]  # Restrict tools during skill execution
+context: fork  # Run in isolated sub-agent context (2026 paradigm)
+agent: pdf-expert  # Bind to specific agent persona when forked
+user-invocable: true  # Show in slash menu (default: true)
+disable-model-invocation: false  # Allow Skill tool invocation
+hooks:  # Optional: Skill-scoped hooks
+  PreToolUse:
+    - matcher: "Bash"
+      hooks:
+        - type: command
+          command: "./validate.sh"
 ---
 ```
 # PDF Processing
@@ -75,6 +85,7 @@ Claude Code implements an "Interception" model for Hooks.
 - `PreToolUse`: Block/modify tool execution.
 - `PostToolUse`: Automated testing or cleanup.
 - `Stop`: Cleanup or summary after agent stops.
+- `SubagentStart`: Initialize subagent environment or logging.
 - `SubagentStop`: Teardown of specialized agents.
 
 ### Implementation (Native Schema)

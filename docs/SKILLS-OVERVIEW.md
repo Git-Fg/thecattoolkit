@@ -100,7 +100,7 @@ description: |
   Keywords: security audit, vulnerability scan, penetration test, XSS, SQL injection
 context: fork
 agent: security-expert
-user-invocable: true
+# user-invocable defaults to true - only set to false to hide from slash menu
 allowed-tools:
   - Read
   - Grep
@@ -175,7 +175,7 @@ Skills can be invoked three ways:
 
 | Setting | Slash Menu | `Skill` Tool | Auto-Discovery | Use Case |
 |:--------|:-----------|:-------------|:---------------|:---------|
-| `user-invocable: true` (default) | ✅ Visible | ✅ Allowed | ✅ Yes | User-facing Skills |
+| `user-invocable` (default: true) | ✅ Visible | ✅ Allowed | ✅ Yes | User-facing Skills |
 | `user-invocable: false` | ❌ Hidden | ✅ Allowed | ✅ Yes | Internal Skills Claude uses |
 | `disable-model-invocation: true` | ✅ Visible | ❌ Blocked | ✅ Yes | User-only Skills |
 
