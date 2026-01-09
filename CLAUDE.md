@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Primary operating system for Claude Code. This document defines the **Orchestration Runtime**—a hierarchical architecture where **Command (Intent) → Agent (Autonomy) → Skill (Protocol)**.
+Primary operating system for Claude Code. This document defines the **Universal Agentic Runtime**—a hierarchical architecture where **Command (Intent) → Agent (Autonomy) → Skill (Protocol)**. This architecture is optimized for both official (Anthropic) and unofficial (Zai, Minimax) endpoints.
 
 ---
 
@@ -8,8 +8,8 @@ Primary operating system for Claude Code. This document defines the **Orchestrat
 
 ## 1.1 The Orchestration Runtime
 
-Claude Code is not a CLI Tool; it is an **Orchestration Runtime**.
-- **The Model** is the CPU.
+The toolkit operates as an **Orchestration Runtime**. It is agnostic to the underlying endpoint (Official or Unofficial) but remains **Claude Code Centric** in its protocol.
+- **The Model** is the CPU (Claude, GLM, MiniMax).
 - **The Context** is the RAM.
 - **The Components (Commands/Agents/Skills)** are the Software.
 
@@ -22,36 +22,33 @@ The Runtime handles concurrency natively via the `Task` tool. Use **Declarative 
 
 ---
 
-## 1.2 The Trinity Architecture
+## 1.2 The Unified Capability Architecture
 
-The architecture is defined by **Separation of Concerns** across three layers:
+The architecture centers on **Skills as atomic units of work** with Commands and Agents serving as composition mechanisms:
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│  COMMAND (Intent)                                           │
-│  "What needs to happen"                                     │
-│  └──► Orchestrates via natural language                     │
-├─────────────────────────────────────────────────────────────┤
-│  AGENT (Autonomy)                                           │
-│  "Who executes it"                                          │
-│  └──► Specialized persona with restricted toolset           │
-├─────────────────────────────────────────────────────────────┤
-│  SKILL (Protocol)                                           │
-│  "How to do it correctly"                                   │
-│  └──► Passive knowledge loaded via semantic matching        │
-└─────────────────────────────────────────────────────────────┘
-```
+| Component | Role | Native Mechanic |
+|:----------|:-----|:----------------|
+| **Skill** | **Atomic Capability** | Auto-discoverable via semantic matching. Can be `user-invocable`, `context: fork`, and `agent: [name]` bound. |
+| **Command** | **Orchestrator** | Manages multi-phase workflows by sequencing multiple Skills. |
+| **Agent** | **Persona** | Reusable identity/tools that Skills can bind to via `agent: [name]`. |
 
-| Component | Analogy | Role | Native Mechanic |
-|:----------|:--------|:-----|:----------------|
-| **Command** | The Architect | **Intent Prompt** | Markdown prompts that orchestrate resources. |
-| **Agent** | The Engineer | **Autonomous Persona** | Launched via `Task` tool. Shared context, specialized persona. |
-| **Skill** | The Handbook | **Contextual Protocol** | Auto-loaded via semantic description matching. |
+> **The New Paradigm:**
+> - Skills **execute** (atomic work units with Triggers + Execution + Context)
+> - Commands **orchestrate** (multi-skill workflows)
+> - Agents **provide** (reusable personas/toolsets for Skills)
 
-> **The Hierarchy of Sovereignty:**
-> - Commands **orchestrate** (user interaction, context gathering)
-> - Agents **execute** (autonomous work, framework application)
-> - Skills **inform** (passive standards, templates, methodology)
+### Tool Primitives
+
+These native tools drive the architecture:
+
+| Tool | Purpose |
+|:-----|:--------|
+| `Task` | Spawns subagents with specialized personas |
+| `Skill` | Loads skills/invokes commands programmatically |
+| `Read` / `Glob` / `Grep` | File system interaction |
+| `Write` / `Edit` | File modification |
+| `Bash` | Shell command execution |
+| `AskUserQuestion` | User interaction during planning |
 
 ---
 
@@ -68,7 +65,17 @@ Components function standalone. Synergy is a side effect.
 - **Context via Prompting:** Commands inject content via natural language prompts
 - **Eternal Skills:** Commands are transient; Skills are eternal. Domain expertise lives in Skills, not Agent system prompts.
 
-### Law 2: Native Delegation
+### Law 2: Law of Unification
+**A Skill that defines its own context (`context: fork`) and trigger (`user-invocable`) requires no Command wrapper.**
+
+Skills are now **atomic capability units** that can operate independently:
+- **Forked Skills:** Use `context: fork` to run in isolation, replacing Task tool delegation
+- **User-Invocable Skills:** Use `user-invocable: true` to appear in slash commands
+- **Agent-Bound Skills:** Use `agent: [name]` to bind to reusable personas
+
+This eliminates glue code where Commands exist solely to wrap single Skills.
+
+### Law 3: Native Delegation
 **"Never write in code what can be described in intent."**
 If it involves reasoning, delegate to an Agent. Don't script it.
 
@@ -78,22 +85,30 @@ If it involves reasoning, delegate to an Agent. Don't script it.
 | Parsing JSON → condition → action in Command | Delegate to agent with goal description |
 | Step-by-step tool micromanagement | Goal-oriented natural language delegation |
 
-### Law 3: Law of Description
+### Law 4: Law of Description
 **"The `description` field is the API."**
 The Runtime discovers capabilities via semantic matching of descriptions.
 
-### Law 4: State-in-Files
+Use natural language keywords for Semantic Discovery. Avoid XML `<example>` blocks in frontmatter.
+
+| Avoid | Prefer |
+|:------|:-------|
+| `<example>...</example>` | Keywords: "audit code", "fix bugs", "deploy app" |
+| XML boilerplate | Plain language descriptions |
+| Structured examples | Natural triggers ("Use when...") |
+
+### Law 5: State-in-Files
 Context is ephemeral; files are eternal. Decisions → ADR. Tasks → Status file. If not on disk, it didn't happen.
 
-### Law 5: Shared-Nothing Parallelism
+### Law 6: Shared-Nothing Parallelism
 - Atomic assignments (no dependencies between parallel agents)
 - File locking (parallel agents never edit same file)
 - Synthesis obligation (orchestrator merges outputs)
 
-### Law 6: Passive Skills
+### Law 7: Passive Skills
 Skills are cookbooks, not wizards. AskUserQuestion FORBIDDEN in skills. If input missing → agent judgment or HANDOFF.md.
 
-### Law 7: Native Capabilities
+### Law 8: Native Capabilities
 Trust the model. Declarative over procedural. Universal over specific.
 
 | Avoid | Prefer |
@@ -103,18 +118,19 @@ Trust the model. Declarative over procedural. Universal over specific.
 | "Execute these grep commands: ..." | "Search for authentication patterns" |
 | "Use the Read tool on path/to/file.ts" | "Read the config file in the src folder" |
 
-### Law 8: The Law of XML
-XML tags are reserved for **Machine Reliability**, not human formatting.
+### Law 9: XML Reserved for Machine Signaling
+XML tags are reserved for **Machine Reliability** in specific cases only.
 
 | Use Case | Status | Tags | Reason |
 |:---------|:-------|:-----|:-------|
-| **Agent Triggering** | **MANDATORY** | `<example>`, `<commentary>` | The Runtime parses these to determine when to launch an agent. |
-| **Hook Signaling** | **MANDATORY** | `<promise>`, `<status>` | Hooks use regex to extract these signals from stdout. |
-| **Prompt Grouping** | **OPTIONAL** | `<guidelines>`, `<rules>` | Helps the Model separate distinct rule sets. |
-| **Command Syntax** | **FORBIDDEN** | `<assignment>`, `<context>`, `<envelope>` | Use Markdown headers and natural language. |
-| **Data Isolation** | **CAUTION** | `<data>`, `<raw>` | ONLY for high-density (>100 lines) unstructured data. |
+| **Agent Discovery** | **Optional** | `<example>`, `<commentary>` | Can help with complex agent selection, but description matching is primary. |
+| **Hook Signaling** | **Allowed** | `<promise>`, `<status>` | Hooks use regex to extract signals from output. |
+| **Prompt Grouping** | **Optional** | `<guidelines>`, `<rules>` | Helps the Model separate distinct rule sets. |
+| **Data Isolation** | **Caution** | `<data>`, `<raw>` | Only for high-density (>100 lines) unstructured data. |
 
-### Law 9: Meta-Synchronization
+**Use Markdown** for all other prompt structure. Natural language and headers are preferred.
+
+### Law 10: Meta-Synchronization
 **When working on the toolkit itself (Meta-Tooling), ensure absolute consistency between the *defined architecture* (docs/prompts) and the *implemented behavior* (code/scripts).**
 
 Never allow the system to "do what I say, not what I do"—if a standard is written, the implementation must rigorously obey it.
@@ -132,11 +148,12 @@ Never allow the system to "do what I say, not what I do"—if a standard is writ
 
 ## 2.1 What Commands Are
 
-Commands are **Intent Prompts**—Markdown files that instruct Claude's internal mission for the current turn. They are instructions FOR Claude, not messages TO the user.
+Commands are **Reusable Prompt Templates**—Markdown files that instruct the Main Agent for the current turn. They are instructions FOR Claude, not messages TO the user.
 
-**Key Principle:** Use `$ARGUMENTS` to capture full natural language context. Rigid argument parsing is not enforced; `argument-hint: [string]` is for UI documentation only.
-
-> **Rule:** Never write in code what can be described in intent.
+**Key Principles:**
+- Use `$ARGUMENTS` to capture the user's full natural language input
+- `argument-hint: [string]` is for UI documentation only (not parsed)
+- Commands orchestrate workflows by instructing the Main Agent
 
 ---
 
@@ -177,21 +194,20 @@ Agents can invoke Commands via the `Skill` tool. This transforms the Command Sui
 
 **Syntax:** `Skill(/command-name)` for exact match. Arguments are passed using the command's `$ARGUMENTS` placeholder.
 
-> **Note:** The `SlashCommand` tool has been deprecated and merged into the `Skill` tool.
-
 ---
 
 # PART III: AGENT (Autonomy Layer)
 
 ## 3.1 What Agents Are
 
-Agents are specialized AI subprocesses with their own system prompts and restricted toolsets, launched via the `Task` tool.
+Agents are **Specialized Personas** with their own system prompts and optional tool restrictions, launched via the `Task` tool.
 
-- **Subagents vs Agents:** An Agent is the software component; a "Subagent" is the runtime instance spawned by the Main Agent (or another agent) via the `Task` tool.
-- **Model Selection:** Specialized Agents can use `haiku` (speed), `sonnet` (balance), or `opus` (logic).
-- **Tool Restriction:** Defined in frontmatter to ensure safety/focus (e.g., `tools: [Read, Grep]`).
-- **Context Sharing:** Subagents do not get a "clean slate." They operate as **Focused Lenses** on the current session, sharing conversation history but adopting a specialized persona/system prompt.
-- **Lifecycle:** `SubagentStop` is the specific hook event triggered when a subagent completes its task.
+**Key Concepts:**
+- **Agent vs Subagent:** An Agent is the definition (`agents/*.md`); a "Subagent" is the runtime instance spawned via `Task` tool
+- **Model Selection:** Agents can use `haiku` (speed), `sonnet` (balance), `opus` (logic), `default`, or `opusplan` (opus for planning, sonnet for execution)
+- **Tool Restriction:** Defined via `tools` field in frontmatter (whitelist)
+- **Context Sharing:** Each subagent operates in its own separate context window. They can access session conversation history (read-only) but have their own specialized system prompt. Provide exhaustive context when spawning.
+- **Lifecycle:** `SubagentStop` hook triggers when a subagent completes
 
 ---
 
@@ -210,7 +226,6 @@ The `Task` tool is the primitive used to spawn subagents.
 name: code-reviewer
 description: Analyzes code for quality issues
 tools: Read, Grep, Glob, Bash  # Only these tools available
-model: sonnet
 ---
 
 # Omitting tools field = inherits ALL tools from main thread
@@ -222,21 +237,26 @@ model: sonnet
 
 ## 3.3 Agent Discovery Protocol
 
-Agents are NOT triggered by simple descriptions. They require **Structured Few-Shot Examples** in the frontmatter.
+Agents are triggered via **semantic description matching**. Claude Code proactively delegates tasks based on the `description` field.
 
-**Required Format:**
-```markdown
-description: Use when [condition]. Examples:
-
-<example>
-Context: [Scenario]
-user: "[User Input]"
-assistant: "[Agent Handoff]"
-<commentary>
-[Why this agent matches]
-</commentary>
-</example>
+**Best Practice Format:**
+```yaml
+---
+name: security-reviewer
+description: |
+  USE when auditing code for security vulnerabilities.
+  Specializes in OWASP patterns, injection flaws, and authentication issues.
+  Keywords: security audit, vulnerability scan, penetration test
+tools: Read, Grep, Glob
+---
 ```
+
+**Discovery relies on:**
+- Clear description of **when** to use the agent
+- Keywords matching common user intents
+- Specific capability statements
+
+> Description-based semantic matching is the primary discovery mechanism. XML `<example>` blocks are optional and only useful for complex disambiguation.
 
 ---
 
@@ -281,7 +301,9 @@ assistant: "[Agent Handoff]"
 
 ## 4.1 What Skills Are
 
-Skills are **Passive Procedural Knowledge** packages. They are cookbooks, not wizards.
+Skills are **Knowledge Bases**—passive procedural knowledge packages. They provide standards, templates, and methodologies that agents "put on" like a lens to view a task.
+
+**Key Principle:** Skills are cookbooks, not wizards. They inform but do not execute.
 
 ---
 
@@ -300,11 +322,18 @@ skill-name/
 
 ## 4.3 Progressive Disclosure
 
+Skills use a **3-level loading hierarchy** to minimize context usage:
+
 | Layer | Budget | When Loaded |
 |-------|--------|-------------|
-| Metadata (`name` + `description`) | ~100 tokens | Startup |
-| Instructions (SKILL.md body) | <5000 tokens | Activation |
-| Resources (scripts/, references/, assets/) | As needed | On reference |
+| **Metadata** (`name` + `description`) | ~100 tokens | Startup |
+| **Instructions** (SKILL.md body) | <5000 tokens | On activation (description match) |
+| **Resources** (scripts/, references/, assets/) | Unlimited | On-demand when referenced |
+
+**Resource Types:**
+- `references/` - Text loaded into context (API docs, standards)
+- `assets/` - Files used in output (templates, images)
+- `scripts/` - Executed via `Bash` without being read into context (infinite token budget for procedural logic)
 
 ---
 
@@ -341,9 +370,17 @@ skill-name/
 name: skill-name          # Required. Max 64 chars, lowercase, hyphens only
 description: |            # Required. Follow Discovery Tiering Matrix
   Description text here
-license: MIT              # Optional
 allowed-tools: Read Edit  # Optional. Space-delimited pre-approved tools
-compatibility: python>=3.9 # Optional. Max 500 chars
+context: fork             # Optional. Run in isolated sub-agent context
+agent: security-reviewer  # Optional. Bind to agent persona when forked
+user-invocable: true      # Optional. Show in slash menu (default: true)
+disable-model-invocation: false  # Optional. Block Skill tool invocation
+hooks:                    # Optional. Skill-scoped hooks
+  PreToolUse:
+    - matcher: "Bash"
+      hooks:
+        - type: command
+          command: "./validate.sh"
 ---
 ```
 
@@ -516,26 +553,30 @@ allowedMcpServers:
 graph TB
     User["👤 User"]
     MainAgent["🤖 Main Agent<br/>(Claude)"]
-    Commands["📋 Commands<br/>(Slash Commands)"]
-    Subagents["🔧 Subagents<br/>(Launched via Task tool)"]
-    Skills["📚 Skills<br/>(Auto-loaded Knowledge)"]
+    Commands["📋 Commands<br/>(Orchestrator)"]
+    Subagents["🔧 Subagents<br/>(Agent-bound Skills)"]
+    Skills["📚 Skills<br/>(Atomic Capabilities)"]
     Tools["🛠️ Tools<br/>(Read, Write, Bash, etc.)"]
     Hooks["🪝 Hooks<br/>(Event Interception)"]
 
+    User -->|"Invokes (/skill)"| Skills
     User -->|"Invokes (/command)"| Commands
     User -->|"Natural Language"| MainAgent
-    
+
+    Commands -->|"Orchestrates"| Skills
     Commands -->|"Injects Instructions"| MainAgent
-    
+
     MainAgent -->|"Spawns via Task tool"| Subagents
     MainAgent -->|"Auto-loads via Description"| Skills
     MainAgent -->|"Uses"| Tools
-    
+
+    Skills -->|"context: fork"| Subagents
+    Skills -->|"Auto-discoverable"| MainAgent
+
     Subagents -->|"Return Results"| MainAgent
     Subagents -->|"Auto-load"| Skills
-    Subagents -->|"Invoke via Skill tool"| Commands
     Subagents -->|"Uses"| Tools
-    
+
     Tools -->|"Triggers"| Hooks
     Hooks -.->|"Blocks/Warns/Injects"| MainAgent
 ```
@@ -552,7 +593,7 @@ graph TB
 - **Move to .attic IN THE ROOT PATH (thecattoolkit/.attic) instead of deleting** - When removing code/files during refactoring
 - **No file pollution** - If a file wasn't requested, don't create it
 
-IMPORTANT: If you have access to claude-code-guide agent, you MUST use it PROACTIVELY. Spawn as much parallel background claude-code-guide agents as needed to verify and confirm any doubt.
+IMPORTANT: If you have access to claude-code-guide agent, you MUST use it PROACTIVELY. Spawn as much parallel background claude-code-guide agents with short and concise prompts descriptions as needed to verify and confirm any doubt.
 
 ---
 
@@ -657,6 +698,11 @@ REVIEW: Phase boundary (SUMMARY.md with evidence)
 <forbidden_pattern>
 **Tool Citation Anti-Pattern:** Citing specific tool names in documentation.
 **Fix:** Describe the behavior abstractly. Focus on "ask questions" not "use AskUserQuestion tool".
+</forbidden_pattern>
+
+<forbidden_pattern>
+**Environment-Specific Coupling:** Hardcoding `model` or `permissionMode` in Agent, Command, or Skill frontmatter.
+**Fix:** Remove these fields. These settings are environmental and non-portable; they break compatibility with custom endpoints (Zai, Minimax) and sandbox configurations. Trust the runtime or global settings to handle model selection and safety levels.
 </forbidden_pattern>
 
 ---
@@ -841,4 +887,5 @@ All runtime artifacts stored in `.cattoolkit/`:
 - **docs/HOOKS_OVERVIEW.md** - Hook system and events
 - **docs/IMPLEMENTATION-GUIDE.md** - Full implementation details
 - **docs/GOLD_STANDARD_COMMAND.md** - Command reference examples
+- **docs/INTERACTION_GRAPH.md** - Component interaction map
 - **README.md** - Installation and marketplace

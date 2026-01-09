@@ -13,6 +13,7 @@
 6. [Skill Tool Usage](#skill-tool-usage)
 7. [Common Patterns](#common-patterns)
 8. [Testing & Validation](#testing--validation)
+9. [Endpoint Configuration (Official & Unofficial)](#endpoint-configuration-official-and-unofficial)
 
 ---
 
@@ -25,7 +26,6 @@
 description: "Natural language description for AI discovery"
 argument-hint: "[description]"  # Optional: UI documentation hint
 allowed-tools: [Read, Grep, Task]  # Restrict tools
-model: claude-3-5-sonnet-20241022  # Optional: specific model
 disable-model-invocation: true  # Optional: prevent programmatic invocation
 hooks:
   PreToolUse:
@@ -57,8 +57,6 @@ description: |
   SPECIALIZES: Security vulnerability detection
   CONSTRAINTS: Read-only exploration
 tools: Read, Grep, Glob, Bash  # Comma-separated list
-model: sonnet  # sonnet, opus, haiku, or inherit
-permissionMode: acceptEdits  # default, acceptEdits, dontAsk, bypassPermissions, plan
 skills: security-analysis, code-review  # Skills to preload
 hooks:
   PostToolUse:
@@ -100,9 +98,9 @@ skills: [skill1, skill2, skill3]
 ```
 skill-name/
 ├── SKILL.md          # Required: Instructions + Metadata
-├── assets/           # Optional: Templates, data files
-├── references/       # Optional: On-demand documentation
-└── scripts/          # Optional: Executable scripts
+├── references/       # Optional: On-demand documentation (loaded into context)
+├── assets/           # Optional: Templates, data files (used in output)
+└── scripts/          # Optional: Executable scripts (run without loading into context)
 ```
 
 ### Valid Frontmatter Fields
@@ -113,21 +111,37 @@ name: my-skill
 description: |
   USE when analyzing security vulnerabilities.
   Performs comprehensive security audit of codebases.
-  Examples: Web security, authentication, data validation
+  Keywords: security audit, vulnerability scan, code analysis
+context: fork  # Runs in isolation (replaces Task tool)
+agent: security-reviewer  # Binds to persona in agents/*.md
 allowed-tools: [Read, Grep]  # Restrict tools when Skill active
-model: haiku  # Optional: specific model
-context: fork  # Optional: run in isolated subagent context
-agent: my-custom-agent  # Optional: bind to specific agent
+user-invocable: true  # Show in slash menu
+disable-model-invocation: false  # Allow programmatic invocation
 hooks:
   PreToolUse:
     - matcher: "Bash"
       hooks:
         - type: command
           command: "./security-check.sh"
-user-invocable: false  # Optional: hide from slash menu
-disable-model-invocation: true  # Optional: block programmatic invocation
 ---
 ```
+
+### New Unified Capability Fields
+
+**`context: fork`** - Runs in isolated context
+- Replaces Task tool delegation
+- No shared session history
+- Self-contained execution environment
+
+**`agent: [name]`** - Binds to reusable persona
+- References `agents/[name].md`
+- Inherits persona's tools and system prompt
+- Enables persona reuse across multiple Skills
+
+**`user-invocable: bool`** - Controls slash command visibility
+- `true` - Appears in `/` menu as `/skill-name`
+- `false` - Only auto-loaded via description matching
+- Default: `true`
 
 ### Progressive Disclosure
 
@@ -138,7 +152,9 @@ disable-model-invocation: true  # Optional: block programmatic invocation
 - Full `SKILL.md` body (<5000 tokens)
 
 **Level 3 (Resources)** - On-demand:
-- `references/*.md` (unlimited)
+- `references/*.md` - loaded into context when referenced
+- `scripts/` - executed via Bash without being read (infinite token budget)
+- `assets/` - used in output generation
 
 ---
 
@@ -245,8 +261,6 @@ Task(
   description="Review authentication code",
   prompt="Analyze the auth module for vulnerabilities...",
   subagent_type="security-reviewer",
-  model="sonnet",
-  permissionMode="acceptEdits",
   skills=["security-analysis"]
 )
 ```
@@ -273,23 +287,25 @@ Task(
 )
 ```
 
-### Agent Sovereignty (Context Scoping)
+### Context Sharing (Critical Concept)
 
-**Subagents operate as "Focused Lenses" on the current session.**
+**Each subagent operates in its own separate context window.** They can access session history but have specialized personas.
 
-They share the conversation history but adopt a specialized persona/system prompt. They are NOT "clean slate" sessions.
-
-**What IS shared:**
-- Session history (Read-only access to previous turns)
+**What subagents can ACCESS:**
+- Session conversation history (read-only visibility)
 - Filesystem state
-- MCP tools (Unless restricted via `tools`)
+- MCP tools (unless restricted via `tools` field)
 
-**What is SPECIALIZED (Not Shared):**
+**What is SPECIALIZED per subagent:**
+- **Context Window**: Separate from main conversation
 - **System Prompt**: Replaced by the agent's distinct persona
-- **Skills**: Must be explicitly listed in `skills` field (no auto-inheritance to keep focus tight)
-- **Permissions**: Defined by `tools` field (Least Privilege)
+- **Skills**: Must be explicitly listed in `skills` field (no auto-inheritance)
+- **Tool Access**: Defined by `tools` field (whitelist for Least Privilege)
 
-**Important:** Subagents **cannot spawn other subagents**
+**Important:** Always provide exhaustive context when spawning subagents—they don't automatically know everything from the main thread.
+
+**Can subagents spawn subagents?**
+Only if the agent has access to the `Task` tool. Built-in agents (Explore, Plan) typically cannot.
 
 ---
 
@@ -352,9 +368,9 @@ Task(
 )
 ```
 
-### Pattern 2: Context-Isolated Agent
+### Pattern 2: Specialized Agent
 
-**Agent with injected context:**
+**Agent with explicit tool restrictions:**
 
 ```yaml
 ---
@@ -365,8 +381,9 @@ skills: [pattern-analysis]
 ---
 
 ## Operational Protocol
-1. **Context First**: Use the injected context from the `# Context` section. If no context was injected and DISCOVERY.md exists, read it. DO NOT regenerate discovery.
-You operate in context-isolated windows. Use injected context, do not re-read files.
+1. Use injected context from the `# Context` section
+2. If no context was injected and DISCOVERY.md exists, read it
+3. DO NOT regenerate discovery—use existing context
 ```
 
 ### Pattern 3: Background Execution
@@ -473,7 +490,7 @@ done
 
 | Aspect | `tools` (Agents) | `allowed-tools` (Commands/Skills) |
 |:-------|:-----------------|:----------------------------------|
-| **Purpose** | Whitelist - defines what agent CAN use | Blacklist - restricts what CAN be used |
+| **Purpose** | Whitelist - defines what agent CAN use | Whitelist - restricts execution to ONLY these tools |
 | **Default Behavior** | Inherits ALL tools if omitted | No restriction if omitted |
 | **Security Impact** | CRITICAL - determines agent capabilities | Important - runtime restrictions |
 
@@ -505,34 +522,21 @@ tools: Read, Grep  # ONLY these tools
 # Result: Agent CANNOT use Write, Edit, Bash, AskUserQuestion
 ```
 
-### Permission Mode Selection Guide
+### Permission Mode Selection (Environmental)
 
-```yaml
-# Development Environment
----
-permissionMode: default
----
+Permission modes are global or session-based settings. They should NOT be hardcoded in component frontmatter.
 
-# Automated CI/CD
----
-permissionMode: dontAsk
----
+| Mode | Behavior | Use Case | Security |
+|:-----|:---------|:---------|:---------|
+| **`default`** | Prompts for each tool | Development | High |
+| **`acceptEdits`** | Auto-approves file operations | Code editing | Medium |
+| **`plan`** | Read-only analysis | Code review | High |
+| **`dontAsk`** | Auto-deny unless pre-approved | CI/CD | High |
+| **`bypassPermissions`** | All tools approved | Trusted environments | **Very Low** |
 
-# Code Review (Read-Only)
----
-permissionMode: plan
----
-
-# Trusted Code Editor
----
-permissionMode: acceptEdits
----
-
-# WARNING: Never use in untrusted environments
----
-permissionMode: bypassPermissions
----
-```
+To set the mode, use the CLI flags or environment variables:
+`claude --mode plan`
+`export CLAUDE_PERMISSION_MODE=acceptEdits`
 
 ### MCP Server Security
 
@@ -614,11 +618,11 @@ description: "Analyzes log files"
 # ✅ SECURE
 ---
 name: "file-analyzer"
-description: "Analyzes log files"
+description: "Log analysis (Read-only)"
 tools: Read, Grep
 ---
 
-# Protection: Agent can only read/analyze, not modify
+# Protection: Agent restricted by toolset, not hardcoded mode.
 ```
 
 #### **Vulnerability 2: Bash Command Injection**
@@ -660,11 +664,9 @@ tools: [Read, Write, Edit, Bash, Grep, Glob, Task, Skill]
 # ✅ SECURE
 ---
 tools: [Read, Grep]
-model: haiku
-permissionMode: plan
 ---
 
-# Protection: Read-only, fast model, plan mode
+# Protection: Read-only via tool restriction
 ```
 
 ---
@@ -674,6 +676,8 @@ permissionMode: plan
 ### The 10-Line Rule
 
 > **If a wrapper is >10 lines with no business logic, it's over-engineered. If it's <3 lines, it's definitely glue code.**
+
+**Rule:** Any Command file that contains *only* a `Task()` call pointing to a single Skill should be refactored into a Forked Skill.
 
 ### Detection Scripts
 
@@ -915,6 +919,132 @@ class OrderProcessor {
 
 ---
 
+### Refactoring Strategy: Command → Forked Skill
+
+**BEFORE (Deprecated Pattern):**
+```yaml
+# commands/analyze-security.md
+---
+description: "Analyze code for security issues"
+allowed-tools: [Task]
+---
+
+Task(
+  description="Security analysis: $ARGUMENTS",
+  prompt="Analyze the codebase for security vulnerabilities...",
+  subagent_type="security-analyzer",
+  skills=["security-standards"]
+)
+```
+
+**AFTER (Unified Capability Pattern):**
+```yaml
+# skills/security-analyzer/SKILL.md
+---
+name: security-analyzer
+description: |
+  USE when analyzing security vulnerabilities in codebases.
+  Scans for common security issues including SQL injection, XSS, and authentication flaws.
+  Keywords: security audit, vulnerability scan, code analysis
+context: fork
+agent: security-reviewer
+user-invocable: true
+allowed-tools: [Read, Grep, Bash]
+---
+
+# Operational Protocol
+1. Scan codebase for security vulnerabilities
+2. Generate detailed security report
+3. Provide remediation recommendations
+```
+
+**Migration Steps:**
+1. Copy Command's `description` → Skill's `description`
+2. Add `context: fork` to run in isolation
+3. Add `agent: [name]` for persona binding
+4. Set `user-invocable: true` if it was user-facing
+5. Move `allowed-tools` from Command to Skill
+6. Delete the Command file
+
+### Refactoring Strategy: Agent → Skill
+
+**IMPORTANT:** Don't blindly delete 1:1 agent-skill pairs. Keep agents if they define **specialized personas**.
+
+**DELETE Agent if it's an Empty Shell:**
+```yaml
+# agents/security-analyzer.md
+---
+tools: [Read, Grep, Bash]
+---
+# Generic instructions only
+```
+
+**Action:** Delete the agent file. Move tool restrictions to `SKILL.md`:
+```yaml
+# skills/security-analyzer/SKILL.md
+---
+allowed-tools: [Read, Grep, Bash]  # Moved here
+---
+
+# No agent field needed
+```
+
+**KEEP Agent if it defines a Specialized Persona:**
+```yaml
+# agents/security-reviewer.md
+---
+description: "Senior Security Auditor persona"
+tools: [Read, Grep, Bash]
+---
+You are a Senior Security Auditor with 15 years of experience. You are extremely pedantic about OWASP standards and never compromise on security best practices. Your tone is authoritative and detail-oriented.
+```
+
+**Action:** Keep the agent file. Bind the Skill to it:
+```yaml
+# skills/security-analyzer/SKILL.md
+---
+agent: security-reviewer  # Bind to specialized persona
+context: fork
+---
+
+# Uses the detailed persona from agents/security-reviewer.md
+```
+
+---
+
+### When to use Commands vs Agents vs Forked Skills
+
+| Component | Use When | Avoid When |
+|:----------|:---------|:-----------|
+| **Forked Skill** | Single atomic capability with optional persona binding | Orchestrating multiple phases |
+| **Command** | Managing multi-phase workflows (Skill A → Skill B → Skill C) | Wrapping single Skills (use Forked Skill instead) |
+| **Agent** | Defining reusable **specialized persona** used by multiple Skills | Generic tool restrictions (use allowed-tools instead) |
+
+**Decision Tree:**
+
+1. **Is this a single atomic task?**
+   - YES → Make it a Forked Skill with `user-invocable: true`
+   - NO → Continue to step 2
+
+2. **Does it require multiple phases?**
+   - YES → Use a Command to orchestrate multiple Skills
+   - NO → Make it a simple Forked Skill
+
+3. **Does the agent define a specialized persona?**
+   - YES (detailed system prompt, specific role, unique tone) → **Keep as separate Agent**
+   - NO (generic instructions, only tool restrictions) → Delete agent, use `allowed-tools` in Skill
+
+4. **Is the persona reused across multiple Skills?**
+   - YES → Keep as separate Agent
+   - NO → Inline into Skill as `context: fork` with `allowed-tools`
+
+**Key Principle:**
+- **Skills** define the **Task** (procedural knowledge)
+- **Agents** define the **Persona** (identity, tone, role)
+- **Commands** define the **Workflow** (orchestration)
+
+---
+
 ## Key Takeaways
 
 1. **Use Task tool** for delegating to subagents (not for invoking commands)
@@ -949,14 +1079,13 @@ class OrderProcessor {
 
 ### Agent Fields (Optional)
 - `name` ✓
-- `tools` (comma-separated)
+- `tools` (comma-separated whitelist)
 - `skills` (array)
-- `permissionMode`
 
-### Skill Fields (Optional)
+### Skill Fields (Required/Optional)
 - `name` ✓
 - `description` ✓
-- `context: fork` (for isolation)
+- `allowed-tools` (optional restriction)
 
 ### Hook Events (Real)
 SessionStart, UserPromptSubmit, PreToolUse, PermissionRequest, PostToolUse, Notification, Stop, SubagentStop, PreCompact, SessionEnd
@@ -968,3 +1097,47 @@ SessionStart, UserPromptSubmit, PreToolUse, PermissionRequest, PostToolUse, Noti
 - **Agent**: Task
 - **Invoke**: Skill
 - **Web**: WebSearch, WebFetch
+
+---
+
+## Endpoint Configuration (Official & Unofficial)
+
+The toolkit is **Claude Code Centric** but **Endpoint Agnostic**.
+
+### 9.1 Zai Code (Z.ai / GLM)
+
+**Environment Setup:**
+```bash
+export ANTHROPIC_BASE_URL="https://api.z.ai/v1" # Or local proxy
+export ANTHROPIC_API_KEY="your-zai-key"
+```
+
+**Skill Optimization:**
+- Image-heavy skills automatically leverage `GLM-4.6V` when the runtime is configured for Z.ai.
+
+### 9.2 Minimax Code (MiniMax-M2)
+
+**Environment Setup:**
+```bash
+export ANTHROPIC_BASE_URL="https://api.minimax.chat/v1/text/chat" 
+export ANTHROPIC_API_KEY="your-minimax-key"
+```
+
+**Agent Optimization:**
+- Minimax agents excel in autonomous code-run-fix loops. Ensure the environment is set to `permissionMode: acceptEdits` via global config for high-velocity tasks.
+
+### 9.3 Unified Configuration (`.claude/settings.json`)
+
+To ensure consistent behavior across providers, define global overrides in `~/.claude/settings.json`:
+
+```json
+{
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://api.z.ai/v1",
+    "ANTHROPIC_CUSTOM_HEADERS": {
+      "X-Provider-Name": "Zai"
+    }
+  },
+  "default_model": "glm-4.5"
+}
+```

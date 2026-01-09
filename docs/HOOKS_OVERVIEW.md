@@ -1,95 +1,145 @@
-# Claude Code Hooks & Lifecycle
+# Agentic Runtime Hooks & Lifecycle
 
 ## 1. The Governance Layer
 
 Hooks are the **Governance Layer** of the Agentic Runtime. They run *outside* the model's context, ensuring safety, compliance, and automated housekeeping.
 
-Usage: `plugins/<plugin>/hooks/hooks.json`
+**Location:** `plugins/<plugin>/hooks/hooks.json`
 
 ---
 
 ## 2. Native Lifecycle Events
 
-The runtime exposes several critical events that allow you to "Hook" into the cognition loop.
-
 | Event | Timing | Use Case |
 |:------|:-------|:---------|
-| **SessionStart** | When a new session begins | Initial context setup, welcome messages. |
-| **UserPromptSubmit**| Before prompt processing | Auto-activate skills, inject context. |
-| **PreToolUse** | Before tool execution | Block risky ops, modify inputs, safety checks. |
-| **PostToolUse** | After tool success | Run linters, formatters, automated testing. |
-| **Stop** | When the main agent stops | Final cleanup, session summary. |
-| **SubagentStop** | After agent task completion| Synthesis, teardown of specialized agents. |
-| **PreCompact** | Before context compaction | Protect critical history from being truncated. |
-| **Notification** | On system notifications | Integrate with external alerting/logging. |
+| **SessionStart** | New session begins | Initial context setup, welcome messages |
+| **UserPromptSubmit** | Before prompt processing | Auto-activate skills, inject context |
+| **PreToolUse** | Before tool execution | Block risky ops, modify inputs, safety checks |
+| **PermissionRequest** | Permission dialog shown | Permission handling |
+| **PostToolUse** | After tool success | Run linters, formatters, automated testing |
+| **Notification** | System notifications | External alerting/logging |
+| **Stop** | Main agent finishes | Final cleanup, session summary |
+| **SubagentStop** | After subagent completes | Synthesis, teardown of specialized agents |
+| **PreCompact** | Before context compaction | Protect critical history from truncation |
+| **SessionEnd** | Session ends | Final state cleanup |
+
+**Note:** `SubagentStart` does NOT exist—only `SubagentStop`.
 
 ---
 
-## 3. Reference Architecture
+## 3. Hook Types
 
-The Cat Toolkit uses a "Reference Architecture" (Zero-Install) pattern.
+### Command Hooks (Deterministic)
 
 ```json
 {
   "hooks": {
     "PreToolUse": [
       {
-        "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/plugins/guard-rail/hooks/verify_safety.py\""
-      }
-    ],
-    "UserPromptSubmit": [
-      {
-        "type": "prompt",
-        "prompt": "Before executing any destructive file operation, explain the consequences and confirm intent."
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/scripts/verify_safety.py\"",
+            "timeout": 30
+          }
+        ]
       }
     ]
   }
 }
 ```
 
-- **`${CLAUDE_PLUGIN_ROOT}`**: Points to the internal cache where your plugin resides. **Hooks MUST use this variable** for portability; never use absolute or exit-relative paths.
-- **Isolation**: Scripts should read from `stdin` as JSON, validate inputs (e.g., using `jq`), and return valid JSON to `stdout` (`continue`, `systemMessage`).
+### Prompt Hooks (Context-Aware)
 
-### Prompt-Based Hooks (Context-Aware)
-Hooks can be natural language prompts rather than just shell commands. This allows for LLM-driven validation logic or context injection.
-- **Type**: Set `"type": "prompt"` in `hooks.json`.
-- **Logic**: Research indicates that `"type": "prompt"` uses an LLM decision (Context-Aware) to determine whether to proceed or inject information, versus `"type": "command"` which is Deterministic.
-- **Purpose**: Use for logic requiring reasoning (e.g., "Review this code for security vulnerabilities before allowing the commit").
+```json
+{
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Before executing any destructive file operation, explain the consequences and confirm intent."
+          }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Prompt hooks** use LLM reasoning to decide whether to proceed or inject information.
+**Command hooks** are deterministic—use for performance or strict validation.
 
 ---
 
-## 4. Best Practices
+## 4. Hook Input/Output
 
-### The "Prompt-First" Strategy
-Prefer **Prompt-Based Hooks** (injecting instructions) over **Hard-Blocking Hooks** where possible.
-- **Good:** Injecting "Do not delete files without asking" into the system prompt.
-- **Necessary:** Hard-blocking `rm -rf /` in `PreToolUse`.
+**Input (JSON via stdin):**
+```json
+{
+  "session_id": "abc123",
+  "hook_event_name": "PreToolUse",
+  "tool_name": "Write",
+  "tool_input": {
+    "file_path": "/path/to/file.txt",
+    "content": "file content"
+  }
+}
+```
+
+**Output:**
+- Exit code `0` = Success (continue)
+- Exit code `2` = Block action
+
+Optional JSON response:
+```json
+{
+  "continue": true,
+  "systemMessage": "Operation validated"
+}
+```
+
+---
+
+## 5. Best Practices
+
+### Portability
+Always use `${CLAUDE_PLUGIN_ROOT}` for script paths:
+```json
+"command": "python3 \"${CLAUDE_PLUGIN_ROOT}/scripts/validate.py\""
+```
+
+### Prompt-First Strategy
+Prefer **Prompt-Based Hooks** (injecting instructions) over hard-blocking:
+- **Good:** Inject "Do not delete files without asking" into the system prompt
+- **Necessary:** Hard-block `rm -rf /` in `PreToolUse`
 
 ### Performance
-Hooks run on *every* interaction.
-- Keep them fast (<100ms).
-- Use `is_safe_read()` and avoid heavy computations.
+Hooks run on every interaction—keep them fast (<100ms).
 
-### The XML Signaling Pattern
-When a Hook needs to detect a specific state (e.g., "Task Complete" or "Error Found") inside the model's output, **do not rely on natural language**. It is too variable.
+---
 
-Instead, instruct the Agent to output an XML Signal, and use Regex in your hook to catch it.
+## 6. Signal Extraction Pattern (Optional)
 
-**The "Ralph Wiggum" Pattern (Loop Termination):**
+When a Hook needs to detect a specific state from model output, **XML signals** provide reliable extraction:
 
-1.  **Instruction (in Command/Prompt):**
-    > "When you have fully satisfied the requirements, output `<promise>COMPLETE</promise>`."
+**Instruction (in Command):**
+```markdown
+When you have fully satisfied the requirements, output `<promise>COMPLETE</promise>`.
+```
 
-2.  **Detection (in `stop-hook.sh`):**
-    ```bash
-    # Extract text between XML tags
-    PROMISE=$(echo "$LAST_OUTPUT" | perl -pe 's/.*?<promise>(.*?)<\/promise>.*/$1/s')
-    
-    if [[ "$PROMISE" == "COMPLETE" ]]; then
-      exit 0 # Allow stop
-    fi
-    ```
+**Detection (in hook script):**
+```bash
+PROMISE=$(echo "$LAST_OUTPUT" | grep -oP '(?<=<promise>).*(?=</promise>)')
+if [[ "$PROMISE" == "COMPLETE" ]]; then
+  exit 0
+fi
+```
 
-**Why XML?**
-*   **Unambiguous Boundaries:** Regex can match `<tag>...</tag>` precisely, ignoring surrounding chatter.
-*   **Machine Parseable:** Allows extraction of structured data (e.g., `<score>85</score>`) by validation scripts.
+**Why XML for signals?**
+- **Unambiguous boundaries:** Regex can match `<tag>...</tag>` precisely
+- **Machine parseable:** Allows extraction of structured data like `<score>85</score>`
+
+**Note:** This pattern is for **hook signal extraction only**, not for structuring Commands or Skills.

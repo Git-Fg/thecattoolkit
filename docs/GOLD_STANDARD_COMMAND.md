@@ -3,146 +3,134 @@ description: Guided feature development with codebase understanding and architec
 argument-hint: Optional feature description
 ---
 
-# Feature Development
+# Feature Development Command (Gold Standard)
 
-You are helping a developer implement a new feature. Follow a systematic approach: understand the codebase deeply, identify and ask about all underspecified details, design elegant architectures, then implement.
+This command demonstrates the **ideal pattern** for complex multi-phase workflows that orchestrate multiple agents.
 
-**Pattern:** Discovery First → Question Burst → Execution → Review
-**Phases:** 7
-**Question Points:** 2
+**Pattern:** Discovery → Exploration (Agents) → Questions → Architecture (Agents) → Implementation → Review (Agents) → Summary
 
 ## Core Principles
 
-- **Ask clarifying questions**: Identify all ambiguities, edge cases, and underspecified behaviors. Present specific, concrete questions with multiple options rather than making assumptions. Wait for user responses before proceeding with implementation. Ask questions early (after understanding the codebase, before designing architecture).
-- **Understand before acting**: Read and comprehend existing code patterns first
-- **Read files identified by agents**: When launching agents, ask them to return lists of the most important files to read. After agents complete, read those files to build detailed context before proceeding.
-- **Simple and elegant**: Prioritize readable, maintainable, architecturally sound code
-- **Use TodoWrite**: Track all progress throughout
+- **Understand before acting:** Read and comprehend existing code patterns first
+- **Ask clarifying questions:** Identify ambiguities early, present specific options
+- **Delegate to agents:** Use parallel agents for exploration, architecture, and review
+- **Use TodoWrite:** Track progress throughout
 
 ---
 
 ## Phase 1: Discovery
 
 **Goal:** Understand what needs to be built
-**Context:** Initial request: $ARGUMENTS
-**Outcome:** Mental model of requirements, questions identified for later
-**Interaction:** Zero (discovery only)
+**Outcome:** Mental model of requirements
+**Interaction:** None (discovery only)
 
-**Actions**:
+**Actions:**
 1. Create todo list with all phases
-2. Read and comprehend the feature request deeply
+2. Read and comprehend the feature request: $ARGUMENTS
 3. Form initial mental model of requirements
-4. Note any unclear aspects for later questioning (do NOT ask yet)
+4. Note unclear aspects for later questioning
 
 ---
 
 ## Phase 2: Codebase Exploration
 
-**Goal:** Understand relevant existing code and patterns at both high and low levels
-**Outcome:** Comprehensive codebase mental model, identified questions for clarification
-**Interaction:** Zero (agent delegation only)
-**Agents:** 2-3 parallel code-explorer agents
+**Goal:** Understand relevant existing code and patterns
+**Outcome:** Comprehensive codebase mental model
+**Interaction:** None (agent delegation only)
 
-**Actions**:
-1. Launch 2-3 code-explorer agents in parallel. Each agent should:
-   - Trace through the code comprehensively and focus on getting a comprehensive understanding of abstractions, architecture and flow of control
-   - Target a different aspect of the codebase (eg. similar features, high level understanding, architectural understanding, user experience, etc)
-   - Include a list of 5-10 key files to read
-   - Note architectural patterns, potential integration points, and implementation concerns for later analysis
+**Actions:**
+1. Launch 2-3 code-explorer agents **in parallel** via Task tool:
+   - Agent 1: Find features similar to the requested feature
+   - Agent 2: Map architecture and abstractions for the relevant area
+   - Agent 3: Identify UI patterns, testing approaches, or extension points
 
-   **Example agent prompts**:
-   - "Find features similar to [feature] and trace through their implementation comprehensively"
-   - "Map the architecture and abstractions for [feature area], tracing through the code comprehensively"
-   - "Analyze the current implementation of [existing feature/area], tracing through the code comprehensively"
-   - "Identify UI patterns, testing approaches, or extension points relevant to [feature]"
+   Each agent should return a list of 5-10 key files to read.
 
-2. Once the agents return, read all files identified by agents to build deep understanding
-3. Synthesize findings into comprehensive mental model of existing codebase
-4. Identify gaps, ambiguities, and questions that need clarification (do NOT ask yet)
+2. Read all files identified by agents
+3. Synthesize findings into comprehensive mental model
+4. Identify gaps and questions for Phase 3
 
 ---
 
 ## Phase 3: Centralized Question Burst
 
 **Goal:** Resolve ALL ambiguities at once for uninterrupted execution
-**Outcome:** Complete requirements specification, all questions answered
+**Outcome:** Complete requirements specification
 **Interaction:** High (comprehensive Q&A)
-**Critical:** This is the ONLY question-asking phase. DO NOT SKIP.
+**Critical:** This is the ONLY question-asking phase
 
-**Actions**:
-1. Review findings from Phases 1-2 and original feature request
-2. Compile comprehensive list of ALL questions needed:
-   - Edge cases and error handling scenarios
-   - Integration points with existing systems
-   - Scope boundaries and feature requirements
-   - Design preferences and architectural choices
-   - Backward compatibility and performance needs
-3. **Present all questions in one organized, centralized list**
-4. **Wait for all answers before proceeding to architecture design**
-
-This centralized approach enables uninterrupted flow through Phases 4-7.
-
-If the user says "whatever you think is best", provide your recommendation and get explicit confirmation.
+**Actions:**
+1. Compile comprehensive list of ALL questions:
+   - Edge cases and error handling
+   - Integration points
+   - Scope boundaries
+   - Design preferences
+   - Backward compatibility
+2. Present all questions in one organized list
+3. Wait for all answers before proceeding
 
 ---
 
 ## Phase 4: Architecture Design
 
-**Goal:** Design multiple implementation approaches with different trade-offs
-**Outcome:** Architecture approach selected, implementation path defined
-**Interaction:** Medium (architecture selection Q&A)
-**Agents:** 2-3 parallel code-architect agents
+**Goal:** Design implementation approaches with trade-offs
+**Outcome:** Architecture approach selected
+**Interaction:** Medium (architecture selection)
 
-**Actions**:
-1. Launch 2-3 code-architect agents in parallel with different focuses: minimal changes (smallest change, maximum reuse), clean architecture (maintainability, elegant abstractions), or pragmatic balance (speed + quality)
-2. Review all approaches and form your opinion on which fits best for this specific task (consider: small fix vs large feature, urgency, complexity, team context)
-3. Present to user: brief summary of each approach, trade-offs comparison, **your recommendation with reasoning**, concrete implementation differences
-4. **Ask user which approach they prefer**
+**Actions:**
+1. Launch 2-3 code-architect agents **in parallel** via Task tool:
+   - Approach 1: Minimal changes (smallest change, maximum reuse)
+   - Approach 2: Clean architecture (maintainability, elegant abstractions)
+   - Approach 3: Pragmatic balance (speed + quality)
+
+2. Present to user:
+   - Brief summary of each approach
+   - Trade-offs comparison
+   - Your recommendation with reasoning
+3. Ask which approach they prefer
 
 ---
 
 ## Phase 5: Implementation
 
 **Goal:** Build the feature
-**Outcome:** Fully implemented feature following chosen architecture
-**Interaction:** Zero (pure execution)
-**Critical:** DO NOT START WITHOUT USER APPROVAL
+**Outcome:** Fully implemented feature
+**Interaction:** None (pure execution)
+**Critical:** Wait for explicit user approval
 
-**Actions**:
+**Actions:**
 1. Wait for explicit user approval
-2. Read all relevant files identified in previous phases
+2. Read all relevant files from previous phases
 3. Implement following chosen architecture
 4. Follow codebase conventions strictly
-5. Write clean, well-documented code
-6. Update todos as you progress
+5. Update todos as you progress
 
 ---
 
 ## Phase 6: Quality Review
 
-**Goal:** Ensure code is simple, DRY, elegant, easy to read, and functionally correct
-**Outcome:** Quality issues identified and resolved based on user preferences
-**Interaction:** Medium (quality findings + remediation decision)
-**Agents:** 3 parallel code-reviewer agents
+**Goal:** Ensure code quality and correctness
+**Outcome:** Quality issues resolved
+**Interaction:** Medium (findings + decision)
 
-**Actions**:
-1. Launch 3 code-reviewer agents in parallel with different focuses: simplicity/DRY/elegance, bugs/functional correctness, project conventions/abstractions
-2. Consolidate findings and identify highest severity issues that you recommend fixing
-3. **Present findings to user and ask what they want to do** (fix now, fix later, or proceed as-is)
-4. Address issues based on user decision
+**Actions:**
+1. Launch 3 code-reviewer agents **in parallel** via Task tool:
+   - Reviewer 1: Simplicity, DRY, elegance
+   - Reviewer 2: Bugs, functional correctness
+   - Reviewer 3: Project conventions, abstractions
+
+2. Consolidate findings
+3. Present to user and ask what they want to do
+4. Address issues based on decision
 
 ---
 
 ## Phase 7: Summary
 
 **Goal:** Document what was accomplished
-**Outcome:** Complete documentation of implementation and decisions
-**Interaction:** Zero (documentation only)
+**Outcome:** Complete documentation
+**Interaction:** None
 
-**Actions**:
+**Actions:**
 1. Mark all todos complete
-2. Summarize:
-   - What was built
-   - Key decisions made
-   - Files modified
-   - Suggested next steps
+2. Summarize: what was built, key decisions, files modified, next steps

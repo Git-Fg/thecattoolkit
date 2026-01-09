@@ -82,11 +82,11 @@ skill-name/
 | `name` | **Yes** | Skill name. Lowercase letters, numbers, hyphens only (max 64 chars). Must match directory name. |
 | `description` | **Yes** | What the Skill does and when to use it (max 1024 chars). Claude uses this for semantic matching. |
 | `allowed-tools` | No | Tools Claude can use without asking permission. Comma-separated or YAML list. |
-| `model` | No | Model to use (`claude-sonnet-4-20250514`, etc.). Defaults to conversation's model. |
+| `model` | No | Model to use (`claude-sonnet-4-20250514`, etc.). Defaults to conversation's model. **Warning:** Hardcoding model in frontmatter breaks portability across endpoints—prefer omitting or using environment config. |
 | `context` | No | Set to `fork` to run in isolated sub-agent context. |
 | `agent` | No | Agent type for forked context (`Explore`, `Plan`, `general-purpose`, or custom agent name). |
 | `hooks` | No | Hooks scoped to Skill lifecycle (`PreToolUse`, `PostToolUse`, `Stop`). |
-| `user-invocable` | No | Controls slash command menu visibility. Default: `true`. |
+| `user-invocable` | No | Controls slash command menu visibility. Default: `true`. Set to `false` to hide from slash menu. |
 | `disable-model-invocation` | No | Blocks programmatic invocation via `Skill` tool. Default: `false`. |
 
 ### Complete Example

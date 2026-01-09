@@ -1,13 +1,24 @@
-# Command Standards: Reusable Prompts
+# Command Standards: Orchestration Layer
 
-## 1. Philosophy: Commands are Prompts
+## 1. Philosophy: Commands Orchestrate Multi-Skill Workflows
 
-In the Agentic Runtime, a Command is an **Instruction FOR Claude**, not a message TO the user. It is a Markdown file whose content becomes Claude's internal mission statement for the current turn.
-1.  **Gathers Context:** Uses `!bash` to get the ground truth from the environment.
-2.  **Captures Intent:** Injects the user's natural language requirements via `$ARGUMENTS`.
-3.  **Delegates (The Task Tool):** Instructs the Main Agent to solve the problem, often by spawning specialized agents in parallel via the `Task` tool.
+**IMPORTANT:** With the Unified Skill Capability model, most simple tasks no longer require Command wrappers. Use `user-invocable: true` in your Skill instead.
 
-> **The Law of Native Delegation:** Never write in code what can be described in intent.
+Commands are **Orchestration Layer** components that manage multi-phase workflows by sequencing multiple Skills together.
+
+**The Pattern:**
+1. **Gather Context:** Use `!bash` to get ground truth from the environment
+2. **Capture Intent:** Inject user's natural language via `$ARGUMENTS`
+3. **Orchestrate:** Sequence multiple Skills to complete complex workflows
+
+**When to Use Commands:**
+- Multi-phase workflows (Skill A → Skill B → Skill C)
+- Need `argument-hint` for UI documentation
+- Complex orchestration requiring decision trees
+
+**When NOT to Use Commands:**
+- Single atomic task → Use Forked Skill instead
+- Wrapping one Skill → Use Forked Skill instead
 
 ---
 
@@ -18,71 +29,179 @@ Location: `plugins/<plugin-name>/commands/<command-name>.md`
 ```markdown
 ---
 description: Natural language description for AI discovery
-argument-hint: [string] # Optional: UI documentation hint only
+argument-hint: [string]  # Optional: UI documentation hint only
 ---
 
 # Context
-!ls -R src/  # Example: Get ground truth
+!git diff --staged
+!ls -R src/
 
-# Instruction
-Standardize on the **Parallel Agent Pattern** to handle complexity.
-Launch 3 agents **in parallel** via the `Task` tool. Each agent should focus on a specific sub-problem (e.g. logic, tests, docs).
-Pass the user's requirements: rules: $ARGUMENTS
+# Instructions
+Based on the context above, analyze the changes and $ARGUMENTS.
 
-**The Task Tool:** Commands guide the Main Agent, which then invokes the `Task` tool to spawn subagents. Subagents return their results to the Main Agent for final synthesis.
+Launch agents in parallel if needed to handle complexity.
+```
+
+### The Feature Dev Pattern (Complex Orchestration)
+
+```markdown
+---
+description: Orchestrate full feature development workflow
+argument-hint: [feature-description]
+---
+
+# Context
+!git status
+!cat ROADMAP.md
+
+# Instructions
+Orchestrate the feature development workflow for: $ARGUMENTS
+
+Phase 1: Design Analysis
+- Use skill: architecture-review
+- Analyze requirements and existing patterns
+
+Phase 2: Implementation Planning
+- Use skill: code-generator
+- Generate implementation plan with tests
+
+Phase 3: Code Generation
+- Use skill: implementation-expert
+- Generate code following project standards
+
+Phase 4: Testing
+- Use skill: test-validator
+- Generate comprehensive tests
+
+Phase 5: Documentation
+- Use skill: doc-generator
+- Update documentation
+
+Synthesize all phases into a cohesive feature implementation.
+```
+
+**Simple tasks** (like commit messages) should now use Forked Skills instead of Commands.
 
 ---
 
 ## 3. Rules & Standards
 
-### ✅ DO: Use `$ARGUMENTS` for Everything
-Native intelligence can parse "fix the login button" better than you can regex it.
-- **Good:** "Launch agent to fix $ARGUMENTS"
-- **Bad:** Rigid argument parsing (e.g., `$1`, `$2`) or fixed positional schemas.
-
-### ❌ DON'T: Use Rigid Positional Parsing
-Claude Code does not enforce rigid positional parsing from a frontmatter `args:` list.
-- **Anti-Pattern:** Building complex `!bash` find/grep chains in the command itself to handle rigid inputs.
-- **Native Pattern:** Accept `$ARGUMENTS` and let the agent's native intelligence determine the file paths/actions.
-
-### ❌ DON'T: Use XML for Prompt Structure
-Do not use tags like `<assignment>`, `<context>`, or `<instruction>` to structure your Command file. The Agentic Runtime is optimized for **Markdown**.
-
-*   **Bad:** `<context>Here is the file list...</context>`
-*   **Good:** `# Context` followed by `!ls -la`
-
-XML tags in Commands should *only* be used if you are teaching the agent how to generate XML outputs (see **The XML Signaling Pattern** in Hooks).
-
-### Real Pattern Example
-The `/commit` command serves as a perfect template:
+### Use `$ARGUMENTS` for Everything
+Native intelligence parses "fix the login button" better than rigid parsing.
 
 ```markdown
-# Context
-!git diff --staged
+# Good
+Launch an agent to fix $ARGUMENTS
 
-# Instructions
-Based on the changes above, write a conventional commit message.
+# Bad - rigid positional parsing
+Arg 1: $1 (file path)
+Arg 2: $2 (action)
 ```
+
+### Use Markdown for Structure
+Commands use **Markdown headers** for structure, not XML tags.
+
+```markdown
+# Good
+## Context
+## Instructions
+## Constraints
+
+# Bad - XML for structure
+<context>...</context>
+<assignment>...</assignment>
+```
+
+### Orchestration Patterns
+
+**Multi-Skill Orchestration:**
+```markdown
+Orchestrate a security audit of the codebase:
+
+Phase 1: Architecture Analysis
+- Use skill: security-scanner (context: fork)
+- Scan for common vulnerabilities
+
+Phase 2: Deep Analysis
+- Use skill: vulnerability-expert (context: fork)
+- Analyze specific vulnerability patterns
+
+Phase 3: Compliance Check
+- Use skill: compliance-validator (context: fork)
+- Verify against security standards
+
+Phase 4: Report Generation
+- Use skill: report-generator (context: fork)
+- Synthesize findings into actionable report
+
+Each skill runs independently in forked context. Commands orchestrate the sequence.
+```
+
+**Parallel Skill Execution:**
+```markdown
+Launch skills in parallel to audit different components:
+
+- Use skill: api-security-scanner (context: fork)
+- Use skill: auth-security-scanner (context: fork)
+- Use skill: db-security-scanner (context: fork)
+- Use skill: utils-security-scanner (context: fork)
+
+Each skill reports independently. Synthesize findings after all complete.
+```
+
+Commands now orchestrate **Skills** (not agents) in the unified model.
 
 ---
 
 ## 4. Tool Restrictions
-Commands can use the `allowed-tools` frontmatter to enforce safety or focus. This restriction cascades: if the Main Agent is restricted to `[Read, Grep]`, any subagents it spawns via the `Task` tool will inherit these restrictions.
+
+Commands can use `allowed-tools` frontmatter to enforce safety or focus:
 
 ```yaml
 ---
 description: Read-only codebase explorer
-allowed-tools: [Read, Grep, LS, find]
+allowed-tools: [Read, Grep, Glob]
 ---
 ```
 
+This restriction cascades: subagents spawned via `Task` inherit these restrictions.
+
 ---
 
-## 5. The "Skill Tool" Recursive Pattern
-Agents can invoke Commands via the `Skill` tool. This is how we build complex workflows from simple primitives.
-- An Agent handling a feature can call `/commit` to save its work.
-- An Agent debugging can call `/test` to verify.
+## 5. The Skill Tool (Recursive Pattern)
 
-This turns your Commands into the **"Standard Library"** for your Agents.
+Agents can invoke Commands via the `Skill` tool, turning Commands into a **Standard Library**:
 
-> **Note:** The `SlashCommand` tool has been deprecated and merged into the `Skill` tool.
+- An Agent handling a feature can call `/commit` to save its work
+- An Agent debugging can call `/test` to verify
+
+**Syntax:** `Skill(/command-name args)`
+
+---
+
+## 6. Command Types
+
+| Type | Consumer | `disable-model-invocation` | AskUserQuestion |
+|:-----|:---------|:---------------------------|:----------------|
+| User-Centric | Human only | `true` | Yes |
+| Agent-Ready | Specialized Agents | `false` | No |
+| Hybrid | Both | `false` | Conditional |
+
+---
+
+## 7. Valid Frontmatter Fields
+
+```yaml
+---
+description: "Natural language description for AI discovery"  # Required
+argument-hint: "[description]"  # Optional: UI hint only
+allowed-tools: [Read, Grep, Task]  # Optional: restrict tools
+disable-model-invocation: true  # Optional: prevent Skill tool invocation
+hooks:
+  PreToolUse:
+    - matcher: "Bash"
+      hooks:
+        - type: command
+          command: "./validate.sh"
+---
+```

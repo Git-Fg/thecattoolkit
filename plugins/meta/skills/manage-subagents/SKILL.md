@@ -93,7 +93,7 @@ Project-level subagents override user-level when names conflict. Use project loc
 - `Glob`, `Grep` - File search
 - `Bash` - Execute shell commands
 - `TodoWrite` - Manage todo lists
-- `Skill` - Invoke skills and commands (SlashCommand tool deprecated)
+- `Skill` - Invoke skills and commands
 - `Task` - Delegate to subagents
 - `WebSearch`, `WebFetch` - Web access
 - `BashOutput`, `KillShell` - Background shell management

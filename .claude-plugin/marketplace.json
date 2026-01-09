@@ -11,44 +11,19 @@
   },
   "plugins": [
     {
-      "name": "architect",
-      "source": "./plugins/architect",
-      "description": "The System Designer: Comprehensive system architecture, design patterns, and technical decision documentation."
-    },
-    {
       "name": "builder",
       "source": "./plugins/builder",
-      "description": "The Unified Builder: Consolidates planning and engineering into a single cohesive workflow. Plan Creation, Plan Execution, TDD, Debugging, and Code Review."
-    },
-    {
-      "name": "context",
-      "source": "./plugins/context",
-      "description": "Session state management and scratchpad pattern for avoiding context overflow and enabling session handoffs."
-    },
-    {
-      "name": "guard-python",
-      "source": "./plugins/guard-python",
-      "description": "The Immune System: File safety warnings, security checks, and type-checking hooks for Python safety."
-    },
-    {
-      "name": "guard-ts",
-      "source": "./plugins/guard-ts",
-      "description": "The Immune System: File safety warnings, security checks, and type-checking hooks for TypeScript safety."
+      "description": "The Unified Builder: Consolidates planning and engineering into a single cohesive workflow. Features autonomous execution, systematic debugging, and test-driven development."
     },
     {
       "name": "meta",
       "source": "./plugins/meta",
-      "description": "The Toolkit Builder: Create skills, agents, commands, and hooks for plugin development. Includes self-correction (/heal)."
+      "description": "The Toolkit Builder: Tools to build, maintain, and audit the AI system itself. Includes command creation, agent development, and self-correction (/heal)."
     },
     {
-      "name": "prompter",
-      "source": "./plugins/prompter",
-      "description": "Prompt engineering, meta-prompting, and prompt chain orchestration for AI-to-AI workflows."
-    },
-    {
-      "name": "think",
-      "source": "./plugins/think",
-      "description": "Mental models and thinking frameworks for structured problem analysis and decision-making. No code execution."
+      "name": "strategist",
+      "source": "./plugins/strategist",
+      "description": "High-level planning and reasoning agents with interactive thinking frameworks and prompt engineering capabilities."
     }
   ]
 }
