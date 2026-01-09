@@ -69,7 +69,7 @@ Components function standalone. Synergy is a side effect.
 **Eliminate Glue Code.** A Skill that defines its own context (`context: fork`) and is user-invocable requires NO Command wrapper.
 
 Skills are now **active atomic capability units** that execute independently:
-- **Forked Skills:** Use `context: fork` to run in isolation—**THIS IS THE PRIMARY DELEGATION METHOD**
+- **Forked Skills:** Use `context: fork` to run in isolation via **Recursive Agentic Delegation**.
 - **User-Invocable Skills:** Appears in slash commands by default (set `user-invocable: false` only to hide)
 - **Agent-Bound Skills:** Use `agent: [name]` to bind to reusable personas
 
@@ -182,7 +182,7 @@ Commands can use the `allowed-tools` frontmatter to enforce safety or focus.
 ```yaml
 ---
 description: Read-only codebase explorer
-allowed-tools: [Read, Grep, LS, find]
+allowed-tools: [Read, Grep, Glob, Bash(ls), Bash(find), Bash(cat)]
 ---
 ```
 
@@ -197,7 +197,7 @@ Agents can invoke Commands via the `Skill` tool. This transforms the Command Sui
 - An Agent handling a feature can call `/commit` to save its work.
 - An Agent debugging can call `/test` to verify.
 
-**Syntax:** `Skill(/command-name)` for exact match. Arguments are passed using the command's `$ARGUMENTS` placeholder.
+**Syntax:** Agents can invoke Commands via the `Skill` tool using `Skill(/command-name)` for exact matches or `Skill(/command:*)` for prefix matching with arguments. Arguments are passed using the command's `$ARGUMENTS` placeholder.
 
 ---
 
@@ -209,8 +209,9 @@ Agents are **Specialized Personas** with their own system prompts and optional t
 
 **Key Concepts:**
 - **Agent vs Subagent:** An Agent is the definition (`agents/*.md`); a "Subagent" is the runtime instance spawned via `Task` tool
-- **Model Selection:** Agents can use `haiku` (speed), `sonnet` (balance), `opus` (logic), `default`, or `opusplan` (opus for planning, sonnet for execution)
-- **Tool Restriction:** Defined via `tools` field in frontmatter (whitelist)
+- **Model Selection:** Agents can use `haiku` (speed), `sonnet` (balance), `opus` (logic), or `'inherit'` to use the main conversation's model
+- **Tool Restriction:** Defined via `tools` field in frontmatter (whitelist). If omitted, agents inherit ALL tools from the main thread
+- **Permission Mode:** Controls how the agent handles permission requests: `default`, `acceptEdits`, `dontAsk`, `bypassPermissions`, `plan`, or `ignore`
 - **Context Sharing:** Each subagent operates in its own separate context window. They can access session conversation history (read-only) but have their own specialized system prompt. Provide exhaustive context when spawning.
 - **Lifecycle:** `SubagentStop` hook triggers when a subagent completes
 
@@ -231,12 +232,21 @@ The `Task` tool is the primitive used to spawn subagents.
 name: code-reviewer
 description: Analyzes code for quality issues
 tools: Read, Grep, Glob, Bash  # Only these tools available
+model: sonnet  # Optional: model to use (sonnet, opus, haiku, or 'inherit')
+permissionMode: plan  # Optional: permission handling (default, acceptEdits, dontAsk, bypassPermissions, plan, ignore)
+skills: security-standards  # Optional: skills to auto-load
+hooks:  # Optional: component-scoped hooks
+  PreToolUse:
+    - matcher: "Bash"
+      hooks:
+        - type: command
+          command: "./validate.sh"
 ---
 
 # Omitting tools field = inherits ALL tools from main thread
 ```
 
-**Critical Rule:** If you omit the `tools` field, the agent inherits ALL tools including Read, Write, Edit, Bash, AskUserQuestion, Task, Skill, and all MCP tools.
+**Critical Rule:** If you omit the `tools` field, the agent inherits ALL tools including Read, Write, Edit, Bash, AskUserQuestion, Task, Skill, and all MCP tools. The agent field supports: `name`, `description`, `tools`, `model`, `permissionMode`, `skills`, and `hooks`.
 
 ---
 
@@ -375,7 +385,7 @@ Skills use a **3-level loading hierarchy** to minimize context usage:
 name: skill-name          # Required. Max 64 chars, lowercase, hyphens only
 description: |            # Required. Follow Discovery Tiering Matrix
   Description text here
-allowed-tools: Read Edit  # Optional. Space-delimited pre-approved tools
+allowed-tools: Read, Edit  # Optional. Comma-delimited pre-approved tools
 context: fork             # Optional. Run in isolated sub-agent context
 agent: security-reviewer  # Optional. Bind to agent persona when forked
 # user-invocable: false   # Optional. Set to false to hide from slash menu (defaults to true)
@@ -433,8 +443,68 @@ Claude Code implements a **defense-in-depth permission model** with two primary 
 | **`plan`** | Read-only analysis | Code review | High |
 | **`dontAsk`** | Auto-deny unless pre-approved | CI/CD | High |
 | **`bypassPermissions`** | All tools approved | Trusted environments | **Very Low** |
+| **`ignore`** | Ignores permission system completely | Advanced users only | **None** |
 
-**Best Practice:** Use `plan` mode for analysis agents to ensure read-only operations.
+**Best Practice:** Use `plan` mode for analysis agents to ensure read-only operations. Use `ignore` only for trusted, controlled environments where you understand the security implications.
+
+### Complex Permission Inheritance
+
+Permission inheritance follows a **cascading hierarchy**:
+
+```yaml
+# Main Agent Configuration
+permissionMode: default
+allowed-tools: [Read, Grep]
+
+# Subagent inherits from main agent
+permissionMode: plan  # Overrides main agent's default mode
+tools: [Read]  # Further restricts to Read-only
+
+# Skill within subagent
+permissionMode: acceptEdits  # Overrides subagent's plan mode
+allowed-tools: [Read, Write, Edit]  # But skill can still be restricted
+```
+
+**Inheritance Rules:**
+1. **Main Agent** sets baseline permissions
+2. **Subagents** can override `permissionMode` but inherit tool restrictions unless explicitly overridden
+3. **Skills** can override both `permissionMode` and `allowed-tools`
+4. **Component-scoped hooks** inherit permissions from their parent component
+
+### Fine-Grained Tool Permissions
+
+Tools support **wildcard patterns** for granular control:
+
+```yaml
+# Bash command restrictions
+allowed-tools: [
+  Bash(git add:*),      # Allow git add with any arguments
+  Bash(git status:*),   # Allow git status with any arguments
+  Bash(git commit:*),   # Allow git commit with any arguments
+  Bash(npm test:*),     # Allow npm test with any arguments
+  Read,                 # Allow all Read operations
+  Grep                  # Allow all Grep operations
+]
+
+# Block dangerous patterns
+disallowed-tools: [
+  Bash(rm *),          # Block all rm commands
+  Bash(sudo *),        # Block all sudo commands
+  Edit                 # Block all Edit operations
+]
+```
+
+**Pattern Matching:**
+- **`tool-name:*`** - Allow tool with any arguments
+- **`tool-name:pattern`** - Allow tool only with matching arguments
+- **`tool-name`** - Allow tool with no arguments
+- **`Skill(name)`** - Allow specific skill invocation
+- **`*`** - Match all tools of this type
+
+**Security Best Practices:**
+- **Whitelist approach:** Always specify exact commands when possible
+- **Argument validation:** Use specific patterns to prevent command injection
+- **Dangerous tool restriction:** Explicitly block risky operations like `rm`, `sudo`, `chmod`
 
 ### Common Permission Vulnerabilities
 
@@ -506,6 +576,7 @@ Hooks are the **Immune System**—interception, safety, context injection. Never
 - **Input Hygiene:** Command hooks MUST read stdin as JSON, validate inputs using `jq`, and quote ALL variables.
 - **Output Protocol:** Return valid JSON (`continue`, `systemMessage`). Use Exit Code `0` for success, `2` for blocking errors.
 - **Prompt First:** Prefer Prompt-Based hooks for logic requiring reasoning; reserve Command hooks for performance/determinism.
+- **Component-Scoped Hooks:** Skills, Agents, and Slash Commands can define hooks scoped to their lifecycle using frontmatter. These support only `PreToolUse`, `PostToolUse`, and `Stop` events. Global hooks (in hooks.json) support all events.
 
 ---
 
@@ -724,8 +795,18 @@ REVIEW: Phase boundary (SUMMARY.md with evidence)
 </forbidden_pattern>
 
 <forbidden_pattern>
-**Environment-Specific Coupling:** Hardcoding `model` or `permissionMode` in Agent, Command, or Skill frontmatter.
-**Fix:** Remove these fields. These settings are environmental and non-portable; they break compatibility with custom endpoints (Zai, Minimax) and sandbox configurations. Trust the runtime or global settings to handle model selection and safety levels.
+**Environment-Specific Coupling:** Hardcoding `model` or `permissionMode` in Agent, Command, or Skill frontmatter when these values should be configurable per environment.
+**Fix:** Use environment variables or settings files for environment-specific values. The `model` field supports values like `sonnet`, `opus`, `haiku`, or `'inherit'` to use the main conversation's model. The `permissionMode` field supports `default`, `acceptEdits`, `dontAsk`, `bypassPermissions`, `plan`, or `ignore`. Use these when the component requires specific behavior, but ensure they align with your deployment environment's requirements.
+</forbidden_pattern>
+
+<forbidden_pattern>
+**Redundant Defaults:** Specifying default values in frontmatter (e.g., `user-invocable: true`).
+**Fix:** Omit default values to keep frontmatter clean. Only specify if deviating (e.g., `user-invocable: false`).
+</forbidden_pattern>
+
+<forbidden_pattern>
+**Buried Trigger:** Placing general description text BEFORE the activation trigger ("USE when...").
+**Fix:** The "USE when" clause must be the very first sentence for efficient semantic matching. Move details back.
 </forbidden_pattern>
 
 ---

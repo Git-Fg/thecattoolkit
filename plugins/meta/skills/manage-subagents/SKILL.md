@@ -1,7 +1,7 @@
 ---
 name: manage-subagents
 description: MUST CONSULT when creating, auditing, or configuring subagents for isolated context execution, specialized expertise, or background-safe operations.
-allowed-tools: Read Write Edit Bash Grep
+allowed-tools: Read, Write, Edit, Bash, Grep
 ---
 
 # Subagent Management Standards
@@ -123,7 +123,7 @@ Subagents run in isolated contexts and return their final output to the main con
 
 - ✅ Can use tools like Read, Write, Edit, Bash, Grep, Glob
 - ✅ Can access MCP servers and other non-interactive tools
-- ❌ **CAN NOT use AskUserQuestion** to gather input or clarification
+- ✅ **Can use AskUserQuestion** if explicitly configured (use sparingly as intermediate steps are hidden)
 - ❌ **User never sees subagent's intermediate steps** (only final output)
 
 The main conversation sees only the subagent's final report/output.

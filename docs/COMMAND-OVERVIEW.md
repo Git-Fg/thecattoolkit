@@ -186,11 +186,89 @@ description: "Natural language description for AI discovery"  # Required
 argument-hint: "[description]"  # Optional: UI hint only
 allowed-tools: [Read, Grep, Task]  # Optional: restrict tools
 disable-model-invocation: true  # Optional: prevent Skill tool invocation
+model: sonnet  # Optional: model to use (sonnet, opus, haiku, or 'inherit')
+permissionMode: plan  # Optional: permission mode (default, acceptEdits, dontAsk, bypassPermissions, plan, ignore)
 hooks:
   PreToolUse:
     - matcher: "Bash"
       hooks:
         - type: command
           command: "./validate.sh"
+---
+```
+
+## 7. Command Permission Security
+
+### Safe Command Examples
+
+```yaml
+# Safe read-only command
+---
+description: "Analyze project structure"
+argument-hint: "[path]"
+allowed-tools: [Read, Grep]
+permissionMode: plan  # Read-only mode
+---
+# Analysis will be read-only, preventing accidental modifications
+
+# Safe git command with specific operations
+---
+description: "Git operations for project maintenance"
+argument-hint: "[operation]"
+allowed-tools:
+  - Bash(git status:*)
+  - Bash(git add:*)
+  - Bash(git diff:*)
+  - Bash(git log:*)
+  - Bash(git branch:*)
+permissionMode: dontAsk  # Auto-deny dangerous operations
+model: haiku
+---
+# Only allows specific git commands, auto-denies everything else
+
+# Dangerous command (should be avoided)
+---
+description: "Execute any bash command"
+allowed-tools: [Bash]  # ❌ DANGEROUS - allows ANY bash command
+permissionMode: bypassPermissions  # ❌ VERY DANGEROUS - bypasses safety
+---
+```
+
+### Command Permission Patterns
+
+```yaml
+# Development command with safety checks
+---
+description: "Development helper for code analysis"
+allowed-tools:
+  - Read
+  - Grep
+  - Bash(npm test:*)
+  - Bash(npm run build:*)
+  - Bash(python -m pytest:*)
+hooks:
+  PreToolUse:
+    - matcher: "Bash"
+      hooks:
+        - type: command
+          command: "./validate-dev-command.sh $TOOL_INPUT"
+          timeout: 60
+---
+
+# Production deployment command (maximum safety)
+---
+description: "Production deployment operations"
+allowed-tools:
+  - Bash(docker-compose up:*)
+  - Bash(docker-compose down:*)
+  - Bash(./deploy.sh:*)
+permissionMode: dontAsk  # Auto-deny unless explicitly pre-approved
+hooks:
+  PreToolUse:
+    - matcher: "Bash"
+      hooks:
+        - type: command
+          command: "./production-validate.sh $TOOL_INPUT"
+          timeout: 300
 ---
 ```

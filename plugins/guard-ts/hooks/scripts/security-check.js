@@ -69,6 +69,8 @@ async function main() {
                 `[security-check]   If this is a false positive, review security-check.js`;
 
             console.log(JSON.stringify({
+                continue: true,
+                systemMessage: warning,
                 hookSpecificOutput: {
                     hookEventName: "PreToolUse",
                     permissionDecision: "allow",

@@ -102,6 +102,8 @@ async function main() {
                 `[protect-files]   This file type should generally not be manually edited.`;
 
             console.log(JSON.stringify({
+                continue: true,
+                systemMessage: warning,
                 hookSpecificOutput: {
                     hookEventName: "PreToolUse",
                     permissionDecision: "allow",
@@ -116,6 +118,8 @@ async function main() {
             const warning = `[protect-files] NOTE: Editing sensitive file ${filePath}\n` +
                 `[protect-files]   Matches pattern: ${warned}`;
             console.log(JSON.stringify({
+                continue: true,
+                systemMessage: warning,
                 hookSpecificOutput: {
                     hookEventName: "PreToolUse",
                     permissionDecision: "allow",

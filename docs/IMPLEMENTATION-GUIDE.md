@@ -23,7 +23,15 @@ Defines **Who** is working.
 name: senior-engineer
 description: "A careful, experienced TypeScript engineer."
 tools: [Read, Write, Bash] # Whitelist of CAPABILITIES
+model: sonnet  # Optional: model to use (sonnet, opus, haiku, or 'inherit')
+permissionMode: plan  # Optional: permission handling (default, acceptEdits, dontAsk, bypassPermissions, plan, ignore)
 skills: [typescript-best-practices] # Pre-loaded skills
+hooks:  # Optional: component-scoped hooks
+  PreToolUse:
+    - matcher: "Bash"
+      hooks:
+        - type: command
+          command: "./validate.sh"
 ---
 ```
 
@@ -37,6 +45,13 @@ context: fork              # Runs in isolation
 agent: senior-engineer     # Uses the persona above
 user-invocable: true       # Creates /refactor-module
 allowed-tools: [Read, Write] # Runtime RESTRICTION
+model: sonnet             # Optional: model to use (sonnet, opus, haiku, or 'inherit')
+hooks:                    # Optional: component-scoped hooks
+  PreToolUse:
+    - matcher: "Write"
+      hooks:
+        - type: command
+          command: "./validate.sh"
 ---
 ```
 
@@ -127,6 +142,83 @@ tools: Read, Grep  # ONLY these tools
 
 # Result: Agent CANNOT use Write, Edit, Bash, AskUserQuestion
 ```
+
+#### **Complex Permission Inheritance Example**
+
+```yaml
+# Main agent configuration
+# ~/.claude/settings.json
+{
+  "permissionMode": "default",
+  "allowed-tools": ["Read", "Grep"]
+}
+
+# Subagent with inherited restrictions
+# agents/security-scanner.md
+---
+name: security-scanner
+description: "Scans for security vulnerabilities"
+permissionMode: plan  # Overrides default to read-only
+tools: [Read, Grep, Bash]  # Inherits from main agent + adds Bash
+model: sonnet
+---
+
+# Skill with further restrictions
+# skills/code-analysis/SKILL.md
+---
+name: code-analysis
+description: "Analyzes code structure"
+context: fork
+agent: security-scanner  # Uses the persona above
+permissionMode: acceptEdits  # Allows file modifications
+allowed-tools: [Read, Write]  # Restricts to read/write only
+hooks:
+  PreToolUse:
+    - matcher: "Write"
+      hooks:
+        - type: command
+          command: "./validate-changes.sh"
+---
+
+# Result:
+# - Main agent: default mode, Read+Grep only
+# - Subagent: plan mode, Read+Grep+Bash (inherits Read+Grep)
+# - Skill: acceptEdits mode, Read+Write only (overrides subagent)
+```
+
+#### **Fine-Grained Tool Permission Examples**
+
+```yaml
+# Allow specific git operations safely
+---
+name: git-helper
+description: "Assists with git operations"
+permissionMode: dontAsk
+allowed-tools:
+  - Bash(git add:*)
+  - Bash(git status:*)
+  - Bash(git diff:*)
+  - Bash(git log:*)
+  - Read
+---
+
+# Dangerous tool restriction
+---
+name: safe-operations
+description: "Performs safe file operations"
+permissionMode: plan
+disallowed-tools:
+  - Bash(rm *)
+  - Bash(sudo *)
+  - Bash(chmod *)
+  - Bash(chown *)
+  - Edit  # Prevent modifications
+allowed-tools:
+  - Read
+  - Grep
+  - Bash(find:*)
+  - Bash(ls:*)
+---
 
 ## 6. Glue Code Detection & Removal
 

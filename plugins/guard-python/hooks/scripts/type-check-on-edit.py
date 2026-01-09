@@ -184,10 +184,11 @@ def main() -> None:
             print(
                 json.dumps(
                     {
+                        "continue": True,
                         "hookSpecificOutput": {
                             "hookEventName": "PostToolUse",
                             "additionalContext": f"[{checker}] not available",
-                        }
+                        },
                     }
                 )
             )
@@ -215,10 +216,11 @@ def main() -> None:
                 print(
                     json.dumps(
                         {
+                            "continue": True,
                             "hookSpecificOutput": {
                                 "hookEventName": "PostToolUse",
                                 "additionalContext": f"[{name}] type-check failed{error_line}",
-                            }
+                            },
                         }
                     )
                 )
@@ -226,10 +228,11 @@ def main() -> None:
                 print(
                     json.dumps(
                         {
+                            "continue": True,
                             "hookSpecificOutput": {
                                 "hookEventName": "PostToolUse",
                                 "additionalContext": f"[{name}] type-checked {os.path.basename(file_path)}",
-                            }
+                            },
                         }
                     )
                 )
@@ -239,10 +242,11 @@ def main() -> None:
             print(
                 json.dumps(
                     {
+                        "continue": True,
                         "hookSpecificOutput": {
                             "hookEventName": "PostToolUse",
                             "additionalContext": f"[{name}] timed out",
-                        }
+                        },
                     }
                 )
             )
@@ -251,10 +255,11 @@ def main() -> None:
             print(
                 json.dumps(
                     {
+                        "continue": True,
                         "hookSpecificOutput": {
                             "hookEventName": "PostToolUse",
                             "additionalContext": f"[{name}] not found",
-                        }
+                        },
                     }
                 )
             )

@@ -15,7 +15,6 @@ The Plugin Developer / System Maintainer.
 - `plugin-expert` (The System Maintainer persona)
 
 ## Commands
-- `/build` (Natural language entry point for building components)
 - `/heal` (Self-correction and diagnostic protocol)
 
 ## Integration

@@ -82,7 +82,7 @@ skill-name/
 | `name` | **Yes** | Skill name. Lowercase letters, numbers, hyphens only (max 64 chars). Must match directory name. |
 | `description` | **Yes** | What the Skill does and when to use it (max 1024 chars). Claude uses this for semantic matching. |
 | `allowed-tools` | No | Tools Claude can use without asking permission. Comma-separated or YAML list. |
-| `model` | No | Model to use (`claude-sonnet-4-20250514`, etc.). Defaults to conversation's model. **Warning:** Hardcoding model in frontmatter breaks portability across endpoints—prefer omitting or using environment config. |
+| `model` | No | Model to use (`claude-sonnet-4-20250514`, etc.). Defaults to conversation's model. Can use model aliases like `sonnet`, `opus`, `haiku`, or `'inherit'` to use the main conversation's model. |
 | `context` | No | Set to `fork` to run in isolated sub-agent context. |
 | `agent` | No | Agent type for forked context (`Explore`, `Plan`, `general-purpose`, or custom agent name). |
 | `hooks` | No | Hooks scoped to Skill lifecycle (`PreToolUse`, `PostToolUse`, `Stop`). |
@@ -105,6 +105,7 @@ allowed-tools:
   - Read
   - Grep
   - Bash
+  - Skill(security-standards) # Allow using another skill
 hooks:
   PreToolUse:
     - matcher: "Bash"
@@ -157,7 +158,11 @@ allowed-tools:
   - Read
   - Grep
   - Glob
+  - Skill(test-suite) # Allow specific Skill invocation
 ```
+
+> [!IMPORTANT]
+> **Skills are Data, not Tools.** To allow a Skill, you must use the `Skill(name)` syntax. You cannot list `test-suite` directly as a tool because no such tool function exists.
 
 > [!IMPORTANT]
 > If `allowed-tools` is omitted, the Skill doesn't restrict tools. Claude uses its standard permission model.
@@ -324,6 +329,20 @@ skills: pr-review, security-check
 
 Use `context: fork` + `agent` to run a Skill in a forked subagent context (see [Forked Context Pattern](#forked-context-pattern)).
 
+### Recursive Agentic Delegation
+When a Command uses a Skill with `context: fork`:
+
+1.  **Command (Intent)**: User types `/audit`. Main Agent receives instruction.
+2.  **Delegation**: Main Agent calls `Skill(security-audit)`.
+3.  **System Action**: Runtime sees `context: fork`.
+    *   **Pauses** Main Agent.
+    *   **Spawns** Sub-Agent (clean context).
+    *   **Loads** `security-audit` instructions into Sub-Agent.
+4.  **Execution**: Sub-Agent performs work (potentially many steps).
+5.  **Return**: Sub-Agent finishes. System destroys Sub-Agent and returns **only the summary** to Main Agent.
+
+**Why this matters:** The Main Agent context remains clean. It never sees the intermediate steps, logs, or file reads performed by the Sub-Agent.
+
 ---
 
 ## Writing Effective Descriptions
@@ -432,7 +451,10 @@ description: |
   Extract text, fill forms, merge PDFs.
   USE when working with PDF files, forms, or document extraction.
   Requires pypdf and pdfplumber packages.
-allowed-tools: Read, Bash(python:*)
+allowed-tools:
+  - Read
+  - Bash(python:*)
+  - Skill(ocr-helper)
 ---
 
 # PDF Processing

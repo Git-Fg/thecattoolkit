@@ -1,7 +1,7 @@
 ---
 name: manage-commands
 description: MUST CONSULT when creating or auditing slash commands to ensure compliance with command structure standards, semantic categorization, and permission patterns.
-allowed-tools: Read Write Edit Bash
+allowed-tools: Read, Write, Edit, Bash
 ---
 
 # Command Management Standards

@@ -1,10 +1,5 @@
 {
   "description": "Hook-Powered Context System: Command + Prompt Hooks with XML Output",
-  "imports": [
-    "auto_log",
-    "restore_context",
-    "compact_memory"
-  ],
   "hooks": {
     "SessionStart": [
       {

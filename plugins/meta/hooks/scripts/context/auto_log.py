@@ -3,10 +3,12 @@
 PostToolUse Hook: Automatically logs state-changing tool executions.
 This runs after Edit, Write, and Bash operations to maintain session history.
 """
+
 import sys
 import json
 import datetime
 from pathlib import Path
+
 
 def main():
     """Log tool execution to context.log."""
@@ -18,10 +20,10 @@ def main():
 
         data = json.loads(input_data)
 
-        tool = data.get('tool_name', 'Unknown')
-        parameters = data.get('parameters', {})
+        tool = data.get("tool_name", "Unknown")
+        parameters = data.get("parameters", {})
 
-        STATE_CHANGING_TOOLS = ['Edit', 'Write', 'Bash']
+        STATE_CHANGING_TOOLS = ["Edit", "Write", "Bash"]
 
         if tool not in STATE_CHANGING_TOOLS:
             print(json.dumps({"status": "success"}))
@@ -31,17 +33,17 @@ def main():
 
         log_entry = f"[{timestamp}] Tool: {tool}\n"
 
-        if tool == 'Edit':
-            file_path = parameters.get('file_path', 'unknown')
+        if tool == "Edit":
+            file_path = parameters.get("file_path", "unknown")
             log_entry += f"  File: {file_path}\n"
 
-        elif tool == 'Write':
-            file_path = parameters.get('file_path', 'unknown')
+        elif tool == "Write":
+            file_path = parameters.get("file_path", "unknown")
             log_entry += f"  File: {file_path}\n"
 
-        elif tool == 'Bash':
-            command = parameters.get('command', 'unknown')
-            description = parameters.get('description', 'no description')
+        elif tool == "Bash":
+            command = parameters.get("command", "unknown")
+            description = parameters.get("description", "no description")
             log_entry += f"  Command: {command[:100]}\n"
             log_entry += f"  Description: {description}\n"
 
@@ -55,10 +57,13 @@ def main():
 
         print(json.dumps({"status": "success"}))
 
-    except json.JSONDecodeError:
+    except json.JSONDecodeError as e:
+        print(f"Error decoding JSON: {e}", file=sys.stderr)
         print(json.dumps({"status": "success"}))
     except Exception as e:
+        print(f"Unexpected error in auto_log hook: {e}", file=sys.stderr)
         print(json.dumps({"status": "success"}))
+
 
 if __name__ == "__main__":
     main()

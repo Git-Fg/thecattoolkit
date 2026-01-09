@@ -1,7 +1,7 @@
 ---
 name: manage-hooks
 description: Event-driven automation hooks for Claude Code. Security-hardened templates for PreToolUse, PostToolUse, SessionStart, and other hook events.
-allowed-tools: Read Write Edit Bash Grep
+allowed-tools: Read, Write, Edit, Bash, Grep
 ---
 
 ## Protocol Overview
@@ -52,4 +52,4 @@ Hooks are event-driven automation for Claude Code. They execute shell commands o
 
 **Hook Types & Matchers**: [hook-types.md](references/hook-types.md) - Events, schemas, regex matchers, and MCP naming
 **Debugging Hooks**: [debugging-hooks.md](references/debugging-hooks.md) - Comprehensive debugging workflows and diagnostics
-**Claude Hooks Architecture**: [claude-hooks.md](../../../../docs/claude-hooks.md) - Reference Architecture using `${CLAUDE_PLUGIN_ROOT}`
+**Claude Hooks Architecture**: [claude-hooks.md](docs/claude-hooks.md) - Reference Architecture using `${CLAUDE_PLUGIN_ROOT}`

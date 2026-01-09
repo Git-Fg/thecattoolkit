@@ -2,16 +2,8 @@
 name: context-engineering
 description: |
   Passive protocol for managing persistent session state. Use when working with context files, creating handoffs, or managing session persistence. Context hooks are auto-managed by the meta plugin.
-  <example>
-  Context: User needs to preserve work across sessions
-  user: "Create a handoff document for this project"
-  assistant: "I'll use the context-engineering skill to create a comprehensive handoff document with all session state."
-  </example>
-  <example>
-  Context: Session approaching context limit
-  user: "I need to archive this session"
-  assistant: "The context-engineering skill provides the handoff protocol for creating portable session summaries."
-  </example>
+  Trigger words: preserve work, archive session, handoff document, session summary.
+  Use when user mentions: "preserve work across sessions", "archive this session", "create handoff".
 allowed-tools: [Read, Write, Edit, Bash]
 ---
 
@@ -107,9 +99,9 @@ Manage persistent session state independent of the LLM context window. Preserve 
 ├── context.log           # Session context history
 ├── handoff.md            # Session handoff summary
 └── checkpoints/          # Critical state snapshots
-    ├── 2025-01-05-feature-start.md
-    ├── 2025-01-05-implementation-complete.md
-    └── 2025-01-05-testing-phase.md
+    ├── 2026-01-05-feature-start.md
+    ├── 2026-01-05-implementation-complete.md
+    └── 2026-01-05-testing-phase.md
 ```
 
 ## Key Concepts

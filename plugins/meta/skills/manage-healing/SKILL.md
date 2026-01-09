@@ -45,7 +45,7 @@ For common principles, integration patterns, and anti-patterns, see:
 
 If the model failed to format an output correctly:
 
-**Action:** Do not just change instructions. Add a concrete `<example>` block to the component's definition showing the *correct* input/output pair based on the recent failure.
+**Action:** Do not just change instructions. Add a concrete example block using Markdown to the component's definition showing the *correct* input/output pair based on the recent failure.
 
 ### The "Constraint Hardening" Fix
 

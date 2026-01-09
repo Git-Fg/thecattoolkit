@@ -8,29 +8,25 @@
 
 Provides persistent session state management independent of the LLM context window using the **Scratchpad Pattern**. Preserve decisions, track progress, and enable seamless session handoffs for solo developers working with AI agents.
 
-## Commands
+## Usage
 
-### /contexteng
+### Automatic (Hooks)
+- **Initialization**: Auto-loads on session start
+- **Logging**: Auto-tracks changes to `context.log`
+- **Compaction**: Auto-compacts working memory when full
 
-Initialize or manage session context state.
+### Manual (Skill)
+
+Invoke the skill directly to manage context:
 
 ```bash
-/contexteng [initialize|update-scratchpad|summarize-session|create-handoff]
+/context-engineering
 ```
 
-**Modes:**
-- **initialize** - Set up context tracking (scratchpad.md, todos.md, context.log)
-- **update-scratchpad** - Record decisions, errors, progress, and important context
-- **summarize-session** - Consolidate session state before rotation or handoff
-- **create-handoff** - Generate comprehensive handoff document for session transfer
-
-**Use for:**
-- Working on complex, multi-step tasks
-- Context window approaching 60% capacity
-- Need to preserve state across sessions
-- Managing multiple parallel workstreams
-- Switching between different AI tools
-- Tracking decisions and thinking over time
+**Capabilities:**
+- Create comprehensive handoffs
+- Summarize current session
+- Archive completed work
 
 ## Skill
 
@@ -70,22 +66,6 @@ Persistent session state management using the scratchpad pattern.
 - **60% Warning** → Begin context tracking
 - **70% Critical** → Create checkpoint + handoff
 - **80% Overflow** → Force session rotation
-
-## Workflow Example
-
-```bash
-# Step 1: Initialize context tracking
-/contexteng initialize
-
-# Step 2: Update scratchpad with decisions
-/contexteng update-scratchpad
-
-# Step 3: When context is full, create handoff
-/contexteng create-handoff
-
-# Step 4: Start new session with preserved context
-# The handoff.md provides all critical context
-```
 
 ## Integration
 

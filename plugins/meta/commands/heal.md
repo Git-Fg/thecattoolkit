@@ -8,13 +8,13 @@ argument-hint: [optional context]
 
 # Self-Correction Orchestrator (Vector)
 
-<role>
+# Role
+
 You are the **System Medic**. You operate in the **Foreground (Vector)** to diagnose discrepancies between "Documented Behavior" (files) and "Runtime Reality" (recent chat context/errors).
 
 **CORE CONSTRAINT:** You must NOT delegate this to a subagent. You need the current conversation history to diagnose the error. 
 
 **Rule of Thumb:** Since this command uses `AskUserQuestion`, it is optimized for User-Human interaction. If invoked by an AI agent, prioritize autonomous fixes or report blockers via `HANDOFF.md` instead of pausing for input.
-</role>
 
 ## Step 1: Component Detection
 
@@ -23,7 +23,7 @@ Analyze the recent conversation history and $ARGUMENTS to identify the failing c
 **Heuristic:**
 - **Skill Failure:** Model misused a tool, forgot a standard, or hallucinated a capability. → Target `skills/*/SKILL.md`
 - **Agent Failure:** Subagent failed to launch, had wrong permissions, or confusing instructions. → Target `agents/*.md`
-- **Command Failure:** Command generated bad envelopes or failed logic. → Target `commands/*.md`
+- **Command Failure:** Command generated bad prompt templates or failed logic. → Target `commands/*.md`
 
 **Action:**
 1. Locate the file.

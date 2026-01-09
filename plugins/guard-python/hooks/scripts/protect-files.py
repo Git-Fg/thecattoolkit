@@ -4,6 +4,7 @@ Protect sensitive files from modification.
 Warns about edits to production configs, lock files, and sensitive directories.
 All edits are allowed but warnings are shown to Claude.
 """
+
 import fnmatch
 import json
 import logging
@@ -16,36 +17,34 @@ logger = logging.getLogger(__name__)
 # Files/patterns to warn about (previously blocked, now allowed with warning)
 PROTECTED_PATTERNS = [
     # Lock files (usually shouldn't be manually edited)
-    'package-lock.json',
-    'yarn.lock',
-    'pnpm-lock.yaml',
-    'Gemfile.lock',
-    'poetry.lock',
-    'Cargo.lock',
-
+    "package-lock.json",
+    "yarn.lock",
+    "pnpm-lock.yaml",
+    "Gemfile.lock",
+    "poetry.lock",
+    "Cargo.lock",
     # Sensitive files
-    '.env',
-    '.env.local',
-    '.env.production',
-    'secrets/*',
-    '*/secrets/*',
-    '*/*/secrets/*',
-    'credentials/*',
-    '*/credentials/*',
-    '*/*/credentials/*',
-
+    ".env",
+    ".env.local",
+    ".env.production",
+    "secrets/*",
+    "*/secrets/*",
+    "*/*/secrets/*",
+    "credentials/*",
+    "*/credentials/*",
+    "*/*/credentials/*",
     # Git internals
-    '.git/*',
+    ".git/*",
 ]
 
 # Files that should warn but not block
 WARN_PATTERNS = [
-    '.github/workflows/*',
-    'docker-compose.yml',
-    'Dockerfile',
-    'production/*',
-    '*/production/*',
-    '*/*/production/*',
+    ".github/workflows/*",
+    "docker-compose.yml",
+    "Dockerfile",
+    "production/*",
+    "*/production/*",
+    "*/*/production/*",
 ]
 
 
@@ -65,7 +64,7 @@ def is_safe_path(file_path: str) -> bool:
 def matches_pattern(file_path: str, patterns: list[str]) -> str | None:
     """Check if file matches any protected pattern. Returns matching pattern or None."""
     # Remove leading ./ if present (but don't use lstrip which removes individual chars)
-    if file_path.startswith('./'):
+    if file_path.startswith("./"):
         file_path = file_path[2:]
     for pattern in patterns:
         if fnmatch.fnmatch(file_path, pattern):
@@ -78,7 +77,7 @@ def matches_pattern(file_path: str, patterns: list[str]) -> str | None:
 def main():
     try:
         input_data = json.load(sys.stdin)
-        file_path = input_data.get('tool_input', {}).get('file_path', '')
+        file_path = input_data.get("tool_input", {}).get("file_path", "")
 
         # Input validation
         if not file_path:
@@ -98,11 +97,13 @@ def main():
                 f"[protect-files]   This file type should generally not be manually edited."
             )
             output = {
+                "continue": True,
+                "systemMessage": warning,
                 "hookSpecificOutput": {
                     "hookEventName": "PreToolUse",
                     "permissionDecision": "allow",
-                    "permissionDecisionReason": warning
-                }
+                    "permissionDecisionReason": warning,
+                },
             }
             print(json.dumps(output))
             sys.exit(0)
@@ -115,11 +116,13 @@ def main():
                 f"[protect-files]   Matches pattern: {warned}"
             )
             output = {
+                "continue": True,
+                "systemMessage": warning,
                 "hookSpecificOutput": {
                     "hookEventName": "PreToolUse",
                     "permissionDecision": "allow",
-                    "permissionDecisionReason": warning
-                }
+                    "permissionDecisionReason": warning,
+                },
             }
             print(json.dumps(output))
             sys.exit(0)
@@ -133,5 +136,5 @@ def main():
         sys.exit(0)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

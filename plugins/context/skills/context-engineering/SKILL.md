@@ -1,17 +1,11 @@
 ---
 name: context-engineering
 description: |
-  The Authority on Session Persistence with **Passive Hook System**. MUST USE when managing persistent session state, avoiding context overflow, or enabling session handoffs. Context is now auto-managed via hooks - no initialization needed!
-  <example>
-  Context: User needs to preserve work across sessions
-  user: "Set up context tracking for this project"
-  assistant: "The context-engineering skill is already active via hooks. Session context will auto-load on startup."
-  </example>
-  <example>
-  Context: Session approaching context limit
-  user: "Context is getting full, help me handoff"
-  assistant: "The PreCompact hook will auto-trigger. I can also use the context-engineering skill to create a manual handoff document."
-  </example>
+  USE when managing persistent session state, avoiding context overflow, or enabling session handoffs. 
+  The Authority on Session Persistence with **Passive Hook System**. 
+  Context is now auto-managed via hooks - no initialization needed!
+  Keywords: context management, session handoff, scratchpad, context overflow, memory persistence
+context: fork
 allowed-tools: [Read, Write, Edit, Bash]
 ---
 
@@ -41,11 +35,11 @@ Manage persistent session state independent of the LLM context window using the 
 | **PostToolUse** | After Edit/Write/Bash | Auto-logs every state change to context.log |
 | **PreCompact** | Context near overflow | Auto-creates memory checkpoint + compacts scratchpad |
 
-**Prompt Hooks** (Intelligent, LLM-Powered, XML Output):
+**Command-Based Prompt Logic** (Deterministic Python Scripts):
 | Hook | Trigger | Action |
 |:-----|:--------|:-------|
-| **Stop** | Session stopping | Decides if handoff needed before stopping (XML-based response) |
-| **SubagentStop** | Agent stops | Verifies context operations completed successfully (XML-based response) |
+| **Stop** | Session stopping | Runs `evaluate_stop.py` to check for safe exit |
+| **SubagentStop** | Agent stops | Runs `evaluate_subagent.py` to verify completion |
 
 ### Why Hybrid Hooks?
 
@@ -56,12 +50,12 @@ Manage persistent session state independent of the LLM context window using the 
 
 **NEW WAY (Hybrid Hooks):**
 - ✅ **Zero Friction**: Automatic operations via command hooks
-- ✅ **Intelligent**: Smart decisions via prompt hooks with XML output
-- ✅ **Robust Parsing**: XML tags ensure reliable response parsing
+- ✅ **Intelligent**: Smart decisions via deterministic scripts
+- ✅ **Robust Parsing**: JSON output ensures reliable response parsing
 - ✅ **Single Source**: Reads Planner files directly, no duplicates
 - ✅ **Perfect Memory**: Every action logged, nothing lost
 - ✅ **Token Efficient**: File-based memory vs. chat history bloat
-- ✅ **Context-Aware**: LLM evaluates when handoffs are needed
+- ✅ **Context-Aware**: Automated hooks evaluate when operations are safe
 
 ## When to Use
 

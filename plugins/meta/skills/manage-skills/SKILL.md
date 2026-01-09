@@ -1,7 +1,7 @@
 ---
 name: manage-skills
 description: The Authority on Skill Architecture. MUST CONSULT when creating, auditing, or refactoring skills to ensure compliance with architectural standards, naming conventions, and directory structure.
-allowed-tools: Read Write Edit
+allowed-tools: Read, Write, Edit
 ---
 
 # Skill Management Authority

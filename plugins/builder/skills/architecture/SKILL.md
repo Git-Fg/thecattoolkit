@@ -1,26 +1,21 @@
 ---
 name: architecture
 description: |
-  System Architecture and Design Frameworks. MUST USE when designing new systems, analyzing existing architecture, or making architectural decisions. Provides comprehensive patterns, quality criteria, and ADR templates.
-  <example>
-  Context: User needs to design a new system
-  user: "Design a real-time collaborative document editing service"
-  assistant: "I'll load the architecture skill to perform comprehensive system design with pattern selection and ADR documentation."
-  </example>
-  <example>
-  Context: User wants to analyze existing architecture
-  user: "Analyze our microservices architecture for scalability issues"
-  assistant: "I'll use the architecture skill to perform brownfield analysis and identify architectural improvements."
-  </example>
-  <example>
-  Context: Architectural decision needed
-  user: "Should we use microservices or monolith for our new API?"
-  assistant: "I'll load the architecture skill to analyze the trade-offs and document the decision with an ADR."
-  </example>
-allowed-tools: Read Write Edit Glob Grep Bash TodoWrite
+  System Architecture and Design Frameworks. MUST USE when designing new systems, analyzing existing architecture, or making architectural decisions.
+  Keywords: system design, architecture analysis, scalability, technical decisions, ADR
+context: fork
+agent: architect
+user-invocable: true
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, TodoWrite]
 ---
 
 # Architecture Design & Analysis
+
+## Operational Protocol
+1. **Discovery**: Check for `.cattoolkit/planning/{project}/DISCOVERY.md`. If missing, execute discovery protocol.
+2. **Analysis**: Apply appropriate workflow (Greenfield vs. Brownfield) based on requirements.
+3. **Design**: Select patterns using architecture patterns and quality criteria.
+4. **Documentation**: Create or update ADRs using ADR template.
 
 ## Core Principles
 1. **Requirements-First**: Understand functional and non-functional requirements before selecting patterns

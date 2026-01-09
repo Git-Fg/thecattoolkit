@@ -94,6 +94,7 @@ async function main() {
                 const errorMsg = relevantErrors.join('\n');
                 if (errorMsg) {
                     console.log(JSON.stringify({
+                        continue: true,
                         hookSpecificOutput: {
                             hookEventName: "PostToolUse",
                             additionalContext: `[type-check] TS Errors in ${basename}:\n${errorMsg}`
@@ -102,6 +103,7 @@ async function main() {
                 }
             } else {
                 console.log(JSON.stringify({
+                    continue: true,
                     hookSpecificOutput: {
                         hookEventName: "PostToolUse",
                         additionalContext: `[type-check] ${basename} passed type check`

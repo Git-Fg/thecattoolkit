@@ -7,13 +7,13 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/plugins/guard-python/hooks/scripts/hook_runner.py\" protect-files",
-            "timeout": 10000
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/plugins/guard-python/hooks/scripts/protect-files.py\"",
+            "timeout": 5000
           },
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/plugins/guard-python/hooks/scripts/hook_runner.py\" security-check",
-            "timeout": 10000
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/plugins/guard-python/hooks/scripts/security-check.py\"",
+            "timeout": 5000
           }
         ]
       }
@@ -24,8 +24,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/plugins/guard-python/hooks/scripts/hook_runner.py\" type-check-on-edit",
-            "timeout": 10000
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/plugins/guard-python/hooks/scripts/type-check-on-edit.py\"",
+            "timeout": 30000
           }
         ]
       }

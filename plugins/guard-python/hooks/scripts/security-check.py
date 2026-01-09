@@ -6,6 +6,7 @@ All edits are allowed but warnings are shown to Claude.
 
 Uses JSON output with permissionDecision: "allow" to warn without blocking.
 """
+
 import json
 import logging
 import os
@@ -25,7 +26,10 @@ SECRET_PATTERNS = [
     (r"sk-ant-[a-zA-Z0-9-]{90,}", "Anthropic API Key"),
     (r"-----BEGIN (?:RSA |EC |DSA )?PRIVATE KEY-----", "Private key"),
     (r"(?i)aws[_-]?access[_-]?key[_-]?id\s*[:=]\s*[A-Z0-9]{20}", "AWS Access Key"),
-    (r"(?i)aws[_-]?secret[_-]?access[_-]?key\s*[:=]\s*[a-zA-Z0-9/+=]{40}", "AWS Secret Key"),
+    (
+        r"(?i)aws[_-]?secret[_-]?access[_-]?key\s*[:=]\s*[a-zA-Z0-9/+=]{40}",
+        "AWS Secret Key",
+    ),
 ]
 
 # Files to always skip
@@ -102,11 +106,13 @@ def main():
                 f"[security-check]   If this is a false positive, review and adjust patterns in security-check.py"
             )
             output = {
+                "continue": True,
+                "systemMessage": warning,
                 "hookSpecificOutput": {
                     "hookEventName": "PreToolUse",
                     "permissionDecision": "allow",
-                    "permissionDecisionReason": warning
-                }
+                    "permissionDecisionReason": warning,
+                },
             }
             print(json.dumps(output))
             sys.exit(0)
