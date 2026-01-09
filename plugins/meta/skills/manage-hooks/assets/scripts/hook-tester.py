@@ -57,9 +57,8 @@ def validate_hooks_json(config_path: str) -> Tuple[bool, List[str]]:
     # Validate hooks structure
     valid_events = {
         'PreToolUse', 'PostToolUse', 'UserPromptSubmit',
-        'PermissionRequest', 'Stop', 'SubagentStart',
-        'SubagentStop', 'SessionStart', 'SessionEnd',
-        'PreCompact', 'Notification'
+        'PermissionRequest', 'Stop', 'SubagentStop',
+        'SessionStart', 'SessionEnd', 'PreCompact', 'Notification'
     }
 
     for event, hook_list in config.get('hooks', {}).items():
@@ -72,8 +71,8 @@ def validate_hooks_json(config_path: str) -> Tuple[bool, List[str]]:
         # Events that don't require matchers
         no_matcher_events = {
             'UserPromptSubmit', 'PermissionRequest', 'Stop',
-            'SubagentStart', 'SubagentStop', 'SessionStart',
-            'SessionEnd', 'PreCompact', 'Notification'
+            'SubagentStop', 'SessionStart', 'SessionEnd',
+            'PreCompact', 'Notification'
         }
 
         for hook_config in hook_list:

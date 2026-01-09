@@ -6,7 +6,7 @@ The standards used to evaluate prompt artifacts for production readiness.
 
 ### 1. Structure Compliance
 - **Single Prompts**: Must be Pure Markdown (0 XML tags).
-- **Chains/Meta-Prompts**: Hybrid XML (1-5 tags maximum).
+- **Chains/Meta-Prompts**: Hybrid XML (1-15 tags maximum).
 - **Flat Tags**: No nested XML tags allowed.
 - **Hierarchy**: Uses clear Markdown headings and lists.
 

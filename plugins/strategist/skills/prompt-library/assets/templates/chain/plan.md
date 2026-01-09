@@ -21,10 +21,9 @@ outputs-to: step-3-execute
 
 # Plan: {{TOPIC}}
 
-<context>
+# Context
 ## Research Findings
 {{RESEARCH_OUTPUT}}
-</context>
 
 <workflow>
 ## Phase 1: Analyze Requirements

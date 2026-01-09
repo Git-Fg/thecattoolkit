@@ -13,11 +13,13 @@ Every component is a sovereign entity.
 *   **Skills are Libraries:** They are passive. They provide declarative standards and templates. They are books that can be read by anyone (User or Agent).
 *   **Commands are Minimal Wrappers:** They force new tasks while preserving context. They delegate to agents, trusting their intelligence. If the Command is deleted, the Agent still works.
 
-### 2. The Pattern of Fresh Context
-We leverage fresh context for maximum AI intelligence.
+### 2. Context-Isolated Delegation
+We leverage context isolation for focused, efficient delegation.
 *   **Vector Pattern (/think):** Uses current context with user interaction. Fast, interactive, perfect for surgical tasks.
-*   **Triangle Pattern (/brainstorm):** Spawns a Subagent with **Fresh Context (0% Rot)**. Use this for heavy lifting (coding, planning, searching) to ensure maximum intelligence.
+*   **Triangle Pattern (/brainstorm):** Spawns a subagent in a **separate context window** with injected context. Use this for heavy lifting (coding, planning, searching) to maintain clean separation and prevent context bloat.
 *   **Time-Server Pattern:** Background execution for long-running tasks with minimal context cost.
+
+> **Note:** Pattern names (Triangle, Vector, Time-Server, Swarm) are **custom conventions** specific to this project, not official Claude Code patterns.
 
 ### 3. The Mathematics of Parallelism
 We leverage the "Task" tool to run **Swarm Architectures**.
@@ -29,11 +31,11 @@ We leverage the "Task" tool to run **Swarm Architectures**.
 
 ## Architecture Patterns
 
-### Triangle Pattern (Fresh Context)
+### Triangle Pattern (Context-Isolated Delegation)
 **Components:** `Command → Agent → Skill`
 *   **Standard Mode:** One agent solves a complex problem.
 *   **Swarm Mode:** The Command acts as a Load Balancer, spawning multiple agents to attack a problem in parallel (Map-Reduce).
-*   **Why:** Maximum speed, minimum cost, zero context rot.
+*   **Why:** Clean context separation prevents main thread pollution. The Command reads files and injects context, allowing agents to focus on their specialized task without context bloat.
 
 ### Vector Pattern (Interactive)
 **Components:** `Command → Skill`
@@ -53,7 +55,7 @@ We leverage the "Task" tool to run **Swarm Architectures**.
 *   **Why:** For search, audit, or batch operations across large codebases.
 *   **Example:** Auditing all plugins simultaneously.
 
-**[Read the full Architecture Guide (VECTOR_vs_TRIANGLE.md)](docs/VECTOR_vs_TRIANGLE.md)**
+> **Important:** These patterns are **project-specific conventions**. See [docs/VECTOR_vs_TRIANGLE.md](docs/VECTOR_vs_TRIANGLE.md) for the complete guide with official Claude Code terminology.
 
 ## Installation
 

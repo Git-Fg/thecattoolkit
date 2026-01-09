@@ -111,6 +111,9 @@ Solution: Focus on value delivery measurement, not just usage metrics
 
 **Output Structure:**
 - Decision Under Consideration
+- 10-10-10 analysis
+- Synthesis
+- Recommended Choice
 - 10-Minute View:
   - Immediate feelings
   - Quick impact
@@ -391,6 +394,6 @@ Result: 6 hrs/week recovered, velocity increased 20%
 
 **For Sovereign Triangle Pattern (Background Delegation):**
 - Agent applies methodology autonomously
-- Use envelope prompt to provide comprehensive context
+- Use Markdown prompt to provide comprehensive context
 - Agent follows steps systematically
 - Deliver complete analysis following template structure

@@ -16,7 +16,7 @@ description: |
   user: "Review our authentication code for vulnerabilities"
   assistant: "I'll delegate for security-focused review of the authentication system."
   </example>
-allowed-tools: Task, Read, Write, Edit, Glob, Grep, Bash
+allowed-tools: [Task, Read, Write, Edit, Glob, Grep, Bash]
 argument-hint: [files, PR, or changes to review]
 disable-model-invocation: true
 ---
@@ -79,7 +79,8 @@ Compile all gathered context into a comprehensive assignment for the worker agen
 
 ## Delegation Phase
 
-<assignment>
+# Assignment
+
 Execute the code review workflow from the software-engineering skill to review: $ARGUMENTS
 
 **Context Provided:**
@@ -124,12 +125,11 @@ Each finding must include:
 - Category (security/performance/correctness/style)
 - Description of the issue
 - Concrete fix suggestion (for CRITICAL/WARNING)
-</assignment>
 
-<context>
+# Context
+
 You are executing in isolated context to perform comprehensive code review. The software-engineering skill provides systematic review protocols and quality checklists.
 All relevant project context has been gathered for you.
-</context>
 
 Execute via worker agent.
 

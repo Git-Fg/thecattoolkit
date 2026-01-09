@@ -8,8 +8,8 @@ We use a simplified two-pattern model designed specifically for AI Agents (like 
 
 | Pattern | Tags | Use Case |
 |:---|:---:|:---|
-| **Pure Markdown** | 0 | Default for simple, linear workflows. |
-| **Hybrid XML** | 1-5 | For structuring cognition, state, safety, and data isolation. |
+| **Pure Markdown** | 0 | **REQUIRED DEFAULT**. Use `# Context` and `# Assignment` headers. |
+| **Hybrid XML** | 1-15 | For structuring cognition (`<thinking>`) or high-density data isolation ONLY. |
 
 ### The Golden Rule
 > **Start with Pure Markdown. Add XML only for explicit scaffolding of AI thinking OR data isolation.**
@@ -17,17 +17,17 @@ We use a simplified two-pattern model designed specifically for AI Agents (like 
 ### Pattern Selection Flowchart
 1. **Multi-phase execution?** → YES → Hybrid (+ `<state>`)
 2. **Critical safety rules?** (NEVER/MUST NOT) → YES → Hybrid (+ `<constraints>`)
-3. **Large data blocks?** (confusing instructions) → YES → Hybrid (+ `<context>`)
+3. **High-density data blocks?** (>100 lines of logs/code) → YES → Hybrid (+ `<data>`)
 4. **Non-negotiable steps?** → YES → Hybrid (+ `<workflow>`)
-5. **Otherwise** → Pure Markdown
+5. **Otherwise** → Pure Markdown (Headers/Prose)
 
 ## Semantic Logic Containers
 
-Limit to **5 tags maximum** per prompt. Never nest XML tags.
+Limit to **15 tags maximum** per prompt. Never nest XML tags.
 
 | Tag | Purpose |
 |:---|:---|
-| `<context>` | Separate large data dumps from instructions. |
+| `<data>` | Isolate high-density data dumps from instructions. |
 | `<workflow>` | Enforce strict, non-negotiable step sequences. |
 | `<constraints>` | High-priority negative constraints (Safety/Security). |
 | `<thinking>` | Isolate internal reasoning/monologue. |
@@ -79,7 +79,7 @@ Output:
 
 ## Success Criteria Checklist
 - [ ] Pattern (Pure vs Hybrid) matches task complexity?
-- [ ] ≤ 5 XML tags used?
+- [ ] ≤ 15 XML tags used?
 - [ ] No nested XML tags?
 - [ ] Markdown used for all general content?
 - [ ] Output format clearly specified?

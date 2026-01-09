@@ -16,7 +16,7 @@ description: |
   user: "Debug why the API is slow"
   assistant: "I'll delegate to the debugging agent for performance analysis."
   </example>
-allowed-tools: Task, Read, Write, Edit, Glob, Grep, Bash
+allowed-tools: [Task, Read, Write, Edit, Glob, Grep, Bash]
 argument-hint: [error description or bug report]
 disable-model-invocation: true
 ---
@@ -107,7 +107,8 @@ Compile all gathered context into a comprehensive assignment for the worker agen
 
 ## Delegation Phase
 
-<assignment>
+# Assignment
+
 Execute the debugging workflow from the software-engineering skill to investigate and fix: $ARGUMENTS
 
 **Context Provided:**
@@ -135,12 +136,11 @@ Execute the debugging workflow from the software-engineering skill to investigat
 - Sanitize inputs and validate data
 - Check for authentication/authorization issues
 - Ensure no sensitive data exposure in fixes
-</assignment>
 
-<context>
+# Context
+
 You are executing in isolated context to perform thorough debugging. The software-engineering skill provides comprehensive debugging methodology with systematic analysis protocols.
 All relevant project context has been gathered for you.
-</context>
 
 Execute via worker agent.
 

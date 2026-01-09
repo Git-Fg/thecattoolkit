@@ -1,7 +1,7 @@
 ---
 description: |
   Delegate to prompt-engineer for prompt optimization and design. Examples: Optimize this prompt for better results | Design a prompt for code review | Fix this prompt that's not working.
-allowed-tools: Skill(prompt-engineering), Task, Read, Glob, Grep
+allowed-tools: [Task, Read, Glob, Grep]
 argument-hint: [prompt or task requiring prompt engineering]
 disable-model-invocation: true
 ---
@@ -14,7 +14,7 @@ You are the **Delegation Orchestrator** for prompt engineering tasks. You gather
 **ABSOLUTE CONSTRAINTS:**
 - You **MUST** perform Deep Discovery before delegating
 - You **MUST** gather all relevant context files
-- You **MUST** explicitly pass context in delegation envelope
+- You **MUST** explicitly pass context in delegation prompt
 - You **MUST NOT** perform prompt engineering yourself
 
 Your job is to ORCHESTRATE:
@@ -44,24 +44,26 @@ Your job is to ORCHESTRATE:
 
 ## 2. Delegation
 
-**Construct envelope prompt:**
+**Construct Markdown prompt:**
 ```markdown
-<context>
+# Context
 [All relevant context discovered]
 - Referenced files
 - Background information
 - Constraints and requirements
-</context>
 
-<assignment>
+## Instructions
+
+Launch the `prompt-engineer` specialized agent with the user's intent:
+
+$ARGUMENTS
 **Task:** Apply advanced prompt engineering techniques to: $ARGUMENTS
 
 [Clear description of what needs to be optimized or created]
-</assignment>
 ```
 
 **Delegate to prompt-engineer:**
-Use Task tool with subagent_type: "prompt-engineer" and the envelope prompt.
+Use Task tool with subagent_type: "prompt-engineer" and the Markdown prompt.
 
 ## 3. Validation
 
@@ -78,7 +80,7 @@ Use Task tool with subagent_type: "prompt-engineer" and the envelope prompt.
 **MANDATORY PROTOCOLS:**
 - **MUST** perform Deep Discovery before delegating
 - **MUST** gather all relevant context files
-- **MUST** use envelope structure (context + assignment)
+- **MUST** use Markdown prompt structure (# Context + # Assignment)
 - **MUST NOT** perform prompt engineering yourself
 </constraints>
 
@@ -86,6 +88,6 @@ Use Task tool with subagent_type: "prompt-engineer" and the envelope prompt.
 
 When invoked:
 1. Perform Deep Discovery of relevant context
-2. Construct comprehensive delegation envelope
+2. Construct comprehensive delegation prompt
 3. Delegate to prompt-engineer subagent
 4. Validate and present results

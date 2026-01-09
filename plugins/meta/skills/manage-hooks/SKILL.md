@@ -11,7 +11,7 @@ Hooks are event-driven automation for Claude Code. They execute shell commands o
 - **Tool Events**: Before (PreToolUse) or after (PostToolUse) tool execution
 - **Session Events**: SessionStart, SessionEnd, PreCompact
 - **User Events**: UserPromptSubmit, PermissionRequest
-- **Agent Events**: Stop, SubagentStart, SubagentStop
+- **Agent Events**: Stop, SubagentStop
 - **System Events**: Notification
 
 **Core Principle:** Hooks operate within an event hierarchy: events trigger matchers (tool patterns) which execute hooks (commands or prompts). Hooks can block actions, modify tool inputs, inject context, or observe and log operations.

@@ -5,7 +5,7 @@ description: |
   to strategist subagent for thorough analysis.
 pattern: Time-Server
 disable-model-invocation: true
-allowed-tools: Skill(thinking-frameworks), Task, AskUserQuestion, Read, Glob, Grep
+allowed-tools: [Task, Read, Glob, Grep]
 argument-hint: [The problem or situation to analyze]
 ---
 
@@ -61,9 +61,10 @@ Explore project files relevant to the analysis:
 **Read framework methodology:**
 references/framework-applications.md from thinking-frameworks skill.
 
-**Construct envelope prompt:**
+**Construct Markdown Prompt:**
 ```markdown
-<context>
+# Context
+
 **Problem Statement:**
 $ARGUMENTS
 
@@ -75,19 +76,22 @@ $ARGUMENTS
 
 **Framework Selected:**
 {framework_name} from {category}
-</context>
 
-<assignment>
 **Task:** Apply {framework_name} comprehensively
 
 Perform a thorough analysis using the selected framework. Explore multiple angles, consider second-order effects, and provide evidence-based insights.
 
 Create a timestamped analysis file with comprehensive findings, recommendations, and supporting evidence. Use topic-based naming: analysis-{kebab-case-topic}-{timestamp}.md
-</assignment>
+
+## Instructions
+
+Launch the `brainstormer` specialized agent with the user's intent:
+
+$ARGUMENTS
 ```
 
 **Delegate to strategist subagent:**
-Use Task tool with subagent_type: "brainstormer" and the envelope prompt.
+Use Task tool with subagent_type: "brainstormer" and the Markdown prompt.
 
 **Wait for completion and capture results.**
 **Extract the generated filename from the agent's response.**
@@ -117,7 +121,7 @@ Display key insights, recommendations, and clearly show the generated filename w
 - **MUST** delegate to strategist subagent
 - **MUST NOT** perform analysis yourself
 - **MUST** validate and present final results
-- **MUST** use envelope prompt structure
+- **MUST** use Markdown prompt structure
 
 **USER INTERACTION:**
 - Guide selection with detailed descriptions
@@ -170,7 +174,7 @@ When invoked:
 4. Guide specific framework selection via AskUserQuestion
 5. Gather context via Deep Discovery
 6. Read framework-applications.md from skill
-7. Construct envelope prompt (context + assignment)
+7. Construct Markdown prompt (# Context + # Assignment)
 8. Delegate to strategist subagent
 9. Extract generated filename from agent response
 10. Validate output quality

@@ -24,9 +24,9 @@ allowed-tools: Read Write Edit Bash Glob Grep
 
 ## Core Purpose
 
-**This skill defines WHAT code patterns and engineering methodologies to apply.**
+Define WHAT code patterns and engineering methodologies to apply.
 
-It answers: "What protocols should I use for debugging, testing, refactoring?" (not "How to execute them").
+Answer: "What protocols should I use for debugging, testing, refactoring?" (not "How to execute them").
 
 **HOW to execute** (Uninterrupted Flow, Self-Verification, Handoffs) is defined by `execution-core` skill.
 

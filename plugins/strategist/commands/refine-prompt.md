@@ -2,7 +2,7 @@
 description: |
   [Prompts] Refine existing prompts through fast edit, improvement, or full refactoring using meta-prompt optimization. Examples: Fix the output format in my code-review prompt | Improve my analysis prompt with better examples | My prompt is producing inconsistent results, refactor it completely.
 disable-model-invocation: true
-allowed-tools: Skill(prompt-library), AskUserQuestion, Read, Write, Edit
+allowed-tools: [Read, Write, Edit]
 argument-hint: [prompt-name or path to .md file]
 ---
 

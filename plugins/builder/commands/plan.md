@@ -16,7 +16,7 @@ description: |
   user: "Create a plan for our new API service"
   assistant: "I'll orchestrate deep discovery and hierarchical plan creation."
   </example>
-allowed-tools: Task, ask_user, Read, Write, Glob, Grep, Bash
+allowed-tools: [Task, Read, Write, Glob, Grep, Bash]
 argument-hint: [project description] [lite|standard]
 disable-model-invocation: true
 ---
@@ -74,11 +74,11 @@ Use `ask_user` to gather missing information.
 
 **Delegation Prompt:**
 ```markdown
-<context>
+# Context
 User Request: $ARGUMENTS
 Current Directory: .
-</context>
-<assignment>
+
+# Assignment
 **Objective:** Perform Deep Discovery on this project.
 
 1. **Map the Structure:** Identify key directories and architectural patterns.
@@ -88,7 +88,6 @@ Current Directory: .
 **Output:**
 - DISCOVERY.md (must exist)
 - Report on any oddities or risks.
-</assignment>
 ```
 
 **Wait for `director` to complete.**
@@ -132,10 +131,11 @@ Reasoning: [why this type]
 Create PLAN.md directly with 2-3 tasks using project-strategy templates.
 
 ### Standard Plans:
-Construct envelope prompt and delegate to director agent:
+Construct Markdown prompt and delegate to director agent:
 
 ```markdown
-<context>
+# Context
+
 **Project Context:**
 - User's original request: $ARGUMENTS
 - Discovery findings: {{PASTE_DISCOVERY_CONTENT_HERE}}
@@ -146,9 +146,9 @@ Construct envelope prompt and delegate to director agent:
 **Template Location:**
 - Use templates from the `project-strategy` skill.
 - Resolve relative paths from your skill binding.
-</context>
 
-<assignment>
+# Assignment
+
 **Task:** Create a Standard hierarchical project plan
 
 Based on the project requirements and discovery findings, create a complete project structure with:
@@ -158,10 +158,9 @@ Based on the project requirements and discovery findings, create a complete proj
 - Phase directories with PLAN.md files
 
 Use the project-strategy skill templates and standards.
-</assignment>
 ```
 
-Use Task tool with subagent_type: "director" and the envelope prompt.
+Use Task tool with subagent_type: "director" and the Markdown prompt.
 
 ## 4. Validation
 

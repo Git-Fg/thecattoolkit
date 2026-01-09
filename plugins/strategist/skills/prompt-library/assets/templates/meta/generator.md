@@ -18,7 +18,7 @@ You are an expert prompt engineer. Your task is to create a high-quality,
 production-ready prompt based on the requirements provided.
 </role>
 
-<context>
+# Context
 ## Task Requirements
 {{TASK_DESCRIPTION}}
 
@@ -30,7 +30,6 @@ production-ready prompt based on the requirements provided.
 
 ## Constraints
 {{ANY_CONSTRAINTS_OR_REQUIREMENTS}}
-</context>
 
 <workflow>
 1. Analyze the task requirements carefully

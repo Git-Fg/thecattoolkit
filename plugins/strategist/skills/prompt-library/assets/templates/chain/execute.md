@@ -21,10 +21,9 @@ outputs-to: step-4-refine
 
 # Execute: {{TOPIC}}
 
-<context>
+# Context
 ## Implementation Plan
 {{PLAN_OUTPUT}}
-</context>
 
 <workflow>
 ## Phase 1: Setup

@@ -16,7 +16,7 @@ description: |
   user: "Implement the API endpoints with TDD"
   assistant: "I'll delegate for TDD implementation of the API endpoints."
   </example>
-allowed-tools: Task, Read, Write, Edit, Glob, Grep, Bash
+allowed-tools: [Task, Read, Write, Edit, Glob, Grep, Bash]
 argument-hint: [feature or bug description]
 disable-model-invocation: true
 ---
@@ -102,7 +102,8 @@ Compile all gathered context into a comprehensive assignment for the worker agen
 
 ## Delegation Phase
 
-<assignment>
+# Assignment
+
 Execute the TDD workflow from the software-engineering skill to implement: $ARGUMENTS
 
 **Context Provided:**
@@ -140,12 +141,11 @@ Execute the TDD workflow from the software-engineering skill to implement: $ARGU
 - All tests must pass before completing
 - Code must be refactored while tests remain green
 - Output must be pristine (no errors, warnings from linters/type checkers)
-</assignment>
 
-<context>
+# Context
+
 You are executing in isolated context to prevent main chat overflow. The software-engineering skill provides comprehensive TDD methodology with safety protocols and best practices.
 All relevant project context has been gathered for you.
-</context>
 
 Execute via worker agent.
 

@@ -7,7 +7,7 @@ description: |
   assistant: "I will use /run-prompt to execute the saved prompt."
   </example>
 disable-model-invocation: true
-allowed-tools: Skill(prompt-library), Read, Write, AskUserQuestion
+allowed-tools: [Read, Write]
 argument-hint: [prompt-name or path to .md file]
 ---
 

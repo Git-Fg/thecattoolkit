@@ -21,13 +21,12 @@ outputs-to: final-output
 
 # Refine: {{TOPIC}}
 
-<context>
+# Context
 ## Execution Results
 {{EXECUTE_OUTPUT}}
 
 ## Original Success Criteria
 {{SUCCESS_CRITERIA}}
-</context>
 
 <workflow>
 ## Phase 1: Review

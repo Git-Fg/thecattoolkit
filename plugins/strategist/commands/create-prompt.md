@@ -2,7 +2,7 @@
 description: |
   [Prompts] Create single prompts, prompt chains (sequential workflows), or meta-prompts (prompts that generate other prompts). Examples: Create a prompt for security code review | Create a prompt chain for competitive analysis | Create a meta-prompt that generates task-specific prompts.
 disable-model-invocation: true
-allowed-tools: Skill(prompt-library), AskUserQuestion, Read, Write, Bash
+allowed-tools: [Read, Write, Bash]
 argument-hint: [prompt description or 'auto' for guided creation]
 ---
 
@@ -137,13 +137,13 @@ Create SUMMARY.md with:
 
 ### Meta-Prompts:
 Create one file: `.cattoolkit/generators/{purpose}.md`
-- Use Hybrid XML/Markdown (3-5 tags max)
+- Use Hybrid XML/Markdown (up to 15 tags)
 - Include prompt generation/optimization logic
 
 ## Step 6: Validate and Present
 
 **Validation:**
-- XML tags: 0 for single, 3-5 max for chain steps and meta-prompts
+- XML tags: 0 for single, up to 15 max for chain steps and meta-prompts
 - No nested XML tags
 - Clear output format specified
 - Concrete examples included where helpful
@@ -166,7 +166,7 @@ Create one file: `.cattoolkit/generators/{purpose}.md`
 - Prompts must be clear and unambiguous
 - Single prompts use Pure Markdown
 - Chain steps use Hybrid XML/Markdown
-- Meta-prompts use Hybrid XML/Markdown (max 5 tags)
+- Meta-prompts use Hybrid XML/Markdown (up to 15 tags)
 - Include concrete examples where helpful
 </constraints>
 

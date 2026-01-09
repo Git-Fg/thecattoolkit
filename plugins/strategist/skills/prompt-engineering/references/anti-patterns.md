@@ -7,7 +7,7 @@ A catalog of known pitfalls, mistakes, and red flags to avoid.
 ### 1. The "XML Soup"
 **What**: Excessive or nested XML tags.
 **Why**: Increases token cost and confuses the model's structural parsing.
-**Prevention**: Limit to 5 flat tags. Use Markdown for content, XML only for containers.
+**Prevention**: Limit to 15 flat tags. Use Markdown for content, XML only for containers.
 
 ### 2. Example Leakage
 **What**: AI follows example content instead of instructions.

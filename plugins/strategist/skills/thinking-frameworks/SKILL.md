@@ -22,7 +22,7 @@ allowed-tools: Read Write Edit Glob Grep
 
 # Thinking Frameworks Standard
 
-This skill provides the theoretical basis and methodology for structured analysis. It contains no active execution logic - only passive reference documentation.
+Provide the theoretical basis and methodology for structured analysis. This skill contains no active execution logic - only passive reference documentation.
 
 ## Framework Index
 

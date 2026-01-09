@@ -17,7 +17,7 @@ description: |
   user: "Apply First Principles thinking to this"
   assistant: "I'll guide you through applying the framework interactively."
   </example>
-allowed-tools: Skill(thinking-frameworks), AskUserQuestion, Read, Write, Glob, Grep
+allowed-tools: [Read, Write, Glob, Grep]
 argument-hint: [Optional: focus area or question]
 ---
 

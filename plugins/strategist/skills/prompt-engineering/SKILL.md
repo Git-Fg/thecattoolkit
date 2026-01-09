@@ -38,9 +38,9 @@ Match specificity to task fragility:
 - **Medium Freedom**: Preferred pattern exists (e.g., refactoring) → use pseudocode with parameters.
 - **Low Freedom**: Error-prone operations (e.g., migration) → use exact scripts.
 
-### 3. XML/Markdown Hybrid
-- **XML** (Limit to 3-5 tags): Use for logic containers, safety boundaries, and machine-parseable output.
-- **Markdown**: Use for general instructions, explanations, and general content.
+### 3. Progressive Markdown Disclosure
+- **Markdown Headers**: Use `# Context` and `# Assignment` as the primary structural elements for all prompts.
+- **XML** (Limit to 15 tags): Use for logic containers (like `<thinking>`) or complex data isolation ONLY when Markdown headers are insufficient due to high data density.
 - **Critical**: Never nest XML tags. Use markdown inside XML.
 
 ## Key Techniques
@@ -65,11 +65,11 @@ Instead of the prompt type determining the format, the **Density of Context** an
 
 | Feature | Use Markdown (Headers/Lists) | Use XML (Flat Semantic Tags) |
 | :--- | :--- | :--- |
-| **Instructional Flow** | Linear, simple, or descriptive steps. | Strict, non-negotiable step sequences. |
-| **Data Separation** | Short snippets or conversational context. | Large data dumps, logs, or noisy codebases. |
-| **Role Definition** | General persona and background. | Strictly isolated identity with high constraints. |
-| **Output Type** | Conversational or standard Markdown. | Machine-parseable JSON or strict code blocks. |
-| **Safety Risk** | Low-risk creative or analytical tasks. | High-risk (Security audits, credentials). |
+| **Instructional Flow** | Default: Linear, simple, or descriptive. | Complex: Strict, non-negotiable step sequences. |
+| **Data Isolation** | Standard context and injected files. | High-density: Large logs or noisy data sets. |
+| **Role Definition** | Standard: Professional persona. | Specialized: Isolated identity with high constraints. |
+| **Output Type** | Standard: Conversational or Markdown. | Technical: Machine-parseable JSON or strict code. |
+| **Safety Risk** | Standard: Analytic or creative tasks. | Critical: Security audits or data protection. |
 
 ### Upgrade Path Protocol
 

@@ -19,7 +19,7 @@ Your task is to analyze the provided prompt and create an improved version
 that produces better, more consistent results.
 </role>
 
-<context>
+# Context
 ## Original Prompt
 \`\`\`
 {{ORIGINAL_PROMPT}}
@@ -33,7 +33,6 @@ that produces better, more consistent results.
 
 ## Optimization Goals
 {{WHAT_SHOULD_BE_IMPROVED}}
-</context>
 
 <workflow>
 1. Analyze the original prompt structure and intent
@@ -91,5 +90,5 @@ Use this meta-prompt when you need to:
 - [ ] Examples concrete and helpful?
 - [ ] Output format specified?
 - [ ] Constraints appropriate (not over/under-constrained)?
-- [ ] XML tags limited to 3-5 max?
+- [ ] XML tags limited to 15 max?
 - [ ] No nested XML?

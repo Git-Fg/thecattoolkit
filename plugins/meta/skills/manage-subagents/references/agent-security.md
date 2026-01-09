@@ -48,7 +48,7 @@ Agents (subagents) use the `tools` field in their frontmatter to control which t
 - `Glob`, `Grep` - File search
 - `Bash` - Execute shell commands
 - `TodoWrite` - Manage todo lists
-- `Skill`, `SlashCommand` - Invoke skills and commands
+- `Skill` - Invoke skills and commands (SlashCommand deprecated)
 - `Task` - Delegate to subagents
 - `WebSearch`, `WebFetch` - Web access
 - `BashOutput`, `KillShell` - Background shell management

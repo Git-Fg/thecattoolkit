@@ -21,9 +21,8 @@ outputs-to: step-2-plan
 
 # Research: {{TOPIC}}
 
-<context>
+# Context
 {{BACKGROUND_CONTEXT}}
-</context>
 
 <workflow>
 ## Phase 1: Initial Discovery
