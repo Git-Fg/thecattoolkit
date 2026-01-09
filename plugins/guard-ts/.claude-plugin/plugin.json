@@ -1,0 +1,9 @@
+{
+    "name": "guard-ts",
+    "description": "The Immune System: File safety warnings, security checks, and type-checking hooks for TypeScript safety.",
+    "version": "0.0.1",
+    "author": {
+        "name": "Git-Fg"
+    },
+    "license": "MIT"
+}

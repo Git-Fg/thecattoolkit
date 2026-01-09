@@ -7,7 +7,7 @@
 ## Purpose
 
 The Builder plugin provides the core **Engine** for the Cat Toolkit. It transforms plans into reality through two specialized agents:
-1. **Director**: Orchestrates, manages context isolation, and tracks state.
+1. **Director**: Orchestrates, creates fresh context, and manages state.
 2. **Worker**: Executes tasks, writes code, and handles implementation details.
 
 ## Agents

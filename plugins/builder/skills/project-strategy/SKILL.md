@@ -24,9 +24,9 @@ allowed-tools: Read Write Edit
 
 ## Core Purpose
 
-Define WHAT documents to create and their structure.
+**This skill defines WHAT documents to create and their structure.**
 
-Answer: "What templates and formats should I use?" (not "How to execute them").
+It answers: "What templates and formats should I use?" (not "How to execute them").
 
 **HOW to execute** is defined by `execution-core` skill (Uninterrupted Flow, Self-Verification, Handoffs).
 

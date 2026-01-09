@@ -6,7 +6,7 @@ description: |
   user: "/heal the skill seems to have hallucinated a tool"
   assistant: "I'll analyze the recent error and diagnose the drift in the skill definition."
   </example>
-allowed-tools: [Read, Edit, Bash, Grep, Glob]
+allowed-tools: [Read, Edit, Bash, Grep, Glob, AskUserQuestion, Skill(manage-healing)]
 argument-hint: [optional: what triggered the need for healing]
 disable-model-invocation: false
 ---
@@ -30,7 +30,7 @@ Analyze the recent conversation history and $ARGUMENTS to identify the failing c
 **Heuristic:**
 - **Skill Failure:** Model misused a tool, forgot a standard, or hallucinated a capability. → Target `skills/*/SKILL.md`
 - **Agent Failure:** Subagent failed to launch, had wrong permissions, or confusing instructions. → Target `agents/*.md`
-- **Command Failure:** Command generated bad prompts or failed logic. → Target `commands/*.md`
+- **Command Failure:** Command generated bad envelopes or failed logic. → Target `commands/*.md`
 
 **Action:**
 1. Locate the file.

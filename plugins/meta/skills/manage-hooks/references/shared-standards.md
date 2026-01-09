@@ -17,7 +17,7 @@ All management skills follow these principles:
 Commands provide the **orchestration layer**:
 - Define goals and inject context
 - Handle user interaction (Vector phase)
-- Delegate to agents using Triangle Prompt Pattern (Triangle phase)
+- Delegate to agents using Envelope pattern (Triangle phase)
 - Validate and present results
 
 ### With Agents
@@ -57,7 +57,7 @@ All management skill outputs should:
 ## Common References
 
 - **CLAUDE.md**: Core architecture and quality gates
-- **standards-communication.md**: Triangle Prompt pattern, XML/Markdown usage, handoff protocols
+- **standards-communication.md**: Envelope pattern, XML/Markdown usage, handoff protocols
 - **standards-security.md**: Background execution, tool permissions, path traversal
 
 ## Usage in Management Skills

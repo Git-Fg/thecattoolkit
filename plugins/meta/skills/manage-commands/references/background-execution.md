@@ -83,7 +83,7 @@ Commands should focus on delegation. Use `allowed-tools: Task` to restrict the c
 
 ## Context Provisioning
 
-Agents operate in context-isolated windows. Commands MUST provide:
+Agents start with fresh context. Commands MUST provide:
 - **Background**: Project/codebase context.
 - **Goal**: Clear objective.
 - **Constraints**: Limitations or requirements.

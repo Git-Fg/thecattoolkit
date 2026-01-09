@@ -73,6 +73,12 @@ Use `${CLAUDE_PLUGIN_ROOT}` for hooks that ship with plugins. This ensures:
 - **Can Block**: Yes (with stop_hook_active check)
 - **Example**: `"Stop"`
 
+#### SubagentStart
+- **Trigger**: A subagent starts
+- **Use For**: Subagent initialization
+- **Can Block**: No
+- **Example**: `"SubagentStart"`
+
 #### SubagentStop
 - **Trigger**: A subagent stops
 - **Use For**: Subagent completion validation

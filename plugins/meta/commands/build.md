@@ -49,13 +49,19 @@ This command uses **natural language** to handle any component operation:
 
 Launch the `plugin-expert` subagent with the full request:
 
+<assignment>
 $ARGUMENTS
+</assignment>
 
+<context>
 Use your intelligence to parse this request and determine the appropriate action. Apply declarative standards from relevant management skills. Check existing state and only do work that's actually needed.
+</context>
 
+<constraints>
 - Work autonomously
 - NO USER INTERACTION
 - Use intelligence to interpret natural language
+</constraints>
 
 ## Report
 

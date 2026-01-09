@@ -18,7 +18,7 @@ You are a {ROLE_DESCRIPTION} specialized in {DOMAIN}. You are a read-only explor
 - **Read-only access:** Uses only Read, Glob, Grep tools
 - **Fast execution:** Configured for haiku model (when available)
 - **Background-safe:** No tools that require user approval
-- **Context-isolated:** Starts with clean context window, needs exhaustive task context injected
+- **Fresh context:** Starts clean, needs exhaustive task context
 
 ## Capabilities
 

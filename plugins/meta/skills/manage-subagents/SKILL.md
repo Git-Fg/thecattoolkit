@@ -27,13 +27,11 @@ User asks about Skills or Commands.
 
 # Quick Reference
 
-# Quick Reference
-
 ## When to Create a Subagent
 
-Use subagents for **Agent Sovereignty** and **specialized expertise**:
+Use subagents for **isolated context** and **specialized expertise**:
 
-1. **Focused Lens Required**: Adopting a specialized persona for deep thinking
+1. **Separate Context Required**: Deep thinking and analysis
 2. **System Maintenance**: Maintaining AI infrastructure
 3. **Specialized Expertise**: Domain-specific knowledge
 
@@ -93,7 +91,7 @@ Project-level subagents override user-level when names conflict. Use project loc
 - `Glob`, `Grep` - File search
 - `Bash` - Execute shell commands
 - `TodoWrite` - Manage todo lists
-- `Skill` - Invoke skills and commands
+- `Skill`, `SlashCommand` - Invoke skills and commands
 - `Task` - Delegate to subagents
 - `WebSearch`, `WebFetch` - Web access
 - `BashOutput`, `KillShell` - Background shell management
@@ -112,64 +110,20 @@ Project-level subagents override user-level when names conflict. Use project loc
 - Only specify a model if the user explicitly requests it or if the task requires specific model capabilities
 - If omitted: defaults to configured subagent model (usually sonnet)
 
-## Capabilities Field (Optional)
-
-Array of strings describing the agent's core competencies.
-
-**Purpose:**
-- Document what the agent can do well
-- Help with agent selection and routing
-- Provide quick overview of agent specialization
-
-**Example:**
-```yaml
-capabilities: ["orchestration", "dependency-analysis", "parallel-execution", "quality-assurance"]
-```
-
-**Best Practices:**
-- Use lowercase-with-hyphens format
-- Keep to 3-5 key capabilities
-- Focus on unique strengths
-- Use action-oriented verbs
-
-## Compatibility Field (Optional)
-
-String specifying Claude version or model requirements.
-
-**Purpose:**
-- Ensure agent works with available Claude version
-- Handle version-specific features or behavior
-- Prevent compatibility issues
-
-**Example:**
-```yaml
-compatibility: "claude>=3.5"
-```
-
-**Format:**
-- Semantic version specification
-- Supports: `>=`, `>`, `<=`, `<`, `==`
-- Can specify minimum version for features
-
-**Common Values:**
-- `claude>=3.5` - Requires Claude 3.5 or newer
-- `claude>=3.0` - Requires Claude 3.0 or newer
-- `claude>=4.0` - Requires Claude 4.0 or newer (for latest features)
-
 # Execution Model
 
-## Agent Sovereignty
+## Critical Constraint
 
-**Agents are specialized lenses on the current session.**
+**Subagents are black boxes that CAN interact with users, but intermediate steps are hidden.**
 
-Agents run within the conversation flow, sharing history but adopting a specialized persona. They:
+Subagents run in isolated contexts and return their final output to the main conversation. They:
 
-- ✅ **Share Context**: Full access to conversation history (read-only)
-- ✅ **Specialized Persona**: Adopts a focused system prompt
-- ✅ **Visible Execution**: Thoughts and tool use are visible in the logs
-- ❌ **NOT "Clean Slate"**: They are not empty sessions; they are focused subprocesses.
+- ✅ Can use tools like Read, Write, Edit, Bash, Grep, Glob
+- ✅ Can access MCP servers and other non-interactive tools
+- ❌ **CAN NOT use AskUserQuestion** to gather input or clarification
+- ❌ **User never sees subagent's intermediate steps** (only final output)
 
-The main agent delegates to the sovereign agent via the `Task` tool.
+The main conversation sees only the subagent's final report/output.
 
 # Templates
 

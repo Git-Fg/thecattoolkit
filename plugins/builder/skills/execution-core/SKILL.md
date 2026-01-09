@@ -24,9 +24,9 @@ allowed-tools: Bash Edit Read Write Glob Grep
 
 ## Core Purpose
 
-Define universal behavioral protocols for autonomous agent execution.
+**This skill defines universal behavioral protocols for autonomous agent execution.**
 
-Answer: "HOW should agents behave?" (not "WHAT should they do").
+It answers: "HOW should agents behave?" (not "WHAT should they do").
 
 ## Skill Contents
 
