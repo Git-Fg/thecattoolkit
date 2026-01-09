@@ -1,6 +1,6 @@
 ---
 name: manage-styles
-description: MUST CONSULT when creating or auditing toolkit styles to ensure compliance with communication protocols, truth-first alignment, and solo-developer focus.
+description: USE when creating or auditing toolkit styles to ensure compliance with communication protocols, truth-first alignment, and solo-developer focus.
 allowed-tools: Read, Write, Edit, Bash
 ---
 

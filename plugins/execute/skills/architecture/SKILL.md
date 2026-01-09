@@ -1,11 +1,10 @@
 ---
 name: architecture
 description: |
-  System Architecture and Design Frameworks. MUST USE when designing new systems, analyzing existing architecture, or making architectural decisions.
+  USE when designing new systems, analyzing existing architecture, or making architectural decisions applying System Architecture and Design Frameworks.
   Keywords: system design, architecture analysis, scalability, technical decisions, ADR
 context: fork
 agent: designer
-user-invocable: true
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, TodoWrite]
 ---
 

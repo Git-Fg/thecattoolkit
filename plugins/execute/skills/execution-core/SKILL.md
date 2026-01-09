@@ -111,6 +111,15 @@ Use execution-core handoff format for blockers
 4. **Non-Blocking:** No waiting loops or human checkpoints
 5. **Clear Handoffs:** Standard format when pausing execution
 
+## 5. Human Interaction Policy (AskUserQuestion)
+
+To ensure Uninterrupted Flow, the following policy applies to human interaction:
+
+- **Execution Phase Workers (e.g., Worker Agent):** `AskUserQuestion` is **STRICLY PROHIBITED**. Workers must operate autonomously or use the Handoff Protocol if blocked.
+- **Planning Phase Coordinators (e.g., Director, Orchestrator):** `AskUserQuestion` is **ALLOWED** for requirements gathering and clarification before execution begins.
+
+This policy ensures that heavy implementation tasks are never interrupted, while initial discovery remains interactive.
+
 ## Standards Hierarchy
 
 Execution-core sits at the BASE of the behavioral stack:

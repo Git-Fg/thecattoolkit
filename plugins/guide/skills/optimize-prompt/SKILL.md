@@ -5,7 +5,6 @@ description: |
   Analyzes prompt weaknesses, applies optimization techniques, produces enhanced version.
 context: fork
 agent: prompt-engineer
-user-invocable: true
 allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 

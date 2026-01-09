@@ -82,12 +82,27 @@ def summarize_actions(actions):
     return summary
 
 
+def get_project_root():
+    """Find the project root using git or environment variables."""
+    try:
+        import subprocess
+
+        return Path(
+            subprocess.check_output(
+                ["git", "rev-parse", "--show-toplevel"], encoding="utf-8"
+            ).strip()
+        )
+    except Exception:
+        return Path(os.environ.get("CLAUDE_PROJECT_DIR", "."))
+
+
 def main():
     """Compact memory by creating a summary and updating scratchpad."""
     try:
-        context_log_path = ".cattoolkit/context/context.log"
-        scratchpad_path = ".cattoolkit/context/scratchpad.md"
-        summary_path = ".cattoolkit/context/checkpoints"
+        root = get_project_root()
+        context_log_path = root / ".cattoolkit/context/context.log"
+        scratchpad_path = root / ".cattoolkit/context/scratchpad.md"
+        summary_path = root / ".cattoolkit/context/checkpoints"
 
         context_log = read_file_safe(context_log_path)
         scratchpad = read_file_safe(scratchpad_path)

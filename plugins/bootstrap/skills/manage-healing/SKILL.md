@@ -1,6 +1,6 @@
 ---
 name: manage-healing
-description: Diagnostic patterns and repair protocols for self-correcting AI components. Passive knowledge base for the /heal command.
+description: USE when diagnosing failures or applying repair protocols for self-correcting AI components.
 allowed-tools: Read
 ---
 

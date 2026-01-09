@@ -1,11 +1,10 @@
 ---
 name: code-review
 description: |
-  Systematic code review and quality assessment. USE when reviewing changes, PRs, or assessing code quality.
+  USE when reviewing changes, PRs, or assessing code quality through systematic code review and quality assessment.
   Keywords: code review, PR review, quality assessment, security review
 context: fork
 agent: worker
-user-invocable: true
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 

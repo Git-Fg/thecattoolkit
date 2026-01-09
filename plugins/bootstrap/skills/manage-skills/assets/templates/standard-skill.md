@@ -3,7 +3,6 @@ name: {SKILL_NAME}
 description: {SKILL_DESCRIPTION}
 context: fork
 agent: {OPTIONAL_PERSONA}
-user-invocable: true
 allowed-tools: {RESTRICTED_TOOLS}
 ---
 

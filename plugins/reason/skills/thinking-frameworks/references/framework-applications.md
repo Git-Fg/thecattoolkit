@@ -1,6 +1,6 @@
 # Framework Application Methodology
 
-This document provides detailed application instructions for each thinking framework. Used by both Sovereign Vector (foreground) and Sovereign Triangle (delegation) patterns.
+This document provides detailed application instructions for each thinking framework. Used by both Sovereign Direct (foreground) and Sovereign Delegated (delegation) patterns.
 
 ## Strategic Thinking Frameworks
 
@@ -386,13 +386,13 @@ Result: 6 hrs/week recovered, velocity increased 20%
 
 ## Usage Guidelines
 
-**For Sovereign Vector Pattern (Foreground Execution):**
+**For Sovereign Direct Pattern (Foreground Execution):**
 - Use these methodologies to guide real-time analysis
 - Walk through steps interactively with user
 - Provide examples for each step
 - Allow user to provide input at each stage
 
-**For Sovereign Triangle Pattern (Background Delegation):**
+**For Sovereign Delegated Pattern (Background Delegation):**
 - Agent applies methodology autonomously
 - Use Markdown prompt to provide comprehensive context
 - Agent follows steps systematically

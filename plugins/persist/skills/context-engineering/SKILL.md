@@ -1,11 +1,10 @@
 ---
 name: context-engineering
 description: |
-  USE when managing persistent session state, avoiding context overflow, or enabling session handoffs. 
-  The Authority on Session Persistence with **Passive Hook System**. 
-  Context is now auto-managed via hooks - no initialization needed!
+  USE when managing persistent session state, avoiding context overflow, or enabling session handoffs using the Passive Hook System.
   Keywords: context management, session handoff, scratchpad, context overflow, memory persistence
 context: fork
+agent: scribe
 allowed-tools: [Read, Write, Edit, Bash]
 ---
 

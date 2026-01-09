@@ -1,12 +1,10 @@
 ---
 name: meta-builder
 description: |
-  [Execution] Build, audit, or modify toolkit components using natural language.
-  USE when creating new skills, agents, or commands, or auditing existing ones.
+  USE when building, auditing, or modifying toolkit components (skills, agents, or commands) using natural language.
   Keywords: build, create, audit, scaffold, generate component
 context: fork
 agent: plugin-expert
-user-invocable: true
 allowed-tools: Read Write Edit Glob Grep Bash TodoWrite
 ---
 

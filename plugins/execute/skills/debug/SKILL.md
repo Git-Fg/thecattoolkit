@@ -1,11 +1,10 @@
 ---
 name: debug
 description: |
-  Systematic debugging and bug fixing. USE when fixing errors, crashes, test failures, or performance issues.
+  USE when fixing errors, crashes, test failures, or performance issues through systematic debugging and bug fixing.
   Keywords: fix bug, debug error, investigate crash, solve issue
 context: fork
 agent: worker
-user-invocable: true
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 

@@ -1,6 +1,6 @@
 # Framework Selection Guide
 
-This document provides the standardized framework selection process for both Sovereign Vector (foreground) and Sovereign Triangle (delegation) patterns.
+This document provides the standardized framework selection process for both Sovereign Direct (foreground) and Sovereign Delegated (delegation) patterns.
 
 ## Selection Workflow
 
@@ -149,15 +149,15 @@ Enter choice (1-4):
 
 ## Usage in Commands
 
-### For Sovereign Vector (think.md):
+### For Sovereign Direct (think.md):
 1. Present category options
 2. Get category selection via AskUserQuestion
 3. Present framework-specific options
 4. Get framework selection via AskUserQuestion
 5. Reference the framework from skill resources
-6. Apply using Vector pattern (direct execution with user)
+6. Apply using Direct pattern (direct execution with user)
 
-### For Sovereign Triangle (brainstorm.md):
+### For Sovereign Delegated (brainstorm.md):
 1. Present category options
 2. Get category selection via AskUserQuestion
 3. Present framework-specific options

@@ -1,29 +1,16 @@
 ---
 description: |
-  MANDATORY ENTRY POINT for creating hierarchical project plans. STRICTLY PROHIBITED from generating phase files manually. YOU MUST DELEGATE to specialized designer agent for plan creation. ORCHESTRATE requirements gathering, strategy analysis, and validation.
-  <example>
-  Context: User wants to create a project plan
-  user: "Create a plan for building a React todo app"
-  assistant: "I'll orchestrate the creation of a comprehensive project plan."
-  </example>
-  <example>
-  Context: Complex project breakdown
-  user: "Plan the implementation of our authentication system"
-  assistant: "I'll use the plan command to structure this into phases."
-  </example>
-  <example>
-  Context: Project planning with discovery
-  user: "Create a plan for our new API service"
-  assistant: "I'll orchestrate deep discovery and hierarchical plan creation."
-  </example>
-allowed-tools: Task, ask_user, Read, Write, Glob, Grep, Bash
+  USE when initializing new projects, breaking down complex features, or creating implementation roadmaps to orchestrate the creation of hierarchical project plans.
+  Delegates deep discovery and architectural planning to the designer agent.
+  Keywords: project plan, roadmap, implementation strategy, feature breakdown
+allowed-tools: [Task, AskUserQuestion, Read, Write, Glob, Grep, Bash]
 argument-hint: [project description] [lite|standard]
 disable-model-invocation: true
 ---
 
 # Plan Creation Orchestrator
 
-<role>
+# Role
 You are the **Plan Creation Orchestrator**. You are the MANDATORY SUPERVISOR for all plan creation workflows.
 
 Your goal is to ORCHESTRATE the creation of a hierarchical project plan for: **$ARGUMENTS**
@@ -44,9 +31,8 @@ Your job is to ORCHESTRATE:
 2. DELEGATION - Assign work to specialized `designer` agent
 3. VALIDATION - Verify created plan structure against standards
 4. PRESENTATION - Provide clear next steps to user
-</role>
 
-<workflow>
+## Strategy & Workflow
 ## 1. Requirements Gathering
 
 **Action:** Analyze the project request from `$ARGUMENTS`
@@ -64,7 +50,7 @@ I need to understand:
 - What are the main features?
 - Any constraints (language, framework, timeline)?
 ```
-Use `ask_user` to gather missing information.
+Use `AskUserQuestion` to gather missing information.
 
 ## 1.5 Deep Discovery Analysis (MANDATORY)
 
@@ -74,11 +60,11 @@ Use `ask_user` to gather missing information.
 
 **Delegation Prompt:**
 ```markdown
-<context>
+# Context
 User Request: $ARGUMENTS
 Current Directory: .
-</context>
-<assignment>
+
+# Assignment
 **Objective:** Perform Deep Discovery on this project.
 
 1. **Map the Structure:** Identify key directories and architectural patterns.
@@ -88,14 +74,13 @@ Current Directory: .
 **Output:**
 - DISCOVERY.md (must exist)
 - Report on any oddities or risks.
-</assignment>
 ```
 
 **Wait for `designer` to complete.**
 
 **Clarification Protocol:**
 Read the generated `DISCOVERY.md`. If anything is marked as "Unknown" or if the stack is unclear:
-- Use `ask_user` to resolve ambiguities.
+- Use `AskUserQuestion` to resolve ambiguities.
 - Do NOT proceed to planning until you have 100% clarity on the tech stack.
 
 **Log completion:**
@@ -132,10 +117,10 @@ Reasoning: [why this type]
 Create PLAN.md directly with 2-3 tasks using project-strategy templates.
 
 ### Standard Plans:
-Construct envelope prompt and delegate to designer agent:
+Construct delegation prompt and delegate to designer agent:
 
 ```markdown
-<context>
+# Context
 **Project Context:**
 - User's original request: $ARGUMENTS
 - Discovery findings: {{PASTE_DISCOVERY_CONTENT_HERE}}
@@ -146,9 +131,8 @@ Construct envelope prompt and delegate to designer agent:
 **Template Location:**
 - Use templates from the `project-strategy` skill.
 - Resolve relative paths from your skill binding.
-</context>
 
-<assignment>
+# Assignment
 **Task:** Create a Standard hierarchical project plan
 
 Based on the project requirements and discovery findings, create a complete project structure with:
@@ -158,10 +142,9 @@ Based on the project requirements and discovery findings, create a complete proj
 - Phase directories with PLAN.md files
 
 Use the project-strategy skill templates and standards.
-</assignment>
 ```
 
-Use Task tool with subagent_type: "designer" and the envelope prompt.
+Use Task tool with subagent_type: "designer" and the delegation prompt.
 
 ## 4. Validation
 
@@ -176,10 +159,9 @@ Use Task tool with subagent_type: "designer" and the envelope prompt.
 **Lite Plans:** Display plan creation confirmation with next steps.
 
 **Standard Plans:** Display complete directory structure and file descriptions with next steps.
-</workflow>
 
-<constraints>
-**MANDATORY PROTOCOLS:**
+## Constraints
+**ABSOLUTE CONSTRAINTS:**
 - **STRICTLY PROHIBITED** from writing plans directly for Standard Plans
 - **MANDATORY DELEGATION**: You MUST delegate to `designer` agent for Standard Plans
 - **MANDATORY VALIDATION**: You MUST verify all plan structures before presenting
@@ -187,11 +169,10 @@ Use Task tool with subagent_type: "designer" and the envelope prompt.
 - **MANDATORY NEXT STEPS**: You MUST provide clear next steps after completion
 
 **EXCEPTION:** For Lite Plans only, you MAY create the PLAN.md directly without delegation.
-</constraints>
 
-<error-handling>
+## Error Handling
 **Ambiguous Requirements:**
-- Deep Discovery found unclear aspects → ask_user immediately
+- Deep Discovery found unclear aspects → AskUserQuestion immediately
 - Do NOT delegate to designer until 100% clarity achieved
 - Log: `[ORCHESTRATOR] BLOCKED: Need clarification before planning`
 
@@ -205,7 +186,6 @@ Use Task tool with subagent_type: "designer" and the envelope prompt.
 - Identify specific missing or incorrect elements
 - Request correction with clear feedback
 - Relaunch designer with correction
-</error-handling>
 
 ---
 

@@ -1,13 +1,11 @@
 ---
 name: summarize-session
 description: |
-  Summarize the current session and create a comprehensive summary.
-  Use when you need to consolidate session state, track progress, or prepare for session rotation.
+  USE when consolidating session state, tracking progress, or preparing for session rotation.
   Reads session logs and creates detailed session summary with health metrics.
   Keywords: session summary, context consolidation, progress tracking, session health
 context: fork
 agent: scribe
-user-invocable: true
 allowed-tools: [Read, Write, Bash, Glob, Grep]
 ---
 

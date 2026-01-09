@@ -1,8 +1,9 @@
 ---
 name: {agent-name}
 description: {ROLE}. {PLATFORM_SPECIFIC_WARNING} MUST/PROACTIVELY USE when {TRIGGER_CONDITION}.
-tools: Read, Glob, Grep  # Read-only for safe background execution
+tools: [Read, Glob, Grep] # Read-only for safe background execution
 model: haiku  # Fast/cheap for exploration tasks
+permissionMode: plan # Default to safe mode
 ---
 
 # {Agent Name}

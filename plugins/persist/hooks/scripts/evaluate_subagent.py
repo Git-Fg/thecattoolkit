@@ -25,7 +25,7 @@ def main():
     # If the subagent failed, the system usually handles it before this hook.
 
     result = {
-        "status": "approve",
+        "decision": "allow",
         "message": "Subagent stop approved by deterministic evaluator",
     }
 

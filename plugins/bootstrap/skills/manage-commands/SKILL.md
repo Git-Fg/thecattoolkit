@@ -1,6 +1,6 @@
 ---
 name: manage-commands
-description: MUST CONSULT when creating or auditing slash commands to ensure compliance with command structure standards, semantic categorization, and permission patterns.
+description: USE when creating or auditing slash commands to ensure compliance with command structure standards, semantic categorization, and permission patterns.
 allowed-tools: Read, Write, Edit, Bash
 ---
 
@@ -50,8 +50,7 @@ Production-grade templates for command scaffolding:
 
 | Template | Use Case |
 |----------|----------|
-| `complex-delegation.md` | Single/Parallel background agents |
-| `hybrid-workflow.md` | Foreground + background work |
+| `forked-skill.md` | Skill binding to specialized agent (Unified Capability) |
 | `context-loader.md` | Dynamic context loading |
 
 **Removed Templates (Anti-Patterns):**
@@ -67,11 +66,17 @@ Production-grade templates for command scaffolding:
 | Pattern | Why Avoid | Alternative |
 |---------|-----------|-------------|
 | Vague description | Won't discover | Add specific purpose |
+| XML in description | Law 4 violation | Natural Language + USE triggers |
 | Missing tool restrictions | Security risk | Add allowed-tools |
 | No dynamic context | Missing state | Add ! `context` |
 | Poor argument integration | Arguments ignored | Use $ARGUMENTS |
 | Overly complex | Hard to use | Split into multiple commands |
 | Interactive prompts | Breaks async | Make autonomous |
+
+## Description Standards (Law 4)
+- **NO XML**: Do not use `<example>` tags in frontmatter.
+- **Natural Language**: Use "USE when [condition]" sentences.
+- **Keywords**: Include a `Keywords: word1, word2` line for fuzzy matching.
 
 ## Validation Protocol
 

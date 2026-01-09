@@ -20,7 +20,7 @@ def main():
     # For now, we allow the user/system to stop when requested.
 
     result = {
-        "status": "approve",
+        "decision": "allow",
         "message": "Session stop approved by deterministic evaluator",
     }
 

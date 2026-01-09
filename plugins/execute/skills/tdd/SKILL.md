@@ -1,11 +1,10 @@
 ---
 name: tdd
 description: |
-  Test-Driven Development workflow. USE when implementing new features, fixing bugs, or refactoring with TDD methodology.
+  USE when implementing new features, fixing bugs, or refactoring with TDD methodology (Test-Driven Development workflow).
   Keywords: test-driven development, TDD, red-green-refactor, write tests first
 context: fork
 agent: worker
-user-invocable: true
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 

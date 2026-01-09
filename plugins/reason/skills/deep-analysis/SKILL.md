@@ -5,7 +5,6 @@ description: |
   Performs autonomous deep discovery using structured thinking frameworks to analyze complex problems comprehensively.
 context: fork
 agent: strategist
-user-invocable: true
 allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 

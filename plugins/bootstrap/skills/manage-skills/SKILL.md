@@ -1,7 +1,10 @@
 ---
 name: manage-skills
-description: The Authority on Skill Architecture. MUST CONSULT when creating, auditing, or refactoring skills to ensure compliance with architectural standards, naming conventions, and directory structure.
-allowed-tools: Read, Write, Edit
+description: |
+  USE when auditing, creating, or modifying plugin skills as the System Authority on Skill Standards and Compliance.
+  Keywords: skill management, audit skills, standard skill, skill metadata, discovery compliance
+agent: plugin-expert
+allowed-tools: [Read, Write, Edit, Bash, Glob, Grep]
 ---
 
 # Skill Management Authority
@@ -12,9 +15,9 @@ allowed-tools: Read, Write, Edit
 **File:** [shared-standards.md](references/shared-standards.md)
 **Contains:** Common principles, integration patterns, and anti-patterns for all management skills.
 
-### 2. Communication & Envelopes
+### 2. Communication & Prompts
 **File:** [standards-communication.md](references/standards-communication.md)
-**Contains:** The Envelope Pattern, XML/Markdown usage, Handoff protocols.
+**Contains:** The Prompt Pattern, Markdown usage, Handoff protocols.
 
 ### 3. Security
 **File:** [standards-security.md](references/standards-security.md)
@@ -44,6 +47,6 @@ Consolidated standards and documentation:
 | Reference | Purpose |
 |-----------|---------|
 | [shared-standards.md](references/shared-standards.md) | Common standards for all management skills |
-| [standards-communication.md](references/standards-communication.md) | Envelope pattern, XML/Markdown usage, handoff protocols |
+| [standards-communication.md](references/standards-communication.md) | Prompt pattern, XML/Markdown usage, handoff protocols |
 | [standards-security.md](references/standards-security.md) | Background execution, tool permissions, path traversal |
 | (Consult `CLAUDE.md`) | Core architecture and quality gates |

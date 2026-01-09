@@ -41,7 +41,7 @@ Provide the theoretical basis and methodology for structured analysis. This skil
 ## Skill Resources
 
 ### Selection Process
-- **references/framework-selection.md**: Standardized framework selection prompts and workflow for both Vector and Triangle patterns
+- **references/framework-selection.md**: Standardized framework selection prompts and workflow for both Direct and Delegated patterns
 
 ### Application Methodology
 - **references/framework-applications.md**: Detailed step-by-step instructions for applying each framework, with examples and templates
@@ -73,13 +73,13 @@ For complex problems, these combinations are effective:
 
 ## Usage Patterns
 
-### For Sovereign Vector Commands (Foreground)
+### For Sovereign Direct Commands (Foreground)
 1. Reference `references/framework-selection.md` for user interaction prompts
 2. Read `references/framework-applications.md` for methodology
 3. Apply framework interactively with user guidance
 4. Write output following `assets/templates/analysis-summary.md`
 
-### For Sovereign Triangle Commands (Delegation)
+### For Sovereign Delegated Commands (Delegation)
 1. Reference `references/framework-selection.md` for user interaction prompts
 2. Gather comprehensive context
 3. Delegate to agent with framework selection

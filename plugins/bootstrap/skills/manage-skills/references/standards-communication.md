@@ -1,33 +1,34 @@
 # Communication Standards
 
-## 1. The Envelope Pattern
-When a Command delegates to an Agent (Triangle Pattern), it must construct a strict **Envelope**. The Agent does not have access to the main chat history; it only sees the Envelope.
+## 1. Natural Language Delegation (Delegated Pattern)
+When a Command delegates to an Agent (Delegated Pattern), it must construct a structured prompt using Markdown headers. The Agent does not have access to the main chat history; it only sees the provided prompt.
 
-**Envelope Structure (in Command):**
-```xml
-<envelope>
-  <intent>
-    {GOAL: What specific outcome is required?}
-  </intent>
-  <context>
-    {DATA: Variables, file paths, and raw content needed.}
-    <!-- Use !bash commands here to inject dynamic state -->
-  </context>
-  <standards>
-    {RULES: Which Skill/Reference files must be obeyed?}
-  </standards>
-  <constraints>
-    {BOUNDARIES: What is forbidden?}
-  </constraints>
-</envelope>
+**Standard Delegation Structure:**
+```markdown
+# Context
+{DATA: Background variables, file paths, and raw content needed.}
+<!-- Pro-Tip: Inject dynamic state directly into the section -->
+
+# Assignment
+**Goal:** {Specific outcome required}
+
+## Instructions
+{Step-by-step guidance for the agent}
+
+## Requirements & Constraints
+{RULES: Which Skill/Reference files must be obeyed? What is forbidden?}
+
+## Quality Standards
+{Expected output format and verification criteria}
 ```
 
-## 2. XML vs. Markdown usage
-*   **Markdown:** Use for **Content** (Instructions, Explanations, Templates).
-*   **XML:** Use for **Data Structures** (The Envelope, extracted code blocks, lists of files).
-*   *Why:* LLMs follow Markdown instructions better, but parse XML data more accurately.
+## 2. XML vs. Markdown usage (Law 9)
+*   **Markdown:** The PRIMARY format for **Instructions** and **Structuring Thought**.
+*   **XML:** Reserved for **Machine Signaling** and **Data Isolation**.
+    *   *Usage:* Grouping high-noise raw data (hooks), signaling tool outputs, or semantic grouping in complex inputs.
+    *   *Constraint:* Max 15 tags per scope, no deep nesting.
 
-## 3. The "Hot-Potato" Handoff
-*   **Interactive Phase:** The Command (Vector) asks the user for clarifications *before* dispatching.
-*   **Silent Phase:** Once the Agent (Triangle) is launched, **NO USER INTERACTION IS ALLOWED**. The Agent must assume the Envelope is complete.
-    *   If info is missing: The Agent checks `standards-quality.md` for default behaviors or fails gracefully.
+## 3. Direct execution (Direct Pattern)
+*   **Interactive Phase:** Commands running in the foreground (Direct Pattern) may use `AskUserQuestion` for clarifications.
+*   **Execution Isolation:** Once an Agent (Delegated) is launched, **NO USER INTERACTION IS ALLOWED**. The Agent operates in Uninterrupted Flow.
+    *   If info is missing: The Agent uses `execution-core` Handoff protocols and terminates.

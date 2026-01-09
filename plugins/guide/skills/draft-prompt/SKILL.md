@@ -5,7 +5,6 @@ description: |
   Guides through prompt design process: analyze requirements, select patterns, create prompt.
 context: fork
 agent: prompt-engineer
-user-invocable: true
 allowed-tools: Read, Write, Edit, Glob, Grep
 ---
 
