@@ -1,9 +1,0 @@
-{
-    "name": "guard-python",
-    "description": "The Immune System: File safety warnings, security checks, and type-checking hooks for Python safety.",
-    "version": "0.0.1",
-    "author": {
-        "name": "Git-Fg"
-    },
-    "license": "MIT"
-}

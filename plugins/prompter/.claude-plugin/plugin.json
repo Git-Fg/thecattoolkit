@@ -1,9 +1,0 @@
-{
-    "name": "prompter",
-    "description": "Prompt engineering, meta-prompting, and prompt chain orchestration for AI-to-AI workflows.",
-    "version": "0.0.1",
-    "author": {
-        "name": "Git-Fg"
-    },
-    "license": "MIT"
-}

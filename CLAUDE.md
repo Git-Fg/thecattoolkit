@@ -35,6 +35,15 @@ skill-name/
 | Instructions (SKILL.md body) | <5000 tokens | Activation |
 | Resources (scripts/, references/, assets/) | As needed | On reference |
 
+### Writing Style Requirements
+
+1.  **Imperative/Infinitive Form:** Write SKILL.md body using verb-first instructions. This allows skills to be read as **direct instructions by spawned agents**.
+    -   ✅ Correct: "Verify indentation using 2-space standard."
+    -   ❌ Incorrect: "You should check the indentation."
+2.  **Third-Person Description:** The YAML `description` determines when the skill is loaded.
+    -   ✅ Correct: "This skill should be used when..."
+    -   ❌ Incorrect: "Use this skill when..."
+
 **Key principles:** Keep SKILL.md under 500 lines. Move detailed references to `references/`. Use relative paths from skill root.
 
 ### YAML Frontmatter
@@ -129,6 +138,8 @@ See `docs/VECTOR_vs_TRIANGLE.md` for detailed mechanics and examples.
 
 ## V. Command Types
 
+See `docs/COMMAND-STANDARDS.md` for technical implementation details (Frontmatter, arguments, environment variables).
+
 Commands work with both humans and AI agents using natural language:
 
 | Type | Consumer | `disable-model-invocation` | AskUserQuestion |
@@ -137,7 +148,9 @@ Commands work with both humans and AI agents using natural language:
 | Subagent-Ready | AI subagents | `false` | No |
 | Hybrid | Both | `false` | Conditional |
 
-**Key Principle:** Modern commands use natural language and work for both humans and AI subagents. The command type determines interaction patterns, not rigid argument parsing.
+**Key Principle:** Commands are **Intent Envelopes**. Use `$ARGUMENTS` to capture full natural language context. Rigid argument parsing (e.g., `$1 $2`) is an anti-pattern reserved only for Tier 3 utilities.
+
+**Rule of Thumb:** If a command leverages AskUserQuestion, it should be disabled for auto-invocation from AI agents through `disable-model-invocation: true`. Otherwise, omit this frontmatter.
 
 ---
 
@@ -150,6 +163,8 @@ Commands work with both humans and AI agents using natural language:
 | **Skill** | Passive standards, templates, methodology | Asks permission (pre-approve via `allowed-tools`) |
 
 **Constraint:** If Command is deleted, Agent + Skill must still work via Task tool.
+
+**Agent Tool Restriction:** Define `tools` in Agent frontmatter to enforce "Privilege Restriction" (e.g., a `code-explorer` agent should restrict `Write` to prevent accidental drift).
 
 ---
 
@@ -190,11 +205,31 @@ Skills are cookbooks, not wizards. AskUserQuestion FORBIDDEN in skills. If input
 ### 5. Native Capabilities
 Trust the model. Declarative over procedural. Universal over specific.
 
+> **Rule:** AI Agents inherently understand standard tools (`Read`, `Write`, `Edit`, `Glob`, `Grep`, `Bash`). ALWAYS use natural language. A simple "read file X from folder Y" is more performant and reliable than micromanagement prompts.
+
 | Avoid | Prefer |
 |:------|:-------|
 | "Check package.json, then requirements.txt" | "Identify dependency management system" |
 | "Run find src -name '*.js'" | "Locate source files using filesystem tools" |
 | "Execute these grep commands: ..." | "Search for authentication patterns" |
+| "Use the Read tool on path/to/file.ts" | "Read the config file in the src folder" |
+
+### 6. Hook Safety Standards
+- **Portability:** ALWAYS use `${CLAUDE_PLUGIN_ROOT}` for script paths. Never hardcode absolute paths.
+- **Input Hygiene:** Command hooks MUST read stdin as JSON, validate inputs using `jq`, and quote ALL variables.
+- **Output Protocol:** Return valid JSON (`continue`, `systemMessage`). Use Exit Code `0` for success, `2` for blocking errors.
+- **Prompt First:** Prefer Prompt-Based hooks for logic requiring reasoning; reserve Command hooks for performance/determinism.
+
+### 7. Law of Native Delegation
+> **"Never write in code what can be described in intent."**
+
+If a task requires searching, analyzing, and editing, do not write a bash script in a command. Describe the goal and launch a specialized agent. Trust the agent to select the tools.
+
+| Anti-Pattern | Native Pattern |
+|:-------------|:---------------|
+| `!`bash find . -name "*.ts" -exec grep "todo" {} \;`` | "Find all TypeScript files containing TODO comments" |
+| Parsing JSON → condition → action in Command | Delegate to agent with goal description |
+| Step-by-step tool micromanagement | Goal-oriented natural language delegation |
 
 ---
 

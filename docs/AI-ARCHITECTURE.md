@@ -1,662 +1,208 @@
-# AI Architecture: Leveraging Native Agent Intelligence
+# AI Architecture: The Agentic Runtime Paradigm
 
 ## Overview
 
-This document clarifies the architecture of AI-powered development tools and how to correctly leverage the native intelligence of AI agents versus treating them as CLI tools.
+This document defines the architecture of AI-powered development where the AI is not a "CLI Tool" but an **Orchestration Runtime**. The model is the operating system; components are cognitive capabilities.
 
 ---
 
-## Core Philosophy: Native Intelligence vs CLI Tools
+## I. The Agentic Runtime Paradigm
 
-### The Critical Difference
+### Mental Model Shift
 
-**CLI Tools:**
-- Stateless by design
-- Require external state tracking
-- Need pre-checks before acting
-- Cannot make autonomous decisions
-- Dumb by design (safe, predictable)
+| Old Paradigm (CLI Tool) | New Paradigm (Agentic Runtime) |
+|:------------------------|:-------------------------------|
+| Claude receives commands | Claude orchestrates cognition |
+| Components are scripts | Components are cognitive capabilities |
+| State tracked externally | State emerges from conversation |
+| Rigid argument parsing | Natural language intent |
 
-**AI Agents:**
-- Stateful and context-aware
-- Can check files and state themselves
-- Make intelligent decisions autonomously
-- Can parse natural language
-- Smart by design (adaptable, intelligent)
+### Cognitive Capabilities
 
-### The Mistake
-
-**Treating AI agents like CLI tools:**
-- Building JSON caches for state tracking
-- Pre-validating before delegation
-- Micromanaging execution
-- Breaking natural intelligence
-
-**Leveraging AI agents correctly:**
-- Delegating with full context
-- Trusting autonomous decisions
-- Natural language interfaces
-- Minimal command wrappers
+- **Slash Commands are "Intent Envelopes":** Templates that wrap user's raw intent into a format the Native Intelligence can process.
+- **Agents are "Contextual Personas":** State-shifts in the same conversation. When an agent is spawned, Claude puts on a specialized pair of glasses.
+- **Skills are "Procedural Lenses":** Standard operating procedures. The agent doesn't "run" a skill; it "adopts the mindset."
+- **The SlashCommand Tool is "Self-Recursion":** An agent can invoke pre-defined workflows autonomously.
 
 ---
 
-## Component Architecture
+## II. The Interaction Trinity (Native Flow)
 
-### Commands: Force New Task, Keep Context
+The architecture is defined by the **Recursive Invocation Path**:
 
-**Purpose:**
-Commands **force a new task** while **preserving context** from the current conversation.
+### 1. Orchestration (Commands)
+User input triggers a Command. The Command doesn't execute; it **Contextualizes**.
 
-**How They Work:**
-1. **Parse natural language** from user/agent
-2. **Inject context** into system prompt
-3. **Force new task** (switches focus)
-4. **Keep context** (available for reference)
+- Uses `!` syntax to gather "Ground Truth" (git status, file lists)
+- Injects context into the conversation via XML envelopes
+- Captures natural language with `$ARGUMENTS`
 
-**Key Characteristics:**
-- **Context Injection:** Modifies system prompt with relevant context
-- **Task Switching:** Creates new focus while maintaining awareness
-- **Dual-Purpose:** Used by both humans and AI agents
-- **Minimal Logic:** Should delegate, not control
+### 2. Autonomous Execution (Agents)
+The Command uses the `Task` tool to spawn an Agent.
 
-**Example:**
-```markdown
-User: "Build audit entire plugin from plugins/meta"
+**Native Capacities:**
+- Agent reads its own `description` and `examples` to understand its "Start State"
+- Agent automatically adopts any `skills` listed in its frontmatter
+- Agent has full intelligence—trust it to select tools
 
-Command:
-1. Takes natural language request
-2. Injects into plugin-expert agent context
-3. Forces new task: "audit plugins/meta"
-4. Keeps conversation context available
-```
+### 3. Self-Correction (SlashCommand Tool)
+If an Agent discovers it needs a standard workflow (e.g., a `feature-dev` agent realizes it needs to commit code), it uses the SlashCommand tool to invoke `/commit` programmatically.
 
-**Natural Language Interface:**
-Modern commands accept natural language:
-- `/build audit entire plugin from plugins/meta`
-- `/build audit 'build' slashcommands`
-- `/build a new skill for database validation`
+**This is the "Collective Intelligence" pattern:** The toolkit's own commands become tools for the agents.
 
-**Why This Matters:**
-Commands should be **minimal wrappers** that:
-- Accept flexible input
+---
+
+## III. Context: Shared, Not Isolated
+
+> **Critical Correction:** Agents are **not** black boxes. They are sub-processes of the current conversation.
+
+### How Context Sharing Works
+
+| Component | Context Visibility |
+|:----------|:-------------------|
+| Main Thread | Full conversation history |
+| Subagent | Fresh context + explicit envelope content |
+| Nested Subagent | Envelope from parent only |
+
+### Benefits
+- Subagents can reference user preferences or errors from earlier messages
+- Commands can inject precise context without repetition
+- Skills are accessible equally to any context level
+
+### Constraints
+Use **Clear Phase Boundaries** (Summary outputs) so the next agent isn't confused by the "internal monologue" of the previous one.
+
+---
+
+## IV. Progressive Disclosure is Context Management
+
+We leverage native capacity by not "Dumping" all information at once.
+
+| Layer | When Present | Purpose |
+|:------|:-------------|:--------|
+| **metadata** | Always (Discovery) | Trigger activation |
+| **SKILL.md body** | When triggered (Instruction) | Core procedure |
+| **references/** | When agent lacks data (Deep Knowledge) | Detailed schemas, policies |
+
+**Why:** This keeps the "Attention Mechanism" focused on the task, not the documentation.
+
+---
+
+## V. Interaction Graph Rules
+
+| Path | Leverage Strategy |
+|:-----|:------------------|
+| **Cmd → Skill** | "Global Guards" or "Standards" visible to user (Vector Pattern). |
+| **Cmd → Subagent** | "Heavy Lifting" where user only wants result (Triangle Pattern). |
+| **Subagent → Skill** | Agent "Self-Onboards" by reading skill. No manual loading needed. |
+| **Subagent → Cmd** | Agent uses toolkit commands for standardized side-effects (e.g., `/heal`). |
+| **Subagent → Subagent** | **Swarm Logic:** One "Director" spawns multiple "Worker" agents for parallel operations. |
+
+---
+
+## VI. State vs. Configuration
+
+### User Configuration (`.claude/*.local.md`)
+- **Purpose:** User preferences, feature flags
+- **Persistence:** Long-term, user-managed
+- **Format:** YAML Frontmatter + Markdown body
+- **Example:** Enabling "Strict Mode" for a security plugin
+
+### Runtime State (`.cattoolkit/`)
+- **Purpose:** Agent memory, execution logs, plan status
+- **Persistence:** Session or Project duration, Agent-managed
+- **Format:** JSON, Markdown logs, Status files
+- **Example:** Tracking files scanned in a swarm operation
+
+**Rule:** Agents generally *read* Configuration but *write* Runtime State.
+
+---
+
+## VII. Best Practices
+
+### For Commands (Intent Envelopes)
+
+**DO:**
+- Accept natural language via `$ARGUMENTS`
 - Trust agent intelligence
-- Not rigid parsers
-
-### Subagents: Clean Context
-
-**Purpose:**
-Subagents provide **isolated context** for specialized tasks.
-
-**How They Work:**
-1. **New conversation** - Isolated from main context
-2. **Specialized tools** - Domain-specific capabilities
-3. **Clean slate** - No contamination from main conversation
-4. **Autonomous execution** - Runs without user interaction
-
-**Key Characteristics:**
-- **Context Isolation:** New, clean context
-- **Specialized Intelligence:** Focused expertise
-- **Black Box:** Intermediate steps hidden
-- **Autonomous:** No user interaction needed
-
-**Example:**
-```markdown
-Main Conversation:
-User: "Audit all agents for compliance"
-
-Command: /build audit all agents
-↓ Delegates to ↓
-Subagent (plugin-expert):
-- New context, clean slate
-- Specialized in agent auditing
-- Autonomous execution
-- Returns findings to main
-```
-
-**When to Use Subagents:**
-- Complex multi-step tasks
-- Specialized expertise needed
-- Context isolation required
-- Background execution needed
-
-**Context Isolation Explained:**
-Subagents get a **clean context** because:
-- Prevents context pollution
-- Focuses agent on specific task
-- Reduces cognitive load
-- Enables true specialization
-
-### Skills: Knowledge Base Powerhouse
-
-**Purpose:**
-Skills are **knowledge libraries** that provide declarative standards and templates.
-
-**How They Work:**
-1. **Declarative Standards** - What to do, not how
-2. **Templates** - Pre-built patterns
-3. **Knowledge Base** - Best practices encoded
-4. **Universal Access** - Available to all agents
-
-**Key Characteristics:**
-- **Passive Knowledge** - Never execute, always reference
-- **Declarative Standards** - Rules and patterns
-- **Templates** - Ready-to-use structures
-- **Shared Resource** - Used by all agents
-
-**Access Patterns:**
-
-#### 1. Main AI Agent Uses Skills Directly
-```markdown
-Main Agent:
-"I need to create a skill for database validation"
-→ Loads manage-skills skill
-→ Reads standards
-→ Applies templates
-→ Creates compliant skill
-```
-
-#### 2. AI Agent Uses Skills Through Slash Command
-```markdown
-User: "/build a new skill for database validation"
-
-Command (/build):
-→ Parses natural language
-→ Delegates to plugin-expert
-
-Plugin-expert:
-→ Loads manage-skills skill
-→ Reads standards
-→ Creates skill
-```
-
-#### 3. AI Agent Uses Skills Through Subagent
-```markdown
-Main Agent:
-"Audit all commands for compliance"
-
-Command: /build audit commands
-↓ Delegates to ↓
-Plugin-expert (subagent):
-→ Loads manage-commands skill
-→ Reads standards
-→ Audits all commands
-→ Reports findings
-```
-
-**Why Skills Are Powerful:**
-
-1. **Declarative Over Procedural**
-   - Standards, not workflows
-   - Principles, not steps
-   - Templates, not scripts
-
-2. **Universal Access**
-   - Main agent: Direct reference
-   - Commands: Via agent delegation
-   - Subagents: Loaded as needed
-
-3. **Passive Knowledge**
-   - Never ask questions
-   - Provide standards only
-   - Enable autonomous execution
-
-4. **Progressive Disclosure**
-   - SKILL.md < 500 lines (overview)
-   - references/ (detailed standards)
-   - assets/ (templates and examples)
-
-**Example: manage-skills**
-```
-Structure:
-├── SKILL.md (overview, <500 lines)
-├── references/
-│   ├── creation-standards.md
-│   ├── communication-standards.md
-│   └── shared-standards.md
-└── assets/
-    ├── templates/
-    └── examples/
-```
-
-**Usage:**
-```markdown
-Agent needs to create a skill:
-1. Load manage-skills skill
-2. Read creation-standards.md
-3. Apply templates from assets/
-4. Follow validation protocols
-5. Create compliant skill
-```
-
----
-
-## Architecture Diagram
-
-```
-┌─────────────────────────────────────────┐
-│           MAIN CONVERSATION              │
-│  - User context                          │
-│  - Project state                         │
-│  - Current task                          │
-└────────────┬────────────────────────────┘
-             │
-             │ Uses
-             ↓
-┌─────────────────────────────────────────┐
-│              COMMANDS                    │
-│  - Force new task                       │
-│  - Keep context                          │
-│  - Natural language                      │
-│  - Minimal wrapper                       │
-└────────────┬────────────────────────────┘
-             │
-             │ Delegates to
-             ↓
-┌─────────────────────────────────────────┐
-│            SUBAGENTS                     │
-│  - Clean context                         │
-│  - Specialized expertise                 │
-│  - Autonomous execution                  │
-│  - Black box operation                   │
-└────────────┬────────────────────────────┘
-             │
-             │ Loads
-             ↓
-┌─────────────────────────────────────────┐
-│              SKILLS                      │
-│  - Declarative standards                 │
-│  - Knowledge base                       │
-│  - Templates                             │
-│  - Passive knowledge                     │
-└─────────────────────────────────────────┘
-```
-
----
-
-## Best Practices
-
-### For Commands
-
-**DO:**
-- Accept natural language
-- Trust agent intelligence
-- Minimal logic
-- Delegate quickly
-- Preserve context
+- Gather context with `!` bash execution
+- Delegate quickly to specialized agents
 
 **DON'T:**
-- Parse rigid arguments
-- Pre-validate state
-- Micromanage execution
-- Build state caches
-- Treat agents like CLI tools
+- Parse rigid positional arguments
+- Pre-validate state externally
+- Micromanage execution steps
+- Build state tracking caches
 
-**Example of Good Command:**
-```markdown
-/description: |
-  Build or audit toolkit components using natural language
-allowed-tools: Task
-disable-model-invocation: false
-
-# Delegate
-<assignment>
-$ARGUMENTS
-</assignment>
-<context>
-Use intelligence to parse and execute this request
-</context>
-```
-
-### For Subagents
+### For Agents (Contextual Personas)
 
 **DO:**
-- Provide isolated context
-- Specialized expertise
-- Autonomous operation
-- Black box execution
-- Clear final output
+- Define clear `tools` restrictions for safety
+- Provide examples in `description` for trigger accuracy
+- Operate autonomously once spawned
+- Use SlashCommand tool for standardized workflows
 
 **DON'T:**
-- Leak context to main
-- Require user interaction
-- Break autonomy
-- Over-complicate logic
+- Use AskUserQuestion (execution phase)
+- Assume specific command invoked the agent
+- Leak internal reasoning to main thread
+- Over-complicate with decision trees
 
-### For Skills
+### For Skills (Procedural Lenses)
 
 **DO:**
-- Declarative standards
-- Templates ready-to-use
-- Progressive disclosure
-- Universal access
-- Passive knowledge
+- Write in imperative/infinitive form
+- Use third-person descriptions for discovery
+- Keep SKILL.md focused (<500 lines)
+- Move heavy content to `references/`
 
 **DON'T:**
-- Execute workflows
-- Ask questions
-- Hardcode logic
-- Be procedural
+- Execute workflows (passive only)
+- Include AskUserQuestion
+- Use absolute paths
+- Prescribe specific tool usage
 
 ---
 
-## Real-World Examples
-
-### Example 1: Creating a Skill
-
-**Natural Request:**
-```
-User: "Build a new skill for database validation"
-```
-
-**Flow:**
-1. **Command** (/build):
-   - Accepts natural language
-   - Delegates to plugin-expert
-
-2. **Plugin-expert** (subagent):
-   - New clean context
-   - Loads manage-skills skill
-   - Reads creation-standards.md
-   - Applies template
-   - Creates skill autonomously
-
-3. **Result:**
-   - Returns success message
-   - Context returns to main
-
-**Key Points:**
-- Natural language ✓
-- Agent intelligence ✓
-- Clean context ✓
-- Standards applied ✓
-- Minimal command ✓
-
-### Example 2: Auditing a Plugin
-
-**Natural Request:**
-```
-User: "Build audit entire plugin from plugins/meta"
-```
-
-**Flow:**
-1. **Command** (/build):
-   - Parses natural language
-   - Delegates with full request
-
-2. **Plugin-expert** (subagent):
-   - New context, clean slate
-   - Determines what to audit
-   - Checks each component
-   - Applies standards
-   - Generates report
-
-3. **Result:**
-   - Comprehensive audit report
-   - Context returns to main
-
-**Key Points:**
-- Flexible input ✓
-- Intelligent parsing ✓
-- Autonomous execution ✓
-- Standards application ✓
-- Clear reporting ✓
-
-### Example 3: Updating an Agent
-
-**Natural Request:**
-```
-User: "Build agent update plugin-expert to use new shared standards"
-```
-
-**Flow:**
-1. **Command** (/build):
-   - Accepts update request
-   - Delegates to plugin-expert
-
-2. **Plugin-expert** (subagent):
-   - Loads manage-subagents skill
-   - Checks current agent definition
-   - Applies shared standards
-   - Updates agent file
-   - Reports changes
-
-**Key Points:**
-- Natural modification ✓
-- Standard application ✓
-- Intelligent diffing ✓
-- Clear reporting ✓
-
----
-
-## Anti-Patterns to Avoid
+## VIII. Anti-Patterns
 
 ### 1. CLI Tool Thinking
-**Bad:**
-```markdown
-Command does:
-1. Parse arguments
-2. Validate state
-3. Check cache
-4. Decide action
-5. Delegate
+**Problem:** Building JSON caches, pre-validating state, micromanaging execution.
 
-Agent gets:
-- "Execute task X"
-- Rigid instructions
-```
+**Solution:** Trust agent intelligence. Delegate with natural language. Let agents determine state.
 
-**Good:**
-```markdown
-Command does:
-1. Delegate request
-2. Report results
+### 2. Rigid Argument Parsing
+**Problem:** `argument-hint: [type] [name] [intent]`
 
-Agent gets:
-- Full natural language request
-- Context to work with
-- Trust to make decisions
-```
+**Solution:** `argument-hint: [natural language request]` with `$ARGUMENTS`.
 
-### 2. State Tracking Caches
-**Bad:**
-```markdown
-Create JSON cache:
-- build-cache.json
-- state tracking
-- File I/O
-- Cache maintenance
-```
+### 3. Black Box Assumption
+**Problem:** Treating subagents as completely isolated processes.
 
-**Good:**
-```markdown
-Trust agent intelligence:
-- Agent checks filesystem
-- Agent determines state
-- Agent makes decisions
-- No external state needed
-```
+**Solution:** Understand they inherit conversation awareness. Use phase boundaries.
 
-### 3. Rigid Argument Parsing
-**Bad:**
-```markdown
-argument-hint: [type] [name] [intent]
+### 4. Over-Prescription
+**Problem:** "Run ls, then grep, then parse output..."
 
-User must:
-- Know exact syntax
-- Use rigid structure
-- Remember patterns
-```
-
-**Good:**
-```markdown
-argument-hint: [natural language request]
-
-User can say:
-- "Build a skill for X"
-- "Audit plugin Y"
-- "Update agent Z"
-```
-
-### 4. Over-Micromanagement
-**Bad:**
-```markdown
-Command includes:
-- Step-by-step logic
-- Validation rules
-- Decision trees
-- State checks
-```
-
-**Good:**
-```markdown
-Command includes:
-- Delegation
-- Context
-- Trust
-```
+**Solution:** "Find the authentication controller in the codebase."
 
 ---
 
-## The Power of Declarative Standards
+## IX. Success Criteria
 
-### What Makes Skills Powerful
-
-**1. Declarative Over Procedural**
-
-Procedural (Bad):
-```markdown
-1. Create directory
-2. Write file A
-3. Write file B
-4. Set permissions
-5. Test
-```
-
-Declarative (Good):
-```markdown
-Standard: Create skill
-Template: Use skill-template.md
-Validation: Check YAML frontmatter
-Requirements: <list>
-```
-
-**2. Templates Over Scripts**
-
-Scripts (Bad):
-```bash
-#!/bin/bash
-create_skill() {
-  mkdir -p $1/skills/$2
-  cat > $1/skills/$2/SKILL.md <<EOF
-# $2 Skill
-...
-EOF
-}
-```
-
-Templates (Good):
-```markdown
-# {{SKILL_NAME}} Skill
-
----
-name: {{SKILL_NAME}}
-description: {{DESCRIPTION}}
----
-
-# Skill Content
-```
-
-**3. Standards Over Rules**
-
-Rules (Bad):
-```
-"Skills must have:
-- SKILL.md file
-- YAML frontmatter
-- Name field
-- Description field
-```
-
-Standards (Good):
-```markdown
-# Skill Creation Standards
-
-## Structure
-Skills follow progressive disclosure:
-- SKILL.md (overview)
-- references/ (standards)
-- assets/ (templates)
-
-## Frontmatter
-Required fields:
-- name: kebab-case, max 64 chars
-- description: clear, specific
-
-## Validation
-Checklist:
-- [ ] Valid YAML
-- [ ] Name follows convention
-- [ ] Description specific
-- [ ] Structure complete
-```
-
----
-
-## Conclusion
-
-### Key Takeaways
-
-1. **Commands** force new tasks while keeping context
-   - Natural language interfaces
-   - Minimal delegation wrappers
-   - Trust agent intelligence
-
-2. **Subagents** provide clean, isolated context
-   - Specialized expertise
-   - Autonomous execution
-   - Black box operation
-
-3. **Skills** are the knowledge powerhouse
-   - Declarative standards
-   - Universal access
-   - Passive knowledge
-
-4. **AI Agents** are intelligent, not CLI tools
-   - Trust their intelligence
-   - Natural language over rigid parsing
-   - Autonomous decision-making
-
-### The Architecture
-
-```
-Commands → Force Task, Keep Context
-   ↓
-Subagents → Clean Context, Specialized
-   ↓
-Skills → Knowledge, Standards, Templates
-```
-
-### Success Criteria
-
-A well-designed system:
+A well-designed toolkit:
 - ✅ Natural language everywhere
-- ✅ Commands are minimal wrappers
-- ✅ Agents are trusted, not micromanaged
-- ✅ Skills provide declarative standards
-- ✅ No state tracking caches
+- ✅ Commands are minimal Intent Envelopes
+- ✅ Agents are trusted Contextual Personas
+- ✅ Skills provide Procedural Lenses
+- ✅ No external state tracking caches
 - ✅ True autonomous execution
 
-### Final Principle
+---
 
-**Leverage native AI intelligence:**
-- Don't make agents dumber
-- Trust their decision-making
-- Use natural language
-- Keep architecture clean
-- Apply standards declaratively
+## See Also
 
-The power is in the combination:
-- **Commands** for task switching
-- **Subagents** for clean context
-- **Skills** for declarative knowledge
-- **Agents** for intelligent execution
+- **Core Laws:** See [CLAUDE.md §VIII](../CLAUDE.md#viii-core-laws) for architectural laws
+- **Architecture Patterns:** See [docs/VECTOR_vs_TRIANGLE.md](VECTOR_vs_TRIANGLE.md) for pattern mechanics
+- **Frontmatter Standards:** See [docs/FRONTMAKER.md](FRONTMAKER.md) for component configuration
+- **Portability Rules:** See [docs/PORTABILITY.md](PORTABILITY.md) for file path standards
