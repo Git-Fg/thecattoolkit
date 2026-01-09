@@ -32,15 +32,26 @@ Locate the relevant management skill for the component type:
 
 Identify existing similar components as reference patterns to ensure structural consistency.
 
-## State Check (Idempotency)
+## Smart Idempotency Check
 
-Before delegating, check if this operation has already been completed:
+Before delegating, use intelligent filesystem checks to determine if work is needed:
 
-1. **Read cache**: Load `.cattoolkit/state/build-cache.json`
-2. **Generate operation key**: Create fingerprint from `$1` (type), `$2` (name), `$3` (intent)
-3. **Check cache**: Does this key exist with a completion status?
-4. **If cached and completed**: Return message: "Operation `$2` ($1) was already completed on [timestamp]. No changes needed."
-5. **If not cached**: Proceed with delegation and update cache after completion.
+1. **For 'create' intent:**
+   - **Skill**: Check if `plugins/*/skills/$2/SKILL.md` exists and has valid structure
+   - **Agent**: Check if `plugins/*/agents/$2.md` exists and has valid YAML frontmatter
+   - **Command**: Check if `plugins/*/commands/$2.md` exists and has valid frontmatter
+   - **Hook**: Check if `plugins/*/hooks/scripts/$2*` exists
+   - **If exists and valid**: Return message: "`$2` ($1) already exists and is valid. No changes needed."
+   - **If doesn't exist or invalid**: Proceed with creation/update
+
+2. **For 'audit' intent:**
+   - Always proceed (auditing is idempotent by nature)
+   - Report current state and findings
+
+3. **For 'update' intent:**
+   - Check current state vs requested changes
+   - Only update if differences are detected
+   - Report what changed or that no changes were needed
 
 ## 3. The Envelope (Triangle Phase)
 
@@ -63,26 +74,8 @@ Use templates from the skill's assets as your baseline.
 
 ## 4. Report Results
 
-Return the agent's findings to the user with clear explanation of what was accomplished and any relevant findings from the standards application.
-
-## 5. Update Cache (Post-Execution)
-
-After successful completion:
-
-1. **Generate operation key**: Create fingerprint from `$1`, `$2`, `$3`
-2. **Update cache**: Append to `.cattoolkit/state/build-cache.json`:
-   ```json
-   {
-     "operations": {
-       "operation_key": {
-         "type": "$1",
-         "name": "$2",
-         "intent": "$3",
-         "timestamp": "[current timestamp]",
-         "status": "completed"
-       }
-     },
-     "lastUpdated": "[current timestamp]"
-   }
-   ```
-3. **Persist**: Save updated cache to disk
+Return the agent's findings to the user with clear explanation of what was accomplished and any relevant findings from the standards application. Include whether the operation was:
+- **Created**: "Created new $2 $1"
+- **Already existed**: "$2 $1 already exists and is valid"
+- **Updated**: "Updated $2 $1 with [specific changes]"
+- **Audited**: "Audit complete for $2 $1 - [findings]"
