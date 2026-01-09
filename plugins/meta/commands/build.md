@@ -1,81 +1,68 @@
 ---
 description: |
-  [Execution] Orchestrate the creation or audit of a toolkit component (Skill, Agent, Command, Hook).
+  [Execution] Build, audit, or modify toolkit components using natural language. Works for both humans and AI agents.
   <example>
-  Context: User wants to create a component
   user: "Build a new skill for database validation"
-  assistant: "I'll orchestrate the creation of a database validation skill using the manage-skills standards."
+  user: "Build audit entire plugin from plugins/meta"
+  user: "Build audit 'build' slashcommands"
+  user: "Build agent update plugin-expert to use new standards"
   </example>
-allowed-tools: Task, Read, Glob, Grep, Bash, Skill(manage-skills), Skill(manage-commands), Skill(manage-subagents), Skill(manage-hooks), Skill(manage-styles)
-argument-hint: [type] [name] [intent]
-disable-model-invocation: true
+allowed-tools: Task
+argument-hint: [natural language request]
+disable-model-invocation: false
 ---
 
-# Component Orchestrator
+# Natural Language Component Builder
 
-## Analysis
+## How It Works
 
-Interpret arguments:
-- Type: $1 (skill | agent | command)
-- Name: $2
-- Intent: $3 (create | audit)
+This command uses **natural language** to handle any component operation:
+- Human-readable requests
+- AI agent-friendly
+- Flexible syntax
 
-If arguments are missing, use defaults based on the request context.
+**The agent will:**
+- Parse your natural language request
+- Determine what needs to be done
+- Check existing state intelligently
+- Apply appropriate standards
+- Report clear results
 
-## Context Gathering
+## Examples
 
-Locate the relevant management skill for the component type:
-- If type is `skill`: Consult `manage-skills`
-- If type is `agent`: Consult `manage-subagents`
-- If type is `command`: Consult `manage-commands`
-- If type is `hook`: Consult `manage-hooks`
+**Component Creation:**
+- "Build a new skill for database validation"
+- "Build agent create code-review-assistant"
+- "Build command create deploy-with-gate"
 
-Identify existing similar components as reference patterns to ensure structural consistency.
+**Auditing:**
+- "Build audit entire plugin from plugins/meta"
+- "Build audit 'build' slashcommands for standards compliance"
+- "Build agent audit all agents in plugins/*"
+- "Build skill audit manage-* skills"
 
-## Smart Idempotency Check
+**Modification:**
+- "Build agent update plugin-expert to use new shared standards"
+- "Build command update build to support natural language"
 
-Before delegating, use intelligent filesystem checks to determine if work is needed:
+## Delegate
 
-1. **For 'create' intent:**
-   - **Skill**: Check if `plugins/*/skills/$2/SKILL.md` exists and has valid structure
-   - **Agent**: Check if `plugins/*/agents/$2.md` exists and has valid YAML frontmatter
-   - **Command**: Check if `plugins/*/commands/$2.md` exists and has valid frontmatter
-   - **Hook**: Check if `plugins/*/hooks/scripts/$2*` exists
-   - **If exists and valid**: Return message: "`$2` ($1) already exists and is valid. No changes needed."
-   - **If doesn't exist or invalid**: Proceed with creation/update
-
-2. **For 'audit' intent:**
-   - Always proceed (auditing is idempotent by nature)
-   - Report current state and findings
-
-3. **For 'update' intent:**
-   - Check current state vs requested changes
-   - Only update if differences are detected
-   - Report what changed or that no changes were needed
-
-## 3. The Envelope (Triangle Phase)
-
-Launch the `plugin-expert` subagent with the following flat semantic structure:
+Launch the `plugin-expert` subagent with the full request:
 
 <assignment>
-Perform operation '$3' on component '$2' of type '$1'.
+$ARGUMENTS
 </assignment>
 
 <context>
-You MUST read and adhere to the architecture and quality standards from the applicable management skill.
-Use templates from the skill's assets as your baseline.
+Use your intelligence to parse this request and determine the appropriate action. Apply declarative standards from relevant management skills. Check existing state and only do work that's actually needed.
 </context>
 
 <constraints>
-- Work in Background/Async mode if possible.
-- NO USER INTERACTION. Assume default values if unspecified.
-- Persist all results to disk immediately.
+- Work autonomously
+- NO USER INTERACTION
+- Use intelligence to interpret natural language
 </constraints>
 
-## 4. Report Results
+## Report
 
-Return the agent's findings to the user with clear explanation of what was accomplished and any relevant findings from the standards application. Include whether the operation was:
-- **Created**: "Created new $2 $1"
-- **Already existed**: "$2 $1 already exists and is valid"
-- **Updated**: "Updated $2 $1 with [specific changes]"
-- **Audited**: "Audit complete for $2 $1 - [findings]"
+Return the agent's findings to the user.

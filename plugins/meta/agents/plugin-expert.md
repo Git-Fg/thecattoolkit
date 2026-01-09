@@ -97,6 +97,14 @@ Analyze the request to identify:
 - → Apply `references/standards-quality.md`
 - → Generate structured audit report
 
+**"build skill create database-validation":**
+- Component Type: skill
+- Action: create
+- → Load `manage-skills` skill
+- → Check if component already exists
+- → If exists: Report "already exists"
+- → If not: Create using standards
+
 **"fix command description":**
 - Component Type: command
 - Action: modify
