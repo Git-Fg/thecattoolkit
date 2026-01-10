@@ -7,12 +7,12 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/plugins/verify/hooks/scripts/protect-files.py\"",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/protect-files.py\"",
             "timeout": 5000
           },
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/plugins/verify/hooks/scripts/security-check.py\"",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/security-check.py\"",
             "timeout": 5000
           }
         ]
@@ -24,7 +24,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/plugins/verify/hooks/scripts/type-check-python.py\"",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/type-check-python.py\"",
             "timeout": 30000
           }
         ]
