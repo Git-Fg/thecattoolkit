@@ -81,3 +81,31 @@ allowedMcpServers:
 allowedMcpServers:
   - serverUrl: "*"
 ```
+
+---
+
+## Environment Configuration
+
+Configure the runtime environment for different providers:
+
+| Variable | Purpose | Example |
+|:---------|:--------|:--------|
+| `ANTHROPIC_BASE_URL` | API endpoint (Zai, Minimax proxy) | `https://api.zai.com/v1` |
+| `ANTHROPIC_API_KEY` | Authentication token | `sk-...` |
+
+Ensure `.claude/settings.json` reflects the chosen provider's capabilities.
+
+---
+
+## Permission Modes Reference
+
+| Mode | Behavior | Security |
+|:-----|:---------|:---------|
+| `default` | Prompts for each tool | High |
+| `acceptEdits` | Auto-approves file operations | Medium |
+| `plan` | Read-only analysis | High |
+| `dontAsk` | Auto-deny unless pre-approved | High |
+| `bypassPermissions` | All tools approved | **Very Low** |
+| `ignore` | Ignores permission system | **None** |
+
+For permission cascading rules, see [CLAUDE.md Section 5.1](../CLAUDE.md#51-permission-system).

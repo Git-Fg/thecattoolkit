@@ -26,8 +26,4 @@ While optimized for `anthropics/claude-code`, the toolkit is designed for **Univ
   - **Parallelism**: Highly efficient when using the **Parallel Agent Pattern** due to fast inference.
   - **Testing**: Native support for coding-run-fix loops.
 
-### Universal Configuration
-To switch endpoints, configure the runtime environment:
-- **Base URL**: `ANTHROPIC_BASE_URL` (points to Zai or Minimax proxy).
-- **API Key**: `ANTHROPIC_API_KEY` (compatible with specialized providers).
-- **Environment**: Ensure `.claude/settings.json` reflects the chosen provider's capabilities.
+For environment configuration (API keys, base URLs), see [IMPLEMENTATION-GUIDE.md](IMPLEMENTATION-GUIDE.md#environment-configuration).
