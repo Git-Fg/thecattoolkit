@@ -479,8 +479,8 @@ IMPORTANT: If you have access to claude-code-guide agent, use it PROACTIVELY. Ot
 </forbidden_pattern>
 
 <forbidden_pattern>
-**Direct Bloat:** Using Direct (Inline) when context >70% full.
-**Fix:** Delegate to Agent to preserve main context.
+**Context Overflow (Direct Bloat):** executing complex logic inline when context >70% full.
+**Fix:** Structured phases are **encouraged**, but if a phase requires deep reasoning or massive context, delegate it to an Agent. Keep the Command as the high-level conductor.
 </forbidden_pattern>
 
 <forbidden_pattern>
