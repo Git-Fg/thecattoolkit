@@ -74,13 +74,19 @@ def main():
 
     if blockers:
         result = {
-            "decision": "block",
-            "message": f"Session stop blocked: {'; '.join(blockers)}. Commit changes or resolve handoffs before stopping.",
+            "hookSpecificOutput": {
+                "hookEventName": "Stop",
+                "ok": False,
+                "reason": f"Session stop blocked: {'; '.join(blockers)}. Commit changes or resolve handoffs before stopping.",
+            }
         }
     else:
         result = {
-            "decision": "allow",
-            "message": "Session stop approved - no uncommitted changes or active handoffs",
+            "hookSpecificOutput": {
+                "hookEventName": "Stop",
+                "ok": True,
+                "reason": "Session stop approved - no uncommitted changes or active handoffs",
+            }
         }
 
     print(json.dumps(result))

@@ -27,8 +27,8 @@ def get_project_root():
 
 
 def output(msg):
-    """Output standard success format for Hooks."""
-    print(json.dumps({"status": "success", "systemMessage": msg}))
+    """Output plain text for SessionStart hooks - stdout is injected as context."""
+    print(msg)
 
 
 def find_active_plan():

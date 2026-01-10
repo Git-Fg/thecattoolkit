@@ -29,8 +29,11 @@ def main():
     # If the subagent failed, the system usually handles it before this hook.
 
     result = {
-        "decision": "allow",
-        "message": "Subagent stop approved by deterministic evaluator",
+        "hookSpecificOutput": {
+            "hookEventName": "SubagentStop",
+            "ok": True,
+            "reason": "Subagent stop approved by deterministic evaluator",
+        }
     }
 
     print(json.dumps(result))

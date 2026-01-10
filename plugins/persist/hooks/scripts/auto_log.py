@@ -46,7 +46,6 @@ def main():
         STATE_CHANGING_TOOLS = ["Edit", "Write", "Bash"]
 
         if tool not in STATE_CHANGING_TOOLS:
-            print(json.dumps({"status": "success"}))
             sys.exit(0)
 
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -75,12 +74,10 @@ def main():
         with open(log_path, "a") as f:
             f.write(log_entry)
 
-        print(json.dumps({"status": "success"}))
-
     except json.JSONDecodeError:
-        print(json.dumps({"status": "success"}))
+        pass
     except Exception:
-        print(json.dumps({"status": "success"}))
+        pass
 
 
 if __name__ == "__main__":
