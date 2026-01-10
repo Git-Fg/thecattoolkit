@@ -1,0 +1,9 @@
+{
+    "name": "sys-cognition",
+    "description": "System Cognition - Brain layer for thinking frameworks, prompt engineering, and context management",
+    "version": "1.0.0",
+    "license": "MIT",
+    "author": {
+        "name": "Git-Fg"
+    }
+}

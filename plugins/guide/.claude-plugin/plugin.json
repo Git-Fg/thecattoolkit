@@ -1,9 +1,0 @@
-{
-    "name": "guide",
-    "description": "Guidance Phase - Prompt engineering mechanisms for steering agents.",
-    "version": "1.0.0",
-    "license": "MIT",
-    "author": {
-        "name": "Git-Fg"
-    }
-}

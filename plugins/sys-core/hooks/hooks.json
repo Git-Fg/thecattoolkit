@@ -1,0 +1,16 @@
+{
+    "hooks": {
+        "PostToolUse": [
+            {
+                "matcher": "Edit|Write|Bash",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "jq -r '{tool: .tool_name, file: (.tool_input.file_path // .tool_input.command[:50])} | \"[\" + (now | strftime(\"%Y-%m-%d %H:%M:%S\")) + \"] \" + .tool + \": \" + .file' >> \"$CLAUDE_PROJECT_DIR/.cattoolkit/context/context.log\" 2>/dev/null || true",
+                        "timeout": 5
+                    }
+                ]
+            }
+        ]
+    }
+}

@@ -1,0 +1,9 @@
+{
+    "name": "sys-builder",
+    "description": "System Builder - Action layer for execution, architecture design, and project implementation",
+    "version": "1.0.0",
+    "license": "MIT",
+    "author": {
+        "name": "Git-Fg"
+    }
+}

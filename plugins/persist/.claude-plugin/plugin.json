@@ -1,9 +1,0 @@
-{
-    "name": "persist",
-    "description": "Memory Phase - Making ephemeral context permanent through session state.",
-    "version": "1.0.0",
-    "license": "MIT",
-    "author": {
-        "name": "Git-Fg"
-    }
-}

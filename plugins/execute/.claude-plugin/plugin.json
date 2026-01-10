@@ -1,9 +1,0 @@
-{
-    "name": "execute",
-    "description": "Act Phase - The execution engine where file modifications happen.",
-    "version": "1.0.0",
-    "license": "MIT",
-    "author": {
-        "name": "Git-Fg"
-    }
-}

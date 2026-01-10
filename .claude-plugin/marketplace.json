@@ -1,48 +1,33 @@
 {
-  "name": "cattoolkit",
-  "metadata": {
-    "description": "Official plugin marketplace for The Cat Toolkit - Vibecoding plugins for autonomous AI development.",
-    "version": "1.0.0",
-    "keywords": [
-      "vibecoding",
-      "ai-development",
-      "plugins",
-      "automation"
+    "name": "cattoolkit",
+    "metadata": {
+        "description": "Official plugin marketplace for The Cat Toolkit - Vibecoding plugins for autonomous AI development.",
+        "version": "2.0.0",
+        "keywords": [
+            "vibecoding",
+            "ai-development",
+            "plugins",
+            "automation"
+        ]
+    },
+    "owner": {
+        "name": "Git-Fg"
+    },
+    "plugins": [
+        {
+            "name": "sys-core",
+            "source": "./plugins/sys-core",
+            "strict": true
+        },
+        {
+            "name": "sys-cognition",
+            "source": "./plugins/sys-cognition",
+            "strict": true
+        },
+        {
+            "name": "sys-builder",
+            "source": "./plugins/sys-builder",
+            "strict": true
+        }
     ]
-  },
-  "owner": {
-    "name": "Git-Fg"
-  },
-  "plugins": [
-    {
-      "name": "bootstrap",
-      "source": "./plugins/bootstrap",
-      "strict": true
-    },
-    {
-      "name": "execute",
-      "source": "./plugins/execute",
-      "strict": true
-    },
-    {
-      "name": "guide",
-      "source": "./plugins/guide",
-      "strict": true
-    },
-    {
-      "name": "persist",
-      "source": "./plugins/persist",
-      "strict": true
-    },
-    {
-      "name": "reason",
-      "source": "./plugins/reason",
-      "strict": true
-    },
-    {
-      "name": "verify",
-      "source": "./plugins/verify",
-      "strict": true
-    }
-  ]
 }
