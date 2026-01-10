@@ -5,25 +5,30 @@ This runs automatically when a session starts to load the current plan and worki
 """
 
 import os
-import glob
 import json
 import sys
 from pathlib import Path
 from datetime import datetime
 
-import subprocess
+# Import shared utilities
+try:
+    from utils import get_project_root
+except ImportError:
+    import subprocess
 
-
-def get_project_root():
-    """Find the project root using git or environment variables."""
-    try:
-        return Path(
-            subprocess.check_output(
-                ["git", "rev-parse", "--show-toplevel"], encoding="utf-8"
-            ).strip()
-        )
-    except Exception:
-        return Path(os.environ.get("CLAUDE_PROJECT_DIR", "."))
+    def get_project_root():
+        if d := os.environ.get("CLAUDE_PROJECT_DIR"):
+            return Path(d)
+        try:
+            return Path(
+                subprocess.check_output(
+                    ["git", "rev-parse", "--show-toplevel"],
+                    encoding="utf-8",
+                    stderr=subprocess.DEVNULL,
+                ).strip()
+            )
+        except:
+            return Path.cwd()
 
 
 def output(msg):

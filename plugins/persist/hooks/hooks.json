@@ -1,5 +1,5 @@
 {
-  "description": "Hook-Powered Context System: Command + Prompt Hooks with XML Output",
+  "description": "Hook-Powered Context System: Simplified and modernized",
   "hooks": {
     "SessionStart": [
       {
@@ -18,8 +18,8 @@
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/auto_log.py\"",
-            "timeout": 10
+            "command": "jq -r '{tool: .tool_name, file: (.tool_input.file_path // .tool_input.TargetFile // .tool_input.command[:100] // \"unknown\")} | \"[\" + (now | strftime(\"%Y-%m-%d %H:%M:%S\")) + \"] \" + .tool + \": \" + .file' >> \"$CLAUDE_PROJECT_DIR/.cattoolkit/context/context.log\" 2>/dev/null || true",
+            "timeout": 5
           }
         ]
       }
@@ -39,19 +39,8 @@
       {
         "hooks": [
           {
-            "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/evaluate_stop.py\"",
-            "timeout": 20
-          }
-        ]
-      }
-    ],
-    "SubagentStop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/evaluate_subagent.py\"",
+            "type": "prompt",
+            "prompt": "Evaluate if this Claude session should stop. Check for blockers:\n1. Run 'git status --porcelain' - if output is non-empty, there are uncommitted changes\n2. Check if .cattoolkit/planning/HANDOFF.md exists - indicates blocked work\n\nIf either blocker exists, respond: {\"ok\": false, \"reason\": \"Uncommitted git changes or active HANDOFF.md - commit or resolve before stopping\"}\nOtherwise respond: {\"ok\": true}",
             "timeout": 15
           }
         ]
