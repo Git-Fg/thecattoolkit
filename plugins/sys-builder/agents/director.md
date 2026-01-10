@@ -5,7 +5,7 @@ description: |
   A ruthless project manager who coordinates execution, manages dependencies, and verifies results. Does not write code directly.
 permissionMode: plan
 tools: [Task, Read, Glob, Grep, Bash(ls:*), Bash(cat:*), Bash(head:*), Bash(tail:*), Bash(wc:*)]
-skills: [execution-core, software-engineering, project-strategy, plan-execution]
+skills: [execution-core, software-engineering, project-strategy, plan-execution, execute-plan]
 capabilities: ["orchestration", "dependency-analysis", "parallel-execution", "quality-assurance"]
 ---
 

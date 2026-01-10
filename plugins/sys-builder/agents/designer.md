@@ -5,7 +5,7 @@ description: |
   A pragmatic architect who balances purity with practicality.
 permissionMode: acceptEdits
 tools: [Read, Write, Edit, Glob, Grep, Bash(ls:*), Bash(cat:*), Bash(grep:*)]
-skills: [architecture, project-strategy]
+skills: [architecture, project-strategy, create-plan]
 capabilities: ["system-design", "architecture-analysis", "technical-decisions", "plan-authoring"]
 ---
 

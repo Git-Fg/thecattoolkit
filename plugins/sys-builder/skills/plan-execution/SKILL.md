@@ -10,6 +10,12 @@ allowed-tools: [Task, Read, Write, Bash(ls:*), Bash(cat:*), Bash(grep:*), Glob, 
 
 # Plan Execution Protocol
 
+## Important: User-Facing Entry Point
+
+**For user-invoked plan execution, use `/execute-plan` skill.**
+
+This skill provides the execution protocols and standards. The execute-plan skill is the primary user-facing interface that wraps this functionality with user intent clarification.
+
 ## 1. Context Discovery (MANDATORY)
 
 **Locate and read context files:**

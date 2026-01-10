@@ -10,6 +10,24 @@ allowed-tools: [Task, Read, Write, Edit, Glob, Grep, Bash(ls:*), Bash(cat:*), Ba
 
 # Project Strategy Standards
 
+## Important: User-Facing Entry Points
+
+**For user-invoked planning, use `/create-plan` skill.**
+**For user-invoked execution, use `/execute-plan` skill.**
+
+This skill provides templates and standards. The create-plan and execute-plan skills are the primary user-facing interfaces.
+
+## Output Location (MANDATORY)
+
+**ALL planning artifacts MUST be created in:**
+```
+.cattoolkit/planning/{project-slug}/
+```
+
+**NEVER create PLAN.md, ROADMAP.md, BRIEF.md at project root.**
+
+This is enforced by the create-plan skill and must be followed by all planning workflows.
+
 ## Core Purpose
 
 **This skill defines WHAT documents to create and their structure.**

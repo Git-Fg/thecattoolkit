@@ -134,16 +134,28 @@ Manage persistent session state independent of the LLM context window using the 
 ## Directory Structure
 
 ```
-.cattoolkit/context/
-├── scratchpad.md          # Current thinking and decisions
-├── todos.md              # Persistent task tracking
-├── context.log           # Session context history
-├── handoff.md            # Session handoff summary
-└── checkpoints/          # Critical state snapshots
-    ├── 2026-01-05-feature-start.md
-    ├── 2026-01-05-implementation-complete.md
-    └── 2026-01-05-testing-phase.md
+.cattoolkit/
+├── context/                    # Session state management
+│   ├── scratchpad.md          # Current thinking and decisions
+│   ├── todos.md               # Persistent task tracking
+│   ├── context.log            # Session context history
+│   ├── handoff.md             # Session handoff summary
+│   └── checkpoints/           # Critical state snapshots
+│       ├── 2026-01-05-feature-start.md
+│       └── 2026-01-05-testing-phase.md
+│
+└── planning/                   # Project plans (managed by create-plan/execute-plan)
+    └── {project-slug}/
+        ├── BRIEF.md           # Project definition
+        ├── DISCOVERY.md       # Codebase discovery findings
+        ├── ROADMAP.md         # Phases with parallelism markers
+        └── phases/
+            └── XX-name/
+                ├── XX-YY-PLAN.md
+                └── XX-YY-SUMMARY.md
 ```
+
+**NOTE**: The `planning/` directory is managed by the `create-plan` and `execute-plan` skills. This skill manages `context/` only.
 
 ## Key Concepts
 
