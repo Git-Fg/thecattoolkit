@@ -33,7 +33,8 @@ We program with **Intent**, not scripts. Instead of `for file in files`, instruc
 **Intra-Plugin Collaboration, Inter-Plugin Independence:** Components within the same plugin should collaborate freely. Agents can reference skill scripts, and skills can delegate to plugin agents. However, **cross-plugin coupling is forbidden**—each plugin must be fully functional standalone. Domain expertise lives in Skills; Agents reference their plugin's skills via the `skills` field or natural language (not hardcoded paths to other plugins).
 
 ### Pillar 2: Atomic Capabilities with Hybrid Execution
-Skills have dual nature: **passive knowledge** (auto-discovered) and **active execution** (via `context: fork` or user invocation). Commands orchestrate multi-skill workflows only—never wrap a single Skill. `AskUserQuestion` is forbidden in Skills.
+Skills have dual nature: **passive knowledge** (auto-discovered) and **active execution** (via `context: fork` or user invocation). Commands orchestrate multi-skill workflows only—never wrap a single Skill.
+*Note: `AskUserQuestion` is **strongly discouraged** in Skills to promote composability, but allowed for inherently interactive tasks (e.g., wizards).*
 
 ### Pillar 3: Native Delegation
 **"Never write in code what can be described in intent."**
@@ -74,7 +75,7 @@ Skills have dual nature: **passive knowledge** (auto-discovered) and **active ex
 **XML Reserved Cases:** Agent discovery (optional), hook signaling (`<promise>`, `<status>`), prompt grouping (`<guidelines>`), high-density data isolation.
 
 ### Pillar 5: State-in-Files
-**Context is ephemeral; files are eternal.** If it's not on disk, it didn't happen.
+**Files are the Anchor.** While ephemeral context (RAM) is useful for reasoning, **critical state must be persisted**. Do not rely on the chat context for long-term memory. Use files to checkpoint work.
 
 ### Pillar 6: Shared-Nothing Parallelism
 **No dependencies between parallel agents.** Never edit the same file. Orchestrator synthesizes outputs.
@@ -473,8 +474,8 @@ IMPORTANT: If you have access to claude-code-guide agent, use it PROACTIVELY. Ot
 </forbidden_pattern>
 
 <forbidden_pattern>
-**Stop-and-Wait:** Pausing for human input during execution.
-**Fix:** Uninterrupted Flow. HANDOFF.md for blockers only.
+**Blocking Interaction:** Unnecessary pausing for human input.
+**Fix:** Prefer **Uninterrupted Flow** with `HANDOFF.md` for major blockers. Direct interaction is acceptable for quick, specific confirmations (e.g., "Deploy to prod?").
 </forbidden_pattern>
 
 <forbidden_pattern>
@@ -511,7 +512,7 @@ IMPORTANT: If you have access to claude-code-guide agent, use it PROACTIVELY. Ot
 
 ## 6.4 Glue Code Detection
 
-**The 10-Line Rule:** If glue code exceeds 10 lines, it's an anti-pattern.
+**The 10-Line Heuristic:** Glue code exceeding 10 lines **suggests** a missing abstraction or misplaced logic. Analyze carefully, but implement if necessary for robustness.
 
 | Component Type | Acceptable | Red Flag |
 |:---------------|:-----------|:---------|

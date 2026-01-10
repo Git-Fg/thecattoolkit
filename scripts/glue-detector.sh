@@ -73,7 +73,7 @@ log_info ""
 
 # 7. Skills with execution logic (should be passive)
 log_info "7. Skills with Execution Logic:"
-grep -r "AskUserQuestion" plugins/*/skills/*.md 2>/dev/null | awk '{print "⚠️  " $0 " (skills should be passive)"}' || true
+grep -r "AskUserQuestion" plugins/*/skills/*.md 2>/dev/null | awk '{print "⚠️  " $0 " (skills: check if interaction is necessary)"}' || true
 log_info ""
 
 # 8. Glue Code Metrics Summary
