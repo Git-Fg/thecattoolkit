@@ -55,4 +55,4 @@ Hooks are event-driven automation for Claude Code. They execute shell commands o
 **Hook Types & Matchers**: [hook-types.md](references/hook-types.md) - Events, schemas, regex matchers, and MCP naming
 **Debugging Hooks**: [debugging-hooks.md](references/debugging-hooks.md) - Comprehensive debugging workflows and diagnostics
 **Claude Hooks Architecture**: [claude-hooks.md](docs/claude-hooks.md) - Reference Architecture using `${CLAUDE_PLUGIN_ROOT}`
-**Shared Standards**: [shared-standards.md](references/shared-standards.md) - Common patterns across management skills
+**Shared Standards**: [shared-standards.md](../../styles/shared-standards.md) - Common patterns across management skills

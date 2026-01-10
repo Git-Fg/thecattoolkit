@@ -204,6 +204,19 @@ Agents can invoke Commands via the `Skill` tool. This transforms the Command Sui
 
 **Syntax:** Agents can invoke Commands via the `Skill` tool using `Skill(/command-name)` for exact matches or `Skill(/command:*)` for prefix matching with arguments. Arguments are passed using the command's `$ARGUMENTS` placeholder.
 
+### 2.5 Gold Standard: Complex Orchestration Pattern
+
+The **7-Phase Feature Development Workflow** demonstrates ideal orchestration for complex multi-phase commands.
+
+> **Full Specification:** [docs/GOLD_STANDARD_COMMAND.md](docs/GOLD_STANDARD_COMMAND.md)
+
+**Pattern:** Discovery → Exploration (Agents) → Questions → Architecture (Agents) → Implementation → Review (Agents) → Summary
+
+**Core Principles:**
+- **Understand before acting:** Read and comprehend existing code patterns first.
+- **Ask clarifying questions:** Identify ambiguities early (Phase 3 only).
+- **Delegate to agents:** Use parallel agents for exploration, architecture, and review.
+
 ---
 
 # PART III: AGENT (Autonomy Layer)
@@ -459,112 +472,37 @@ Claude Code implements a **defense-in-depth permission model** with two primary 
 | **`bypassPermissions`** | All tools approved | Trusted environments | **Very Low** |
 | **`ignore`** | Ignores permission system completely | Advanced users only | **None** |
 
-**Best Practice:** Use `plan` mode for analysis agents to ensure read-only operations. Use `ignore` only for trusted, controlled environments where you understand the security implications.
-
-### Complex Permission Inheritance
+### Permission Inheritance
 
 Permission inheritance follows a **cascading hierarchy**:
-
-```yaml
-# Main Agent Configuration
-permissionMode: default
-allowed-tools: [Read, Grep]
-
-# Subagent inherits from main agent
-permissionMode: plan  # Overrides main agent's default mode
-tools: [Read]  # Further restricts to Read-only
-
-# Skill within subagent
-permissionMode: acceptEdits  # Overrides subagent's plan mode
-allowed-tools: [Read, Write, Edit]  # But skill can still be restricted
-```
-
-**Inheritance Rules:**
 1. **Main Agent** sets baseline permissions
 2. **Subagents** can override `permissionMode` but inherit tool restrictions unless explicitly overridden
 3. **Skills** can override both `permissionMode` and `allowed-tools`
-4. **Component-scoped hooks** inherit permissions from their parent component
 
 ### Fine-Grained Tool Permissions
 
-Tools support **wildcard patterns** for granular control:
-
 ```yaml
-# Bash command restrictions
+# Safe pattern: Specific commands with wildcard patterns
 allowed-tools: [
   Bash(git add:*),      # Allow git add with any arguments
   Bash(git status:*),   # Allow git status with any arguments
-  Bash(git commit:*),   # Allow git commit with any arguments
   Bash(npm test:*),     # Allow npm test with any arguments
   Read,                 # Allow all Read operations
   Grep                  # Allow all Grep operations
 ]
 
-# Block dangerous patterns
+# Dangerous pattern to avoid
 disallowed-tools: [
-  Bash(rm *),          # Block all rm commands
-  Bash(sudo *),        # Block all sudo commands
-  Edit                 # Block all Edit operations
+  Bash(rm *),          # Block dangerous commands
+  Bash(sudo *),
+  Edit                 # Block modifications when needed
 ]
 ```
 
-**Pattern Matching:**
-- **`tool-name:*`** - Allow tool with any arguments
-- **`tool-name:pattern`** - Allow tool only with matching arguments
-- **`tool-name`** - Allow tool with no arguments
-- **`Skill(name)`** - Allow specific skill invocation
-- **`*`** - Match all tools of this type
-
-**Security Best Practices:**
-- **Whitelist approach:** Always specify exact commands when possible
-- **Argument validation:** Use specific patterns to prevent command injection
-- **Dangerous tool restriction:** Explicitly block risky operations like `rm`, `sudo`, `chmod`
-
-### Common Permission Vulnerabilities
-
-#### 1. Permission Escalation
-```yaml
-# ❌ Vulnerable: Agent inherits all tools
----
-name: file-reader
-description: Reads configuration files
-# tools field omitted
----
-
-# ✅ Fixed: Explicit restriction
----
-name: file-reader
-description: Reads configuration files
-tools: Read, Grep  # Only read-only access
----
-```
-
-#### 2. Bash Command Injection
-```yaml
-# ❌ Vulnerable: Wildcard command
-permissions:
-  allow: ["Bash(npm *)"]  # Allows: npm && rm -rf /
-
-# ✅ Fixed: Specific commands
-permissions:
-  allow: ["Bash(npm run build)", "Bash(npm test)"]
-```
-
-### Permission Audit Checklist
-
-**Subagents:**
-- [ ] `tools` field specified (never rely on inheritance)
-- [ ] Only necessary tools granted
-- [ ] Sensitive tools (Bash, Edit) require explicit approval
-- [ ] Model selection appropriate for security needs
-
-**Commands:**
-- [ ] `allowed-tools` defined for safety
-- [ ] Interactive commands restricted appropriately
-
-**Skills:**
-- [ ] `allowed-tools` defined for sensitive operations
-- [ ] Read-only operations properly restricted
+**Critical Security Rules:**
+- **NEVER omit `tools` field** - agents inherit ALL tools if omitted
+- **Use whitelist patterns** - specify exact commands when possible
+- **Block dangerous operations** - explicitly restrict `rm`, `sudo`, `chmod`
 
 ---
 
@@ -649,6 +587,7 @@ graph TB
     Agents["👥 Agents<br/>(Personas)"]
     Tools["🛠️ Tools<br/>(Read, Write, Bash, etc.)"]
     Hooks["🪝 Hooks<br/>(Event Interception)"]
+    MCP["🔌 MCP Servers<br/>(External Services)"]
 
     User -->|"Invokes (/skill)"| ForkedSkills
     User -->|"Invokes (/command)"| Commands
@@ -657,8 +596,9 @@ graph TB
     Commands -->|"Orchestrates"| Skills
     Commands -->|"Injects Instructions"| MainAgent
 
-    MainAgent -->|"Auto-loads via Description"| Skills
+    MainAgent -->|"Auto-loads via description"| Skills
     MainAgent -->|"Uses"| Tools
+    MainAgent -->|"Calls"| MCP
 
     Skills -->|"context: fork"| ForkedSkills
     ForkedSkills -.->|"Binds Persona"| Agents
@@ -682,25 +622,8 @@ graph TB
 - **No file pollution** - If a file wasn't requested, don't create it
 - **Run toolkit validation after changes** - After modifying Skills/Commands/Agents, run `./scripts/toolkit-lint.sh`
 
-IMPORTANT: If you have access to claude-code-guide agent, you MUST use it PROACTIVELY. Spawn as much parallel background claude-code-guide agents with short and concise prompts descriptions as needed to verify and confirm any doubt.
-
-If you don't have access to claude-code-guide agent, you MUST fetch content (always prefer `curl`) from : 
-- [Changelog](https://raw.githubusercontent.com/anthropics/claude-code/refs/heads/main/CHANGELOG.md)
-- [CLI reference](https://code.claude.com/docs/en/cli-reference.md): Complete reference for Claude Code command-line interface, including commands and flags.
-- [Common workflows](https://code.claude.com/docs/en/common-workflows.md): Learn about common workflows with Claude Code.
-- [Discover and install prebuilt plugins through marketplaces](https://code.claude.com/docs/en/discover-plugins.md): Find and install plugins from marketplaces to extend Claude Code with new commands, agents, and capabilities.
-- [Run Claude Code programmatically](https://code.claude.com/docs/en/headless.md): Use the Agent SDK to run Claude Code programmatically from the CLI, Python, or TypeScript.
-- [Hooks reference](https://code.claude.com/docs/en/hooks.md): This page provides reference documentation for implementing hooks in Claude Code.
-- [Get started with Claude Code hooks](https://code.claude.com/docs/en/hooks-guide.md): Learn how to customize and extend Claude Code's behavior by registering shell commands
-- [Connect Claude Code to tools via MCP](https://code.claude.com/docs/en/mcp.md): Learn how to connect Claude Code to your tools with the Model Context Protocol.
-- [Create and distribute a plugin marketplace](https://code.claude.com/docs/en/plugin-marketplaces): Build and host plugin marketplaces to distribute Claude Code extensions across teams and communities.
-- [Create plugins](https://code.claude.com/docs/en/plugins.md): Create custom plugins to extend Claude Code with slash commands, agents, hooks, Skills, and MCP servers.
-- [Plugins reference](https://code.claude.com/docs/en/plugins-reference.md): Complete technical reference for Claude Code plugin system, including schemas, CLI commands, and component specifications.
-- [Quickstart](https://code.claude.com/docs/en/quickstart.md): Welcome to Claude Code!
-- [Agent Skills](https://code.claude.com/docs/en/skills.md): Create, manage, and share Skills to extend Claude's capabilities in Claude Code.
-- [Slash commands](https://code.claude.com/docs/en/slash-commands.md): Control Claude's behavior during an interactive session with slash commands.
-- [Status line configuration](https://code.claude.com/docs/en/statusline.md): Create a custom status line for Claude Code to display contextual information
-- [Subagents](https://code.claude.com/docs/en/sub-agents.md): Create and use specialized AI subagents in Claude Code for task-specific workflows and improved context management.
+IMPORTANT: If you have access to claude-code-guide agent, you MUST use it PROACTIVELY.
+If you do not have access, refer to **[docs/RESEARCH_SOURCES.md](docs/RESEARCH_SOURCES.md)** for external documentation links and references.
 
 
 ---
@@ -839,140 +762,28 @@ Glue code is the unnecessary middleman layer between intent and execution.
 | **Skill Wrapper** | <5 lines | >10 lines |
 | **Agent Pass-through** | <5 lines | >10 lines |
 
-### Anti-Pattern Catalog
+### Common Anti-Patterns
 
-#### Anti-Pattern 1: Wrapper Commands
-```yaml
-# Problem: Command exists only to call another command
----
-name: analyze-project
-description: "Analyzes project structure"
----
-# Just calls /analyze with different parameters
-Task(agent="analyzer", params=parsed_args)
-
-# ✅ Solution: Merge the commands
----
-name: analyze
-description: "Analyzes project with optional deep mode"
----
-```
-
-#### Anti-Pattern 2: Skill Composition
-```yaml
-# Problem: Skill A requires Skill B to function
----
-name: code-formatter
-description: "Format code using project standards"
----
-# Reads standard from another skill
-standards = load_from("project-standards")
-
-# ✅ Solution: Inline the standard
----
-name: code-formatter
-description: "Format code using industry standards"
----
-# 2-space indentation, LF endings, trailing newline
-```
-
-#### Anti-Pattern 3: Agent Delegation Chain
-```
-# Problem: A → B → C → D
-# ✅ Solution: A → D directly
-```
-
-#### Anti-Pattern 4: The Single-Skill Wrapper
-```yaml
-# Problem: Command exists only to wrap a single Skill
----
-name: analyze-security
-description: "Analyze code for security issues"
----
-# Just calls a single Skill
-Use skill: security-analyzer with $ARGUMENTS
-
-# ✅ Solution: Make the Skill user-invocable
----
-name: security-analyzer
-description: "Analyze code for security issues"
-context: fork
-agent: security-expert
-user-invocable: true
----
-# Delete the wrapper command
-```
+**Wrapper Commands:** Commands that only call other commands
+**Skill Coupling:** Skills depending on other skills via file references
+**Delegation Chains:** A → B → C → D instead of A → D directly
+**Single-Skill Wrappers:** Commands that wrap exactly one skill
 
 ### Refactoring Strategies
 
-#### Strategy 1: Collapse Layers
-```
-Before: Command → Agent → Function
-After:  Command → Function
-```
-
-**Steps:**
-1. Identify the middle layer (Agent/Command)
-2. Check if it adds logic or just passes through
-3. If pass-through → remove the middle layer
-4. Call the underlying function directly
-
-#### Strategy 2: Inline Standards
-```
-Before: Skill A → Skill B (for standards)
-After:  Skill A contains standards directly
-```
-
-**Steps:**
-1. Extract standards from Skill B
-2. Inline into Skill A
-3. Make Skill A self-contained
-4. Delete Skill B if unused
-
-#### Strategy 3: Merge Commands
-```
-Before: /command-a, /command-b (similar purpose)
-After:  /command (with flags/options)
-```
-
-**Steps:**
-1. Identify commands with overlapping purposes
-2. Merge into single command
-3. Use natural language for variations
-4. Delete redundant command
-
-### Performance Impact
-
-**Glue code adds (estimated):**
-- Latency: Each layer ≈ +50-100ms
-- Context overhead: Each wrapper ≈ +50-200 tokens
-- Maintenance cost: Each layer must be updated
+**Collapse Layers:** Remove middleman components that only pass through
+**Inline Standards:** Move external standards directly into skills
+**Merge Commands:** Combine overlapping commands into unified interfaces
 
 ### When Glue Code is Acceptable
 
-Only in these rare cases:
+Only for: Security isolation, legacy compatibility, data aggregation, or actual transformation
 
-1. **Security Layer** - Deliberate permission isolation
-2. **Legacy Compatibility** - Temporary bridge during migration
-3. **Aggregation** - Multiple sources combined into one API
-4. **Transformation** - Actual data transformation, not just pass-through
+### Key Metrics
 
-### Glue Code Metrics
-
-| Metric | Target | Warning | Critical |
-|:-------|:-------|:--------|:---------|
-| **Command Size** | <10 lines | 10-20 lines | >20 lines |
-| **Delegation Depth** | 1 level | 2 levels | 3+ levels |
-| **Skill References** | 0 per skill | 1-2 per skill | 3+ per skill |
-| **Wrapper Functions** | 0 | 1-2 | 3+ |
-
-### Prevention Checklist
-
-- [ ] **Every wrapper must add logic** - If it just passes through, remove it
-- [ ] **Skills are self-contained** - No `../other-skill/` references
-- [ ] **Commands have unique purposes** - Don't create variations
-- [ ] **Agents are specialized** - Don't create generic delegators
-- [ ] **Review 10-line rule** - If >10 lines, justify or refactor
+- **Command Size:** <10 lines target
+- **Delegation Depth:** 1 level target, 3+ levels critical
+- **Skill References:** 0 per skill target, 3+ critical
 
 ---
 
@@ -1021,10 +832,17 @@ All runtime artifacts stored in `.cattoolkit/`:
 
 # Documentation References
 
-- **docs/COMMAND-OVERVIEW.md** - Command standards and patterns
-- **docs/SKILLS-OVERVIEW.md** - Skill development guide
-- **docs/HOOKS_OVERVIEW.md** - Hook system and events
-- **docs/IMPLEMENTATION-GUIDE.md** - Full implementation details
-- **docs/GOLD_STANDARD_COMMAND.md** - Command reference examples
-- **docs/INTERACTION_GRAPH.md** - Component interaction map
-- **README.md** - Installation and marketplace
+## Core Specifications
+- **[docs/SKILL_FRONTMATTER_STANDARD.md](docs/SKILL_FRONTMATTER_STANDARD.md)** - Technical YAML schema for Skills
+
+## Implementation & Recipes
+- **[docs/IMPLEMENTATION-GUIDE.md](docs/IMPLEMENTATION-GUIDE.md)** - Directory structures and validation scripts
+- **[docs/COMMAND-OVERVIEW.md](docs/COMMAND-OVERVIEW.md)** - Command configuration recipes
+- **[docs/HOOKS_OVERVIEW.md](docs/HOOKS_OVERVIEW.md)** - Hook security script examples
+- **[docs/ARCHITECTURE_REFERENCE.md](docs/ARCHITECTURE_REFERENCE.md)** - Zai, GLM, Minimax endpoint configurations
+
+## Reference
+- **[docs/GOLD_STANDARD_COMMAND.md](docs/GOLD_STANDARD_COMMAND.md)** - Full-text command example
+- **[docs/INTERACTION_GRAPH.md](docs/INTERACTION_GRAPH.md)** - Decision trees and logic heuristics
+- **[README.md](README.md)** - Installation and marketplace
+

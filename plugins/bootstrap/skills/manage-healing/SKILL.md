@@ -6,7 +6,6 @@ description: |
   Keywords: forensic audit, repair component, fix hallucination, log analysis
 context: fork
 agent: plugin-expert
-user-invocable: true
 allowed-tools: [Task, Read, Write, Edit, Glob, Grep]
 ---
 
@@ -34,7 +33,7 @@ Compare the **Tool Prompt** (from context.log) against the **Instructions** (fro
 ## Phase 3: The Healing Fix
 DO NOT revert files. Update the logic to be more resilient:
 1. **Correct the Example**: Update the Markdown code block to show the correct tool signature.
-2. **Harden Constraints**: Add a `<constraints>` block with a `MUST NOT` instruction specifically addressing the error.
+2. **Harden Constraints**: Add a `## Constraints` section with specific `MUST NOT` instructions addressing the error.
 3. **Path Sanitization**: If the error was a "File Not Found," add a "Context Discovery" step to the protocol.
 
 ## Phase 4: Prevention (Immunization)
@@ -42,6 +41,6 @@ Update the component's **Description** keywords to better match its actual succe
 
 ## Reference Assets
 - [bootstrap-protocol.md](references/bootstrap-protocol.md): Protocol for initializing healing environment
-- [shared-standards.md](references/shared-standards.md): Cross-skill standards
+- [shared-standards.md](../../styles/shared-standards.md): Cross-skill standards
 - [diagnosis-patterns.md](references/diagnosis-patterns.md): Common error patterns
 - [bootstrap.sh](assets/scripts/bootstrap.sh): Environment setup script

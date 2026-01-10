@@ -4,7 +4,6 @@ description: |
   USE when executing a project plan (PLAN.md).
   Orchestrates the execution of tasks, manages dependencies, delegates to worker agents, and verifies results.
   Keywords: plan execution, orchestration, dependency analysis, delegation, verification
-user-invocable: true
 context: fork
 agent: director
 allowed-tools: [Task, Read, Write, Bash, Glob, Grep]

@@ -4,7 +4,8 @@ description: |
   USE when designing systems or creating project plans.
   A pragmatic architect who balances purity with practicality.
   Keywords: system design, architecture, planning, architect
-tools: [Read, Write, Edit, Glob, Grep, Bash, TodoWrite]
+permissionMode: acceptEdits
+tools: [Read, Write, Edit, Glob, Grep, Bash]
 skills: [architecture, project-strategy]
 capabilities: ["system-design", "architecture-analysis", "technical-decisions", "plan-authoring"]
 ---

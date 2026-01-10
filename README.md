@@ -110,44 +110,46 @@ Initializing and repairing the system itself.
 
 ## Installation
 
-```bash
-# Add the marketplace
-claude plugin marketplace add Git-Fg/thecattoolkit
+To use The Cat Toolkit plugins, load them directly using the `--plugin-dir` flag:
 
-# Install plugins
-claude plugin install @cattoolkit/execute
-claude plugin install @cattoolkit/reason
-claude plugin install @cattoolkit/verify
+```bash
+# Load individual plugins
+claude --plugin-dir ./plugins/execute
+claude --plugin-dir ./plugins/reason
+claude --plugin-dir ./plugins/verify
+
+# Load multiple plugins
+claude --plugin-dir ./plugins/execute --plugin-dir ./plugins/reason --plugin-dir ./plugins/verify
 ```
 
-## Architecture Patterns
-
-### Triangle Pattern (Context-Isolated Delegation)
-**Components:** `Command → Agent → Skill`
-- Standard Mode: One agent solves a complex problem
-- Swarm Mode: Multiple agents in parallel (Map-Reduce)
-
-### Vector Pattern (Interactive)
-**Components:** `Command → Skill`
-- For tasks requiring human feedback loops
-
-### Forked Skills (2026 Pattern)
-**Components:** `Skill (context: fork) → Agent`
-- Skills execute in isolated context with bound agent persona
-- No command wrapper needed
-
----
+**Note:** This is a plugin marketplace for development. In production, you would typically install specific plugins from a marketplace.
 
 ## Development Standards
 
-All plugins follow the **2026 Universal Agentic Runtime** standards:
+All plugins follow **Claude Code plugin architecture**. For comprehensive documentation on:
 
-- **Law 1:** Atomic Independence - Components function standalone
-- **Law 2:** Eliminate Glue Code - Skills with `context: fork` need no wrappers
-- **Law 3:** Native Delegation - Intent over scripting
-- **Law 4:** Description as API - Semantic discovery via descriptions
+- **Plugin System**: See [Official Claude Code Plugins Documentation](https://code.claude.com/docs/en/plugins)
+- **Skills**: See [Agent Skills Documentation](https://code.claude.com/docs/en/skills)
+- **Hooks**: See [Hooks Reference](https://code.claude.com/docs/en/hooks)
+- **MCP Servers**: See [MCP Integration Guide](https://code.claude.com/docs/en/mcp)
 
-See [CLAUDE.md](CLAUDE.md) for complete development guidelines.
+### Plugin Components
+
+| Component | Purpose | Implementation |
+|-----------|---------|---------------|
+| **Skills** | Auto-discoverable capabilities | Markdown files with YAML frontmatter |
+| **Agents** | Reusable personas | System prompts with tool restrictions |
+| **Hooks** | Event automation | JSON configuration with trigger handlers |
+| **Commands** | User-invokable workflows | Markdown files for slash commands |
+
+### Best Practices
+
+- **Skills** are self-contained with clear descriptions for automatic discovery
+- **Agents** define personas with explicit tool permissions
+- **Hooks** handle lifecycle events for safety and automation
+- **Commands** provide explicit user entry points
+
+For Cat Toolkit-specific development guidelines, see [CLAUDE.md](CLAUDE.md). For implementation details, see [docs/IMPLEMENTATION-GUIDE.md](docs/IMPLEMENTATION-GUIDE.md).
 
 ---
 

@@ -3,8 +3,8 @@ name: prompt-engineer
 description: |
   USE when designing prompts, meta-prompts, prompt chains, or optimizing system instructions.
   Applies Complexity-Based Guidance Framework with XML/Markdown decision rules.
-permissionMode: acceptEdits
-tools: [Read, Write, Edit, Grep, Glob, Bash]
+permissionMode: plan
+tools: [Read, Write, Edit, Grep, Glob]
 skills: [prompt-engineering, prompt-library]
 ---
 

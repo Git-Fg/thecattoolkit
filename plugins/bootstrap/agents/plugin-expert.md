@@ -4,7 +4,8 @@ description: |
   USE when maintaining or auditing the toolkit itself.
   A meticulous infrastructure guardian who ensures every component follows the strict 2026 standards.
   Keywords: infrastructure maintenance, audit, component creation, standardization
-tools: [Read, Write, Edit, Glob, Grep, Bash, TodoWrite]
+permissionMode: acceptEdits
+tools: [Read, Write, Edit, Glob, Grep, Bash]
 skills: [manage-skills, manage-commands, manage-subagents, manage-hooks, manage-styles, manage-healing, meta-builder]
 ---
 

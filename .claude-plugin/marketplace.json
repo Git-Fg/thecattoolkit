@@ -3,7 +3,12 @@
   "metadata": {
     "description": "Official plugin marketplace for The Cat Toolkit - Vibecoding plugins for autonomous AI development.",
     "version": "1.0.0",
-    "keywords": ["vibecoding", "ai-development", "plugins", "automation"]
+    "keywords": [
+      "vibecoding",
+      "ai-development",
+      "plugins",
+      "automation"
+    ]
   },
   "owner": {
     "name": "Git-Fg",
@@ -11,19 +16,34 @@
   },
   "plugins": [
     {
-      "name": "builder",
-      "source": "./plugins/builder",
-      "description": "The Unified Builder: Consolidates planning and engineering into a single cohesive workflow. Features autonomous execution, systematic debugging, and test-driven development."
+      "name": "bootstrap",
+      "source": "./plugins/bootstrap",
+      "description": "Initializing and repairing the system itself. Includes meta-builder and plugin management skills."
     },
     {
-      "name": "meta",
-      "source": "./plugins/meta",
-      "description": "The Toolkit Builder: Tools to build, maintain, and audit the AI system itself. Includes command creation, agent development, and self-correction (/heal)."
+      "name": "execute",
+      "source": "./plugins/execute",
+      "description": "The execution engine - where file modifications happen. Includes director, worker, and architect personas."
     },
     {
-      "name": "strategist",
-      "source": "./plugins/strategist",
-      "description": "High-level planning and reasoning agents with interactive thinking frameworks and prompt engineering capabilities."
+      "name": "guide",
+      "source": "./plugins/guide",
+      "description": "Prompt engineering as a guidance mechanism for steering agents."
+    },
+    {
+      "name": "persist",
+      "source": "./plugins/persist",
+      "description": "Making ephemeral context permanent through session state management. Includes scribe agent."
+    },
+    {
+      "name": "reason",
+      "source": "./plugins/reason",
+      "description": "Strategic thinking and analysis without action. Includes brainstorming and deep analysis skills."
+    },
+    {
+      "name": "verify",
+      "source": "./plugins/verify",
+      "description": "The immune system - verifying correctness of changes."
     }
   ]
 }

@@ -83,3 +83,25 @@ The investigation focused on:
 - **Marketplace Standard**: The `marketplace.json` and `plugin.json` schemas have been defined in **[`docs/MARKETPLACE_REFERENCE.md`](docs/MARKETPLACE_REFERENCE.md)**.
 - **Registry Pattern**: Confirmed the use of `plugin.json` for individual packages and `marketplace.json` for aggregation.
 - **Universal Frontmatter**: The cross-platform specification for `SKILL.md` is defined in **[`docs/SKILL_FRONTMATTER_STANDARD.md`](docs/SKILL_FRONTMATTER_STANDARD.md)**.
+
+---
+
+## Official Claude Code Documentation
+
+- [Changelog](https://raw.githubusercontent.com/anthropics/claude-code/refs/heads/main/CHANGELOG.md)
+- [CLI reference](https://code.claude.com/docs/en/cli-reference.md)
+- [Common workflows](https://code.claude.com/docs/en/common-workflows.md)
+- [Plugin Marketplaces](https://code.claude.com/docs/en/discover-plugins.md)
+- [Headless Usage](https://code.claude.com/docs/en/headless.md)
+- [Hooks Reference](https://code.claude.com/docs/en/hooks.md)
+- [Hooks Guide](https://code.claude.com/docs/en/hooks-guide.md)
+- [MCP Integration](https://code.claude.com/docs/en/mcp.md)
+- [Plugin Marketplaces Development](https://code.claude.com/docs/en/plugin-marketplaces)
+- [Create Plugins](https://code.claude.com/docs/en/plugins.md)
+- [Plugins Reference](https://code.claude.com/docs/en/plugins-reference.md)
+- [Quickstart](https://code.claude.com/docs/en/quickstart.md)
+- [Agent Skills](https://code.claude.com/docs/en/skills.md)
+- [Slash Commands](https://code.claude.com/docs/en/slash-commands.md)
+- [Status Line Configuration](https://code.claude.com/docs/en/statusline.md)
+- [Subagents](https://code.claude.com/docs/en/sub-agents.md)
+

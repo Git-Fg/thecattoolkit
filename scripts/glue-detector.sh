@@ -18,7 +18,7 @@ echo
 
 # 1. Large Command Files (>10 lines that might be glue)
 log_info "1. Large Command Files (>10 lines):"
-find plugins/*/commands -name "*.md" -type f -not -path "*/references/*" -exec sh -c 'lines=$(wc -l < "$1"); if [ "$lines" -gt 10 ]; then echo "⚠️  $1 ($lines lines)"; fi' _ {} \; 2>/dev/null | sort
+find plugins -path "*/commands/*.md" -type f -not -path "*/references/*" -exec sh -c 'lines=$(wc -l < "$1"); if [ "$lines" -gt 10 ]; then echo "⚠️  $1 ($lines lines)"; fi' _ {} \; 2>/dev/null | sort
 log_info ""
 
 # 2. Agent Files with Excessive Delegation
@@ -36,7 +36,7 @@ log_info ""
 
 # 3. Commands that delegate to other commands
 log_info "3. Command-to-Command Delegation:"
-for file in plugins/*/commands/*.md; do
+find plugins -path "*/commands/*.md" -type f 2>/dev/null | while read file; do
   if [ -f "$file" ] && grep -q "Skill(" "$file" 2>/dev/null; then
     echo "⚠️  $file (uses Skill tool)"
   fi
@@ -64,7 +64,7 @@ log_info ""
 
 # 6. Commands with missing allowed-tools
 log_info "6. Commands Missing Tool Restrictions:"
-for file in plugins/*/commands/*.md; do
+find plugins -path "*/commands/*.md" -type f 2>/dev/null | while read file; do
   if [ -f "$file" ] && ! grep -q "allowed-tools:" "$file"; then
     echo "⚠️  $file (no allowed-tools specified)"
   fi
@@ -78,7 +78,7 @@ log_info ""
 
 # 8. Glue Code Metrics Summary
 log_info "8. Glue Code Metrics:"
-total_commands=$(find plugins/*/commands -name "*.md" -type f 2>/dev/null | wc -l | tr -d ' ')
+total_commands=$(find plugins -path "*/commands/*.md" -type f 2>/dev/null | wc -l | tr -d ' ')
 total_agents=$(find plugins/*/agents -name "*.md" -type f 2>/dev/null | wc -l | tr -d ' ')
 total_skills=$(find plugins/*/skills -name "*.md" -type f 2>/dev/null | wc -l | tr -d ' ')
 log_info "Total Commands: $total_commands"

@@ -12,7 +12,6 @@ allowed-tools:
   - Glob
   - Grep
   - Bash(curl *)
-  - TodoWrite
 ---
 
 # Meta Builder Skill
@@ -43,7 +42,7 @@ You are the execution engine for the `plugin-expert` persona. Your goal is to in
 - "Create deploy-with-gate command"
 
 **Auditing:**
-- "Audit entire plugin from plugins/meta"
+- "Audit entire plugin from plugins/bootstrap"
 - "Audit 'build' slashcommands for standards compliance"
 - "Audit all agents in plugins/*"
 - "Audit manage-* skills"

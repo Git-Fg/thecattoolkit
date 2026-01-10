@@ -16,7 +16,7 @@ allowed-tools: Read, Write, Edit, Bash
 ## Shared Standards
 
 For common principles, integration patterns, and anti-patterns, see:
-- **[shared-standards.md](references/shared-standards.md)** - Common standards for all management skills
+- **[shared-standards.md](../../styles/shared-standards.md)** - Common standards for all management skills
 
 ## Knowledge Base
 

@@ -5,7 +5,6 @@ description: |
   Keywords: test-driven development, TDD, red-green-refactor, write tests first
 context: fork
 agent: worker
-user-invocable: true
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 

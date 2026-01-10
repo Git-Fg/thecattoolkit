@@ -9,7 +9,7 @@ allowed-tools: [Read, Write, Edit, Bash(ls:*), Bash(grep:*), Bash(find:*)]
 ## Shared Standards
 
 For common principles, integration patterns, and anti-patterns, see:
-- **[shared-standards.md](references/shared-standards.md)** - Common standards for all management skills
+- **[shared-standards.md](../../styles/shared-standards.md)** - Common standards for all management skills
 
 ## Essential Principles
 
@@ -112,7 +112,7 @@ See `references/command-standards.md` for comprehensive best practices including
 
 ### Refactoring Principles
 
-- Maintain backward compatibility when possible
+- Enforce clean breaks over backward compatibility (Codebase > History)
 - Preserve core functionality
 - Improve clarity and usability
 - Reduce complexity

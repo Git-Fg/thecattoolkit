@@ -2,8 +2,8 @@
 name: scribe
 description: |
   USE when consolidating session state, generating handoffs, or managing context in background.
-  Keywords: session summary, context consolidation, handoff preparation, context management
-
+  Keywords: context management, session handoff, scratchpad, context overflow, memory persistence
+permissionMode: acceptEdits
 tools: [Read, Write, Edit, Bash]
 skills: [context-engineering]
 capabilities: ["context-summarization", "session-handoff", "context-archive", "context-purge"]

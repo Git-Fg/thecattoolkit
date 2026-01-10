@@ -4,7 +4,8 @@ description: |
   Security audit specialist with read-only access for detecting vulnerabilities and risky patterns.
   USE when scanning code for security issues, secrets exposure, or OWASP violations.
   Keywords: security audit, vulnerability scan, secrets detection, OWASP compliance
-tools: [Read, Grep, Glob, Bash]
+permissionMode: plan
+tools: [Read, Grep, Glob, Bash(ls:*), Bash(cat:*), Bash(head:*), Bash(find:*)]
 ---
 
 # Role

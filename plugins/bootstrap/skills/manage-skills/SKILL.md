@@ -13,7 +13,7 @@ allowed-tools: [Read, Write, Edit, Bash, Glob, Grep]
 ## Knowledge Base
 
 ### 1. Shared Standards
-**File:** [shared-standards.md](references/shared-standards.md)
+**File:** [shared-standards.md](../../styles/shared-standards.md)
 **Contains:** Common principles, integration patterns, and anti-patterns for all management skills.
 
 ### 2. Communication & Prompts

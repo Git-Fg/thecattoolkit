@@ -6,7 +6,6 @@ description: |
   Keywords: deep analysis, strategic analysis, problem solving, frameworks, first principles, root cause
 context: fork
 agent: strategist
-user-invocable: true
 allowed-tools: [Read, Write, Edit, Glob, Grep]
 ---
 
