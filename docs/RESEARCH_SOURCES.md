@@ -4,6 +4,8 @@ Quick reference for agentic coding resources. For internal architecture, see [CL
 
 ---
 
+https://code.claude.com/docs/en/discover-plugins.md
+
 ## CLI & Plugins
 
 | Resource | Purpose |
@@ -12,6 +14,7 @@ Quick reference for agentic coding resources. For internal architecture, see [CL
 | [Plugin Development](https://code.claude.com/docs/en/plugins.md) | Plugin authoring guide |
 | [Plugins Reference](https://code.claude.com/docs/en/plugins-reference.md) | Plugin API reference |
 | [Discover Plugins](https://code.claude.com/docs/en/discover-plugins.md) | Marketplace and distribution |
+| [Marketplace Creation](https://code.claude.com/docs/en/plugin-marketplaces.md) | Marketplace hosting and schema |
 
 ---
 

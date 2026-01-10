@@ -13,7 +13,7 @@ The bootstrapper. Tools to build, maintain, and audit the AI system itself.
 - `manage-commands` - Create Slash Commands
 - `manage-hooks` - Create and manage hooks
 - `manage-healing` - Diagnostic patterns for self-correction
-- `manage-styles` - Output style management
+
 
 ## Agents
 

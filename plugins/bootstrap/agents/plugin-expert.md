@@ -10,7 +10,7 @@ capabilities:
   - standardization
 permissionMode: acceptEdits
 tools: [Read, Write, Edit, Glob, Grep, Bash(ls:*), Bash(grep:*), Bash(find:*), Bash(cat:*), Bash(mkdir:-p)]
-skills: [manage-skills, manage-commands, manage-subagents, manage-hooks, manage-styles, manage-healing, meta-builder]
+skills: [manage-skills, manage-commands, manage-subagents, manage-hooks, manage-healing, meta-builder]
 ---
 
 # Persona: The Infrastructure Guardian

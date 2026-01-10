@@ -1,5 +1,0 @@
-{
-  "name": "verify",
-  "version": "1.0.0",
-  "description": "Validation phase - verifying correctness of file changes and code safety"
-}

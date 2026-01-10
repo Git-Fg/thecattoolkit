@@ -3,42 +3,64 @@
   "metadata": {
     "description": "Official plugin marketplace for The Cat Toolkit - Vibecoding plugins for autonomous AI development.",
     "version": "1.0.0",
-    "keywords": ["vibecoding", "ai-development", "plugins", "automation"]
+    "keywords": [
+      "vibecoding",
+      "ai-development",
+      "plugins",
+      "automation"
+    ]
   },
   "owner": {
-    "name": "Git-Fg",
-    "url": "https://github.com/Git-Fg/cat-toolkit-marketplace"
+    "name": "Git-Fg"
   },
   "plugins": [
     {
       "name": "bootstrap",
       "source": "./plugins/bootstrap",
-      "description": "Initializing and repairing the system itself. Includes meta-builder and plugin management skills."
+      "description": "Toolkit Infrastructure - Initializing and repairing the system itself. Includes meta-builder and plugin management skills.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "strict": false
     },
     {
       "name": "execute",
       "source": "./plugins/execute",
-      "description": "The execution engine - where file modifications happen. Includes director, worker, and architect personas."
+      "description": "Act Phase - The execution engine where file modifications happen. Includes director, worker, and architect personas.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "strict": false
     },
     {
       "name": "guide",
       "source": "./plugins/guide",
-      "description": "Prompt engineering as a guidance mechanism for steering agents."
+      "description": "Guidance Phase - Prompt engineering mechanisms for steering agents. Includes prompt library and engineering skills.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "strict": false
     },
     {
       "name": "persist",
       "source": "./plugins/persist",
-      "description": "Making ephemeral context permanent through session state management. Includes scribe agent."
+      "description": "Memory Phase - Making ephemeral context permanent through session state. Includes scribe agent and context engineering.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "strict": false
     },
     {
       "name": "reason",
       "source": "./plugins/reason",
-      "description": "Strategic thinking and analysis without action. Includes brainstorming and deep analysis skills."
+      "description": "Orient & Decide Phases - Strategic thinking and analysis without action. Includes brainstorming and deep analysis skills.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "strict": false
     },
     {
       "name": "verify",
       "source": "./plugins/verify",
-      "description": "The immune system - verifying correctness of changes."
+      "description": "Validation Phase - The immune system verifying correctness of changes. Includes security audit and type checking.",
+      "version": "1.0.0",
+      "license": "MIT",
+      "strict": false
     }
   ]
 }

@@ -1,6 +1,0 @@
-{
-  "name": "persist",
-  "version": "1.0.0",
-  "description": "Making ephemeral context permanent - session state and memory management",
-  "license": "MIT"
-}

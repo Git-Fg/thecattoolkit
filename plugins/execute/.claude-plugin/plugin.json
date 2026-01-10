@@ -1,6 +1,0 @@
-{
-  "name": "execute",
-  "version": "1.0.0",
-  "description": "Act phase - where file modifications and irreversible actions happen",
-  "license": "MIT"
-}
