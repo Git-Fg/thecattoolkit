@@ -388,6 +388,25 @@ graph TB
 
 ---
 
+## 5.6 Runtime Constraints (Endpoint Awareness)
+
+The toolkit supports multiple agentic endpoints. Adjust behavior based on the active runtime:
+
+| Endpoint | Optimization Strategy |
+|:---------|:----------------------|
+| **Anthropic (Claude)** | Full capability: large context (200k+), native `Task`/`Skill` tools |
+| **Zai (GLM-4.x)** | Leverage native function calling. Vision tasks use `GLM-4.6V`. |
+| **Minimax (M2)** | Prioritize **Parallel Agent Pattern** due to fast inference. Excellent for multi-file context edits. |
+
+**Behavioral Adaptation Rules:**
+1. If context window is limited → increase delegation frequency
+2. If vision model available → use skill-based image analysis
+3. If inference is fast → prefer parallel agent spawning over sequential
+
+For endpoint-specific technical details and proxy configuration, see **[docs/ARCHITECTURE_REFERENCE.md](docs/ARCHITECTURE_REFERENCE.md)**.
+
+---
+
 # PART VI: MAINTENANCE
 
 ## 6.1 Project Hygiene
@@ -502,7 +521,7 @@ All runtime artifacts stored in `.cattoolkit/`:
 - **[docs/IMPLEMENTATION-GUIDE.md](docs/IMPLEMENTATION-GUIDE.md)** - Validation scripts, MCP configuration
 - **[docs/COMMAND-OVERVIEW.md](docs/COMMAND-OVERVIEW.md)** - Command YAML recipes
 - **[docs/HOOKS_OVERVIEW.md](docs/HOOKS_OVERVIEW.md)** - Hook I/O protocol and validation scripts
-- **[docs/ARCHITECTURE_REFERENCE.md](docs/ARCHITECTURE_REFERENCE.md)** - Endpoint-specific optimizations (GLM/Minimax)
+- **[docs/ARCHITECTURE_REFERENCE.md](docs/ARCHITECTURE_REFERENCE.md)** - Endpoint proxy configuration and API details
 
 ## Reference
 - **[docs/GOLD_STANDARD_COMMAND.md](docs/GOLD_STANDARD_COMMAND.md)** - Full-text command example

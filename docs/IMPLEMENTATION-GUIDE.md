@@ -94,18 +94,3 @@ Configure the runtime environment for different providers:
 | `ANTHROPIC_API_KEY` | Authentication token | `sk-...` |
 
 Ensure `.claude/settings.json` reflects the chosen provider's capabilities.
-
----
-
-## Permission Modes Reference
-
-| Mode | Behavior | Security |
-|:-----|:---------|:---------|
-| `default` | Prompts for each tool | High |
-| `acceptEdits` | Auto-approves file operations | Medium |
-| `plan` | Read-only analysis | High |
-| `dontAsk` | Auto-deny unless pre-approved | High |
-| `bypassPermissions` | All tools approved | **Very Low** |
-| `ignore` | Ignores permission system | **None** |
-
-For permission cascading rules, see [CLAUDE.md Section 5.1](../CLAUDE.md#51-permission-system).
