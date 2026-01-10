@@ -6,13 +6,5 @@
     "author": {
         "name": "Git-Fg"
     },
-    "capabilities": [
-        "agents",
-        "skills",
-        "hooks",
-        "outputStyles"
-    ],
-    "outputStyles": "./styles/",
-    "hooks": "./hooks/hooks.json",
-    "readme": "README.md"
+    "outputStyles": "./styles/"
 }
