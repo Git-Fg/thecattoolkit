@@ -1,12 +1,12 @@
 # Hook Implementation Recipes
 
-This document provides practical code examples for hook implementation. For complete specifications and event reference, see [CLAUDE.md](../CLAUDE.md#52-hooks-governance).
+Code examples for hook implementation. For event reference and specifications, see [CLAUDE.md](../CLAUDE.md#52-hooks-governance).
 
 ---
 
 ## Hook Types
 
-### Command Hooks (Deterministic)
+### Command Hook (Deterministic)
 
 ```json
 {
@@ -27,7 +27,7 @@ This document provides practical code examples for hook implementation. For comp
 }
 ```
 
-### Prompt Hooks (Context-Aware)
+### Prompt Hook (Context-Aware)
 
 ```json
 {
@@ -48,7 +48,7 @@ This document provides practical code examples for hook implementation. For comp
 
 ---
 
-## Hook Input/Output Protocol
+## Input/Output Protocol
 
 **Input (JSON via stdin):**
 ```json
@@ -77,31 +77,26 @@ Optional JSON response:
 
 ---
 
-## Security Implementation: Validation Script
+## Validation Script Template
 
 ```bash
 #!/bin/bash
 # validate.sh - Secure hook implementation
 
-# Read stdin as JSON
 INPUT=$(cat)
 
-# Validate JSON structure
 if ! echo "$INPUT" | jq -e . >/dev/null 2>&1; then
   echo '{"continue": false, "systemMessage": "Invalid JSON input"}'
   exit 1
 fi
 
-# Extract and validate tool input
 FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.file_path // empty')
 
-# Security check: prevent path traversal
 if [[ "$FILE_PATH" == *".."* ]]; then
   echo '{"continue": false, "systemMessage": "Path traversal detected"}'
   exit 2
 fi
 
-# All checks passed
 echo '{"continue": true, "systemMessage": "Operation validated"}'
 exit 0
 ```
@@ -110,9 +105,8 @@ exit 0
 
 ## Validation Checklist
 
-- [ ] **Input Validation:** Validate all parameters from `TOOL_INPUT` or `FILE_PATH`
-- [ ] **Timeout Protection:** Set reasonable timeouts for command hooks
-- [ ] **Error Handling:** Handle failures gracefully with proper exit codes
-- [ ] **Path Security:** Use `${CLAUDE_PLUGIN_ROOT}` for all file paths
-- [ ] **Permission Awareness:** Understand inherited permission restrictions
-- [ ] **Audit Trail:** Log significant operations for security review
+- [ ] Validate all parameters from `TOOL_INPUT`
+- [ ] Set reasonable timeouts for command hooks
+- [ ] Handle failures with proper exit codes
+- [ ] Use `${CLAUDE_PLUGIN_ROOT}` for all file paths
+- [ ] Log significant operations for security review

@@ -1,88 +1,77 @@
 # Skill Frontmatter Standard
 
-This document defines The Cat Toolkit's skill frontmatter standards. For complete specifications, see [CLAUDE.md](../CLAUDE.md#skill-protocol-layer).
+Technical YAML schema for skill frontmatter. For complete specifications and Discovery Tiering Matrix, see [CLAUDE.md](../CLAUDE.md#part-iv-skill-protocol-layer).
+
+---
 
 ## Universal Frontmatter Schema
-
-We adopt a **Native-First Schema** using Claude Code's native schema as the baseline for our skills.
-
-### Gold Standard Header
-
-Every skill in `thecattoolkit` should follow this header pattern:
 
 ```yaml
 ---
 name: my-skill-name
 description: >
-  A concise, action-oriented description of what this skill does.
-  CRITICAL: This text is used for "Semantic Intent Matching".
-  Keep it under 1024 characters.
-context: fork         # Recommended for complex tasks
-allowed-tools:        # Explicit tool permissions
+  USE when [condition].
+  A concise, action-oriented description.
+  Max 1024 characters.
+context: fork
+allowed-tools:
   - Read
   - Write
   - Bash
-model: sonnet         # Optional: model specification
-
-hooks:                # Optional: lifecycle automation
+model: sonnet
+hooks:
   PreToolUse: "validate-input"
   PostToolUse: "log-operation"
   Stop: "cleanup"
 ---
 ```
 
+---
+
 ## Field Reference
 
-| Field | Required | Description |
+| Field | Required | Constraints |
 |:------|:---------|:------------|
-| `name` | **Yes** | Skill name. Lowercase letters, numbers, hyphens only (max 64 chars). Must match directory name. |
-| `description` | **Yes** | What the Skill does and when to use it (max 1024 chars). Claude uses this for semantic matching. |
+| `name` | **Yes** | Max 64 chars, lowercase letters/numbers/hyphens only. Must match directory name. |
+| `description` | **Yes** | Max 1024 chars. Used for semantic matching. "USE when" as first sentence. |
 | `allowed-tools` | No | Tools Claude can use without asking permission. |
 | `context` | No | Set to `fork` to run in isolated sub-agent context. |
 | `agent` | No | Agent type for forked context. |
-| `user-invocable` | No | Controls slash command menu visibility. Default: `true`. |
+| `user-invocable` | No | Controls slash command visibility. Default: `true`. Only specify if `false`. |
 | `disable-model-invocation` | No | Blocks programmatic invocation via `Skill` tool. |
-| `model` | No | Model to use (`sonnet`, `opus`, `haiku`, or `'inherit'`). |
-| `hooks` | No | Hooks scoped to Skill lifecycle. |
-
-## Discovery Tiering Matrix
-
-> [!IMPORTANT]
-> The tiers below are **pattern guidance** for writing effective descriptions. Do NOT include `[Tier X: Name]` as a literal prefix in the description field.
-
-| Tier | Use Case | Pattern |
-|:-----|:---------|:--------|
-| **1: High Fidelity** | Complex/fuzzy tasks, LLM capability overlap | `[MODAL] when [CONDITION]. Examples: <example>...` |
-| **2: High Gravity** | Safety-critical, governance, mandatory protocols | `[MODAL] USE when [CONDITION].` |
-| **3: Utility** | Single-purpose, self-documenting utilities | `{Action Verb} + {Object} + {Purpose}` |
-
-**Selection Rules:**
-1. >40% overlap with built-in tools → Tier 1
-2. Governance/safety layer → Tier 2
-3. Self-documenting name → Tier 3
+| `model` | No | `sonnet`, `opus`, `haiku`, or `'inherit'`. |
+| `hooks` | No | Hooks scoped to Skill lifecycle (`PreToolUse`, `PostToolUse`, `Stop` only). |
 
 ---
 
-## Description Best Practices
+## Field Constraints
 
-Since `description` is the *only* semantic signal for discovery, it must be engineered perfectly.
+### `name`
+- **Pattern:** `^[a-z0-9-]+$`
+- **Max Length:** 64 characters
+- **Must Match:** Directory name containing SKILL.md
 
-**Do:**
-- Use imperative verbs ("Extract", "Analyze", "Generate")
-- Mention specific file types or contexts ("...from PDF files", "...in the `src` directory")
-- Include "trigger keywords" (e.g., "Use this when the user asks to debug")
+### `description`
+- **Max Length:** 1024 characters
+- **Format:** "USE when [condition]." as first sentence for optimal discovery
+- **Content:** Action verbs, specific contexts, trigger keywords
 
-**Don't:**
-- Write vague marketing copy ("The best skill for coding")
-- Exceed 1024 characters (strict limit for Claude Code)
-- Put critical instructions in the description (put them in the Body)
+### `allowed-tools`
+- **Format:** Comma-delimited string or YAML array
+- **Supports:** Granular patterns like `Bash(git add:*)`
+
+### `context`
+- **Values:** `fork` or omit for inline execution
+- **Effect:** When set to `fork`, runs in isolated sub-agent with own context window
+
+### `model`
+- **Values:** `sonnet`, `opus`, `haiku`, `'inherit'`
+- **Default:** Inherits from parent context if omitted
 
 ---
 
 ## Complete Specifications
 
-For detailed explanations of WHY these patterns exist, see:
 - **Skill system overview** → [CLAUDE.md PART IV](../CLAUDE.md#part-iv-skill-protocol-layer)
-- **`context: fork` semantics** → [CLAUDE.md Law 2](../CLAUDE.md#law-2-the-law-of-atomic-capabilities)
+- **Discovery Tiering Matrix** → [CLAUDE.md Section 4.4](../CLAUDE.md#44-discovery-tiering-matrix)
 - **Permission system** → [CLAUDE.md PART V.1](../CLAUDE.md#51-permission-system)
-- **Progressive disclosure** → [CLAUDE.md Section 4.3](../CLAUDE.md#43-progressive-disclosure)
