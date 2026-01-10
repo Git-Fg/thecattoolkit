@@ -1,0 +1,10 @@
+{
+    "name": "verify",
+    "description": "Validation Phase - The immune system verifying correctness of changes.",
+    "version": "1.0.0",
+    "license": "MIT",
+    "author": {
+        "name": "Git-Fg"
+    },
+    "hooks": "./hooks/hooks.json"
+}
