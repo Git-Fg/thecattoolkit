@@ -13,6 +13,7 @@ import sys
 from typing import Optional
 
 logger = logging.getLogger(__name__)
+HOOK_NAME = "protect-files"
 
 # Files/patterns to warn about (previously blocked, now allowed with warning)
 PROTECTED_PATTERNS = [
@@ -85,7 +86,7 @@ def main():
 
         # Security: Check for path traversal attempts (log and skip silently)
         if not is_safe_path(file_path):
-            logger.debug("[protect-files] Path traversal detected: %s", file_path)
+            logger.debug(f"[{HOOK_NAME}] Path traversal detected: {file_path}")
             sys.exit(0)
 
         # Check for protected patterns (previously blocked, now warn only)
@@ -127,12 +128,13 @@ def main():
             print(json.dumps(output))
             sys.exit(0)
 
-    except json.JSONDecodeError:
+    except json.JSONDecodeError as e:
         # Invalid JSON input, don't block
+        logger.debug(f"[{HOOK_NAME}] Invalid JSON input: {e}")
         sys.exit(0)
     except Exception as e:
         # Don't block on errors, but log for debugging
-        logger.debug("[protect-files] Unexpected error: %s", e, exc_info=True)
+        logger.debug(f"[{HOOK_NAME}] Unexpected error in main(): {e}", exc_info=True)
         sys.exit(0)
 
 

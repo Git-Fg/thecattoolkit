@@ -39,9 +39,9 @@
       {
         "hooks": [
           {
-            "type": "prompt",
-            "prompt": "Evaluate if this Claude session should stop. Check for blockers:\n1. Run 'git status --porcelain' - if output is non-empty, there are uncommitted changes\n2. Check if .cattoolkit/planning/HANDOFF.md exists - indicates blocked work\n\nIf either blocker exists, respond: {\"ok\": false, \"reason\": \"Uncommitted git changes or active HANDOFF.md - commit or resolve before stopping\"}\nOtherwise respond: {\"ok\": true}",
-            "timeout": 15
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/evaluate_stop.py\"",
+            "timeout": 10
           }
         ]
       }

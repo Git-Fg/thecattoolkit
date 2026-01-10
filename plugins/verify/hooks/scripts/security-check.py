@@ -14,6 +14,7 @@ import re
 import sys
 
 logger = logging.getLogger(__name__)
+HOOK_NAME = "security-check"
 
 # Patterns that indicate potential secrets
 SECRET_PATTERNS = [
@@ -92,7 +93,7 @@ def main():
 
         # Security: Check for path traversal attempts
         if not is_safe_path(file_path):
-            logger.debug("[security-check] Path traversal detected: %s", file_path)
+            logger.debug(f"[{HOOK_NAME}] Path traversal detected: {file_path}")
             sys.exit(0)
 
         issues = check_for_secrets(content, file_path)
@@ -117,12 +118,13 @@ def main():
             print(json.dumps(output))
             sys.exit(0)
 
-    except json.JSONDecodeError:
+    except json.JSONDecodeError as e:
         # Invalid JSON input, don't block
+        logger.debug(f"[{HOOK_NAME}] Invalid JSON input: {e}")
         sys.exit(0)
     except Exception as e:
         # Don't block on errors, but log for debugging
-        logger.debug("[security-check] Unexpected error: %s", e, exc_info=True)
+        logger.debug(f"[{HOOK_NAME}] Unexpected error in main(): {e}", exc_info=True)
         sys.exit(0)
 
 
