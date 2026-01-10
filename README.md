@@ -36,8 +36,7 @@ claude --plugin-dir ./plugins/execute --plugin-dir ./plugins/reason --plugin-dir
 
 ## Development
 
-- **[CLAUDE.md](CLAUDE.md)** - Core architectural laws (The Constitution)
-- **[docs/](docs/)** - Technical implementation guides (The Manual)
+- **[CLAUDE.md](CLAUDE.md)** - The Universal Agentic Runtime (Constitution & Manual)
 
 ---
 

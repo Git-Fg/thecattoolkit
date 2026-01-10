@@ -1,17 +1,26 @@
 {
+    "$schema": "https://json.schemastore.org/claude-marketplace-1.0.0.json",
     "name": "cattoolkit",
     "metadata": {
-        "description": "Official plugin marketplace for The Cat Toolkit - Vibecoding plugins for autonomous AI development.",
+        "description": "Official plugin marketplace for The Cat Toolkit - A layered orchestration framework for autonomous AI development with vibecoding principles.",
         "version": "2.0.0",
         "keywords": [
             "vibecoding",
             "ai-development",
             "plugins",
-            "automation"
-        ]
+            "automation",
+            "orchestration",
+            "agents",
+            "skills",
+            "framework"
+        ],
+        "homepage": "https://github.com/Git-Fg/thecattoolkit",
+        "repository": "https://github.com/Git-Fg/thecattoolkit",
+        "license": "MIT"
     },
     "owner": {
-        "name": "Git-Fg"
+        "name": "Git-Fg",
+        "email": "noreply@github.com"
     },
     "plugins": [
         {

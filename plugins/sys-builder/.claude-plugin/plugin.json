@@ -5,5 +5,10 @@
     "license": "MIT",
     "author": {
         "name": "Git-Fg"
-    }
+    },
+    "capabilities": [
+        "agents",
+        "skills"
+    ],
+    "readme": "README.md"
 }
