@@ -3,12 +3,7 @@
   "metadata": {
     "description": "Official plugin marketplace for The Cat Toolkit - Vibecoding plugins for autonomous AI development.",
     "version": "1.0.0",
-    "keywords": [
-      "vibecoding",
-      "ai-development",
-      "plugins",
-      "automation"
-    ]
+    "keywords": ["vibecoding", "ai-development", "plugins", "automation"]
   },
   "owner": {
     "name": "Git-Fg",

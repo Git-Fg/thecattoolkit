@@ -25,35 +25,15 @@ We program with **Intent**, not scripts. Instead of `for file in files`, instruc
 | **Command** | **Orchestrator** | Manages multi-phase workflows by sequencing multiple Skills. |
 | **Agent** | **Persona** | Reusable identity/tools that Skills can bind to via `agent: [name]`. |
 
-### Tool Primitives
-
-| Tool | Purpose |
-|:-----|:--------|
-| `Task` | Spawns subagents with specialized personas |
-| `Skill` | Loads skills/invokes commands programmatically |
-| `Read` / `Glob` / `Grep` | File system interaction |
-| `Write` / `Edit` | File modification |
-| `Bash` | Shell command execution |
-| `AskUserQuestion` | User interaction during planning |
-
 ---
 
 ## 1.3 Core Pillars
 
 ### Pillar 1: Atomic Independence
-Components function standalone—no caller assumptions, no cross-plugin references, no shared state.
-
-**Mercenary Isolation:** Agents MUST NOT reference plugin-specific files. Commands inject context via prompting. Domain expertise lives in Skills, not Agent system prompts.
+**Mercenary Isolation:** Components must be self-contained; no shared state or cross-references. Agents must not reference plugin-specific files. Domain expertise lives in Skills, not Agent system prompts.
 
 ### Pillar 2: Atomic Capabilities with Hybrid Execution
-Skills are active capability units with dual nature: **passive knowledge** (auto-discovered standards) and **active execution** (via `context: fork` or user invocation).
-
-- **Passive Mode:** Skills auto-load when descriptions match user requests.
-- **Active Mode:** Skills with `context: fork` run as isolated subagents.
-
-**Constraint:** `AskUserQuestion` FORBIDDEN in skills. If input missing → agent judgment or HANDOFF.md.
-
-**Commands exist for orchestration only** (multi-skill workflows). Never create a Command that wraps a single Skill.
+Skills have dual nature: **passive knowledge** (auto-discovered) and **active execution** (via `context: fork` or user invocation). Commands orchestrate multi-skill workflows only—never wrap a single Skill. `AskUserQuestion` is forbidden in Skills.
 
 ### Pillar 3: Native Delegation
 **"Never write in code what can be described in intent."**
@@ -86,13 +66,13 @@ Skills are active capability units with dual nature: **passive knowledge** (auto
 **XML Reserved Cases:** Agent discovery (optional), hook signaling (`<promise>`, `<status>`), prompt grouping (`<guidelines>`), high-density data isolation.
 
 ### Pillar 5: State-in-Files
-Context is ephemeral; files are eternal. Decisions → ADR. Tasks → Status file. If not on disk, it didn't happen.
+**Context is ephemeral; files are eternal.** If it's not on disk, it didn't happen.
 
 ### Pillar 6: Shared-Nothing Parallelism
-Atomic assignments (no dependencies between parallel agents). File locking (parallel agents never edit same file). Synthesis obligation (orchestrator merges outputs).
+**No dependencies between parallel agents.** Never edit the same file. Orchestrator synthesizes outputs.
 
 ### Pillar 7: Meta-Synchronization
-When working on the toolkit itself, ensure absolute consistency between *defined architecture* (docs/prompts) and *implemented behavior* (code/scripts). Never "do what I say, not what I do."
+**Never "do what I say, not what I do."** Ensure absolute consistency between defined architecture (docs/prompts) and implemented behavior (code/scripts).
 
 ---
 
@@ -165,7 +145,38 @@ hooks:
 ---
 ```
 
-**Critical:** If you omit `tools`, the agent inherits ALL tools including Read, Write, Edit, Bash, AskUserQuestion, Task, Skill, and all MCP tools.
+**Critical:** If you omit `tools`, the agent inherits ALL tools including Read, Write, Edit, Bash, AskUserQuestion, Task, Skill, TodoWrite, and all MCP tools.
+
+### The `skills` Field: Passive Knowledge Loading
+
+The `skills` field lists skills whose instructions should be available to the agent as **passive knowledge**.
+
+**How it works:**
+- At agent startup: Only skill `name + description` loaded (~100 tokens)
+- On activation: Full SKILL.md content loaded when relevant (<5000 tokens)
+- On-demand: Resources (references/, assets/, scripts/) loaded as needed
+
+**IMPORTANT:** The `skills` field does NOT trigger `context: fork`. It operates in **passive mode** only.
+
+| Concept | Agent `skills` Field | Skill `context: fork` |
+|:--------|:---------------------|:----------------------|
+| **Mode** | Passive knowledge | Active execution |
+| **When** | Agent startup/activation | When skill is invoked |
+| **Fork?** | No | Yes - creates isolated subagent |
+| **Use Case** | Agent needs skill's patterns | Skill needs isolated context |
+
+**Non-Recursive:** An agent can list a skill that has `context: fork` without creating a loop. The agent gets passive access to the skill's content, but the fork only occurs when the skill is actively invoked (e.g., via `/skill-name` or semantic matching).
+
+**Example - The Scribe Pattern:**
+```yaml
+# scribe.md (agent)
+skills: [context-engineering]  # Passive: loads patterns on-demand
+
+# context-engineering/SKILL.md
+context: fork                   # Active: forks when invoked
+agent: scribe                   # Persona to use during fork
+```
+This is valid: scribe gets context-engineering patterns passively, but `/context-engineering` invocation creates a fresh fork with scribe persona.
 
 ---
 
@@ -179,7 +190,10 @@ name: security-reviewer
 description: |
   USE when auditing code for security vulnerabilities.
   Specializes in OWASP patterns, injection flaws, and authentication issues.
-  Keywords: security audit, vulnerability scan, penetration test
+capabilities:
+  - security audit
+  - vulnerability scan
+  - penetration test
 tools: Read, Grep, Glob
 ---
 ```
@@ -210,9 +224,40 @@ Skills are **Hybrid Capability Units**—passive knowledge with optional active 
 
 | Mode | Trigger | Behavior |
 |:-----|:--------|:---------|
-| **Passive** | Description matches user request | Standards/guidance loaded into context |
-| **Active (Fork)** | `context: fork` set | Runs as isolated subagent |
+| **Passive** | Description matches user request OR agent's `skills` field | Standards/guidance loaded into context |
+| **Active (Fork)** | `context: fork` set + skill invoked | Runs as isolated subagent |
 | **Active (User)** | User types `/skill-name` | Direct invocation |
+
+### Agent-Skill Binding Patterns
+
+**Pattern 1: Passive Knowledge (Agent loads Skill)**
+```yaml
+# Agent definition
+skills: [context-engineering]  # Passive: patterns available in-agent
+```
+When an agent lists a skill, the skill's content loads passively. The agent references the skill's patterns directly without forking.
+
+**Pattern 2: Active Execution (Skill binds to Agent)**
+```yaml
+# Skill definition
+context: fork
+agent: scribe  # When forked, use scribe persona
+```
+When the skill is invoked, it creates an isolated subagent using the specified agent's persona and tool restrictions.
+
+**Pattern 3: Combined (Both)**
+```yaml
+# scribe.md (agent)
+skills: [context-engineering]  # Passive knowledge
+
+# context-engineering/SKILL.md
+context: fork                   # Active execution
+agent: scribe                   # Use scribe when forked
+```
+**How it works:**
+- Main Agent launches scribe via `Task` → scribe has context-engineering patterns available
+- Someone invokes `/context-engineering` → skill forks with scribe persona
+- **No recursion**: Passive loading never triggers `context: fork`
 
 ---
 
@@ -258,19 +303,9 @@ skill-name/
 
 ## 4.5 YAML Frontmatter
 
-For complete YAML schema and field reference, see **[docs/SKILL_FRONTMATTER_STANDARD.md](docs/SKILL_FRONTMATTER_STANDARD.md)**.
+For complete YAML schema, see **[docs/SKILL_FRONTMATTER_STANDARD.md](docs/SKILL_FRONTMATTER_STANDARD.md)**.
 
-```yaml
----
-name: skill-name          # Required. Max 64 chars, lowercase, hyphens only
-description: |            # Required. Follow Discovery Tiering Matrix
-  USE when [condition].
-  Description text here.
-allowed-tools: Read, Edit  # Optional. Comma-delimited pre-approved tools
-context: fork             # Optional. Run in isolated sub-agent context
-agent: security-reviewer  # Optional. Bind to agent persona when forked
----
-```
+Required: `name` (max 64 chars), `description` (start with "USE when"). Optional: `allowed-tools`, `context: fork`, `agent`, `model`, `hooks`.
 
 ---
 
@@ -319,12 +354,7 @@ Hooks are the **Immune System**—interception, safety, context injection. Never
 | `PreCompact` | Before context compaction |
 | `SessionEnd` | Session ends |
 
-**Safety Standards:**
-- **Portability:** ALWAYS use `${CLAUDE_PLUGIN_ROOT}` for script paths
-- **Input Hygiene:** Read stdin as JSON, validate with `jq`, quote ALL variables
-- **Output Protocol:** Return valid JSON. Exit `0` for success, `2` for blocking errors
-
-For implementation recipes and validation scripts, see **[docs/HOOKS_OVERVIEW.md](docs/HOOKS_OVERVIEW.md)**.
+For I/O protocol, validation scripts, and safety standards, see **[docs/HOOKS_OVERVIEW.md](docs/HOOKS_OVERVIEW.md)**.
 
 ---
 
@@ -385,25 +415,6 @@ graph TB
     Tools -->|"Triggers"| Hooks
     Hooks -.->|"Blocks/Warns/Injects"| MainAgent
 ```
-
----
-
-## 5.6 Runtime Constraints (Endpoint Awareness)
-
-The toolkit supports multiple agentic endpoints. Adjust behavior based on the active runtime:
-
-| Endpoint | Optimization Strategy |
-|:---------|:----------------------|
-| **Anthropic (Claude)** | Full capability: large context (200k+), native `Task`/`Skill` tools |
-| **Zai (GLM-4.x)** | Leverage native function calling. Vision tasks use `GLM-4.6V`. |
-| **Minimax (M2)** | Prioritize **Parallel Agent Pattern** due to fast inference. Excellent for multi-file context edits. |
-
-**Behavioral Adaptation Rules:**
-1. If context window is limited → increase delegation frequency
-2. If vision model available → use skill-based image analysis
-3. If inference is fast → prefer parallel agent spawning over sequential
-
-For endpoint-specific technical details and proxy configuration, see **[docs/ARCHITECTURE_REFERENCE.md](docs/ARCHITECTURE_REFERENCE.md)**.
 
 ---
 
@@ -515,14 +526,15 @@ All runtime artifacts stored in `.cattoolkit/`:
 # Documentation References
 
 ## Core Specifications
-- **[docs/SKILL_FRONTMATTER_STANDARD.md](docs/SKILL_FRONTMATTER_STANDARD.md)** - Technical YAML schema
+- **[docs/SKILL_FRONTMATTER_STANDARD.md](docs/SKILL_FRONTMATTER_STANDARD.md)** - Complete YAML schema and field reference
 
 ## Implementation & Recipes
-- **[docs/IMPLEMENTATION-GUIDE.md](docs/IMPLEMENTATION-GUIDE.md)** - Validation scripts, MCP configuration
+- **[docs/IMPLEMENTATION-GUIDE.md](docs/IMPLEMENTATION-GUIDE.md)** - Validation scripts, MCP configuration, endpoint adaptation
 - **[docs/COMMAND-OVERVIEW.md](docs/COMMAND-OVERVIEW.md)** - Command YAML recipes
-- **[docs/HOOKS_OVERVIEW.md](docs/HOOKS_OVERVIEW.md)** - Hook I/O protocol and validation scripts
-- **[docs/ARCHITECTURE_REFERENCE.md](docs/ARCHITECTURE_REFERENCE.md)** - Endpoint proxy configuration and API details
+- **[docs/HOOKS_OVERVIEW.md](docs/HOOKS_OVERVIEW.md)** - Hook I/O protocol, validation scripts, safety standards
+- **[docs/ARCHITECTURE_REFERENCE.md](docs/ARCHITECTURE_REFERENCE.md)** - Multi-LLM provider technical details
 
 ## Reference
 - **[docs/GOLD_STANDARD_COMMAND.md](docs/GOLD_STANDARD_COMMAND.md)** - Full-text command example
+- **[docs/RESEARCH_SOURCES.md](docs/RESEARCH_SOURCES.md)** - External documentation links
 - **[README.md](README.md)** - Installation and marketplace

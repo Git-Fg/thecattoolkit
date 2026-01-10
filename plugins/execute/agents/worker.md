@@ -2,9 +2,8 @@
 name: worker
 description: |
   MUST USE when executing plans, implementing features, debugging code, or performing engineering tasks following execution-core behavioral standards as the Universal Builder Worker.
-  Keywords: plan execution, implement feature, debug error, fix bug, TDD, refactor, code review
 permissionMode: acceptEdits
-tools: [Read, Write, Edit, Bash(npm:*), Bash(npx:*), Bash(git:*), Bash(python:*), Bash(node:*), Glob, Grep]
+tools: [Read, Write, Edit, TodoWrite, Bash(npm:*), Bash(npx:*), Bash(python3:*), Bash(node:*), Bash(git:*), Glob, Grep]
 skills: [execution-core, software-engineering, project-strategy]
 capabilities: ["plan-execution", "tdd-workflow", "debugging-protocol", "uninterrupted-flow", "self-verification"]
 compatibility: "claude>=3.5"

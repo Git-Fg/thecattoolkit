@@ -1,4 +1,4 @@
 {
-  "description": "Meta plugin - no hooks (context/guard handle lifecycle and safety)",
+  "description": "Meta plugin - infrastructure management",
   "hooks": {}
 }

@@ -1,8 +1,6 @@
 # Implementation Guide
 
-This document provides practical implementation guidance. For complete component specifications and YAML schemas, see:
-- [CLAUDE.md](../CLAUDE.md) - Core specifications
-- [SKILL_FRONTMATTER_STANDARD.md](SKILL_FRONTMATTER_STANDARD.md) - Skill YAML schema
+Practical implementation guidance for the toolkit, including validation scripts, MCP configuration, and endpoint adaptation rules.
 
 ---
 
@@ -94,3 +92,25 @@ Configure the runtime environment for different providers:
 | `ANTHROPIC_API_KEY` | Authentication token | `sk-...` |
 
 Ensure `.claude/settings.json` reflects the chosen provider's capabilities.
+
+---
+
+## Endpoint Adaptation Rules
+
+The toolkit supports multiple agentic endpoints. Adjust behavior based on the active runtime:
+
+### Optimization Strategy by Endpoint
+
+| Endpoint | Optimization Strategy |
+|:---------|:----------------------|
+| **Anthropic (Claude)** | Full capability: large context (200k+), native `Task`/`Skill` tools |
+| **Zai (GLM-4.x)** | Leverage native function calling. Vision tasks use `GLM-4.6V`. |
+| **Minimax (M2)** | Prioritize **Parallel Agent Pattern** due to fast inference. Excellent for multi-file context edits. |
+
+### Behavioral Adaptation Rules
+
+1. **Context Window:** If limited → increase delegation frequency
+2. **Vision Model:** If available → use skill-based image analysis
+3. **Inference Speed:** If fast → prefer parallel agent spawning over sequential
+
+For endpoint-specific technical details (API specs, proxy configuration), see **[ARCHITECTURE_REFERENCE.md](ARCHITECTURE_REFERENCE.md)**.

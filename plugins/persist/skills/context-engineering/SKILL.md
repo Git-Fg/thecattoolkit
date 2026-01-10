@@ -2,10 +2,9 @@
 name: context-engineering
 description: |
   USE when managing persistent session state, avoiding context overflow, or enabling session handoffs using the Passive Hook System.
-  Keywords: context management, session handoff, scratchpad, context overflow, memory persistence
 context: fork
 agent: scribe
-allowed-tools: [Read, Write, Edit, Bash]
+allowed-tools: [Read, Write, Edit, Bash(ls:.cattoolkit/*), Bash(cat:.cattoolkit/*), Bash(rm:.cattoolkit/context/archives/*)]
 ---
 
 # Context Engineering Skill
@@ -141,9 +140,9 @@ Manage persistent session state independent of the LLM context window using the 
 ├── context.log           # Session context history
 ├── handoff.md            # Session handoff summary
 └── checkpoints/          # Critical state snapshots
-    ├── 2025-01-05-feature-start.md
-    ├── 2025-01-05-implementation-complete.md
-    └── 2025-01-05-testing-phase.md
+    ├── 2026-01-05-feature-start.md
+    ├── 2026-01-05-implementation-complete.md
+    └── 2026-01-05-testing-phase.md
 ```
 
 ## Key Concepts

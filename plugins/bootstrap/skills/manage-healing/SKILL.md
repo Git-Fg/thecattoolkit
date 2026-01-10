@@ -3,7 +3,6 @@ name: manage-healing
 description: |
   USE when diagnosing component failures, hallucinations, or instruction drift.
   Performs forensic investigation of session logs, scratchpads, and tool prompts to apply permanent fixes.
-  Keywords: forensic audit, repair component, fix hallucination, log analysis
 context: fork
 agent: plugin-expert
 allowed-tools: [Task, Read, Write, Edit, Glob, Grep]

@@ -3,7 +3,6 @@ name: execution-core
 description: |
   USE to apply universal behavioral standards for autonomous agents.
   Defines Uninterrupted Flow, Self-Verification, Auth-Gates, and Handoff protocols.
-  Keywords: execution behavior, autonomous agent, verification, handoff protocol
 user-invocable: false
 allowed-tools: Bash, Edit, Read, Write, Glob, Grep
 ---
@@ -117,7 +116,7 @@ Use execution-core handoff format for blockers
 
 To ensure Uninterrupted Flow, the following policy applies to human interaction:
 
-- **Execution Phase Workers (e.g., Worker Agent):** `AskUserQuestion` is **STRICLY PROHIBITED**. Workers must operate autonomously or use the Handoff Protocol if blocked.
+- **Execution Phase Workers (e.g., Worker Agent):** `AskUserQuestion` is **STRICTLY PROHIBITED**. Workers must operate autonomously or use the Handoff Protocol if blocked.
 - **Planning Phase Coordinators (e.g., Director, Orchestrator):** `AskUserQuestion` is **ALLOWED** for requirements gathering and clarification before execution begins.
 
 This policy ensures that heavy implementation tasks are never interrupted, while initial discovery remains interactive.

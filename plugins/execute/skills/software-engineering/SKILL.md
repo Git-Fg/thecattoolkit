@@ -3,8 +3,8 @@ name: software-engineering
 description: |
   USE when applying engineering best practices for debugging, testing, code review, or security.
   Contains protocols for TDD, debugging strategies, refactoring patterns, and security checklists.
-  Keywords: debugging, TDD, test-driven development, code review, security audit, refactoring, prototyping
-allowed-tools: [Read, Write, Edit, Bash, Glob, Grep]
+allowed-tools: [Read, Write, Edit, Bash(python3:-m pytest), Bash(python3:-m unittest), Bash(npm:*), Bash(grep:*), Glob, Grep]
+user-invocable: false
 ---
 
 # Software Engineering Skill

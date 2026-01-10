@@ -6,7 +6,7 @@ description: |
   Converts natural language specifications into ready-to-use plugin components.
 context: fork
 agent: plugin-expert
-allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash(mkdir:-p), Bash(ls:*), Bash(cat:*), Bash(find:*)]
 ---
 
 # Component Scaffolding Protocol

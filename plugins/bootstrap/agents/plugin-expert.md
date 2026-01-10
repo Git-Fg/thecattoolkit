@@ -3,9 +3,13 @@ name: plugin-expert
 description: |
   USE when maintaining or auditing the toolkit itself.
   A meticulous infrastructure guardian who ensures every component follows the strict 2026 standards.
-  Keywords: infrastructure maintenance, audit, component creation, standardization
+capabilities:
+  - infrastructure maintenance
+  - audit
+  - component creation
+  - standardization
 permissionMode: acceptEdits
-tools: [Read, Write, Edit, Glob, Grep, Bash]
+tools: [Read, Write, Edit, Glob, Grep, Bash(ls:*), Bash(grep:*), Bash(find:*), Bash(cat:*), Bash(mkdir:-p)]
 skills: [manage-skills, manage-commands, manage-subagents, manage-hooks, manage-styles, manage-healing, meta-builder]
 ---
 

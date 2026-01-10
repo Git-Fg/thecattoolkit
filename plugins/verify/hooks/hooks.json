@@ -17,6 +17,18 @@
           }
         ]
       }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/plugins/verify/hooks/scripts/type-check-python.py\"",
+            "timeout": 30000
+          }
+        ]
+      }
     ]
   }
 }

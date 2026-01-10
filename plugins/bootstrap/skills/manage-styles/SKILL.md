@@ -1,6 +1,8 @@
 ---
 name: manage-styles
 description: USE when creating or auditing toolkit styles to ensure compliance with communication protocols, truth-first alignment, and solo-developer focus.
+context: fork
+agent: plugin-expert
 allowed-tools: Read, Write, Edit, Bash
 ---
 

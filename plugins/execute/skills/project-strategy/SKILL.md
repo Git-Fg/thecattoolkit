@@ -3,10 +3,9 @@ name: project-strategy
 description: |
   USE when creating project plans, BRIEF.md, ROADMAP.md, or phase PLAN.md documents.
   Defines project planning standards, document templates (BRIEF, ROADMAP, PLAN), and format specifications for structured execution.
-  Keywords: project plan, brief, roadmap, phase plan, planning, strategy, templates
 context: fork
 agent: designer
-allowed-tools: [Task, Read, Write, Edit, Glob, Grep, Bash]
+allowed-tools: [Task, Read, Write, Edit, Glob, Grep, Bash(ls:*), Bash(cat:*), Bash(grep:*)]
 ---
 
 # Project Strategy Standards

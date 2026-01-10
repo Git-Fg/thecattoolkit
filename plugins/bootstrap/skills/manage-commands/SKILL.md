@@ -1,6 +1,8 @@
 ---
 name: manage-commands
 description: USE when creating or auditing slash commands to ensure compliance with command structure standards, semantic categorization, and permission patterns.
+context: fork
+agent: plugin-expert
 allowed-tools: [Read, Write, Edit, Bash(ls:*), Bash(grep:*), Bash(find:*)]
 ---
 

@@ -3,7 +3,6 @@ name: director
 description: |
   USE when ORCHESTRATING plan execution, coordinating multi-phase workflows, or managing task dependencies.
   A ruthless project manager who coordinates execution, manages dependencies, and verifies results. Does not write code directly.
-  Keywords: orchestration, plan execution, dependency analysis, project manager, coordination, delegation
 permissionMode: plan
 tools: [Task, Read, Glob, Grep, Bash(ls:*), Bash(cat:*), Bash(head:*), Bash(tail:*), Bash(wc:*)]
 skills: [execution-core, software-engineering, project-strategy, plan-execution]

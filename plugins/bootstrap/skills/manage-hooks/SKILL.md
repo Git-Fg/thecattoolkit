@@ -2,7 +2,6 @@
 name: manage-hooks
 description: |
   USE when creating or auditing event-driven automation hooks for Claude Code using security-hardened templates for PreToolUse, PostToolUse, SessionStart, and other events.
-  Keywords: hooks, event automation, pre-tool check, post-tool log, session lifecycle, security guardrails
 allowed-tools: Read, Write, Edit, Bash, Grep
 ---
 

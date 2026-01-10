@@ -2,26 +2,32 @@ import sys
 import os
 import datetime
 import json
+import subprocess
 from pathlib import Path
 
-plugin_root = os.environ.get("CLAUDE_PLUGIN_ROOT")
-if plugin_root and plugin_root not in sys.path:
-    sys.path.insert(0, plugin_root)
+# Bootstrap: Detect CLAUDE_PLUGIN_ROOT from environment
+CLAUDE_PLUGIN_ROOT = os.environ.get("CLAUDE_PLUGIN_ROOT")
+if not CLAUDE_PLUGIN_ROOT:
+    # Fallback: try to detect from script location
+    current_script = Path(__file__).resolve()
+    for parent in current_script.parents:
+        if (parent / "plugins").exists():
+            CLAUDE_PLUGIN_ROOT = str(parent)
+            break
 
-# Try to import path_validator if available
+# Import path_validator for security
 try:
     from path_validator import validate_path
 except ImportError:
-    # Fallback if path_validator is not in python path
-    def validate_path(path):
-        return True
+    # Fail closed - block unsafe operations
+    sys.stderr.write("CRITICAL: path_validator not found. Blocking unsafe operations.\n")
 
+    def validate_path(path):
+        return False
 
 current_dir = Path(__file__).resolve().parent
-sys.path.insert(0, str(current_dir))
-
-# Security: Detect Plugin Root to prevent self-modification
-CLAUDE_PLUGIN_ROOT = os.environ.get("CLAUDE_PLUGIN_ROOT")
+if str(current_dir) not in sys.path:
+    sys.path.insert(0, str(current_dir))
 
 
 def is_safe_write(file_path: str) -> bool:
@@ -104,13 +110,11 @@ def summarize_actions(actions):
 def get_project_root():
     """Find the project root using git or environment variables."""
     try:
-        import subprocess
-
-        return Path(
-            subprocess.check_output(
-                ["git", "rev-parse", "--show-toplevel"], encoding="utf-8"
-            ).strip()
-        )
+        result = subprocess.check_output(
+            ["git", "rev-parse", "--show-toplevel"],
+            encoding="utf-8"
+        ).strip()
+        return Path(result)
     except Exception:
         return Path(os.environ.get("CLAUDE_PROJECT_DIR", "."))
 

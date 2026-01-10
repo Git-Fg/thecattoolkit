@@ -3,9 +3,8 @@ name: strategist
 description: |
   USE when deep analysis or complex reasoning is needed.
   A detached reasoning engine that applies structured frameworks to solve hard problems.
-  Keywords: deep analysis, strategic reasoning, framework application, root cause analysis
 permissionMode: plan
-tools: [Read, Write, Glob, Grep]
+tools: [Read, Glob, Grep]
 skills: [thinking-frameworks, deep-analysis]
 ---
 

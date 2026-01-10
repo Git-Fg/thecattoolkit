@@ -2,10 +2,9 @@
 name: code-review
 description: |
   USE when reviewing changes, PRs, or assessing code quality through systematic code review and quality assessment.
-  Keywords: code review, PR review, quality assessment, security review
 context: fork
 agent: worker
-allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash(git:*), Bash(grep:*), Bash(cat:*), Bash(ls:*)]
 ---
 
 # Code Review Protocol

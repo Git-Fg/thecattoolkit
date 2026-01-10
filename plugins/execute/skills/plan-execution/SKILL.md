@@ -3,10 +3,9 @@ name: plan-execution
 description: |
   USE when executing a project plan (PLAN.md).
   Orchestrates the execution of tasks, manages dependencies, delegates to worker agents, and verifies results.
-  Keywords: plan execution, orchestration, dependency analysis, delegation, verification
 context: fork
 agent: director
-allowed-tools: [Task, Read, Write, Bash, Glob, Grep]
+allowed-tools: [Task, Read, Write, Bash(ls:*), Bash(cat:*), Bash(grep:*), Glob, Grep]
 ---
 
 # Plan Execution Protocol
@@ -24,6 +23,41 @@ You MUST locate and read:
 - Use Glob tool to locate PLAN.md files if needed.
 
 **If any required file is missing:** Log error and abort.
+
+### 1.1 Resumability Check (CRITICAL)
+
+**State-in-Files Enforcement:**
+Before proceeding with execution, you MUST check for interruption state:
+
+1. **Check for HANDOFF.md in current phase directory:**
+   - Look for `.cattoolkit/planning/[phase-name]/HANDOFF.md`
+   - If found, READ it immediately
+
+2. **Resume from Handoff State:**
+   - Review the "In-Progress" section to understand where execution stopped
+   - Review the "Next Actions" section to resume from the correct point
+   - DO NOT restart completed tasks listed in the handoff
+   - Continue execution from the "Next Actions" specifically
+
+3. **Handoff Format Required:**
+   When creating HANDOFF.md files, ensure they contain:
+   ```markdown
+   # Handoff - Phase: [Phase Name]
+
+   ## Completed Tasks
+   - [List of tasks already completed]
+
+   ## In-Progress
+   - [Current task being worked on, if any]
+
+   ## Next Actions
+   - [Specific next steps to resume execution]
+
+   ## Context
+   - [Any relevant context for resuming]
+   ```
+
+4. **If no HANDOFF.md exists:** Continue with fresh execution as normal.
 
 ## 2. Plan Validation
 

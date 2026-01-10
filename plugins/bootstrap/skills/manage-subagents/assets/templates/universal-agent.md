@@ -1,7 +1,7 @@
 ---
 name: {AGENT_NAME}
 description: [{{TIER}}] {Detailed description tiering selection: T3 (Discovery), T2 (Focus), T1 (Core)}
-tools: [Read, Write, Edit, Glob, Grep, Bash] # EXPLICIT WHITELIST REQUIRED
+tools: [Read, Write, Edit, Glob, Grep, Bash(ls:*), Bash(cat:*), Bash(grep:*)] # EXPLICIT WHITELIST WITH PREFIX MATCHING REQUIRED
 skills: []
 permissionMode: plan # Default to safe mode
 ---
