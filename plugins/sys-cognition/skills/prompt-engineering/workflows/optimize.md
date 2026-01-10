@@ -1,13 +1,3 @@
----
-name: optimize-prompt
-description: |
-  USE when user has an existing prompt that needs improvement or refinement.
-  Analyzes prompt weaknesses, applies optimization techniques, produces enhanced version.
-context: fork
-agent: prompt-engineer
-allowed-tools: Read, Write, Edit, Glob, Grep
----
-
 # Optimize Existing Prompt
 
 Refine and enhance prompts for better performance using systematic optimization techniques.
@@ -55,6 +45,11 @@ Save improvements to:
 - Include comparison notes in comments
 - Maintain original intent while enhancing execution
 - Apply template structure from prompt-library skill
+
+## Key Resources
+- **Optimization Theory**: `../references/optimization.md`
+- **Anti-Patterns**: `../references/anti-patterns.md`
+- **Templates**: `../assets/templates/`
 
 ## Output
 Optimized prompt saved to `OPTIMIZED_PROMPT.md` with:

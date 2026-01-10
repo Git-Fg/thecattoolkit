@@ -1,13 +1,3 @@
----
-name: draft-prompt
-description: |
-  USE when user wants to create a new prompt from scratch for a specific task or use case.
-  Guides through prompt design process: analyze requirements, select patterns, create prompt.
-context: fork
-agent: prompt-engineer
-allowed-tools: Read, Write, Edit, Glob, Grep
----
-
 # Draft New Prompt
 
 Create high-quality prompts from scratch using proven engineering patterns.
@@ -52,9 +42,9 @@ Write the completed prompt to:
 - Follow template structure from prompt-library skill
 
 ## Key Resources
-- **prompt-engineering skill**: Theory, patterns, and optimization techniques
-- **prompt-library skill**: Templates and taxonomy
-- **Template**: Use single-prompt.md from prompt-library skill
+- **Theory**: `../references/techniques.md`, `../references/patterns.md`
+- **Templates**: `../assets/templates/`
+- **Quality**: `../references/quality.md`
 
 ## Output
 Complete prompt saved to `PROMPT.md` with:

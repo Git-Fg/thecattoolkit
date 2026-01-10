@@ -1,82 +1,102 @@
 ---
 name: prompt-engineering
 description: |
-  USE when user asks to 'create a prompt', 'optimize prompt', 'design system instructions', or 'reduce hallucinations'.
-  Prompt design theory (CoT, few-shot), XML vs Markdown decision framework, and optimization techniques.
+  USE when user needs to draft, optimize, or audit prompts.
+  Includes the full Prompt Library, Chain-of-Thought patterns, and Optimization workflows.
+  Modes: draft, optimize, library access.
 context: fork
 agent: prompt-engineer
-allowed-tools: Read, Write, Edit, Glob, Grep
+allowed-tools: [Read, Write, Edit, Glob, Grep]
 ---
 
-# Prompt Engineering Theory & Patterns
+# Prompt Engineering Domain
 
-Master the art and science of prompt design through proven techniques and frameworks.
+## Router Protocol
 
-## Core Principles
+Analyze the user's intent and select the appropriate workflow:
 
-### 1. Concise Is Key
+### 1. Drafting New Prompts
+**Trigger**: "Create a prompt", "Draft system instructions", "New prompt for..."
+**Protocol**: Apply workflow from `workflows/draft.md`
+**Assets**: Use templates from `assets/templates/`
+
+### 2. Optimizing Existing Prompts
+**Trigger**: "Fix this prompt", "Make this prompt better", "Optimize..."
+**Protocol**: Apply workflow from `workflows/optimize.md`
+**Theory**: Apply `references/optimization.md`
+
+### 3. Library Access
+**Trigger**: "Show me examples", "List templates", "Prompt templates"
+**Action**: List contents of `assets/templates/`
+**References**: Use `references/taxonomy.md` for categorization
+
+## Core Theory
+
+### Concise Is Key
 Every token competes with conversation history. Assume Claude is already intelligent.
 - **Does Claude already know this?** (Omit common knowledge)
 - **Is this explanation necessary?** (Be direct)
 - **Does this justify its token cost?** (Value-based inclusion)
 
-### 2. Control Degrees of Freedom
+### Control Degrees of Freedom
 Match specificity to task fragility:
-- **High Freedom**: Multiple valid approaches (e.g., code review) → use text-based heuristics.
-- **Medium Freedom**: Preferred pattern exists (e.g., refactoring) → use pseudocode with parameters.
-- **Low Freedom**: Error-prone operations (e.g., migration) → use exact scripts.
+- **High Freedom**: Multiple valid approaches → use text-based heuristics
+- **Medium Freedom**: Preferred pattern exists → use pseudocode with parameters
+- **Low Freedom**: Error-prone operations → use exact scripts
 
-### 3. Progressive Markdown Disclosure
-- **Markdown Headers**: Use `# Context` and `# Assignment` as the primary structural elements for all prompts.
-- **XML** (Limit to 15 tags): Use for logic containers (like `<thinking>`) or complex data isolation ONLY when Markdown headers are insufficient due to high data density.
-- **Critical**: Never nest XML tags. Use markdown inside XML.
+### Signal-to-Noise Rule (XML vs Markdown)
+- **Default**: Markdown (80% of prompts) - fewer tokens, Claude-native
+- **Upgrade to XML/Markdown hybrid** only when complexity triggers met:
+  - Data Isolation: >50 lines of raw data
+  - Constraint Weight: Rules that MUST NEVER be broken
+  - Internal Monologue: Complex reasoning requiring step-by-step
 
-## Key Techniques
+### Key Techniques
 
-### Chain-of-Thought (CoT)
-Encourage the model to reason before providing an answer.
-- **Zero-shot CoT**: "Let's think step by step."
-- **Structured CoT**: Use `<thinking>` blocks for internal monologue.
-- **Step-back**: Address principles before specifics.
+**Chain-of-Thought (CoT)**
+- Zero-shot CoT: "Let's think step by step."
+- Structured CoT: Use `<thinking>` blocks for internal monologue
+- Step-back: Address principles before specifics
 
-### Few-Shot Learning
-Demonstrate intent through concrete examples.
-- **One-shot**: Single demonstration for simple patterns.
-- **Few-shot (3-8 examples)**: For complex categorization or formatting.
-- **Isolation**: Use `<example>` tags to prevent example leakage.
+**Few-Shot Learning**
+- One-shot: Single demonstration for simple patterns
+- Few-shot (3-8 examples): For complex categorization or formatting
+- Isolation: Use `<example>` tags to prevent example leakage
 
-## Decision Frameworks
+## Prompt Taxonomy
 
-### The "Signal-to-Noise" Rule (XML vs Markdown)
+### 1. Single Prompts
+Standalone, reusable prompts for direct, one-shot execution.
+- **Storage**: `.cattoolkit/prompts/`
+- **Template**: `assets/templates/single-prompt.md`
 
-Instead of the prompt type determining the format, the **Density of Context** and **Logic Non-Negotiability** should drive the architecture.
+### 2. Prompt Chains
+Sequential multi-step workflows where output from one step feeds the next.
+- **Storage**: `.cattoolkit/chains/{number}-{topic}/`
+- **Pattern**: Research → Plan → Execute → Refine
+- **Templates**: `assets/templates/chain/`
 
-| Feature | Use Markdown (Headers/Lists) | Use XML (Flat Semantic Tags) |
-| :--- | :--- | :--- |
-| **Instructional Flow** | Default: Linear, simple, or descriptive. | Complex: Strict, non-negotiable step sequences. |
-| **Data Isolation** | Standard context and injected files. | High-density: Large logs or noisy data sets. |
-| **Role Definition** | Standard: Professional persona. | Specialized: Isolated identity with high constraints. |
-| **Output Type** | Standard: Conversational or Markdown. | Technical: Machine-parseable JSON or strict code. |
-| **Safety Risk** | Standard: Analytic or creative tasks. | Critical: Security audits or data protection. |
-
-### Upgrade Path Protocol
-
-#### 1. The Default (Markdown First)
-For 80% of standalone prompts, Markdown is superior because it consumes fewer tokens and aligns better with Claude's native training for following prose instructions.
-
-#### 2. The Semantic Upgrade (XML Tags)
-Upgrade to a **Hybrid XML/Markdown** structure only when the prompt hits these "Complexity Triggers":
-*   **The "Data Isolation" Trigger:** If the prompt requires the user to paste >50 lines of raw data, use `<context>` or `<data>` to prevent the data from "leaking" into the instructions.
-*   **The "Constraint Weight" Trigger:** If there are rules that MUST NEVER be broken (e.g., "Never expose API keys"), isolate them in `<constraints>` so the model's attention mechanism anchors to them.
-*   **The "Internal Monologue" Trigger:** If the task is so complex that the model is prone to jumping to conclusions, use `<thinking>` to force a Chain-of-Thought isolated from the final answer.
+### 3. Meta-Prompts
+Higher-order prompts that generate, optimize, or analyze other prompts.
+- **Storage**: `.cattoolkit/generators/`
+- **Templates**: `assets/templates/meta/`
 
 ## Reference Index
+- [Techniques](references/techniques.md)
+- [Patterns](references/patterns.md)
+- [Optimization](references/optimization.md)
+- [Anti-Patterns](references/anti-patterns.md)
+- [Execution Protocol](references/execution-protocol.md)
+- [Taxonomy](references/taxonomy.md)
+- [Quality Standards](references/quality.md)
+- [Discovery Questions](references/discovery.md)
+- [Metadata Standards](references/metadata.md)
 
-- `references/techniques.md`: Deep dive into CoT, few-shot, and reasoning patterns.
-- `references/patterns.md`: Detailed library of prompt structure patterns.
-- `references/optimization.md`: Systematic refinement and troubleshooting.
-- `references/anti-patterns.md`: Common pitfalls and how to avoid them.
-- `references/execution-protocol.md`: Step-by-step execution guidelines.
+## Template Library
+- `assets/templates/single-prompt.md` - General purpose template
+- `assets/templates/chain-summary.md` - Chain result summary
+- `assets/templates/chain/` - Research → Plan → Execute → Refine
+- `assets/templates/meta/` - Generator and optimizer templates
 
 ## Assets
-- `assets/examples/few-shot.json`: Curated example datasets for various domains.
+- `assets/examples/few-shot.json` - Curated example datasets for various domains

@@ -1,52 +1,91 @@
 ---
 name: software-engineering
 description: |
-  USE when applying engineering best practices for debugging, testing, code review, or security.
-  Contains protocols for TDD, debugging strategies, refactoring patterns, and security checklists.
-allowed-tools: [Read, Write, Edit, Bash(python3:-m pytest), Bash(python3:-m unittest), Bash(npm:*), Bash(grep:*), Glob, Grep]
-user-invocable: false
+  MUST USE when writing code, debugging errors, or reviewing PRs.
+  The Universal Standard for TDD, Security, and Code Quality.
+  Modes: debug, review, refactor, implement.
+context: fork
+agent: worker
+allowed-tools: [Read, Write, Edit, Bash, Glob, Grep]
 ---
 
-# Software Engineering Skill
+# Engineering Standards & Protocols
 
 ## Role
 You are the **Quality Guardian**. You do not just write code; you engineer robust solutions. You ensure every change is tested, reviewed, and secure.
 
-## Protocols
+## Router Protocol
 
-### 1. Test-Driven Development (TDD)
-Before writing implementation code, establishing a testing harness is mandatory for complex logic.
-- **Reference:** [TDD Protocol](references/tdd-protocol.md)
-- **Reference:** [TDD Guide](references/test-driven-development.md)
-- **Reference:** [Testing Guide](references/testing.md)
+Analyze the user's intent and select the appropriate workflow:
 
-### 2. Debugging
-Systematic debugging over guesswork.
-- **Reference:** [Debugging Protocol](references/debug.md)
+### Mode: Debugging
+**Trigger**: "Fix this error", "Why is this failing?", "Debug...", crashes, test failures
+**Protocol**: Apply workflow from `workflows/debug.md`
+1. Capture Trace
+2. Hypothesize
+3. Test (Repro)
+4. Fix & Verify
 
-### 3. Code Review & Refactoring
-Clean code is easier to maintain. Refactor proactively, not just reactively.
-- **Reference:** [Code Review Standards](references/code-review.md)
-- **Reference:** [Refactoring Patterns](references/refactoring-patterns.md)
-- **Reference:** [Refactoring Guide](references/refactor.md)
+### Mode: Code Review
+**Trigger**: "Review this", "Check for bugs", "PR review", assessing code quality
+**Protocol**: Apply workflow from `workflows/review.md`
+1. Security Scan (OWASP)
+2. Logic Verification
+3. Performance check
+4. Report findings by severity
 
-### 4. Security Engineering
-Security is not an afterthought. Apply the checklist before committing.
-- **Reference:** [Security Checklist](references/security-checklist.md)
-- **Reference:** [Security Audit Protocol](references/security-audit.md)
+### Mode: Implementation (TDD)
+**Trigger**: "Implement feature", "Write code", "Build..."
+**Protocol**: Apply `references/tdd-protocol.md`
+1. Red (Fail) - Write failing test first
+2. Green (Pass) - Minimal implementation
+3. Refactor - Clean up while tests pass
 
-### 5. Prototyping
-When exploring new solutions, use the prototyping protocol to fail fast and learn.
-- **Reference:** [Prototyping Guide](references/prototype.md)
+### Mode: Refactoring
+**Trigger**: "Refactor", "Clean up", "Improve structure"
+**Protocol**: Apply `references/refactoring-patterns.md`
 
-## Knowledge Base
+## Universal Standards
+
+### Security (OWASP Top 10)
+- **Injection Prevention**: All user inputs validated/sanitized
+- **Authentication**: Auth checks on sensitive endpoints
+- **Access Control**: Authorization on every protected resource
+- **Cryptography**: No hardcoded passwords or keys
+- **Input Validation**: All entry points validated
+- **Error Handling**: Errors don't expose sensitive information
+- **Dependencies**: No vulnerable/outdated components
+
+### Testing
+- No code without tests
+- Edge cases covered
+- Test quality and assertions correct
+
+### State Persistence
+- Persist decisions to `.cattoolkit/context/scratchpad.md`
+
+## Reference Index
+
+### TDD & Testing
 - [TDD Protocol](references/tdd-protocol.md)
 - [Test Driven Development](references/test-driven-development.md)
 - [Testing Standards](references/testing.md)
+
+### Debugging & Review
 - [Debugging Protocol](references/debug.md)
 - [Code Review](references/code-review.md)
+
+### Refactoring
 - [Refactoring](references/refactor.md)
 - [Refactoring Patterns](references/refactoring-patterns.md)
+
+### Security
 - [Security Checklist](references/security-checklist.md)
 - [Security Audit](references/security-audit.md)
+
+### Prototyping
 - [Prototype Guide](references/prototype.md)
+
+## Workflow Index
+- [Debug Workflow](workflows/debug.md)
+- [Review Workflow](workflows/review.md)

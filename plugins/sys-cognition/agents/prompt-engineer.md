@@ -5,7 +5,7 @@ description: |
   Applies Complexity-Based Guidance Framework with XML/Markdown decision rules.
 permissionMode: plan
 tools: [Read, Write, Edit, Grep, Glob]
-skills: [prompt-engineering, prompt-library]
+skills: [prompt-engineering]
 ---
 
 # Prompt Engineer Agent

@@ -1,12 +1,3 @@
----
-name: debug
-description: |
-  USE when fixing errors, crashes, test failures, or performance issues through systematic debugging and bug fixing.
-context: fork
-agent: worker
-allowed-tools: [Read, Write, Edit, Glob, Grep, Bash(python3:*), Bash(node:*), Bash(npm:*), Bash(npx:*), Bash(git:*), Bash(ls:*), Bash(cat:*)]
----
-
 # Debugging Protocol
 
 ## Core Purpose
