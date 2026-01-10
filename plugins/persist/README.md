@@ -14,12 +14,7 @@ Takes ephemeral context and makes it permanent. Provides session state managemen
 
 - **scribe** - Context management and session documentation
 
-## Hooks
 
-- **SessionStart** - Restores context from `.cattoolkit/context/`
-- **PostToolUse** - Auto-logs state-changing operations
-- **PreCompact** - Compacts memory before context limit
-- **Stop/SubagentStop** - Session evaluation on completion
 
 ## Directory Structure
 

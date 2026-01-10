@@ -8,10 +8,11 @@ The immune system of the toolkit. Shifts focus from "blocking" to "verifying cor
 
 ## Hooks
 
-- **protect-files.py** - Warns about editing sensitive files (lock files, .env, secrets, git internals)
-- **security-check.py** - Detects potential secrets in code (API keys, tokens, passwords)
-- **type-check-python.py** - Runs pyrefly/mypy on Python files after edits
-- **type-check-ts.js** - Runs tsc on TypeScript files after edits
+- **SessionStart** - Restores context plan, scratchpad, and history (restore-context.sh)
+- **PreToolUse** - Warns about editing sensitive files and detects secrets (protect-files.sh, security-check.sh)
+- **PostToolUse** - Auto-logs state-changing operations to context log (inline jq)
+- **PreCompact** - Compacts memory before context limit (compact-memory.sh)
+- **Stop** - Checks for uncommitted changes and active handoff files (evaluate-stop.sh)
 
 ## Design Philosophy
 

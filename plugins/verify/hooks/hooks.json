@@ -1,19 +1,30 @@
 {
-  "description": "Safety layer: file protection, secret detection, and type checking",
+  "description": "Safety & Context System: File protection, security checks, context restoration and memory management",
   "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/restore-context.sh",
+            "timeout": 30
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
         "matcher": "Edit|Write",
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/protect-files.py\"",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/protect-files.sh",
             "timeout": 5,
             "once": true
           },
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/security-check.py\"",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/security-check.sh",
             "timeout": 5,
             "once": true
           }
@@ -22,19 +33,34 @@
     ],
     "PostToolUse": [
       {
-        "matcher": "Edit|Write",
+        "matcher": "Edit|Write|Bash",
         "hooks": [
           {
             "type": "command",
-            "command": "python3 \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/type-check-python.py\"",
-            "timeout": 30,
-            "once": true
-          },
+            "command": "jq -r '{tool: .tool_name, file: (.tool_input.file_path // .tool_input.TargetFile // .tool_input.command[:100] // \"unknown\")} | \"[\" + (now | strftime(\"%Y-%m-%d %H:%M:%S\")) + \"] \" + .tool + \": \" + .file' >> \"$CLAUDE_PROJECT_DIR/.cattoolkit/context/context.log\" 2>/dev/null || true",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
           {
             "type": "command",
-            "command": "node \"${CLAUDE_PLUGIN_ROOT}/hooks/scripts/type-check-ts.js\"",
-            "timeout": 30,
-            "once": true
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/compact-memory.sh",
+            "timeout": 60
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/evaluate-stop.sh",
+            "timeout": 10
           }
         ]
       }
