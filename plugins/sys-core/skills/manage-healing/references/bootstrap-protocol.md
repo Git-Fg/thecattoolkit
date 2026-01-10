@@ -15,18 +15,18 @@ Invoke `/bootstrap` when:
 1. **Specific File Corruption?**
    - → Use `git checkout HEAD -- <path>` or `/bootstrap <path>`.
 2. **Major Meta-Plugin Drift?**
-   - → Use `/bootstrap plugins/meta`.
+   - → Use `/bootstrap plugins/sys-core`.
 3. **Catastrophic "AI Hallucination" State?**
    - → Use `/bootstrap --hard 1` to revert the last commit.
 4. **Local Repository Corrupted?**
-   - → Use `/bootstrap --remote plugins/meta`.
+   - → Use `/bootstrap --remote plugins/sys-core`.
 
 ## Manual Recovery (Agent-less)
 
 If Claude Code is unable to execute even basic commands, use the standalone script from your terminal:
 
 ```bash
-./plugins/meta/skills/manage-healing/assets/scripts/bootstrap.sh soft
+./plugins/sys-core/skills/manage-healing/assets/scripts/bootstrap.sh soft
 ```
 
 ## Safety Mechanisms

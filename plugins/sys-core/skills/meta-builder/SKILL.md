@@ -42,7 +42,7 @@ You are the execution engine for the `plugin-expert` persona. Your goal is to in
 - "Create deploy-with-gate command"
 
 **Auditing:**
-- "Audit entire plugin from plugins/bootstrap"
+- "Audit entire plugin from sys-core"
 - "Audit 'build' slashcommands for standards compliance"
 - "Audit all agents in plugins/*"
 - "Audit manage-* skills"

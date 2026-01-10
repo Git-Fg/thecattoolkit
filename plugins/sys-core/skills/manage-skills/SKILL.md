@@ -46,7 +46,7 @@ Consolidated standards and documentation:
 
 | Reference | Purpose |
 |-----------|---------|
-| [shared-standards.md](references/shared-standards.md) | Common standards for all management skills |
+| [shared-standards.md](../../styles/shared-standards.md) | Common standards for all management skills |
 | [standards-communication.md](references/standards-communication.md) | Prompt pattern, XML/Markdown usage, handoff protocols |
 | [standards-security.md](references/standards-security.md) | Background execution, tool permissions, path traversal |
 | (Consult `CLAUDE.md`) | Core architecture and quality gates |

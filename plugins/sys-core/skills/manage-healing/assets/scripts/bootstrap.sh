@@ -12,13 +12,13 @@ usage() {
     echo ""
     echo "Modes:"
     echo "  list              Show changed files that can be restored"
-    echo "  soft [path]       Restore specific path from HEAD (Default: plugins/meta)"
+    echo "  soft [path]       Restore specific path from HEAD (Default: plugins/sys-core)"
     echo "  hard [N]          Hard reset to HEAD~N (N defaults to 0)"
     echo "  remote [path]     Restore path from origin/main"
     echo ""
     echo "Examples:"
     echo "  $0 soft"
-    echo "  $0 soft plugins/meta/skills/manage-hooks"
+    echo "  $0 soft plugins/sys-core/skills/manage-hooks"
     echo "  $0 hard 1"
     exit 1
 }
@@ -32,7 +32,7 @@ case $MODE in
         git status --short plugins/ agents/ skills/
         ;;
     soft)
-        TARGET=${TARGET:-"plugins/meta"}
+        TARGET=${TARGET:-"plugins/sys-core"}
         echo "Restoring $TARGET from HEAD..."
         git checkout HEAD -- "$TARGET"
         echo "✓ Restored $TARGET"
@@ -51,7 +51,7 @@ case $MODE in
         fi
         ;;
     remote)
-        TARGET=${TARGET:-"plugins/meta"}
+        TARGET=${TARGET:-"plugins/sys-core"}
         echo "Fetching from origin and restoring $TARGET..."
         git fetch origin
         git checkout origin/main -- "$TARGET"

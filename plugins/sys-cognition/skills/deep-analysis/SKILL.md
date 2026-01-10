@@ -1,7 +1,7 @@
 ---
 name: deep-analysis
 description: |
-  MUST use when performing deep analysis, strategic analysis, comprehensive problem analysis, or systematic exploration of complex issues.
+  USE when performing deep analysis, strategic analysis, comprehensive problem analysis, or systematic exploration of complex issues.
   Applies structured thinking frameworks (First Principles, Inversion, Pareto, 5-Whys) to generate actionable insights autonomously.
 context: fork
 agent: strategist

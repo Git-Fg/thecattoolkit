@@ -154,6 +154,6 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash(mkdir:-p), Bash(ls:*), Bash(
 - manage-commands skill for command structure
 
 **Template Library:**
-- Consult existing templates in bootstrap/skills/*/assets/templates/
+- Consult existing templates in sys-core/skills/*/assets/templates/
 - Follow progressive disclosure patterns
 - Apply router pattern for complex skills
