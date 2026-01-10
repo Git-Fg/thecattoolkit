@@ -2,6 +2,44 @@
 
 This document provides practical YAML examples and patterns for command development. For complete specifications, see [CLAUDE.md](../CLAUDE.md#part-ii-command-intent-layer).
 
+**Complex Orchestration Reference:** [GOLD_STANDARD_COMMAND.md](GOLD_STANDARD_COMMAND.md) - Full 7-phase workflow example.
+
+---
+
+## Orchestration Prompting Patterns
+
+Commands instruct Claude using natural language prompts, not XML parsing.
+
+### Single Agent Delegation
+
+```
+Launch an agent to analyze the authentication flow in src/auth/.
+The agent should identify security vulnerabilities and report findings.
+```
+
+### Parallel Swarm Execution
+
+```
+Launch 4 agents in parallel to:
+- Agent 1: Audit src/api/ for input validation
+- Agent 2: Audit src/auth/ for session handling  
+- Agent 3: Audit src/db/ for SQL injection
+- Agent 4: Audit src/utils/ for unsafe operations
+
+Each agent reports independently. Synthesize findings after all complete.
+```
+
+### Context Injection
+
+```
+Here is the current project brief:
+[content of BRIEF.md]
+
+Analyze the codebase against these requirements.
+```
+
+> **Key Insight:** Claude natively understands "launch X agents in parallel" instructions. No special syntax required.
+
 ---
 
 ## Complex Orchestration Example

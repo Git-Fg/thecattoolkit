@@ -124,32 +124,9 @@ claude --plugin-dir ./plugins/execute --plugin-dir ./plugins/reason --plugin-dir
 
 **Note:** This is a plugin marketplace for development. In production, you would typically install specific plugins from a marketplace.
 
-## Development Standards
+## Development
 
-All plugins follow **Claude Code plugin architecture**. For comprehensive documentation on:
-
-- **Plugin System**: See [Official Claude Code Plugins Documentation](https://code.claude.com/docs/en/plugins)
-- **Skills**: See [Agent Skills Documentation](https://code.claude.com/docs/en/skills)
-- **Hooks**: See [Hooks Reference](https://code.claude.com/docs/en/hooks)
-- **MCP Servers**: See [MCP Integration Guide](https://code.claude.com/docs/en/mcp)
-
-### Plugin Components
-
-| Component | Purpose | Implementation |
-|-----------|---------|---------------|
-| **Skills** | Auto-discoverable capabilities | Markdown files with YAML frontmatter |
-| **Agents** | Reusable personas | System prompts with tool restrictions |
-| **Hooks** | Event automation | JSON configuration with trigger handlers |
-| **Commands** | User-invokable workflows | Markdown files for slash commands |
-
-### Best Practices
-
-- **Skills** are self-contained with clear descriptions for automatic discovery
-- **Agents** define personas with explicit tool permissions
-- **Hooks** handle lifecycle events for safety and automation
-- **Commands** provide explicit user entry points
-
-For Cat Toolkit-specific development guidelines, see [CLAUDE.md](CLAUDE.md). For implementation details, see [docs/IMPLEMENTATION-GUIDE.md](docs/IMPLEMENTATION-GUIDE.md).
+Refer to [CLAUDE.md](CLAUDE.md) for core architectural laws and [docs/IMPLEMENTATION-GUIDE.md](docs/IMPLEMENTATION-GUIDE.md) for validation workflows.
 
 ---
 

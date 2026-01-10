@@ -6,23 +6,15 @@ This document provides practical implementation guidance. For complete component
 
 ---
 
-## Directory Structure
+## Validation Scripts
 
-```
-plugin-name/
-├── .claude-plugin/
-│   └── plugin.json          # Manifest (Required)
-├── commands/                # Orchestration Workflows
-├── agents/                  # Personas (System Prompts)
-├── skills/                  # Capabilities (Forked Contexts)
-├── hooks/                   # Lifecycle Automation
-│   └── hooks.json
-└── .mcp.json                # MCP Configuration
+### Toolkit Lint (Comprehensive)
+
+```bash
+./scripts/toolkit-lint.sh
 ```
 
----
-
-## Testing & Validation
+Validates all components: Skills, Commands, Agents, Hooks.
 
 ### Validate hooks.json
 
@@ -39,27 +31,11 @@ python3 plugins/meta/skills/manage-hooks/assets/scripts/hook-tester.py hooks.jso
 ### Check Command Structure
 
 ```bash
-# Verify frontmatter
 grep -E "^---$" commands/*.md
 
-# Check required fields
 for file in commands/*.md; do
   if ! grep -q "description:" "$file"; then
     echo "Missing description: $file"
-  fi
-done
-```
-
-### Verify Skill Structure
-
-```bash
-# Check SKILL.md exists
-find skills -name "SKILL.md" -type f
-
-# Verify frontmatter
-for skill in skills/*/SKILL.md; do
-  if ! grep -q "name:" "$skill"; then
-    echo "Missing name: $skill"
   fi
 done
 ```

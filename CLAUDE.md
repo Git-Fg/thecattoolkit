@@ -179,22 +179,6 @@ Commands work with both humans and AI agents using natural language:
 
 ---
 
-## 2.3 Command Permissions
-
-### Tool Restrictions
-Commands can use the `allowed-tools` frontmatter to enforce safety or focus.
-
-```yaml
----
-description: Read-only codebase explorer
-allowed-tools: [Read, Grep, Glob, Bash(ls), Bash(find), Bash(cat)]
----
-```
-
-This restriction cascades: if the Main Agent is restricted to `[Read, Grep]`, any subagents it spawns via the `Task` tool inherit these restrictions.
-
----
-
 ## 2.4 The Skill Tool (Recursive Pattern)
 
 Agents can invoke Commands via the `Skill` tool. This transforms the Command Suite into a **Standard Library** for Agents.
@@ -387,24 +371,6 @@ Skills use a **3-level loading hierarchy** to minimize context usage:
 
 ---
 
-## 4.5 Discovery Tiering Matrix
-
-> [!IMPORTANT]
-> The tiers below are **pattern guidance** for writing effective descriptions. do NOT include `[Tier X: Name]` as a literal prefix in the description field.
-
-| Tier | Use Case | Pattern |
-|:-----|:---------|:--------|
-| **1: High Fidelity** | Complex/fuzzy tasks, LLM capability overlap | `[MODAL] when [CONDITION]. Examples: <example>...` |
-| **2: High Gravity** | Safety-critical, governance, mandatory protocols | `[MODAL] USE when [CONDITION].` |
-| **3: Utility** | Single-purpose, self-documenting utilities | `{Action Verb} + {Object} + {Purpose}` |
-
-**Selection Rules:**
-1. >40% overlap with built-in tools → Tier 1
-2. Governance/safety layer → Tier 2
-3. Self-documenting name → Tier 3
-
----
-
 ## 4.6 YAML Frontmatter
 
 ```yaml
@@ -434,22 +400,6 @@ Scripts must be self-contained, include error messages, and handle edge cases. V
 
 ---
 
-## 4.8 Skill Permissions
-
-```yaml
----
-name: safe-reader
-description: Read files safely without modifications
-allowed-tools:
-  - Read
-  - Grep
----
-
-# Skills use allowed-tools to restrict tools during skill execution
-```
-
----
-
 # PART V: RUNTIME MECHANICS
 
 ## 5.1 Permission System
@@ -458,8 +408,13 @@ Claude Code implements a **defense-in-depth permission model** with two primary 
 
 | Restriction Type | Used By | Syntax | Behavior |
 |:-----------------|:--------|:-------|:---------|
-| **`tools`** | Agents | `tools: Read, Grep, Bash` | Defines what tools agent CAN use (whitelist) |
-| **`allowed-tools`** | Commands/Skills | `allowed-tools: [Read, Grep]` | Restricts tools DURING execution (blacklist) |
+| **`tools`** | **Agents** | `tools: Read, Grep, Bash` | Defines what tools agent CAN use (whitelist). Hard boundary. |
+| **`allowed-tools`** | **Commands/Skills** | `allowed-tools: [Read, Grep]` | Restricts tools DURING execution (runtime restriction). |
+
+**Key Distinction:**
+- **Agent Whitelist (`tools`):** Defines the hard boundary of what an Agent can ever do. If omitted, agents inherit ALL tools.
+- **Execution Restriction (`allowed-tools`):** Restricts the toolset during a specific Command or Skill run.
+- **Inheritance:** Subagents inherit the *intersection* of their definition and the parent's current restrictions.
 
 ### Permission Modes
 
@@ -787,41 +742,6 @@ Only for: Security isolation, legacy compatibility, data aggregation, or actual 
 
 ---
 
-## 6.6 Prompt Engineering for Orchestration
-
-Commands instruct Claude using natural language prompts, not XML parsing.
-
-### Writing Orchestration Prompts
-
-**Single Agent Delegation:**
-```
-Launch an agent to analyze the authentication flow in src/auth/.
-The agent should identify security vulnerabilities and report findings.
-```
-
-**Parallel Swarm Execution:**
-```
-Launch 4 agents in parallel to:
-- Agent 1: Audit src/api/ for input validation
-- Agent 2: Audit src/auth/ for session handling  
-- Agent 3: Audit src/db/ for SQL injection
-- Agent 4: Audit src/utils/ for unsafe operations
-
-Each agent reports independently. Synthesize findings after all complete.
-```
-
-**Context Injection (Native):**
-```
-Here is the current project brief:
-[content of BRIEF.md]
-
-Analyze the codebase against these requirements.
-```
-
-> **Key Insight:** Claude natively understands "launch X agents in parallel" instructions. No special syntax required.
-
----
-
 ## 6.7 The .cattoolkit Root
 
 All runtime artifacts stored in `.cattoolkit/`:
@@ -843,6 +763,5 @@ All runtime artifacts stored in `.cattoolkit/`:
 
 ## Reference
 - **[docs/GOLD_STANDARD_COMMAND.md](docs/GOLD_STANDARD_COMMAND.md)** - Full-text command example
-- **[docs/INTERACTION_GRAPH.md](docs/INTERACTION_GRAPH.md)** - Decision trees and logic heuristics
 - **[README.md](README.md)** - Installation and marketplace
 
