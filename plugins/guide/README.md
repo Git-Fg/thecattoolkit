@@ -1,4 +1,4 @@
-# @cattoolkit/guide
+# guide
 
 **Prompt Engineering as Guidance** - Steering agents through structured prompts.
 

@@ -20,10 +20,13 @@ try:
     from path_validator import validate_path
 except ImportError:
     # Fail closed - block unsafe operations
-    sys.stderr.write("CRITICAL: path_validator not found. Blocking unsafe operations.\n")
+    sys.stderr.write(
+        "CRITICAL: path_validator not found. Blocking unsafe operations.\n"
+    )
 
     def validate_path(path):
         return False
+
 
 current_dir = Path(__file__).resolve().parent
 if str(current_dir) not in sys.path:
@@ -111,8 +114,7 @@ def get_project_root():
     """Find the project root using git or environment variables."""
     try:
         result = subprocess.check_output(
-            ["git", "rev-parse", "--show-toplevel"],
-            encoding="utf-8"
+            ["git", "rev-parse", "--show-toplevel"], encoding="utf-8"
         ).strip()
         return Path(result)
     except Exception:

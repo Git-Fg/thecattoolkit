@@ -1,4 +1,4 @@
-# @cattoolkit/bootstrap
+# bootstrap
 
 **Initializing and Repairing the System** - Toolkit infrastructure management.
 
@@ -25,5 +25,5 @@ The bootstrapper. Tools to build, maintain, and audit the AI system itself.
 
 ## Integration
 
-- Works with `@cattoolkit/verify` for actual running safety hooks
-- Works with `@cattoolkit/execute` for implementation
+- Works with `verify` for actual running safety hooks
+- Works with `execute` for implementation

@@ -1,4 +1,4 @@
-# @cattoolkit/reason
+# reason
 
 **Orient and Decide** - Strategic thinking and analysis without action.
 

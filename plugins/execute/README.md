@@ -1,4 +1,4 @@
-# @cattoolkit/execute
+# execute
 
 **Act Phase** - Where file modifications and irreversible actions happen.
 

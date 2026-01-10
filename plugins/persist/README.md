@@ -1,4 +1,4 @@
-# @cattoolkit/persist
+# persist
 
 **Making Ephemeral Context Permanent** - Session state and memory management.
 

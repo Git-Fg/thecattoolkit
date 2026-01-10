@@ -1,4 +1,4 @@
-# @cattoolkit/verify
+# verify
 
 **Validation Phase** - Verifying correctness of file changes and code safety.
 
