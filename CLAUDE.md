@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Primary operating system for Claude Code. This document defines the **Universal Agentic Runtime**—the hierarchical architecture where **Command (Intent) → Agent (Autonomy) → Skill (Protocol)**.
+Project Context Definition for Claude Code. This document defines the **Universal Agentic Runtime**—a layered architecture where **Skills**, **Commands**, and **Agents** serve as parallel entry points for capabilities.
 
 ---
 
@@ -21,8 +21,8 @@ We program with **Intent**, not scripts. Instead of `for file in files`, instruc
 
 | Component | Role | Native Mechanic |
 |:----------|:-----|:----------------|
-| **Skill** | **Atomic Capability** | Auto-discoverable via semantic matching. Can be `user-invocable`, `context: fork`, and `agent: [name]` bound. |
-| **Command** | **Orchestrator** | Manages multi-phase workflows by sequencing multiple Skills. |
+| **Skill** | **Atomic Capability** | Top-level tool. User-invocable (`/skill-name`) OR model-discovered. Supports `context: fork` and `agent: [name]` binding. |
+| **Command** | **Workflow Orchestrator** | Orchestrates single or multiple Skills. Provides deterministic shortcuts for any workflow. |
 | **Agent** | **Persona** | Reusable identity/tools that Skills can bind to via `agent: [name]`. |
 
 ---
@@ -33,7 +33,7 @@ We program with **Intent**, not scripts. Instead of `for file in files`, instruc
 **Intra-Plugin Collaboration, Inter-Plugin Independence:** Components within the same plugin should collaborate freely. Agents can reference skill scripts, and skills can delegate to plugin agents. However, **cross-plugin coupling is forbidden**—each plugin must be fully functional standalone. Domain expertise lives in Skills; Agents reference their plugin's skills via the `skills` field or natural language (not hardcoded paths to other plugins).
 
 ### Pillar 2: Atomic Capabilities with Hybrid Execution
-Skills have dual nature: **passive knowledge** (auto-discovered) and **active execution** (via `context: fork` or user invocation). Commands orchestrate multi-skill workflows only—never wrap a single Skill.
+Skills have dual nature: **passive knowledge** (auto-discovered) and **active execution** (via `context: fork` or user invocation). Commands can orchestrate single or multiple Skills—single-skill shortcuts are valid for deterministic access.
 *Note: `AskUserQuestion` is **strongly discouraged** in Skills to promote composability, but allowed for inherently interactive tasks (e.g., wizards).*
 
 ### Pillar 3: Native Delegation
@@ -85,253 +85,70 @@ Skills have dual nature: **passive knowledge** (auto-discovered) and **active ex
 
 ---
 
-# PART II: COMMAND (Intent Layer)
+# PART II: ARCHITECTURE & SCHEMAS
 
-## 2.1 What Commands Are
+## 2.1 The Marketplace Layer
 
-Commands are **Reusable Prompt Templates**—Markdown files that instruct the Main Agent for the current turn.
+The **Standard Marketplace Schema** aggregates and distributes plugins.
 
-- Use `$ARGUMENTS` to capture user's full natural language input
-- `argument-hint: [string]` is for UI documentation only
-- Commands orchestrate workflows by instructing the Main Agent
+**Location**: `.claude-plugin/marketplace.json`
+
+```json
+{
+  "$schema": "https://json.schemastore.org/claude-marketplace-1.0.0.json",
+  "name": "The Cat Toolkit Official Marketplace",
+  "version": "1.0.0",
+  "plugins": [
+    {
+      "name": "meta",
+      "source": "github:thecattoolkit/plugins/meta",
+      "category": "core"
+    }
+  ]
+}
+```
+
+## 2.2 The Plugin Layer
+
+The **Standard Plugin Definition** required for every plugin.
+
+**Location**: `.claude-plugin/plugin.json` (Plugin Root)
+
+```json
+{
+  "$schema": "https://json.schemastore.org/claude-plugin-1.0.0.json",
+  "name": "strategist",
+  "version": "1.2.0",
+  "capabilities": ["agents", "skills", "commands"],
+  "readme": "README.md",
+  "license": "MIT"
+}
+```
+
+## 2.3 Plugin Portability
+
+**Independent Units:**
+- **Intra-Plugin**: Free referencing (agents ↔ skills).
+- **Cross-Plugin**: **Strongly discouraged**. Avoid hardcoded paths (`../other-plugin`). Prefer natural language referencing ("use the planning skill") or explicit dependencies in `plugin.json`.
 
 ---
 
-## 2.2 Command Types
-
-| Type | Consumer | `disable-model-invocation` | AskUserQuestion |
-|:-----|:---------|:---------------------------|:----------------|
-| User-Centric | Human only | `true` | Yes |
-| Agent-Ready | Specialized Agents | `false` | No |
-| Hybrid | Both | `false` | Conditional |
-
----
-
-## 2.3 The Skill Tool (Recursive Pattern)
-
-Agents invoke Commands via `Skill(/command-name)` or `Skill(/command:*)` for prefix matching.
-
----
-
-## 2.4 Complex Orchestration Pattern
-
-For complex multi-phase orchestration, follow the pattern in **[docs/GOLD_STANDARD_COMMAND.md](docs/GOLD_STANDARD_COMMAND.md)**.
-
-**Pattern:** Discovery → Exploration (Agents) → Questions → Architecture (Agents) → Implementation → Review (Agents) → Summary
-
----
-
-# PART III: AGENT (Autonomy Layer)
+# PART III: AGENTS & PERMISSIONS
 
 ## 3.1 What Agents Are
 
-Agents are **Specialized Personas** with their own system prompts and optional tool restrictions, launched via the `Task` tool.
+Agents are **Specialized Personas** defined in `agents/*.md`.
 
-- **Agent vs Subagent:** An Agent is the definition (`agents/*.md`); a "Subagent" is the runtime instance spawned via `Task`
-- **Model Selection:** `haiku` (speed), `sonnet` (balance), `opus` (logic), or `'inherit'`
-- **Tool Restriction:** `tools` field in frontmatter (whitelist). If omitted, inherits ALL tools
-- **Permission Mode:** `default`, `acceptEdits`, `dontAsk`, `bypassPermissions`, `plan`, or `ignore`
-- **Context Sharing:** Each subagent has its own context window but can access session history (read-only)
+- **Model Selection**: `haiku` (speed), `sonnet` (balance), `opus` (logic), or `'inherit'`.
+- **Tool Restriction**: `tools` field is a **whitelist**. If omitted, inherits ALL tools. **Best practice:** Explicitly list tools for security-critical agents.
+- **Context Sharing**: Subagents have their own context but can read session history.
 
----
+## 3.2 Agent Permissions & Security
 
-## 3.2 Agent Permissions
-
-```yaml
----
-name: code-reviewer
-description: Analyzes code for quality issues
-tools: Read, Grep, Glob, Bash
-model: sonnet
-permissionMode: plan
-skills: security-standards
-hooks:
-  PreToolUse:
-    - matcher: "Bash"
-      hooks:
-        - type: command
-          command: "./validate.sh"
----
-```
-
-**Critical:** If you omit `tools`, the agent inherits ALL tools including Read, Write, Edit, Bash, AskUserQuestion, Task, Skill, TodoWrite, and all MCP tools.
-
-### The `skills` Field: Passive Knowledge Loading
-
-The `skills` field lists skills whose instructions should be available to the agent as **passive knowledge**.
-
-**How it works:**
-- At agent startup: Only skill `name + description` loaded (~100 tokens)
-- On activation: Full SKILL.md content loaded when relevant (<5000 tokens)
-- On-demand: Resources (references/, assets/, scripts/) loaded as needed
-
-**IMPORTANT:** The `skills` field does NOT trigger `context: fork`. It operates in **passive mode** only.
-
-| Concept | Agent `skills` Field | Skill `context: fork` |
-|:--------|:---------------------|:----------------------|
-| **Mode** | Passive knowledge | Active execution |
-| **When** | Agent startup/activation | When skill is invoked |
-| **Fork?** | No | Yes - creates isolated subagent |
-| **Use Case** | Agent needs skill's patterns | Skill needs isolated context |
-
-**Non-Recursive:** An agent can list a skill that has `context: fork` without creating a loop. The agent gets passive access to the skill's content, but the fork only occurs when the skill is actively invoked (e.g., via `/skill-name` or semantic matching).
-
-**Example - The Scribe Pattern:**
-```yaml
-# scribe.md (agent)
-skills: [context-engineering]  # Passive: loads patterns on-demand
-
-# context-engineering/SKILL.md
-context: fork                   # Active: forks when invoked
-agent: scribe                   # Persona to use during fork
-```
-This is valid: scribe gets context-engineering patterns passively, but `/context-engineering` invocation creates a fresh fork with scribe persona.
-
----
-
-## 3.3 Agent Discovery Protocol
-
-Agents are triggered via **semantic description matching**.
-
-```yaml
----
-name: security-reviewer
-description: |
-  USE when auditing code for security vulnerabilities.
-  Specializes in OWASP patterns, injection flaws, and authentication issues.
-capabilities:
-  - security audit
-  - vulnerability scan
-  - penetration test
-tools: Read, Grep, Glob
----
-```
-
----
-
-## 3.4 Delegation Patterns
-
-**The Physics:** Delegation is based on **Context Gravity** and **Attention Dilution**.
-
-> **The 10-File Heuristic:** If a task requires reasoning about >10 files, delegate to preserve Main Thread's attention focus.
-
-### Pattern Selection Matrix
-
-| Metric | Direct | Delegated | Parallel |
-|:-------|:-------|:----------|:---------|
-| **Files Involved** | 1-5 | 5-20 | 20+ |
-| **Duration** | <1 min | 1-5 mins | 5+ mins |
-| **User Input** | Required | Forbidden | Forbidden |
-
----
-
-# PART IV: SKILL (Protocol Layer)
-
-## 4.1 What Skills Are
-
-Skills are **Hybrid Capability Units**—passive knowledge with optional active execution.
-
-| Mode | Trigger | Behavior |
-|:-----|:--------|:---------|
-| **Passive** | Description matches user request OR agent's `skills` field | Standards/guidance loaded into context |
-| **Active (Fork)** | `context: fork` set + skill invoked | Runs as isolated subagent |
-| **Active (User)** | User types `/skill-name` | Direct invocation |
-
-### Agent-Skill Binding Patterns
-
-**Pattern 1: Passive Knowledge (Agent loads Skill)**
-```yaml
-# Agent definition
-skills: [context-engineering]  # Passive: patterns available in-agent
-```
-When an agent lists a skill, the skill's content loads passively. The agent references the skill's patterns directly without forking.
-
-**Pattern 2: Active Execution (Skill binds to Agent)**
-```yaml
-# Skill definition
-context: fork
-agent: scribe  # When forked, use scribe persona
-```
-When the skill is invoked, it creates an isolated subagent using the specified agent's persona and tool restrictions.
-
-**Pattern 3: Combined (Both)**
-```yaml
-# scribe.md (agent)
-skills: [context-engineering]  # Passive knowledge
-
-# context-engineering/SKILL.md
-context: fork                   # Active execution
-agent: scribe                   # Use scribe when forked
-```
-**How it works:**
-- Main Agent launches scribe via `Task` → scribe has context-engineering patterns available
-- Someone invokes `/context-engineering` → skill forks with scribe persona
-- **No recursion**: Passive loading never triggers `context: fork`
-
----
-
-## 4.2 Skill Anatomy
-
-```
-skill-name/
-├── SKILL.md          # Required: Instructions + Metadata
-├── scripts/          # Optional: Executable scripts
-├── references/       # Optional: On-demand documentation
-└── assets/           # Optional: Templates, data files
-```
-
----
-
-## 4.3 Progressive Disclosure
-
-| Layer | Budget | When Loaded |
-|-------|--------|-------------|
-| **Metadata** (`name` + `description`) | ~100 tokens | Startup |
-| **Instructions** (SKILL.md body) | <5000 tokens | On activation |
-| **Resources** (scripts/, references/, assets/) | Unlimited | On-demand |
-
----
-
-## 4.4 Discovery Tiering Matrix
-
-> [!IMPORTANT]
-> The tiers below are **pattern guidance** for writing effective descriptions. Do NOT include `[Tier X: Name]` as a literal prefix.
-
-| Tier | Use Case | Pattern |
-|:-----|:---------|:--------|
-| **1: High Fidelity** | Complex/fuzzy tasks, LLM capability overlap | `[MODAL] when [CONDITION]. Examples: <example>...` |
-| **2: High Gravity** | Safety-critical, governance, mandatory protocols | `[MODAL] USE when [CONDITION].` |
-| **3: Utility** | Single-purpose, self-documenting utilities | `{Action Verb} + {Object} + {Purpose}` |
-
-**Selection Rules:**
-1. >40% overlap with built-in tools → Tier 1
-2. Governance/safety layer → Tier 2
-3. Self-documenting name → Tier 3
-
----
-
-## 4.5 YAML Frontmatter
-
-For complete YAML schema, see **[docs/SKILL_FRONTMATTER_STANDARD.md](docs/SKILL_FRONTMATTER_STANDARD.md)**.
-
-Required: `name` (max 64 chars), `description` (start with "USE when"). Optional: `allowed-tools`, `context: fork`, `agent`, `model`, `hooks`.
-
----
-
-# PART V: RUNTIME MECHANICS
-
-## 5.1 Permission System
-
-Three-level cascading hierarchy:
-
-1. **Main Agent** sets baseline permissions
-2. **Subagents** can override `permissionMode` but inherit tool restrictions unless explicitly overridden
-3. **Skills** can override both `permissionMode` and `allowed-tools`
-
-| Restriction Type | Used By | Behavior |
-|:-----------------|:--------|:---------|
-| **`tools`** | **Agents** | Whitelist of what agent CAN use (hard boundary) |
-| **`allowed-tools`** | **Commands/Skills** | Runtime restriction during execution |
+**Cascading Hierarchy:**
+1. **Main Agent** sets baseline.
+2. **Subagents** override `permissionMode`.
+3. **Skills** override `permissionMode` and `allowed-tools`.
 
 ### Permission Modes
 
@@ -342,208 +159,225 @@ Three-level cascading hierarchy:
 | `plan` | Read-only analysis | High |
 | `dontAsk` | Auto-deny unless pre-approved | High |
 | `bypassPermissions` | All tools approved | **Very Low** |
-| `ignore` | Ignores permission system | **None** |
+
+**Crucial:** If you omit `tools`, the agent inherits EVERYTHING. Always specify `tools` for security-critical agents.
+
+## 3.3 Skills Field vs Context Fork
+
+**Two distinct mechanisms:**
+1. **Agent's `skills` list**: Makes skills **available** to the agent as passive knowledge. Does NOT affect execution mode.
+2. **Skill's `context: fork`**: Dictates **execution behavior** when the skill is invoked—runs in isolated subagent context.
+
+| Configuration | Availability | Execution |
+|:--------------|:-------------|:----------|
+| Listed in agent's `skills` | Available to agent | Inline (unless skill has `context: fork`) |
+| Skill has `context: fork` | Per normal discovery | Forked subagent context |
+
+## 3.4 Runtime Environment
+
+Configure via `.claude/settings.json` or env vars:
+
+| Variable | Purpose |
+|:---------|:--------|
+| `ANTHROPIC_BASE_URL` | API endpoint (Zai, Minimax proxy) |
+| `ANTHROPIC_API_KEY` | Authentication token |
 
 ---
 
-## 5.2 Hooks (Governance)
+# PART IV: SKILL PROTOCOL
 
-Hooks are the **Immune System**—interception, safety, context injection. Never heavy work.
+Skills are **Hybrid Capability Units**—passive knowledge with optional active execution (`context: fork`).
 
-| Hook | Trigger |
-|:-----|:--------|
-| `SessionStart` | New session begins |
-| `UserPromptSubmit` | Before prompt processing |
-| `PreToolUse` | Before tool execution |
-| `PermissionRequest` | Permission dialog shown |
-| `PostToolUse` | After tool success |
-| `Notification` | System notifications |
-| `Stop` | Main agent finishes |
-| `SubagentStop` | After task completion |
-| `PreCompact` | Before context compaction |
-| `SessionEnd` | Session ends |
+## 4.1 Skill Anatomy
 
-For I/O protocol, validation scripts, and safety standards, see **[docs/HOOKS_OVERVIEW.md](docs/HOOKS_OVERVIEW.md)**.
-
----
-
-## 5.3 MCP Integration
-
-Plugins connect to external services via the **Model Context Protocol (MCP)**.
-
-**Security:** Restrict by URL pattern, audit third-party servers, use OAuth tokens. Never use wildcard `*`.
-
-For MCP configuration examples, see **[docs/IMPLEMENTATION-GUIDE.md](docs/IMPLEMENTATION-GUIDE.md#mcp-configuration)**.
-
----
-
-## 5.4 Token Budget & Context Gravity
-
-| Component | Budget |
-|:----------|:-------|
-| Command description | <200 tokens |
-| Agent description | <500 tokens |
-| Skill description | <200 tokens |
-| SKILL.md body | <5000 tokens |
-| Reference files | Unlimited |
-
-**Context Gravity Rule:** If phase requires >5 source files → use Delegated pattern.
-
----
-
-## 5.5 Interaction Graph
-
-```mermaid
-graph TB
-    User["👤 User"]
-    MainAgent["🤖 Main Agent<br/>(Claude)"]
-    Commands["📋 Commands<br/>(Orchestrator)"]
-    ForkedSkills["🔧 Forked Skills<br/>(context: fork)"]
-    Skills["📚 Skills<br/>(Atomic Capabilities)"]
-    Agents["👥 Agents<br/>(Personas)"]
-    Tools["🛠️ Tools<br/>(Read, Write, Bash, etc.)"]
-    Hooks["🪝 Hooks<br/>(Event Interception)"]
-    MCP["🔌 MCP Servers<br/>(External Services)"]
-
-    User -->|"Invokes (/skill)"| ForkedSkills
-    User -->|"Invokes (/command)"| Commands
-    User -->|"Natural Language"| MainAgent
-
-    Commands -->|"Orchestrates"| Skills
-    Commands -->|"Injects Instructions"| MainAgent
-
-    MainAgent -->|"Auto-loads via description"| Skills
-    MainAgent -->|"Uses"| Tools
-    MainAgent -->|"Calls"| MCP
-
-    Skills -->|"context: fork"| ForkedSkills
-    ForkedSkills -.->|"Binds Persona"| Agents
-    ForkedSkills -->|"Executes"| Tools
-    Skills -->|"Auto-discoverable"| MainAgent
-
-    Tools -->|"Triggers"| Hooks
-    Hooks -.->|"Blocks/Warns/Injects"| MainAgent
+```
+skill-name/
+├── SKILL.md          # Instructions + Metadata
+├── scripts/          # Executable scripts (bash/python)
+├── references/       # Docs loaded on-demand
+└── assets/           # Templates/data
 ```
 
+## 4.2 Frontmatter Standard
+
+**Location**: `SKILL.md`
+
+```yaml
 ---
-
-# PART VI: MAINTENANCE
-
-## 6.1 Project Hygiene
-
-- **Never create temporary markdown reports** - Output findings directly in responses
-- **Clean up after operations** - Remove temp files, caches, build artifacts
-- **Move to .attic instead of deleting** - When removing code/files during refactoring
-- **Run toolkit validation after changes** - `./scripts/toolkit-lint.sh`
-
-IMPORTANT: If you have access to claude-code-guide agent, use it PROACTIVELY. Otherwise, refer to **[docs/RESEARCH_SOURCES.md](docs/RESEARCH_SOURCES.md)**.
-
+name: my-skill-name
+description: >
+  USE when [condition].
+  A concise, action-oriented description.
+context: fork          # Optional: runs in subagent
+allowed-tools: [Read, Write, Bash]
+model: sonnet
+hooks:
+  PreToolUse: "validate-input"
 ---
-
-## 6.2 File Path Standards
-
-### Within Skills
-```
-✅ assets/templates/document.md
-✅ references/format-guide.md
 ```
 
-### Cross-Component
+## 4.3 Field Constraints
+
+| Field | Required | Constraints |
+|:------|:---------|:------------|
+| `name` | **Yes** | Max 64 chars. Must match directory name. |
+| `description` | **Yes** | Max 1024 chars. Must start with "USE when". |
+| `allowed-tools` | No | Comma-delimited string or YAML list. |
+| `model` | No | Model for skill execution (e.g., `sonnet`, `opus`). |
+| `context` | No | `fork` for isolation. Omit for inline. |
+| `agent` | No | Binds forked skill to Agent persona. Only applicable with `context: fork`. |
+| `user-invocable` | No | `false` hides from slash command menu. Default: `true`. |
+
+## 4.4 Discovery Tiering Matrix
+
+| Tier | Use Case | Pattern |
+|:-----|:---------|:--------|
+| **1: High Fidelity** | Complex/fuzzy tasks | `[MODAL] when [CONDITION]. Examples: ...` |
+| **2: High Gravity** | Safety-critical, governance | `[MODAL] USE when [CONDITION].` |
+| **3: Utility** | Single-purpose tools | `{Action Verb} + {Object} + {Purpose}` |
+
+---
+
+# PART V: COMMAND INTENT
+
+Commands are **Reusable Prompt Templates** (`commands/*.md`) that orchestrate workflows. They instruct the Main Agent.
+
+## 5.1 Command Types (Recipes)
+
+### 1. Safe Read-Only
+```yaml
+---
+description: "Analyze project structure"
+allowed-tools: [Read, Grep]
+permissionMode: plan
+---
 ```
-✅ "from the project-strategy skill"
-❌ ../../../other-skill/assets/template.md
+
+### 2. Autonomous Agent Wrapper
+```yaml
+---
+description: "Autonomous code review"
+allowed-tools: [Read, Grep, Glob]
+permissionMode: plan
+---
+Analyze codebase. Output JSON. DO NOT ask questions.
 ```
 
+### 3. User Interactive (Wizard)
+```yaml
 ---
+description: "Project scaffolding wizard"
+disable-model-invocation: true
+---
+Guide user through setup. Ask for template preference.
+```
 
-## 6.3 Forbidden Patterns
-
-<forbidden_pattern>
-**Caller Assumption:** Agent assumes specific command invoked it.
-**Fix:** "You have been tasked with X" not "Called by /command".
-</forbidden_pattern>
-
-<forbidden_pattern>
-**Command-Only Logic:** Business logic only in Command, not Skill.
-**Fix:** Move logic to Skill. Command references, Agent reads.
-</forbidden_pattern>
-
-<forbidden_pattern>
-**Cross-Plugin Coupling:** Component in Plugin A references component in Plugin B via hardcoded path.
-**Fix:** Each plugin must be standalone. Cross-plugin references use natural language: "from the planning skill" (if installed). Intra-plugin references are allowed via skill-relative paths or `${CLAUDE_PLUGIN_ROOT} `.
-</forbidden_pattern>
-
-<forbidden_pattern>
-**Blocking Interaction:** Unnecessary pausing for human input.
-**Fix:** Prefer **Uninterrupted Flow** with `HANDOFF.md` for major blockers. Direct interaction is acceptable for quick, specific confirmations (e.g., "Deploy to prod?").
-</forbidden_pattern>
-
-<forbidden_pattern>
-**Context Overflow (Direct Bloat):** executing complex logic inline when context >70% full.
-**Fix:** Structured phases are **encouraged**, but if a phase requires deep reasoning or massive context, delegate it to an Agent. Keep the Command as the high-level conductor.
-</forbidden_pattern>
-
-<forbidden_pattern>
-**Over-Prescription:** Micromanaging tool usage ("run ls then grep").
-**Fix:** Goal-oriented: "Find the controller".
-</forbidden_pattern>
-
-<forbidden_pattern>
-**Cross-Plugin Paths:** Hardcoded paths that reference components in other plugins.
-**Fix:** Intra-plugin paths are fine (e.g., `scripts/validate.sh`, `${CLAUDE_PLUGIN_ROOT}/plugins/my-plugin/...`). Cross-plugin references must use natural language or gracefully handle missing plugins.
-</forbidden_pattern>
-
-<forbidden_pattern>
-**Environment-Specific Coupling:** Hardcoding `model` or `permissionMode` when configurable.
-**Fix:** Use environment variables or settings files for environment-specific values.
-</forbidden_pattern>
-
-<forbidden_pattern>
-**Redundant Defaults:** Specifying default values in frontmatter (e.g., `user-invocable: true`).
-**Fix:** Omit default values. Only specify if deviating.
-</forbidden_pattern>
-
-<forbidden_pattern>
-**Buried Trigger:** Placing general description text BEFORE "USE when...".
-**Fix:** "USE when" must be the very first sentence.
-</forbidden_pattern>
+## 5.2 Complex Orchestration
+For complex multi-phase workflows (Discovery → Plan → Act → Verify), refer to **[examples/GOLD_STANDARD_COMMAND.md](examples/GOLD_STANDARD_COMMAND.md)** (kept as reference).
 
 ---
 
-## 6.4 Glue Code Detection
+# PART VI: RUNTIME MECHANICS
 
-**The 10-Line Heuristic:** Glue code exceeding 10 lines **suggests** a missing abstraction or misplaced logic. Analyze carefully, but implement if necessary for robustness.
+## 6.1 Hooks (The Immune System)
 
-| Component Type | Acceptable | Red Flag |
-|:---------------|:-----------|:---------|
-| Command Wrapper | <10 lines | >10 lines |
-| Skill Wrapper | <5 lines | >10 lines |
-| Agent Pass-through | <5 lines | >10 lines |
+Hooks intercept events for safety and compliance.
 
-**Refactoring:** Collapse layers, inline standards, merge overlapping commands.
+**Key Events**: `SessionStart`, `UserPromptSubmit`, `PreToolUse`, `PostToolUse`, `Stop`.
+
+### Standard I/O Protocol
+- **Input**: JSON via `stdin`
+- **Output**: JSON via `stdout`
+- **Exit Codes**: `0` (Success/Continue), `2` (Block/Fail)
+
+**Example Hook (JSON)**:
+```json
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+           { "type": "command", "command": "./scripts/safety-check.py" }
+        ]
+      }
+    ]
+  }
+}
+```
+
+**Safety Standards**:
+- Always use `${CLAUDE_PLUGIN_ROOT}` in paths.
+- Validate all `TOOL_INPUT` parameters.
+- Prevent path traversal (`..`).
+
+## 6.2 MCP Integration
+
+Connect external tools via `.mcp.json`.
+
+**Security Rule**: Explicitly allow servers. Avoid wildcard `*` unless necessary.
+```yaml
+allowedMcpServers:
+  - serverUrl: "https://approved-api.com/*"
+```
+
+## 6.3 Universal Endpoint Adaptation
+
+The toolkit supports multiple backends. Adjust behavior layout:
+
+| Endpoint | Strategy |
+|:---------|:---------|
+| **Anthropic** | Full capability. Native `Task`/`Skill`. |
+| **Zai (GLM)** | Use native function calling. `GLM-4.6V` for vision. |
+| **Minimax** | Prioritize **Parallel Agents**. Very fast inference. |
+
+## 6.4 Validation & Linting
+
+| Script | Purpose |
+|:-------|:--------|
+| `./scripts/toolkit-lint.sh` | Comprehensive suite (Agents, Skills, Hooks) |
+| `manage-hooks/assets/scripts/hook-tester.py` | Validates `hooks.json` syntax |
 
 ---
 
-## 6.5 The .cattoolkit Root
+# PART VII: MAINTENANCE & REFERENCES
 
-All runtime artifacts stored in `.cattoolkit/`:
-- **Session State**: `.cattoolkit/context/`
-- **Project Management**: `.cattoolkit/planning/`
+## 7.1 Hygiene & Standards
+
+- **Clean up**: Remove temp files (`rm tmp.json`) after use.
+- **Move not Delete**: Use `.attic/` for deprecated code during refactors.
+- **Validation**: Run `./scripts/toolkit-lint.sh` after changes.
+- **File Paths**: Use `assets/templates/doc.md` (relative) or `${CLAUDE_PLUGIN_ROOT}`.
+
+## 7.2 Forbidden Patterns
+
+<forbidden_pattern>
+**Caller Assumption:** "Called by /command".
+**Fix:** "You have been tasked with X".
+</forbidden_pattern>
+
+<forbidden_pattern>
+**Cross-Plugin Hardlinks:** `../other-plugin/script.sh`.
+**Fix:** Natural language referencing or explicit dependencies.
+</forbidden_pattern>
+
+<forbidden_pattern>
+**Buried Trigger:** Text before "USE when".
+**Fix:** "USE when" must be the FIRST sentence.
+</forbidden_pattern>
+
+<forbidden_pattern>
+**Glue Code Bloat:** Wrappers >10 lines.
+**Fix:** Collapse layers.
+</forbidden_pattern>
 
 ---
 
-# Documentation References
+## 7.3 External References
 
-## Core Specifications
-- **[docs/SKILL_FRONTMATTER_STANDARD.md](docs/SKILL_FRONTMATTER_STANDARD.md)** - Complete YAML schema and field reference
-
-## Implementation & Recipes
-- **[docs/IMPLEMENTATION-GUIDE.md](docs/IMPLEMENTATION-GUIDE.md)** - Validation scripts, MCP configuration, endpoint adaptation
-- **[docs/COMMAND-OVERVIEW.md](docs/COMMAND-OVERVIEW.md)** - Command YAML recipes
-- **[docs/HOOKS_OVERVIEW.md](docs/HOOKS_OVERVIEW.md)** - Hook I/O protocol, validation scripts, safety standards
-- **[docs/ARCHITECTURE_REFERENCE.md](docs/ARCHITECTURE_REFERENCE.md)** - Multi-LLM provider technical details
-
-## Reference
-- **[docs/GOLD_STANDARD_COMMAND.md](docs/GOLD_STANDARD_COMMAND.md)** - Full-text command example
-- **[docs/RESEARCH_SOURCES.md](docs/RESEARCH_SOURCES.md)** - External documentation links
-- **[README.md](README.md)** - Installation and marketplace
+| Resource | Purpose |
+|:---------|:--------|
+| [CLI Reference](https://code.claude.com/docs/en/cli-reference.md) | Command-line usage |
+| [Plugin Development](https://code.claude.com/docs/en/plugins.md) | Structure & API |
+| [Skills System](https://code.claude.com/docs/en/skills.md) | SKILL.md rules |
+| [Model Context Protocol](https://code.claude.com/docs/en/mcp.md) | Integration specs |
