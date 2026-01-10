@@ -43,9 +43,9 @@ find plugins -path "*/commands/*.md" -type f 2>/dev/null | while read file; do
 done
 log_info ""
 
-# 4. Skills referencing other skills via relative paths
-log_info "4. Cross-Skill Coupling:"
-grep -r "\.\./.*skill" plugins/*/skills/ 2>/dev/null | grep -v "the.*skill" | awk '{print "⚠️  " $0}' || true
+# 4. Components referencing other plugins via relative paths
+log_info "4. Cross-Plugin Coupling:"
+grep -r "\.\./\.\./\.\./" plugins/ 2>/dev/null | awk '{print "⚠️  " $0}' || true
 log_info ""
 
 # 5. Wrapper Agents (agents that just delegate)

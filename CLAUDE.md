@@ -29,8 +29,8 @@ We program with **Intent**, not scripts. Instead of `for file in files`, instruc
 
 ## 1.3 Core Pillars
 
-### Pillar 1: Atomic Independence
-**Mercenary Isolation:** Components must be self-contained; no shared state or cross-references. Agents must not reference plugin-specific files. Domain expertise lives in Skills, not Agent system prompts.
+### Pillar 1: Plugin Portability
+**Intra-Plugin Collaboration, Inter-Plugin Independence:** Components within the same plugin should collaborate freely. Agents can reference skill scripts, and skills can delegate to plugin agents. However, **cross-plugin coupling is forbidden**—each plugin must be fully functional standalone. Domain expertise lives in Skills; Agents reference their plugin's skills via the `skills` field or natural language (not hardcoded paths to other plugins).
 
 ### Pillar 2: Atomic Capabilities with Hybrid Execution
 Skills have dual nature: **passive knowledge** (auto-discovered) and **active execution** (via `context: fork` or user invocation). Commands orchestrate multi-skill workflows only—never wrap a single Skill. `AskUserQuestion` is forbidden in Skills.
@@ -43,6 +43,14 @@ Skills have dual nature: **passive knowledge** (auto-discovered) and **active ex
 | `find . -name "*.ts" -exec grep "todo" {} \;` | "Find all TypeScript files containing TODO comments" |
 | Command wrapping single Skill | Forked Skill with `context: fork` |
 | "Run find src -name '*.js'" | "Locate source files using filesystem tools" |
+
+**Skill Invocation Priority:**
+1. **Prefer `context: fork`:** When a skill needs isolated execution, forked skills auto-execute with their own context
+2. **Manual `Skill()` is valid:** Commands and agents can explicitly call `Skill(/skill-name)` when orchestrating workflows
+3. **Passive `skills` field:** For knowledge injection without execution (agent references skill patterns)
+
+> [!NOTE]
+> Manual `Skill()` loading is **not an anti-pattern**. The priority is about choosing the right mechanism: fork for isolation, explicit call for orchestration, passive field for knowledge.
 
 **Delegation Flow:**
 1. **Atomic task** → Forked Skill (`context: fork`)
@@ -460,8 +468,8 @@ IMPORTANT: If you have access to claude-code-guide agent, use it PROACTIVELY. Ot
 </forbidden_pattern>
 
 <forbidden_pattern>
-**Cross-Skill Coupling:** Skill A references Skill B via relative path.
-**Fix:** Self-contained skills. Use natural language: "from the planning skill".
+**Cross-Plugin Coupling:** Component in Plugin A references component in Plugin B via hardcoded path.
+**Fix:** Each plugin must be standalone. Cross-plugin references use natural language: "from the planning skill" (if installed). Intra-plugin references are allowed via skill-relative paths or `${CLAUDE_PLUGIN_ROOT} `.
 </forbidden_pattern>
 
 <forbidden_pattern>
@@ -480,8 +488,8 @@ IMPORTANT: If you have access to claude-code-guide agent, use it PROACTIVELY. Ot
 </forbidden_pattern>
 
 <forbidden_pattern>
-**Hardcoded Paths:** Absolute or exit-relative paths in skills.
-**Fix:** Relative from skill root or natural language for cross-component.
+**Cross-Plugin Paths:** Hardcoded paths that reference components in other plugins.
+**Fix:** Intra-plugin paths are fine (e.g., `scripts/validate.sh`, `${CLAUDE_PLUGIN_ROOT}/plugins/my-plugin/...`). Cross-plugin references must use natural language or gracefully handle missing plugins.
 </forbidden_pattern>
 
 <forbidden_pattern>

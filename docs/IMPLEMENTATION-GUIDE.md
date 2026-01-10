@@ -50,6 +50,35 @@ done
 
 ---
 
+## Plugin Portability Principle
+
+Each plugin in the marketplace is a **standalone unit**. While plugins in the same workspace can collaborate, they must also work independently.
+
+### Intra-Plugin Collaboration ✅
+Components within the same plugin can freely reference each other:
+- Agents reference skill scripts via `skills` field or natural language instructions
+- Skills specify `agent: [agent-name]` for forked execution
+- Commands call `Skill(/skill-name)` for orchestration
+
+### Cross-Plugin Coupling ❌
+Never create hard dependencies between plugins:
+- Don't use relative paths like `../other-plugin/scripts/tool.sh`
+- Don't assume another plugin's internal structure
+- Use natural language: "from the [skill-name] skill if available"
+
+### Skill Invocation Priority
+
+| Mechanism | When to Use |
+|:----------|:------------|
+| `context: fork` | Skill needs isolated context (default for atomic tasks) |
+| `Skill(/name)` | Command/agent orchestrating multiple skills |
+| `skills: [name]` | Agent needs skill's knowledge, not execution |
+
+> [!TIP]
+> Manual `Skill()` loading is valid and often necessary. The key is choosing the right mechanism for the task.
+
+---
+
 ## MCP Configuration
 
 ### MCP Servers (`.mcp.json`)
