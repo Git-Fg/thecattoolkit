@@ -1,9 +1,22 @@
 {
     "name": "sys-core",
-    "description": "System Core - Infrastructure and Safety layer for plugin management, security auditing, and toolkit maintenance",
-    "version": "1.0.2",
+    "description": "INFRASTRUCTURE & SYSTEM DOMAIN - Foundation tools for system stability, security auditing, plugin management, validation, hooks, MCP integration, and development infrastructure",
+    "version": "1.0.4",
     "license": "MIT",
     "author": {
         "name": "Git-Fg"
-    }
+    },
+    "keywords": [
+        "infrastructure",
+        "security",
+        "safety",
+        "validation",
+        "quality",
+        "plugin-management",
+        "healing",
+        "scaffolding",
+        "hooks",
+        "mcp",
+        "meta"
+    ]
 }

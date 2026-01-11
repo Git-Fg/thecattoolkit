@@ -1,6 +1,6 @@
 ---
 name: scaffold-component
-description: "MUST USE when creating new plugin components (skills, agents, commands) or scaffolding 2026 Universal Agentic Runtime components with proper frontmatter and templates."
+description: "SHOULD USE when creating new plugin components (skills, agents, commands). Scaffolds 2026 Universal Agentic Runtime components with proper frontmatter and templates."
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash(mkdir:-p), Bash(ls:*), Bash(cat:*), Bash(find:*)]
 ---
 

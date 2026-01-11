@@ -1,6 +1,6 @@
 ---
 name: toolkit-registry
-description: "MUST USE when creating, auditing, or managing plugin components (Skills, Commands, Agents). System Authority on 2026 Universal Agentic Runtime standards for all plugin components."
+description: "SHOULD USE when auditing or managing plugin components (Skills, Commands, Agents). System Authority on 2026 Universal Agentic Runtime standards for all plugin components."
 context: fork
 agent: plugin-expert
 allowed-tools: [Read, Write, Edit, Bash(ls:*), Bash(grep:*), Bash(cat:*), Bash(find:*), Glob, Grep]

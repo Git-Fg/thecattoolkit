@@ -1,9 +1,18 @@
 {
   "name": "sys-edge",
-  "version": "1.0.0",
-  "description": "Edge AI and mobile optimization for resource-constrained environments",
+  "version": "1.0.2",
+  "description": "EDGE & TOOLING DOMAIN - Edge AI, mobile optimization, offline-first systems, Python tooling, and resource-constrained environments",
   "license": "MIT",
   "author": {
     "name": "Git-Fg"
-  }
+  },
+  "keywords": [
+    "edge",
+    "mobile",
+    "optimization",
+    "offline-sync",
+    "python-tools",
+    "uv",
+    "ruff"
+  ]
 }

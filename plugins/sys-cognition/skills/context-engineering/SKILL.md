@@ -1,227 +1,114 @@
 ---
 name: context-engineering
-description: "USE when managing persistent session state, avoiding context overflow, or enabling session handoffs via the Passive Hook System. MUST USE when sys-core plugin is installed."
+description: "USE when optimizing AI agent context: compression, degradation detection, KV-cache optimization, or session management. Unified interface for all context engineering patterns."
+user-invocable: true
 allowed-tools: [Read, Write, Edit, Bash(ls:*), Bash(cat:*), Bash(rm:*), Glob, Grep]
 ---
 
-# Context Engineering Skill
+# Context Engineering
 
-## CONSTRAINT: Scratchpad Hygiene
+Unified skill for all context engineering patterns in AI agent systems. This skill consolidates context management, compression, degradation detection, and KV-cache optimization into a single entry point with progressive disclosure.
 
-**NEVER update the scratchpad for trivial file reads. ONLY update for:**
+## Quick Decision Matrix
+
+| Problem | Solution | Reference |
+|:--------|:---------|:----------|
+| Context window filling up | **Compression** | [compression.md](references/compression.md) |
+| Agent ignoring mid-context info | **Degradation Detection** | [degradation.md](references/degradation.md) |
+| High API costs | **KV-Cache Optimization** | [kv-cache.md](references/kv-cache.md) |
+| Session state persistence | **Session Management** | [session-management.md](references/session-management.md) |
+
+## Core Concepts
+
+### Context Window Thresholds
+
+| Utilization | Action | Technique |
+|:------------|:-------|:----------|
+| **<60%** | Monitor | No action needed |
+| **60-80%** | Light compression | Observation masking |
+| **80-95%** | Aggressive compression | Summarization + compaction |
+| **>95%** | Emergency | Force session handoff |
+
+### The Four-Bucket Framework
+
+1. **Write**: Save non-critical info outside context (scratchpads, files)
+2. **Select**: Pull only relevant context (high-precision retrieval)
+3. **Compress**: Reduce while preserving information
+4. **Isolate**: Separate contexts across sub-agents
+
+## Compression Techniques Summary
+
+| Technique | Token Overhead | Reduction | Best For |
+|:----------|:--------------|:----------|:---------|
+| **Observation Masking** | 0% | 90-98% | Tool outputs >200 tokens |
+| **Summarization** | 5-7% | 60-90% | Mixed content |
+| **Compaction** | 0% | 50-80% | Older messages |
+
+**Quick Pattern - Observation Masking:**
+```
+Before: 500 lines of tool output (500 tokens)
+After:  "See /results/search_20260101.txt" (12 tokens)
+```
+
+## Degradation Patterns Summary
+
+| Pattern | Symptom | Mitigation |
+|:--------|:--------|:-----------|
+| **Lost-in-Middle** | Info at 40-60% position ignored | Place critical info at start/end |
+| **Context Poisoning** | Errors compound through references | Require source citations |
+| **Context Distraction** | Model ignores training knowledge | Quality over quantity |
+| **Context Confusion** | Incorrect associations | Rigorous context selection |
+| **Context Clash** | Contradictory information | Establish information hierarchy |
+
+## KV-Cache Optimization Summary
+
+**The Four Principles:**
+
+1. **Stable Prefix**: Never change system prompts across requests
+2. **Append-Only**: Never modify previous messages
+3. **Deterministic Serialization**: Same data = same tokens (sort JSON keys)
+4. **Explicit Breakpoints**: Mark cache boundaries
+
+**Cost Impact:**
+```
+Cached tokens:   $0.30 per 1M tokens
+Uncached tokens: $3.00 per 1M tokens
+Target hit rate: >80% = 70%+ cost savings
+```
+
+## Session Management Summary
+
+**Directory Structure:**
+```
+.cattoolkit/
+├── context/
+│   ├── scratchpad.md    # Current thinking/decisions
+│   ├── todos.md         # Persistent task tracking
+│   ├── context.log      # Session history
+│   └── checkpoints/     # State snapshots
+```
+
+**Scratchpad Hygiene Rule:**
+Only update scratchpad for:
 - Critical decisions made
 - Errors encountered
 - Phase changes
 - Progress milestones
 
-This prevents "Context Churn" in the 150k token window.
+## Integration Points
 
-## Available Resources
+| Skill | Integration |
+|:------|:------------|
+| **memory-systems** | Long-term memory complements context |
+| **agent-orchestration** | Each agent manages own context |
+| **planning-with-files** | Plans stored outside context |
 
-- **[Context Initialization](references/context-initialization.md)**: Standards for setting up context foundations.
-- **[Scratchpad Maintenance](references/scratchpad-maintenance.md)**: Procedures for tracking decisions and progress.
-- **[Session Summary](references/session-summary.md)**: Protocols for consolidating session state.
-- **[Handoff Protocol](references/handoff-protocol.md)**: Standards for seamless session rotation.
-- **[Execution Protocol](references/execution-protocol.md)**: Guidelines for context-aware execution.
+## Usage
 
-## Core Purpose
+When invoked, this skill will:
+1. Assess current context state
+2. Identify appropriate technique
+3. Apply optimization
+4. Generate metrics report
 
-Manage persistent session state independent of the LLM context window using the **Passive Hook System**. Preserve decisions, track progress, and enable seamless session handoffs with zero manual intervention.
-
-## 🆕 Hybrid Hook-Powered Architecture
-
-**NEW**: The Context plugin uses a **hybrid approach** combining command and prompt hooks for optimal performance and intelligence. **Requires sys-core plugin to be installed** for hook infrastructure.
-
-### The Hybrid Hook System
-
-**Command Hooks** (Deterministic, Fast):
-| Hook | Trigger | Action |
-|:-----|:--------|:-------|
-| **SessionStart** | Session begins | Auto-loads active plan from Planner + scratchpad state |
-| **PostToolUse** | After Edit/Write/Bash | Auto-logs every state change to context.log |
-| **PreCompact** | Context near overflow | Auto-creates memory checkpoint + compacts scratchpad |
-
-**Command-Based Prompt Logic** (Deterministic Python Scripts):
-| Hook | Trigger | Action |
-|:-----|:--------|:-------|
-| **Stop** | Session stopping | Runs `evaluate_stop.py` to check for safe exit |
-| **SubagentStop** | Agent stops | Runs `evaluate_subagent.py` to verify completion |
-
-**Note**: These hooks are provided by the `sys-core` infrastructure plugin. Install sys-core before using context-engineering for full functionality.
-
-### Why Hybrid Hooks?
-
-**OLD WAY (Active Commands):**
-- User/Agent must run `/contexteng initialize` → Often forgotten
-- Manual context updates → Context rot
-- Duplicate `plan.md` files → Conflicting sources of truth
-
-**NEW WAY (Hybrid Hooks):**
--  **Zero Friction**: Automatic operations via command hooks
--  **Intelligent**: Smart decisions via deterministic scripts
--  **Robust Parsing**: JSON output ensures reliable response parsing
--  **Single Source**: Reads Planner files directly, no duplicates
--  **Perfect Memory**: Every action logged, nothing lost
--  **Token Efficient**: File-based memory vs. chat history bloat
--  **Context-Aware**: Automated hooks evaluate when operations are safe
-
-## When to Use
-
-**The hooks auto-handle everything - use context-engineering for:**
-
-**Automatic (via hooks):**
--  Initializing session context (SessionStart hook)
--  Logging state changes (PostToolUse hook)
--  Context compaction (PreCompact hook)
-
-**Manual operations (when needed):**
-- Creating comprehensive handoff documents
-- Archiving completed sessions
-- Manual scratchpad edits for complex decisions
-- Emergency context management
-
-**Use context-engineering when:**
-- Working on complex, multi-step tasks
-- Need to create portable handoffs
-- Session approaching completion (archive work)
-- Managing multiple parallel workstreams
-- Switching between different tools (Claude Code, Cursor, Codex)
-
-**Don't use for:**
-- Initialization (automatic via hooks)
-- Routine logging (automatic via hooks)
-- Context tracking (automatic via hooks)
-
-## The Scratchpad Pattern
-
-**Core Problem**: AI models have limited context windows, but complex tasks require extensive context preservation across interactions.
-
-**Solution**: Engineer context to maximize relevant information while minimizing token consumption through persistent storage in `.cattoolkit/context/`.
-
-## Standard Operating Procedures
-
-### [Context Initialization](references/context-initialization.md)
-**Use when**: Starting new project or task requiring persistent state
-
-**Creates**:
-- `.cattoolkit/context/` directory structure
-- Initial `scratchpad.md` with project context
-- `todos.md` for persistent task tracking
-- `context.log` for session history
-- `checkpoints/` directory for state snapshots
-
-### [Scratchpad Maintenance](references/scratchpad-maintenance.md)
-**Use when**: Recording decisions, errors, progress, or important context
-
-**Updates**:
-- Current thinking and decisions
-- Technical choices and rationale
-- Progress tracking
-- Open questions and issues
-- Recent changes and discoveries
-
-### [Session Summary](references/session-summary.md)
-**Use when**: Consolidating session state before rotation or handoff
-
-**Produces**:
-- Session summary with key decisions
-- Current state documentation
-- Progress assessment
-- Context health check
-- Next steps identification
-
-### [Handoff Protocol](references/handoff-protocol.md)
-**Use when**: Transferring work to new session or different tool
-
-**Generates**:
-- Comprehensive handoff document
-- Critical context preservation
-- Next actions clarity
-- File state summary
-- Decision history
-
-## Directory Structure
-
-```
-.cattoolkit/
-├── context/                    # Session state management
-│   ├── scratchpad.md          # Current thinking and decisions
-│   ├── todos.md               # Persistent task tracking
-│   ├── context.log            # Session context history
-│   ├── handoff.md             # Session handoff summary
-│   └── checkpoints/           # Critical state snapshots
-│       ├── 2026-01-05-feature-start.md
-│       └── 2026-01-05-testing-phase.md
-│
-└── planning/                   # Project plans (managed by create-plan/execute-plan)
-    └── {project-slug}/
-        ├── BRIEF.md           # Project definition
-        ├── DISCOVERY.md       # Codebase discovery findings
-        ├── ROADMAP.md         # Phases with parallelism markers
-        └── phases/
-            └── XX-name/
-                ├── XX-YY-PLAN.md (phase plan file)
-                └── XX-YY-SUMMARY.md
-```
-
-**NOTE**: The `planning/` directory is managed by the `create-plan` and `execute-plan` skills. This skill manages `context/` only.
-
-## Key Concepts
-
-### Context Window Thresholds
-- **60% Warning** → Begin context tracking
-- **70% Critical** → Create checkpoint + handoff
-- **80% Overflow** → Force session rotation
-
-### Progressive Disclosure
-- **Level 1** (500 tokens): Immediate context - current task, active files, next action
-- **Level 2** (2000 tokens): Task context - requirements, approach, related files
-- **Level 3** (3000 tokens): Project context - overview, decisions, conventions
-- **Level 4** (On-demand): Reference context - detailed docs, examples
-
-### Context Health Monitoring
-Track these metrics:
-- **Token Efficiency**: Actionable context percentage
-- **Information Density**: Relevant info per token
-- **Context Relevance**: Context used in responses
-- **Update Frequency**: How often context is refreshed
-
-## Integration with Other Skills
-
-**Works seamlessly with:**
-- **Manage Planning** - Track plan execution progress
-- **Engineering** - Preserve debugging and review context
-- **Thinking Frameworks** - Track strategic thinking
-- **Git Workflow** - Preserve version control context
-
-## Templates Reference
-
-- **[scratchpad.md](templates/scratchpad.md)** - Standard scratchpad structure with Current Session Context, Technical Decisions, Open Questions
-- **[handoff.md](templates/handoff.md)** - Session handoff format with completed work, current state, next steps
-- **[context.log](templates/context-log.md)** - Context tracking format (CREATED)
-- **[checkpoint.md](templates/checkpoint.md)** - Critical state snapshot template (CREATED)
-
-## Benefits
-
-**For Solo Developers:**
-- Never lose critical context
-- Quick recovery after interruptions
-- Systematic approach to complexity
-- Better decision tracking
-- Improved workflow continuity
-
-**Workflow Improvements:**
-- Reduced context loss
-- Faster handoffs
-- Better progress tracking
-- Improved quality
-- Enhanced productivity
-
-## Quick Start
-
-1. **Initialize**: See `references/context-initialization.md`
-2. **Track**: See `references/scratchpad-maintenance.md`
-3. **Monitor**: Watch context usage and update accordingly
-4. **Handoff**: See `references/handoff-protocol.md`
-
-For detailed guidance, see [Context Structure Reference](references/context-structure.md).
+**For detailed implementation, see `references/` subdirectory.**
