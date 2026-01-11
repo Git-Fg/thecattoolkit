@@ -209,14 +209,31 @@ We instruct: "Find all TypeScript files containing TODO comments" = a simple par
 
 ## Derived Concepts
 
-Commands are **deterministic workflow macros** or **shortcuts**. They sequence multiple Skills or provide zero-token aliases for frequent tools/prompts.
+### Commands: Shortcuts & AI Macros
+
+Commands serve two distinct audiences:
+
+1. **For Humans (Zero-Token Shortcuts):**
+   - Quick aliases for complex workflows (e.g., `/plan`).
+   - Often use `disable-model-invocation: true` if they are pure wizards.
+
+2. **For AI (Context Macros):**
+   - Standardized interfaces for complex tools (e.g., `/ingest`).
+   - **Benefit:** Reduces hallucination by abstracting complex Skill schemas into simple CLI-style arguments.
+   - **Rule:** If a Command abstracts parameters significantly, expose it to the model.
 
 **The Mental Model:**
 ```
 Command = Macro / Shortcut
-├─ You type: /deploy
+├─ Human types: /deploy
+├─ AI invokes: SlashCommand(deploy, args)
 └─ Claude executes: pre-deploy-check skill → build skill → deploy skill → post-deploy-test skill
 ```
+
+**Command-Skill Pattern:**
+Create a command that simply points to a Skill via `allowed-tools: [Skill(name)]`. This forces the model to "Global Orientation" on that specific skill without context pollution.
+
+---
 
 **Command Recipes (Three Types):**
 

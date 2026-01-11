@@ -789,10 +789,10 @@ class ToolkitAnalyzer:
         self.log_result(result)
 
     def validate_glue_code(self) -> None:
-        """Detect glue code patterns and enforce Zero-Token Shortcuts"""
-        result = ValidationResult("Glue Code & Zero-Token Standards", True)
+        """Detect glue code patterns and validate 2026 Standards"""
+        result = ValidationResult("Glue Code & Standard Detection", True)
 
-        print("Phase 3: Glue Code & Zero-Token Standards")
+        print("Phase 3: Glue Code & AI Macro Standards")
         print("-" * 70)
 
         command_files = list(self.plugins_dir.rglob("commands/*.md"))
@@ -802,41 +802,24 @@ class ToolkitAnalyzer:
             try:
                 content = cmd_file.read_text()
                 lines = content.split("\n")
-                if len(lines) > 100:
+
+                # AI Macro: Commands can wrap Skills for high-fidelity execution
+                # Logic Duplication Check
+                if len(lines) > 50 and "Skill(" not in content:
                     result.warnings.append(
-                        f"{cmd_file}: Large command file ({len(lines)} lines)"
+                        f"{cmd_file}: Large command detected (>50 lines). "
+                        "Commands should primarily orchestrate Skills/Agents, not contain heavy logic."
                     )
 
-                # Zero-Token Shortcut Standard (2026 Hybrid Standard)
-                # If a command wraps a Skill, it MUST have disable-model-invocation: true
-                if "Skill(" in content and "allowed-tools" in content:
-                    if "disable-model-invocation: true" not in content:
-                        result.errors.append(
-                            f"{cmd_file}: VIOLATION - Command wraps a Skill but 'disable-model-invocation: true' is missing. "
-                            "This wastes tokens. Commands wrapping skills must be zero-token shortcuts."
-                        )
-
-                # Logic Duplication Check
-                # If a command wraps a Skill (is a Shortcut), it should be minimal (< 20 lines).
-                if "Skill(" in content and "allowed-tools" in content:
-                    if len(lines) > 20:
-                        result.warnings.append(
-                            f"{cmd_file}: Potential Logic Duplication. Command wraps a Skill but has > 20 lines. "
-                            "Shortcuts should be minimal (delegating logic to the Skill)."
-                        )
-
-                # Description Optimization
+                # Description Check (AI needs terse descriptions for semantic routing)
                 if "description" in content:
                     desc_match = re.search(r'description:\s*["\'](.*?)["\']', content, re.DOTALL)
-                    if desc_match and len(desc_match.group(1)) > 150:
+                    if desc_match and len(desc_match.group(1)) > 200:
                         result.warnings.append(
-                            f"{cmd_file}: Description is too long (>150 chars). Commands function as Semantic Shortcuts; keep descriptions terse."
+                            f"{cmd_file}: Description is too long (>200 chars). "
+                            "Keep descriptions semantic and terse for optimal AI routing."
                         )
 
-                if "Skill(" in content and "allowed-tools" not in content:
-                    result.warnings.append(
-                        f"{cmd_file}: Uses Skill tool without allowed-tools restriction"
-                    )
             except Exception as e:
                 result.errors.append(f"{cmd_file}: Error processing: {e}")
 
