@@ -1,8 +1,8 @@
 ---
 name: deep-analysis
-description: "SHOULD USE when performing deep analysis, strategic analysis, or systematic exploration requiring structured thinking frameworks. Examples: First Principles, Inversion, Pareto, 5-Whys, SWOT, Second-Order Thinking."
+description: "USE when synthesis of research into a formal report is required."
 context: fork
-agent: strategist
+agent: reasoner
 allowed-tools: [Read, Write, Edit, Glob, Grep]
 ---
 

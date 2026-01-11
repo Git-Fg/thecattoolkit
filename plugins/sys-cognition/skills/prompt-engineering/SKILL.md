@@ -1,14 +1,24 @@
 ---
 name: prompt-engineering
-description: "USE when drafting, optimizing, or auditing prompts. Includes Prompt Library, Chain-of-Thought patterns, and Optimization workflows. Modes: draft, optimize, library access."
+description: "USE when designing, optimizing, or auditing AI prompts, system instructions, or multi-step chains. Applies 2026 Complexity-Based Guidance standards with Attention Management, Sycophancy Prevention, and XML/Markdown decision matrix."
 allowed-tools: [Read, Write, Edit, Glob, Grep]
 ---
 
-# Prompt Engineering Domain
+# Prompt Engineering & Design Standards
+
+## Operational Protocol
+
+1. **Analyze Intent**: Determine if the goal is Drafting, Optimizing, Auditing, or serving as Knowledge Bank.
+2. **Consult Standards**: PROACTIVELY load `references/core-standards.md` for Attention Management rules.
+3. **Select Pattern**:
+   - **Markdown-First** (Default): Use for 80% of tasks.
+   - **Hybrid XML**: Use ONLY for Data Isolation (>50 lines) or strict constraints.
+4. **Execute Workflow**:
+   - **Drafting**: Use `workflows/draft.md`
+   - **Optimizing**: Use `workflows/optimize.md`
+5. **Verify**: Apply `references/quality.md` gates before final output.
 
 ## Router Protocol
-
-Analyze the user's intent and select the appropriate workflow:
 
 ### 1. Drafting New Prompts
 **Trigger**: "Create a prompt", "Draft system instructions", "New prompt for..."
@@ -20,78 +30,64 @@ Analyze the user's intent and select the appropriate workflow:
 **Protocol**: Apply workflow from `workflows/optimize.md`
 **Theory**: Apply `references/optimization.md`
 
-### 3. Library Access
-**Trigger**: "Show me examples", "List templates", "Prompt templates"
-**Action**: List contents of `assets/templates/`
-**References**: Use `references/taxonomy.md` for categorization
+### 3. Auditing Prompts
+**Trigger**: "Review this prompt", "Check for issues", "Audit..."
+**Protocol**: Apply `references/quality.md` checklist and `references/anti-patterns.md`
 
-## Core Theory
+### 4. Library Access (Knowledge Bank Mode)
+**Trigger**: "Show me examples", "List templates", "What patterns exist..."
+**Action**: List contents of `assets/templates/` or `references/design-patterns.md`
 
-### Concise Is Key
-Every token competes with conversation history. Assume Claude is already intelligent.
-- **Does Claude already know this?** (Omit common knowledge)
-- **Is this explanation necessary?** (Be direct)
-- **Does this justify its token cost?** (Value-based inclusion)
+### 5. Agent Knowledge Injection
+**Trigger**: Agent loads this skill via `skills:` field
+**Purpose**: Ensure generated instructions follow 2026 standards
+**Key Standards**: Truth-First, Attention Management, Signal-to-Noise optimization
 
-### Control Degrees of Freedom
-Match specificity to task fragility:
-- **High Freedom**: Multiple valid approaches → use text-based heuristics
-- **Medium Freedom**: Preferred pattern exists → use pseudocode with parameters
-- **Low Freedom**: Error-prone operations → use exact scripts
+## Core Principles (Quick Reference)
 
-### Signal-to-Noise Rule (XML vs Markdown)
+### Attention Management
+> Every token competes with conversation history for model attention.
+
+Use Markdown headers for hierarchy. XML tags (Max 15, No Nesting) ONLY for semantic data isolation or thinking scaffolding.
+
+### Sycophancy Prevention (Truth-First)
+> Technical accuracy > User validation.
+
+If user suggests flawed path → CONTRADICT immediately. No "Great idea!" or superlatives. Speak in code, files, commands.
+
+### Signal-to-Noise Rule
 - **Default**: Markdown (80% of prompts) - fewer tokens, Claude-native
-- **Upgrade to XML/Markdown hybrid** only when complexity triggers met:
+- **Upgrade to XML/Markdown hybrid** only when:
   - Data Isolation: >50 lines of raw data
-  - Constraint Weight: Rules that MUST NEVER be broken
+  - Constraint Weight: NEVER/MUST rules that cannot be broken
   - Internal Monologue: Complex reasoning requiring step-by-step
 
-### Key Techniques
+## Knowledge Index (Progressive Disclosure)
 
-**Chain-of-Thought (CoT)**
-- Zero-shot CoT: "Let's think step by step."
-- Structured CoT: Use `<thinking>` blocks for internal monologue
-- Step-back: Address principles before specifics
-
-**Few-Shot Learning**
-- One-shot: Single demonstration for simple patterns
-- Few-shot (3-8 examples): For complex categorization or formatting
-- Isolation: Use `<example>` tags to prevent example leakage
-
-## Prompt Taxonomy
-
-### 1. Single Prompts
-Standalone, reusable prompts for direct, one-shot execution.
-- **Storage**: `.cattoolkit/prompts/`
-- **Template**: `assets/templates/single-prompt.md`
-
-### 2. Prompt Chains
-Sequential multi-step workflows where output from one step feeds the next.
-- **Storage**: `.cattoolkit/chains/{number}-{topic}/`
-- **Pattern**: Research → Plan → Execute → Refine
-- **Templates**: `assets/templates/chain/`
-
-### 3. Meta-Prompts
-Higher-order prompts that generate, optimize, or analyze other prompts.
-- **Storage**: `.cattoolkit/generators/`
-- **Templates**: `assets/templates/meta/`
-
-## Reference Index
-- [Techniques](references/techniques.md)
-- [Patterns](references/patterns.md)
-- [Optimization](references/optimization.md)
-- [Anti-Patterns](references/anti-patterns.md)
-- [Execution Protocol](references/execution-protocol.md)
-- [Taxonomy](references/taxonomy.md)
-- [Quality Standards](references/quality.md)
-- [Discovery Questions](references/discovery.md)
-- [Metadata Standards](references/metadata.md)
+| Reference | Purpose | Load When |
+|:----------|:--------|:----------|
+| **core-standards.md** | Attention, Sycophancy, Quota, XML/MD matrix | ALWAYS consult first |
+| **design-patterns.md** | CoT, Few-Shot, Taxonomy, Structural patterns | Selecting technique |
+| **optimization.md** | Systematic refinement workflow | Improving existing prompts |
+| **quality.md** | Production quality gates | Final verification |
+| **anti-patterns.md** | Common mistakes to avoid | Prevention |
+| **taxonomy.md** | Single vs Chain vs Meta categorization | Storage/planning |
+| **execution-protocol.md** | Standard completion reporting | Structured output |
 
 ## Template Library
+
 - `assets/templates/single-prompt.md` - General purpose template
 - `assets/templates/chain-summary.md` - Chain result summary
 - `assets/templates/chain/` - Research → Plan → Execute → Refine
 - `assets/templates/meta/` - Generator and optimizer templates
 
-## Assets
-- `assets/examples/few-shot.json` - Curated example datasets for various domains
+## Success Criteria
+
+A prompt meets 2026 standards when:
+- [ ] Uses Markdown headers for hierarchy (default)
+- [ ] XML tags are < 15 and never nested
+- [ ] Instructions are specific, actionable, and truth-focused
+- [ ] Examples (if any) are isolated in `<example>` tags
+- [ ] Reasoning is isolated in `<thinking>` blocks (if needed)
+- [ ] Quality gate checklist is included
+- [ ] Output format is clearly specified
