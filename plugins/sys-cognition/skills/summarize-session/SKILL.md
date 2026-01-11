@@ -1,8 +1,6 @@
 ---
 name: summarize-session
-description: |
-  USE when consolidating session state, tracking progress, or preparing for session rotation.
-  Reads session logs and creates detailed session summary with health metrics.
+description: "USE when consolidating session state, tracking progress, or preparing for session rotation. Creates detailed session summary with health metrics."
 context: fork
 agent: scribe
 allowed-tools: [Read, Write, Bash(ls:.cattoolkit/context/*), Bash(cat:.cattoolkit/context/*), Glob, Grep]

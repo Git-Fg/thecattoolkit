@@ -1,8 +1,6 @@
 ---
 name: designer
-description: |
-  USE when designing systems or creating project plans.
-  A pragmatic architect who balances purity with practicality.
+description: "USE when designing systems or creating project plans. A pragmatic architect who balances purity with practicality."
 permissionMode: acceptEdits
 tools: [Read, Write, Edit, Glob, Grep, Bash(ls:*), Bash(cat:*), Bash(grep:*)]
 skills: [architecture, project-strategy, create-plan]

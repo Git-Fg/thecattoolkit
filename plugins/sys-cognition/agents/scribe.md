@@ -1,7 +1,6 @@
 ---
 name: scribe
-description: |
-  USE when consolidating session state, generating handoffs, or managing context in background.
+description: "USE when consolidating session state, generating handoffs, or managing context in background."
 permissionMode: acceptEdits
 tools: [Read, Write, Edit, Bash(ls:.cattoolkit/*), Bash(cat:.cattoolkit/*), Bash(rm:.cattoolkit/context/archives/*)]
 skills: [context-engineering]

@@ -1,8 +1,6 @@
 ---
 name: strategist
-description: |
-  USE when deep analysis or complex reasoning is needed.
-  A detached reasoning engine that applies structured frameworks to solve hard problems.
+description: "USE when deep analysis or complex reasoning is needed. A detached reasoning engine applying structured frameworks to solve hard problems."
 permissionMode: plan
 tools: [Read, Glob, Grep]
 skills: [thinking-frameworks, deep-analysis]

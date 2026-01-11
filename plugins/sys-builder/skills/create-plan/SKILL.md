@@ -1,9 +1,6 @@
 ---
 name: create-plan
-description: |
-  USE when starting a new project or feature that requires planning.
-  Auto-discovers codebase patterns via parallel explore agents, then creates multi-phase plans optimized for parallel agent execution.
-  All artifacts created in .cattoolkit/planning/{slug}/.
+description: "USE when starting a new project or feature requiring planning. Auto-discovers codebase patterns and creates multi-phase plans in .cattoolkit/planning/{slug}/."
 context: fork
 agent: designer
 allowed-tools: [Read, Write, Edit, Glob, Grep, Task, Bash(mkdir:-p), Bash(ls:*)]

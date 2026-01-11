@@ -1,9 +1,6 @@
 ---
 name: execute-plan
-description: |
-  USE when ready to execute a plan created by create-plan.
-  Orchestrates parallel agent execution following the plan's dependency graph.
-  Reads from .cattoolkit/planning/{slug}/ and updates progress in-place.
+description: "USE when ready to execute a plan created by create-plan. Orchestrates parallel agent execution following the plan's dependency graph."
 context: fork
 agent: director
 allowed-tools: [Read, Write, Edit, Glob, Grep, Task, AskUserQuestion, Bash]

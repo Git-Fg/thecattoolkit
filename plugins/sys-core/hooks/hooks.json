@@ -5,7 +5,18 @@
                 "hooks": [
                     {
                         "type": "command",
-                        "command": "${CLAUDE_PLUGIN_ROOT}/../hooks/scripts/inject_protocols.sh"
+                        "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/inject_protocols.sh"
+                    }
+                ]
+            }
+        ],
+        "Notification": [
+            {
+                "matcher": "",
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "${CLAUDE_PLUGIN_ROOT}/hooks/scripts/notify.sh 'Awaiting your input'"
                     }
                 ]
             }

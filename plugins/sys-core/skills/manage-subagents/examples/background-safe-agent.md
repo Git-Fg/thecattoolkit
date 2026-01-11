@@ -5,8 +5,7 @@ A read-only agent safe for background execution.
 ```markdown
 ---
 name: code-explorer
-description: |
-  Read-only Code Explorer. MUST USE when user requests background analysis or comprehensive codebase search without modification.
+description: "Read-only Code Explorer. MUST USE when user requests background analysis or codebase search without modification."
 tools: [Read, Glob, Grep]
 model: haiku
 ---

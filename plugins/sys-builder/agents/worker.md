@@ -1,7 +1,6 @@
 ---
 name: worker
-description: |
-  MUST USE when executing plans, implementing features, debugging code, or performing engineering tasks following execution-core behavioral standards as the Universal Builder Worker.
+description: "MUST USE when executing plans, implementing features, debugging code, or performing engineering tasks. Universal Builder Worker following execution-core standards."
 permissionMode: acceptEdits
 tools: [Read, Write, Edit, TodoWrite, Bash(npm:*), Bash(npx:*), Bash(python3:*), Bash(node:*), Bash(git:*), Glob, Grep]
 skills: [execution-core, software-engineering, project-strategy]

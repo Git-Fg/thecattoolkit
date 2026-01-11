@@ -62,9 +62,7 @@ Skills are discovered by matching your intent against their `description` field.
 skills/security-audit/SKILL.md:
 ---
 name: security-audit
-description: >
-  USE when scanning code for security vulnerabilities.
-  Performs OWASP Top 10 checks and credential leakage detection.
+description: "USE when scanning code for security vulnerabilities. Performs OWASP Top 10 checks and credential leakage detection."
 ---
 
 You type: "Check this code for security issues"
@@ -76,9 +74,7 @@ Claude matches: "security vulnerabilities" → security-audit skill
 # skills/format-code/SKILL.md
 ---
 name: format-code
-description: >
-  USE when you need to format code according to project standards.
-  Applies Prettier/Black and organizes imports.
+description: "USE when you need to format code according to project standards. Applies Prettier/Black and organizes imports."
 allowed-tools: [Write, Bash]
 ---
 ```
@@ -90,9 +86,7 @@ When invoked, this skill runs in the main conversation. Claude reads files, appl
 # skills/deep-analysis/SKILL.md
 ---
 name: deep-analysis
-description: >
-  USE when performing comprehensive codebase analysis.
-  Analyzes architecture patterns, dependencies, and code quality.
+description: "USE when performing comprehensive codebase analysis. Analyzes architecture patterns, dependencies, and code quality."
 context: fork          # Always runs in isolated subagent
 model: opus            # Use most capable model
 allowed-tools: [Read, Grep, Glob]
@@ -664,9 +658,7 @@ Configure via `.claude/settings.json` or environment variables:
 ```yaml
 ---
 name: my-skill                    # Max 64 chars, must match directory
-description: >                    # Max 1024 chars, must start with "USE when"
-  USE when [condition].
-  Concise, action-oriented description.
+description: "USE when [condition]. Concise, action-oriented single-line description."  # Max 1024 chars, must start with "USE when", single line only
 context: fork                     # Optional: runs in isolated subagent
 allowed-tools: [Read, Write, Bash]  # Optional: whitelist (omit = all)
 model: sonnet                     # Optional: sonnet, opus, haiku, inherit
@@ -676,6 +668,8 @@ hooks:
   PreToolUse: "validate-input"    # Optional: hook bindings
 ---
 ```
+
+**Description Formatting Rule**: Descriptions MUST be on a single line. Never use multi-line YAML syntax (`>` or `|`). Use quotes if the description contains special characters.
 
 **allowed-tools Format Examples:**
 

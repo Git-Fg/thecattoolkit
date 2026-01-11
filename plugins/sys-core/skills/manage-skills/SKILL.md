@@ -1,7 +1,6 @@
 ---
 name: manage-skills
-description: |
-  USE when auditing, creating, or modifying plugin skills as the System Authority on Skill Standards and Compliance.
+description: "USE when auditing, creating, or modifying plugin skills. System Authority on Skill Standards and Compliance."
 context: fork
 agent: plugin-expert
 allowed-tools: [Read, Write, Edit, Bash(ls:*), Bash(grep:*), Bash(cat:*), Glob, Grep]

@@ -1,8 +1,6 @@
 ---
 name: execution-core
-description: |
-  USE to apply universal behavioral standards for autonomous agents.
-  Defines Uninterrupted Flow, Self-Verification, Auth-Gates, and Handoff protocols.
+description: "USE to apply universal behavioral standards for autonomous agents. Defines Uninterrupted Flow, Self-Verification, Auth-Gates, and Handoff protocols."
 user-invocable: false
 allowed-tools: Bash, Edit, Read, Write, Glob, Grep
 ---

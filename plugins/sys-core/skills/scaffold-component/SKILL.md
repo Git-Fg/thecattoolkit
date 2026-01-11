@@ -1,9 +1,6 @@
 ---
 name: scaffold-component
-description: |
-  USE when generating new plugin components (skills, agents, commands) from specifications.
-  Scaffolds file structures with proper 2026 Universal Agentic Runtime standards, frontmatter, and templates.
-  Converts natural language specifications into ready-to-use plugin components.
+description: "USE when generating new plugin components (skills, agents, commands). Scaffolds with 2026 Universal Agentic Runtime standards, frontmatter, and templates."
 context: fork
 agent: plugin-expert
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash(mkdir:-p), Bash(ls:*), Bash(cat:*), Bash(find:*)]

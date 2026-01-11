@@ -1,8 +1,6 @@
 ---
 name: audit-security
-description: |
-  USE when verifying security of code changes or auditing file safety.
-  Automatically scans for secrets (API keys, tokens) and prevents modification of protected files (locks, credentials).
+description: "USE when verifying security of code changes or auditing file safety. Scans for secrets and prevents modification of protected files."
 allowed-tools: [Read, Grep]
 ---
 

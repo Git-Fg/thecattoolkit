@@ -1,8 +1,6 @@
 ---
 name: check-types
-description: |
-  USE when validating Python type safety.
-  Automatically runs configured type checkers (pyrefly, mypy) on files after editing.
+description: "USE when validating Python type safety. Runs configured type checkers (pyrefly, mypy) on files after editing."
 allowed-tools: [Read, Bash(pyrefly), Bash(mypy), Bash(python3:-m pyrefly), Bash(python3:-m mypy)]
 ---
 

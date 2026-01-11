@@ -1,8 +1,6 @@
 ---
 name: meta-builder
-description: |
-  USE when building or auditing components.
-  Proactively fetches live Claude Code documentation via curl to prevent instructional drift.
+description: "USE when building or auditing components. Proactively fetches live Claude Code documentation via curl to prevent instructional drift."
 context: fork
 agent: plugin-expert
 allowed-tools:

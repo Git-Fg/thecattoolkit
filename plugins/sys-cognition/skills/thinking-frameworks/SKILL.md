@@ -1,8 +1,6 @@
 ---
 name: thinking-frameworks
-description: |
-  USE when a reasoning engine needs structured methodologies for analysis.
-  Contains 12 passive frameworks (Strategic, Prioritization, Problem Analysis).
+description: "USE when a reasoning engine needs structured methodologies. Contains 12 passive frameworks (Strategic, Prioritization, Problem Analysis)."
 allowed-tools: [Read]
 ---
 

@@ -68,6 +68,10 @@ validate_skill() {
   if ! has_yaml_key "$fm" "description"; then
     log_error "$file: Missing required field 'description'"
   else
+    if echo "$fm" | grep -qE "description: [|>]"; then
+      log_error "$file: description MUST be single-line (no '|' or '>' multi-line syntax)"
+    fi
+    
     local desc
     desc=$(get_yaml_value "$fm" "description")
     if [[ ${#desc} -gt 1024 ]]; then
@@ -76,13 +80,8 @@ validate_skill() {
     
     local first_line
     first_line=$(echo "$desc" | head -1)
-    if [[ ! "$first_line" =~ ^(USE|MUST|SHOULD) ]] && echo "$fm" | grep -q "description: |"; then
-      local full_desc
-      full_desc=$(awk '/^description:/{f=1;next} /^[a-z-]+:/{f=0} f' "$file")
-      first_line=$(echo "$full_desc" | head -1 | xargs)
-      if [[ -n "$first_line" ]] && [[ ! "$first_line" =~ ^(USE|MUST|SHOULD) ]]; then
-        log_info "$file: Consider starting description with trigger (USE when...) for better discovery"
-      fi
+    if [[ -n "$first_line" ]] && [[ ! "$first_line" =~ ^[\"\']?(USE|MUST|SHOULD) ]]; then
+      log_info "$file: Consider starting description with trigger (USE when...) for better discovery"
     fi
   fi
   

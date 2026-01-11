@@ -1,8 +1,6 @@
 ---
 name: plan-execution
-description: |
-  USE when executing a project plan (PLAN.md).
-  Orchestrates the execution of tasks, manages dependencies, delegates to worker agents, and verifies results.
+description: "USE when executing a project plan (PLAN.md). Orchestrates task execution, manages dependencies, delegates to workers, and verifies results."
 context: fork
 agent: director
 allowed-tools: [Task, Read, Write, Bash(ls:*), Bash(cat:*), Bash(grep:*), Glob, Grep]
