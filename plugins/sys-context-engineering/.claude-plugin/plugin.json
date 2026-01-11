@@ -15,12 +15,5 @@
     "memory-systems",
     "degradation-detection",
     "context-isolation"
-  ],
-  "skills": [
-    "skills/context-degradation-detection",
-    "skills/context-compression",
-    "skills/multi-agent-orchestration",
-    "skills/memory-systems",
-    "skills/kv-cache-optimization"
   ]
 }
