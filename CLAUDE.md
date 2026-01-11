@@ -7,17 +7,59 @@ You are an **orchestration architect** specializing in the Cat Toolkit framework
 - Quota-optimized workflows for 5-hour rolling window providers
 - Intent-driven programming over procedural scripting
 
-**Success criteria:** Minimize prompt consumption while maximizing task completion through inline execution.
+> **Zero-Waste Orchestration:** Maximize **Inline Skills** for all local engineering tasks. Spawning an Agent for a task that fits in the current Context Window is a **Quota Violation**. Use Commands only as high-level "Playbooks" to sequence multiple Skills.
 
 ---
 
-## Project Overview
+## The Unified 2026 Primitive Matrix
 
-This document defines the **Cat Toolkit Orchestration Framework**—everything derives from two primitives: **Skills** (Knowledge) and **Agents** (Delegation).
+> **Core Thesis:** Modern Claude Code orchestration is about **Cost & Logic**—choosing the primitive that minimizes **Context RAM** bloat while maximizing task completion.
 
-## The Two Primitives
+| Primitive | Prompt Cost | Primary Invoke | Context | Best Use Case |
+|:---|:---:|:---|:---|:---|
+| **Skill (Inline)** | **1** | **Semantic** (or `/`) | Main | **Expertise**: Teaching Claude a new "Standard" (TDD, Security Audit) |
+| **Command** | **1** | **Manual** (or Model) | Main | **Workflow**: A deterministic macro to sequence 2+ Skills |
+| **Skill (Fork)** | **3** | **Semantic** (or `/`) | Isolated | **Volume**: Processing massive files (>10) without "Context Bloat" |
+| **Agent (Task)** | **2×N** | **Direct** (via `@`) | Isolated | **Parallelism**: Running job A while job B happens in main chat (N = parallelism) |
 
-> **Core Thesis:** All capability in this framework is either **knowledge injection** (Skill) or **delegated execution** (Agent/Task). Everything else—Commands, Hooks, Plan Mode—emerges from these two primitives.
+---
+
+### Primitive Strengths & Weaknesses
+
+#### Skill (Knowledge Injection)
+- **Strength:** Semantic Discovery—Claude triggers it because the `description` matches your intent
+- **Weakness:** If `context: fork`, you lose ephemeral RAM of last 2-3 turns unless passed explicitly
+- **2026 Rule:** Default to `inline` for everything. Only use `fork` for "Large Scale Reconnaissance"
+
+#### Command (Workflow Macros)
+- **Strength:** Determinism—`/release` triggers Skill A → Skill B → Skill C predictably
+- **Weakness:** Instruction Churn—if a Command is just a single prompt wrapper for a Skill, it is redundant
+- **2026 Rule:** Only use Commands to **orchestrate** multiple Skills. Single-skill wrappers are redundant since Skills are `user-invocable: true` by default
+
+#### Agent (Delegated Specialist)
+- **Strength:** State-in-Files Isolation—useful when you want an agent to "go away and work" while you keep typing
+- **Weakness:** State Desynchronization—if an agent modifies a file while you edit it, Git conflict or "Dirty State" error
+- **2026 Rule:** Use Agents only for **"Shared-Nothing"** tasks (different directories)
+
+---
+
+### The Prompt Churn Decision Flow (2026 Standards)
+
+To minimize your 5-hour rolling window consumption:
+
+1. **Is it a simple file edit or a standard check?**
+   → **USE INLINE SKILL** (Cost: 1). Uses current "RAM" to make the fix instantly.
+
+2. **Does it require reading >1000 lines of docs/logs?**
+   → **USE FORKED SKILL** (Cost: 3). Keeps the "Noise" out of main implementation context.
+
+3. **Do you need to run a 10-minute test suite while you keep coding?**
+   → **USE BACKGROUND AGENT** (Cost: 2×N). Spawn explicitly as a background agent with prompt: "You are a background agent (async) which runs X and waits for Y completion."
+
+4. **Is it a repetitive, multi-skill sequence (Test → Commit → Push)?**
+   → **USE COMMAND** (Cost: 1). Provides a deterministic shortcut.
+
+---
 
 ### Primitive 1: Skill = Knowledge
 
@@ -29,18 +71,6 @@ Skill = Brain Extension
 ├─ You say: "Use the security-audit skill"
 └─ Claude gains: The skill's expertise instantly (like downloading knowledge)
 ```
-
-**Execution Modes:**
-
-| Mode | Cost | Context | Use When |
-|:-----|:-----|:--------|:---------|
-| **Inline** | ~1 prompt | Main conversation | Default for everything |
-| **Forked** (`context: fork`) | 1-2 prompts | Isolated subagent | Large outputs OR isolation needed |
-
-**Why the cost difference matters:**
-- Inline execution benefits from **bundling**: ~15 internal operations (read, reason, write) cost 1 prompt
-- Forked execution spawns a **new session**: handoff (1 prompt) + execution (1+ prompts)
-- Workflows using sub-agents consume quota **5x-10x faster** than inline skills
 
 **Discovery: The Semantic Matching Layer**
 
@@ -58,17 +88,6 @@ Skills are discovered by matching your intent against their `description` field.
 
 **AskUserQuestion in Skills:** Use at the **beginning of tasks** to gather requirements. Avoid mid-execution questions—make strategic assumptions, document them, and proceed.
 
-```
-skills/security-audit/SKILL.md:
----
-name: security-audit
-description: "USE when scanning code for security vulnerabilities. Performs OWASP Top 10 checks and credential leakage detection."
----
-
-You type: "Check this code for security issues"
-Claude matches: "security vulnerabilities" → security-audit skill
-```
-
 **Example: Inline Skill (Default)**
 ```yaml
 # skills/format-code/SKILL.md
@@ -78,8 +97,6 @@ description: "USE when you need to format code according to project standards. A
 allowed-tools: [Write, Bash]
 ---
 ```
-
-When invoked, this skill runs in the main conversation. Claude reads files, applies formatters, writes changes—all as part of its current context.
 
 **Example: Forked Skill (Isolation)**
 ```yaml
@@ -92,10 +109,6 @@ model: opus            # Use most capable model
 allowed-tools: [Read, Grep, Glob]
 ---
 ```
-
-When invoked, this skill spawns a subagent that works independently. The subagent reads hundreds of files, performs analysis, then returns a summary. None of the intermediate file reads pollute your main conversation.
-
----
 
 ### Primitive 2: Agent/Task = Delegation
 
@@ -160,7 +173,7 @@ We program with INTENT, not scripts.
 
 Instead of:  for file in $(find . -name "*.ts"); do grep "TODO" "$file"; done
 
-We instruct: "Find all TypeScript files containing TODO comments"
+We instruct: "Find all TypeScript files containing TODO comments" = a simple paragraph/line is often better 
 ```
 
 **Key Insight**: Skills and Agents are software you install into the runtime. The model executes them by understanding intent, not by running scripts line-by-line.
@@ -177,7 +190,7 @@ We instruct: "Find all TypeScript files containing TODO comments"
 
 ### Command = Orchestration Layer
 
-**Commands are NOT primitives.** They are shortcuts that combine Skills (and optionally Agents) into deterministic workflows.
+Commands are **deterministic workflow macros** that sequence multiple Skills. They provide cost-1 automation for repetitive multi-step operations.
 
 **The Mental Model:**
 ```
@@ -220,9 +233,10 @@ Guide user through setup. Ask for template preference.
 
 | Pattern | Example |
 |:--------|:--------|
-| **Single-skill shortcut** | `/test` → invokes test-runner skill |
 | **Multi-skill workflow** | `/release` → runs version-bump → build → deploy → notify |
 | **Interactive wizard** | `/scaffold` → guides through project setup |
+
+> ⚠️ **2026 Rule:** Single-skill command shortcuts are redundant—invoke Skills directly via semantic discovery or manual `/` invocation.
 
 **Example: Command that Orchestrates Multiple Skills**
 ```markdown
@@ -247,49 +261,17 @@ DO NOT ask for confirmation. Proceed autonomously.
 
 ---
 
-### Quota Optimization: The Cost Hierarchy
+### Quota Optimization: Anti-Patterns
 
 > **CRITICAL**: This toolkit is designed for providers with **5-hour rolling window quotas** (MiniMax, Z.ai). The unit of consumption is the **Prompt** (user intent), not the token.
-
-**The Cost Table:**
-
-| Pattern | Prompt Cost | When to Use |
-|:--------|:------------|:------------|
-| **Skill (inline)** | ~1 prompt (bundled, up to 15 sub-calls) | Default for ALL tasks |
-| **Skill (fork)** | 1-2 prompts (handoff + execution) | Task exceeds context window OR strict isolation |
-| **Agent (sub)** | 2-N prompts (handoff + N turns) | Only for true parallelism with independent outputs |
-
-**The Decision Tree (Visualized):**
-```
-                    ┌──────────────────────┐
-                    │ Task to complete?    │
-                    └──────────┬───────────┘
-                               │
-                    ┌──────────▼───────────┐
-                    │ Fits in current      │
-                    │ context window?      │
-                    └──────────┬───────────┘
-                               │
-                 ┌─────────────┴─────────────┐
-                 │ YES                       │ NO
-        ┌────────▼─────────┐       ┌────────▼─────────┐
-        │ Use Skill        │       │ Single task?     │
-        │ (inline)         │       │ OR Parallel?     │
-        │ ~1 prompt        │       └────────┬─────────┘
-        └──────────────────┘                │
-                              ┌─────────────┴─────────────┐
-                              │ Single        │ Parallel  │
-                     ┌────────▼─────────┐  ┌─▼──────────────┐
-                     │ Skill (fork)     │  │ Agent (sub)     │
-                     │ 1-2 prompts      │  │ 2-N prompts     │
-                     └──────────────────┘  └─────────────────┘
-```
 
 **Anti-Patterns (Quota Drains):**
 
 | ❌ Expensive | ✅ Efficient | Why |
 |:-------------|:-------------|:-----|
-| Spawning sub-agent for simple file ops | Use inline Skill with `allowed-tools: [Read, Write]` | Sub-agents cost 2+ prompts; inline costs 1 |
+| Forking skill for simple task (<10 files) | Use inline skill (no `context: fork`) | Forking costs 3 prompts; inline costs 1 |
+| Spawning agent for task fitting in context | Use inline Skill | Agents cost 2×N; inline costs 1 |
+| Creating Command wrapper for single Skill | Use Skill without `user-invocable: false` | Commands add overhead; Skills are directly discoverable |
 | "I'll create file." → *User: OK* → "Now tests." → *User: OK* | "I'll create file, add tests, and update index in one pass." | Each user turn costs 1 prompt |
 | `write_file("x.ts")` → `read_file("x.ts")` to verify | Trust `write_file` return code | Redundant verification doubles operations |
 
@@ -744,6 +726,11 @@ disable-model-invocation: false        # true = user wizard (model doesn't execu
 <forbidden_pattern>
 **Unnecessary Abstraction:** Wrappers that don't add value
 **Fix:** Prefer direct calls for simple operations
+</forbidden_pattern>
+
+<forbidden_pattern>
+**Quota Violation:** Spawning Agent/Forked Skill for task fitting in current Context Window
+**Fix:** Use Inline Skill (Cost: 1) for all tasks <10 files
 </forbidden_pattern>
 
 ---
