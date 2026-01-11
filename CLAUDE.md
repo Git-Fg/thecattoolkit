@@ -56,17 +56,7 @@ Skills are discovered by matching your intent against their `description` field.
 | **High Gravity** | Safety-critical, governance | `[MODAL] USE when [CONDITION].` |
 | **Utility** | Single-purpose tools | `{Action Verb} + {Object} + {Purpose}` |
 
-<critical constraint="AskUserQuestion">
-NEVER use AskUserQuestion in Skills except for:
-1. User-facing wizards where interaction is the PRIMARY purpose
-2. Destructive operations requiring explicit confirmation
-3. Commands (not Skills) where user dialogue is expected
-
-**Why this is non-negotiable:**
-- Breaks composability (skills cannot chain)
-- Fails silently in background/forked contexts
-- Prevents agent orchestration
-</critical>
+**AskUserQuestion in Skills:** Use at the **beginning of tasks** to gather requirements. Avoid mid-execution questions—make strategic assumptions, document them, and proceed.
 
 ```
 skills/security-audit/SKILL.md:
