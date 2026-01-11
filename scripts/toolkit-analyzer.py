@@ -26,9 +26,13 @@ from collections import defaultdict
 
 
 # --- Validation Constants ---
-MAX_SKILL_NAME_LENGTH = 64
+MAX_NAME_LENGTH = 64
 MAX_DESCRIPTION_LENGTH = 1024
 MAX_COMPATIBILITY_LENGTH = 500
+
+# Hardcore naming regex - violation causes CLI crash
+# Pattern: lowercase alphanumeric, hyphens allowed, no start/end hyphen, no consecutive hyphens
+NAME_PATTERN = re.compile(r"^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$")
 
 # Allowed frontmatter fields per Agent Skills Spec
 ALLOWED_FIELDS = {
@@ -129,71 +133,89 @@ class CrossPluginLink:
 
 
 def _validate_name(name: str, skill_dir: Optional[Path] = None) -> List[str]:
-    """Validate skill name format and directory match."""
+    """Validate skill name format and directory match.
+    Violation causes CLI crash - errors are CRITICAL."""
     errors = []
 
     if not name or not isinstance(name, str) or not name.strip():
-        errors.append("Field 'name' must be a non-empty string")
+        errors.append("CRITICAL: Field 'name' is missing. Code will crash.")
         return errors
 
     name_normalized = unicodedata.normalize("NFKC", name.strip())
 
-    if len(name_normalized) > MAX_SKILL_NAME_LENGTH:
+    # 1. Length check
+    if len(name_normalized) > MAX_NAME_LENGTH:
         errors.append(
-            f"Skill name '{name_normalized}' exceeds {MAX_SKILL_NAME_LENGTH} character limit "
-            f"({len(name_normalized)} chars)"
+            f"CRITICAL: Name length ({len(name_normalized)}) exceeds limit ({MAX_NAME_LENGTH}). "
+            "Code will crash."
         )
 
-    if name_normalized != name_normalized.lower():
-        errors.append(f"Skill name '{name_normalized}' must be lowercase")
+    # 2. Pattern check (comprehensive)
+    if not NAME_PATTERN.match(name_normalized):
+        errors.append(
+            f"CRITICAL: Name '{name_normalized}' contains invalid characters. "
+            "Must be lowercase alphanumeric (a-z, 0-9), hyphens allowed, "
+            "no start/end hyphens, no consecutive hyphens (--). Code will crash."
+        )
 
-    if name_normalized.startswith("-") or name_normalized.endswith("-"):
-        errors.append("Skill name cannot start or end with a hyphen")
+    # 3. Explicit checks for clearer error messages
+    if name_normalized != name_normalized.lower():
+        errors.append(f"CRITICAL: Name '{name_normalized}' must be lowercase only.")
+
+    if name_normalized.startswith("-"):
+        errors.append(f"CRITICAL: Name '{name_normalized}' cannot start with a hyphen.")
+
+    if name_normalized.endswith("-"):
+        errors.append(f"CRITICAL: Name '{name_normalized}' cannot end with a hyphen.")
 
     if "--" in name_normalized:
-        errors.append("Skill name cannot contain consecutive hyphens")
+        errors.append(f"CRITICAL: Name '{name_normalized}' contains consecutive hyphens (--).")
 
-    if not all(c.isalnum() or c == "-" for c in name_normalized):
+    if "_" in name_normalized:
         errors.append(
-            f"Skill name '{name_normalized}' contains invalid characters. "
-            "Only letters, digits, and hyphens are allowed."
+            f"CRITICAL: Name '{name_normalized}' contains underscore (_). "
+            "Use hyphens (-) only."
         )
 
+    # 4. Directory match (skills only)
     if skill_dir:
-        # Check against directory name
         dir_name = unicodedata.normalize("NFKC", skill_dir.name)
         if dir_name != name_normalized:
             errors.append(
-                f"Directory name '{skill_dir.name}' must match skill name '{name_normalized}'"
+                f"CRITICAL: Skill name '{name_normalized}' MUST match directory name '{dir_name}'. "
+                "Code will crash."
             )
 
     return errors
 
 
 def _validate_description(description: str) -> List[str]:
-    """Validate description format."""
+    """Validate description format.
+    Violation causes CLI crash - errors are CRITICAL."""
     errors = []
 
     if not description or not isinstance(description, str) or not description.strip():
-        errors.append("Field 'description' must be a non-empty string")
+        errors.append("CRITICAL: Field 'description' is missing. Code will crash.")
         return errors
 
+    # 1. Length check
     if len(description) > MAX_DESCRIPTION_LENGTH:
         errors.append(
-            f"Description exceeds {MAX_DESCRIPTION_LENGTH} character limit "
-            f"({len(description)} chars)"
+            f"CRITICAL: Description length ({len(description)}) exceeds limit ({MAX_DESCRIPTION_LENGTH}). "
+            "Code will crash."
         )
 
-    # Check for multi-line YAML syntax which is forbidden
+    # 2. Multi-line check (YAML parsing safety)
     if "\n" in description.strip():
-        errors.append("Description must be single-line")
+        errors.append("CRITICAL: Description must be a single-line string only.")
 
-    # Pattern check
+    # 3. Pattern check (discovery tiering)
     first_line = description.split("\n")[0]
     normalized = re.sub(r'^["\']', "", first_line).upper()
     if not re.match(r"^(PROACTIVELY|MUST|SHOULD)?\s*USE\s+WHEN", normalized):
         errors.append(
-            "Description must start with 'USE when', 'MUST USE when', 'SHOULD USE when', or 'PROACTIVELY USE when' pattern"
+            "CRITICAL: Description must start with 'USE when', 'MUST USE when', "
+            "'SHOULD USE when', or 'PROACTIVELY USE when' pattern for semantic discovery."
         )
 
     return errors

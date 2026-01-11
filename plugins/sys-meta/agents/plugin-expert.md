@@ -1,11 +1,6 @@
 ---
 name: plugin-expert
 description: "SHOULD USE when maintaining or auditing Agent Skills according to the official Agent Skills framework. A meticulous infrastructure guardian ensuring compliance with the agentskills.io open standard."
-capabilities:
-  - infrastructure maintenance
-  - audit
-  - component creation
-  - standardization
 permissionMode: acceptEdits
 tools: [Read, Write, Edit, Glob, Grep, Bash, WebFetch]
 skills: [toolkit-registry, manage-healing, meta-builder, scaffold-component]

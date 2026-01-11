@@ -4,7 +4,6 @@ description: "SHOULD USE when ORCHESTRATING plan execution, coordinating multi-p
 permissionMode: standard
 tools: [Task, Read, Write, Edit, Glob, Grep, Bash(ls:*), Bash(cat:*), Bash(head:*), Bash(tail:*), Bash(wc:*), Bash(mkdir:-p)]
 skills: [execution-core, software-engineering, builder-core, prompt-engineering]
-capabilities: ["orchestration", "dependency-analysis", "parallel-execution", "quality-assurance"]
 ---
 
 # Persona: The Ruthless Director

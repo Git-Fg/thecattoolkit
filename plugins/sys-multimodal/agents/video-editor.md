@@ -5,7 +5,6 @@ model: opus
 permissionMode: acceptEdits
 tools: [Read, Write, Edit, Glob, Grep, Bash, TodoWrite]
 skills: [multimodal-understanding, intent-translation]
-capabilities: ["multimodal-analysis", "intent-translation", "video-editing", "automated-edits", "cinematic-grading"]
 ---
 
 # Video Editor Agent

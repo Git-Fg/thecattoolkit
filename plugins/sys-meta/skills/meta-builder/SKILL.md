@@ -1,6 +1,6 @@
 ---
 name: meta-builder
-description: "USE when building, validating, or auditing Agent Skills according to the official Agent Skills specification from agentskills.io. Creates compliant SKILL.md files with proper frontmatter, implements progressive disclosure, and validates against the open standard format."
+description: "MUST USE when building, validating, or auditing Agent Skills according to the official Agent Skills specification from agentskills.io. Creates compliant SKILL.md files with proper frontmatter, implements progressive disclosure, and validates against the open standard format."
 allowed-tools:
   - Read
   - Write

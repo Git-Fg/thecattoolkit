@@ -2,5 +2,8 @@
   "name": "sys-edge",
   "version": "1.0.0",
   "description": "Edge AI and mobile optimization for resource-constrained environments",
-  "license": "MIT"
+  "license": "MIT",
+  "author": {
+    "name": "Git-Fg"
+  }
 }

@@ -4,7 +4,6 @@ description: "SHOULD USE when designing systems or creating project plans. A pra
 permissionMode: acceptEdits
 tools: [Read, Write, Edit, Glob, Grep, Bash(ls:*), Bash(cat:*), Bash(grep:*)]
 skills: [architecture, builder-core, plan-execution]
-capabilities: ["system-design", "architecture-analysis", "technical-decisions", "plan-authoring"]
 ---
 
 # Persona: The Pragmatic Architect

@@ -1,6 +1,6 @@
 ---
 name: scaffold-component
-description: "SHOULD USE when generating new plugin components (skills, agents, commands). Scaffolds with 2026 Universal Agentic Runtime standards, frontmatter, and templates."
+description: "MUST USE when creating new plugin components (skills, agents, commands) or scaffolding 2026 Universal Agentic Runtime components with proper frontmatter and templates."
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash(mkdir:-p), Bash(ls:*), Bash(cat:*), Bash(find:*)]
 ---
 
@@ -54,7 +54,25 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash(mkdir:-p), Bash(ls:*), Bash(
 - skills: auto-load relevant skills
 - model: omit unless specified (defaults to configured subagent model)
 
-### 3. Template Selection Logic
+### 3. Hardcore Naming Constraints (Anti-Crash)
+
+**You MUST follow these rules strictly. Violations cause the runtime to crash.**
+
+**Name Field Rules:**
+1. **Length:** 1-64 characters exactly.
+2. **Charset:** Lowercase `a-z`, `0-9`, `-` ONLY. No underscores `_`. No uppercase.
+3. **Format:** No consecutive hyphens (`--`). Cannot start/end with `-`.
+4. **Consistency:** Skill filename `name` MUST match its parent directory name.
+
+**Valid:** `pdf-processing`, `data-analysis-v2`, `code-review`
+**Invalid:** `PDF_Processing` (caps/underscore), `-helper` (start hyphen), `tool--kit` (double hyphen)
+
+**Description Field Rules:**
+1. **Length:** 1-1024 characters max.
+2. **Format:** Single line string only.
+3. **Pattern:** Must start with "(MODAL) USE when..." where MODAL is optional (PROACTIVELY, MUST, SHOULD).
+
+### 4. Template Selection Logic
 
 **Minimal Complexity:**
 - Single component, straightforward purpose
@@ -72,7 +90,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash(mkdir:-p), Bash(ls:*), Bash(
 - Router pattern or progressive disclosure patterns
 - Multiple templates combined
 
-### 4. Frontmatter Generation
+### 5. Frontmatter Generation
 
 **Generate valid YAML with:**
 - All required fields populated
@@ -80,7 +98,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash(mkdir:-p), Bash(ls:*), Bash(
 - No redundant defaults (e.g., user-invocable: true)
 - Proper tool permissions and restrictions
 
-### 5. File Creation
+### 6. File Creation
 
 **Create files in correct locations:**
 - Skills: `.claude/skills/skill-name/SKILL.md` (or plugin-level)

@@ -1,7 +1,7 @@
 ---
 name: context-engineering
 description: "USE when managing persistent session state, avoiding context overflow, or enabling session handoffs via the Passive Hook System. MUST USE when sys-core plugin is installed."
-allowed-tools: [Read, Write, Edit, Bash(ls:.cattoolkit/*), Bash(cat:.cattoolkit/*), Bash(rm:.cattoolkit/context/archives/*)]
+allowed-tools: [Read, Write, Edit, Bash(ls:*), Bash(cat:*), Bash(rm:*), Glob, Grep]
 ---
 
 # Context Engineering Skill
