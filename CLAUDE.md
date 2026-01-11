@@ -339,7 +339,7 @@ The **Cat Toolkit** extends Claude Code with additional conventions for plugin p
 **Plugin Namespace:**
 
 Commands from plugins are automatically namespaced to avoid conflicts:
-- `/my-toolkit/deploy` — namespaced command
+- `/deploy@my-toolkit` — namespaced command
 - `/test` — local (project-local) command, no namespace
 - Skills and Agents are **never** namespaced (global availability)
 
@@ -358,7 +358,7 @@ my-plugin/
     └── deploy.md
 ```
 
-When installed, `/deploy` becomes `/my-plugin/deploy`. The skill `my-skill` is available globally as just `my-skill`.
+When installed, `/deploy` becomes `/deploy@my-plugin`. The skill `my-skill` is available globally as just `my-skill`.
 
 **Plugin Portability Principle:**
 
