@@ -14,12 +14,12 @@ Provides the essential infrastructure for the Cat Toolkit: security auditing, su
 ## Skills
 
 - **audit-security** - Secret detection and protected file blocking
-- **manage-subagents** - Create/audit/configure subagents for isolated execution
+- **toolkit-registry** - Component registry and management for skills/commands/agents
 - **scaffold-component** - Generate new plugin components from specifications
 - **meta-builder** - Build/audit components with live Claude Code docs
 - **manage-healing** - Forensic investigation of component failures
-- **manage-skills** - Audit/create/modify plugin skills
-- **manage-commands** - Create/audit slash commands
+- **manage-skills** - Consolidated into toolkit-registry for unified management
+- **manage-commands** - Consolidated into toolkit-registry for unified management
 - **check-types** - Python type safety validation (pyright, mypy)
 - **validate-toolkit** - Comprehensive plugin/marketplace validation
 

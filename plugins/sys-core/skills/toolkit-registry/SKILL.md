@@ -1,6 +1,6 @@
 ---
 name: toolkit-registry
-description: SHOULD USE when creating, auditing, or managing plugin components (Skills, Commands, Agents). System Authority on 2026 Universal Agentic Runtime standards for all plugin components.
+description: "SHOULD USE when creating, auditing, or managing plugin components (Skills, Commands, Agents). System Authority on 2026 Universal Agentic Runtime standards for all plugin components."
 context: fork
 agent: plugin-expert
 allowed-tools: [Read, Write, Edit, Bash(ls:*), Bash(grep:*), Bash(cat:*), Bash(find:*), Glob, Grep]
@@ -23,7 +23,7 @@ System Authority for managing all plugin components (Skills, Commands, Agents) f
 ## Shared Standards
 
 For common principles, integration patterns, and anti-patterns, see:
-- **[shared-standards.md](../../styles/shared-standards.md)** - Common standards for all components
+- **[standards-communication.md](references/standards-communication.md)** - Common standards for all components
 
 ## Component Standards
 
@@ -146,7 +146,6 @@ Consolidated standards and documentation:
 
 | Reference | Purpose |
 |:----------|:--------|
-| `shared-standards.md` | Common standards for all components |
 | `standards-communication.md` | Skill creation, auditing, and communication patterns |
 | `command-standards.md` | Command creation and auditing |
 | `agent-security.md` | Agent creation, auditing, and security |
@@ -256,7 +255,7 @@ See `examples/bash-logic.md` for a command that:
 
 ## Integration Points
 
-- **shared-standards.md** - Common principles for all components
+- **standards-communication.md** - Common principles for all components
 - **scaffold-component** - Natural language to component generation
 - **meta-builder** - Live documentation fetching for compliance
 - **validate-toolkit** - Comprehensive testing and validation

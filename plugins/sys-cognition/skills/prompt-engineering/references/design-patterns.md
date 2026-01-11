@@ -1,5 +1,200 @@
 # Design Patterns: Techniques & Structure
 
+## Part 0: The 7 Golden Patterns (2026 Standards)
+
+These foundational patterns represent the distilled best practices from analyzing actual Claude Code system prompts.
+
+### Pattern 1: Specialized Persona Definition
+**Core Principle:** Define role, domain, and success criteria immediately. Never use generic "helpful assistant."
+
+**Structure:**
+```markdown
+You are a **[Specific Role]** specializing in **[Domain]**.
+Your expertise lies in **[specific competencies]**.
+
+**Your Strengths:**
+- [Competency 1]
+- [Competency 2]
+- [Competency 3]
+
+**Success Criteria:**
+- [Criterion 1 with measurable outcome]
+- [Criterion 2 with constraint]
+- [Criterion 3 with quality gate]
+```
+
+**Example:**
+```markdown
+You are a **Senior PostgreSQL Database Administrator**.
+Your goal is to optimize query performance without altering the underlying data schema unless absolutely necessary.
+
+**Your Strengths:**
+- Query plan analysis (EXPLAIN ANALYZE)
+- Indexing strategies (B-Tree vs GIN/GiST)
+- Vacuuming and maintenance configuration
+
+**Success Criteria:**
+- Reduced query execution time by >50%
+- No degradation in write performance
+- Zero downtime implementation
+```
+
+### Pattern 2: Hard Boundaries (Negative Constraints)
+**Core Principle:** Use "Negative Prompting" to psychologically sandbox the model before technical sandboxing.
+
+**Structure:**
+```markdown
+### OPERATIONAL BOUNDARIES
+You are in **[Mode]**.
+
+**=== CRITICAL: [MODE] MODE - [KEY RESTRICTION] ===**
+You are STRICTLY PROHIBITED from:
+- [Forbidden action 1]
+- [Forbidden action 2]
+- [Forbidden action 3]
+
+**Why:** [Reasoning for each prohibition]
+```
+
+**Example (from Explore Agent):**
+```markdown
+**=== CRITICAL: READ-ONLY MODE - NO FILE MODIFICATIONS ===**
+You are STRICTLY PROHIBITED from:
+- Creating new files (no Write, touch, or file creation)
+- Modifying existing files (no Edit operations)
+- Deleting files (no rm)
+- Moving or copying files
+- Running ANY commands that change system state
+
+Your role is EXCLUSIVELY to search and analyze existing code.
+```
+
+### Pattern 3: Dynamic Context Injection (Parsimonious XML)
+**Core Principle:** Wrap dynamic context in XML tags, limit to 5-8 tag pairs maximum.
+
+**Structure:**
+```markdown
+[Instruction text]
+
+<env>
+[Key 1]: [Value 1]
+[Key 2]: [Value 2]
+</env>
+
+<file_contents filename="[name]">
+[Content to process]
+</file_contents>
+```
+
+**XML Tag Priority Matrix:**
+| Priority | Tag Type | Purpose |
+|:---------|:--------|:--------|
+| 1 (Essential) | `<env>` | Runtime context injection |
+| 2 (Essential) | `<example_correct>` / `<example_incorrect>` | Contrastive few-shot learning |
+| 3 (High) | `<sub_agents>` | Sub-agent definitions |
+| 4 (Medium) | `<file_contents>` | File data separation |
+| 5 (Low) | `<thinking>` | Internal reasoning |
+
+### Pattern 4: Protocol Prerequisites (Chain of Thought)
+**Core Principle:** Enforce specific order of operations with mandatory prerequisites.
+
+**Structure:**
+```markdown
+### DIAGNOSTIC PROTOCOL
+Before [action], you MUST follow this sequence:
+
+1. **Step 1:** [Specific verification]
+2. **Step 2:** [Specific verification]
+3. **Step 3:** [Specific verification]
+
+ONLY after these steps are complete may you [perform action].
+
+**Why this is non-negotiable:** [Consequence of skipping]
+```
+
+**Example (from MCP prompt):**
+```markdown
+**MANDATORY PREREQUISITE - THIS IS A HARD REQUIREMENT**
+You MUST call `mcp-cli info <server>/<tool>` BEFORE ANY `mcp-cli call <server>/<tool>`.
+
+**Why:** MCP tool schemas never match expectations. Even tools with pre-approved permissions require schema checks.
+
+**Flow:**
+1. `mcp-cli tools` (Discover)
+2. `mcp-cli info <tool>` (Check Schema - **REQUIRED**)
+3. `mcp-cli call <tool>` (Execute)
+```
+
+### Pattern 5: XML-Structured Few-Shot Examples
+**Core Principle:** Provide contrastive examples to teach nuance.
+
+**Structure:**
+```markdown
+<example_correct>
+User: [Input scenario]
+Assistant: [Desired response]
+Reasoning: [Why this is correct]
+</example_correct>
+
+<example_incorrect>
+User: [Same scenario]
+Assistant: [Undesired response]
+Reasoning: [Why this is wrong]
+</example_incorrect>
+```
+
+### Pattern 6: Plan Mode Workflow (State Machines)
+**Core Principle:** Separate "Thinking" from "Doing" through phased workflows.
+
+**Structure:**
+```markdown
+**Plan mode is active.**
+You MUST NOT make any edits or run non-readonly tools. You may only edit the plan file: `{{PLAN_FILE_PATH}}`.
+
+**Workflow:**
+1. **Phase 1 (Initial Understanding):** [Actions]
+2. **Phase 2 (Design):** [Actions]
+3. **Phase 3 (Review):** [Actions]
+4. **Phase 4 (Final Plan):** [Actions]
+5. **Phase 5 (Exit):** [Action]
+```
+
+### Pattern 7: Parsimonious XML Usage (5-8 Tag Rule)
+**Core Principle:** Limit to 5-8 XML tag pairs maximum. Prioritize tags by semantic value.
+
+**What to Convert to Markdown:**
+- `<persona>` → **Bold header**
+- `<success_criteria>` → **Numbered list**
+- `<protocol>` → Steps listed directly
+- `<output_format>` → Inline code block or table
+
+**Bad Example (11+ tags):**
+```markdown
+<persona>...</persona>
+<success_criteria>...</success_criteria>
+<env>...</env>
+<agent_persona type="Explore">...</agent_persona>
+<protocol>...</protocol>
+<example_correct>...</example_correct>
+```
+
+**Good Example (6 tags):**
+```markdown
+**Your Strengths:** [markdown list]
+**Success Criteria:** [markdown list]
+
+<env>...</env>
+
+<sub_agents>
+[All agent personas consolidated here]
+</sub_agents>
+
+<example_correct>...</example_correct>
+<example_incorrect>...</example_incorrect>
+```
+
+---
+
 ## Part I: Reasoning Techniques
 
 ### Chain-of-Thought (CoT) Prompting

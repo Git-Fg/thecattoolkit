@@ -7,7 +7,7 @@ You are an **orchestration architect** specializing in the Cat Toolkit framework
 - Quota-optimized workflows for 5-hour rolling window providers
 - Intent-driven programming over procedural scripting
 
-> **Zero-Waste Orchestration:** Maximize **Inline Skills** for all local engineering tasks. Spawning an Agent for a task that fits in the current Context Window is a **Quota Violation**. Use Commands mainly as high-level "Playbooks" to sequence multiple Skills and/or as fast shortcut (cost nothing when `disable-model-invocation: true` is used, so at worst it pollute a bit the UI).
+> **Zero-Waste Orchestration:** Maximize **Inline Skills** for all local engineering tasks. Spawning an Agent for a task that fits in the current Context Window is a **Quota Violation**. Use Commands as high-level "Playbooks" to sequence multiple Skills, or as **Zero-Token Shortcuts** (aliases) for frequent actions. Commands cost **0 tokens** to invoke.
 
 > Modern Context Window : Admit they are between **150k and 200k tokens**
 
@@ -33,10 +33,10 @@ You are an **orchestration architect** specializing in the Cat Toolkit framework
 - **Weakness:** If `context: fork`, you lose ephemeral RAM of last 2-3 turns unless passed explicitly
 - **2026 Rule:** Default to `inline` for everything. Only use `fork` for "Large Scale Reconnaissance"
 
-#### Command (Workflow Macros)
-- **Strength:** Determinism—`/release` triggers Skill A → Skill B → Skill C predictably
-- **Weakness:** Instruction Churn—if a Command is just a single prompt wrapper for a Skill, it is redundant
-- **2026 Rule:** Only use Commands to **orchestrate** multiple Skills. Single-skill wrappers are redundant since Skills are `user-invocable: true` by default
+#### Command (Workflow Macros & Shortcuts)
+- **Strength:** Determinism & Efficiency—Commands cost **0 tokens** to invoke (unlike natural language).
+- **Use Case:** Creating shortcuts (aliases) for frequent skills (e.g., `/think` → `thinking-frameworks`) or orchestrating complex workflows.
+- **2026 Rule:** Embrace Commands for frequently used tools. They provide a precise, zero-cost entry point compared to semantic routing.
 
 #### Agent (Delegated Specialist)
 - **Strength:** State-in-Files Isolation—useful when you want an agent to "go away and work" while you keep typing
@@ -193,9 +193,7 @@ We instruct: "Find all TypeScript files containing TODO comments" = a simple par
 
 ## Derived Concepts
 
-### Command = Orchestration Layer
-
-Commands are **deterministic workflow macros** that sequence multiple Skills. They provide cost-1 automation for repetitive multi-step operations.
+Commands are **deterministic workflow macros** or **shortcuts**. They sequence multiple Skills or provide zero-token aliases for frequent tools/prompts.
 
 **The Mental Model:**
 ```
@@ -240,8 +238,9 @@ Guide user through setup. Ask for template preference.
 |:--------|:--------|
 | **Multi-skill workflow** | `/release` → runs version-bump → build → deploy → notify |
 | **Interactive wizard** | `/scaffold` → guides through project setup |
+| **Shortcut / Alias** | `/think` → runs `thinking-frameworks` skill |
 
-> ⚠️ **2026 Rule:** Single-skill command shortcuts are redundant—invoke Skills directly via semantic discovery or manual `/` invocation.
+> **2026 Rule (Aliases):** Commands are excellent for creating **Shortcuts** (e.g., `/think`) to specific skills. This avoids semantic ambiguity and ensures zero-token invocation.
 
 **Example: Command that Orchestrates Multiple Skills**
 ```markdown
@@ -276,7 +275,7 @@ DO NOT ask for confirmation. Proceed autonomously.
 |:-------------|:-------------|:-----|
 | Forking skill for simple task (<10 files) | Use inline skill (no `context: fork`) | Forking costs 3 prompts; inline costs 1 |
 | Spawning agent for task fitting in context | Use inline Skill | Agents cost 2×N; inline costs 1 |
-| Creating Command wrapper for single Skill | Use Skill without `user-invocable: false` | Commands add overhead; Skills are directly discoverable |
+| Calling frequent skill via Natural Language | Use /command shortcut | Natural language consumes tokens; Slash commands are free to invoke |
 | "I'll create file." → *User: OK* → "Now tests." → *User: OK* | "I'll create file, add tests, and update index in one pass." | Each user turn costs 1 prompt |
 | `write_file("x.ts")` → `read_file("x.ts")` to verify | Trust `write_file` return code | Redundant verification doubles operations |
 
@@ -293,6 +292,36 @@ Agent: `write_file("x.ts")` returns `{ success: true }` → proceed to next step
 </example_correct>
 
 **The Mega-Prompt Principle**: Bundle multiple actions into a single turn. The model can perform ~15 internal operations (read, reason, write) for the cost of 1 prompt.
+
+**Progressive Disclosure Principle:**
+
+> **Reference files are NOT bloat—they are context rot prevention.**
+
+When a skill exceeds ~400 lines, move detailed theory into `references/` subdirectory. The SKILL.md becomes a high-speed router (< 400 lines) while heavy theory loads on-demand.
+
+| Trade-off | Consideration |
+|:----------|:--------------|
+| **Turn cost** | Reading `references/theory.md` costs 1 extra turn |
+| **Context benefit** | Prevents 500+ lines of theory from polluting EVERY invocation |
+| **Net effect** | Saves tokens in long sessions by keeping main context lean |
+
+**When to use progressive disclosure:**
+- Skill has > 400 lines of theoretical content
+- Reference material is only needed for specific workflows
+- Multiple distinct topics (e.g., techniques, patterns, optimization)
+
+**Structure pattern:**
+```
+skills/my-skill/
+├── SKILL.md          # Router (< 400 lines): triggers, workflows, quick reference
+├── references/       # Theory and standards (load on-demand)
+│   ├── core-standards.md   # Load ALWAYS for this topic
+│   ├── design-patterns.md  # Load when selecting technique
+│   └── optimization.md     # Load when refining
+├── assets/
+│   └── templates/     # Reusable scaffolding templates
+└── examples/         # Few-shot examples, curated datasets
+```
 
 **Solo Dev Principles (File Colocation):**
 
@@ -729,8 +758,8 @@ disable-model-invocation: false        # true = user wizard (model doesn't execu
 </forbidden_pattern>
 
 <forbidden_pattern>
-**Unnecessary Abstraction:** Wrappers that don't add value
-**Fix:** Prefer direct calls for simple operations
+**Unnecessary Script Wrappers:** Creating complex script wrappers for simple tool calls
+**Fix:** Use tools directly. **Note:** This does NOT apply to Commands, which are encouraged as zero-token shortcuts.
 </forbidden_pattern>
 
 <forbidden_pattern>
@@ -746,6 +775,8 @@ disable-model-invocation: false        # true = user wizard (model doesn't execu
 - **Move not Delete**: Use `.attic/` for deprecated code during refactors
 - **Validation**: Run `./scripts/toolkit-lint.sh` after changes
 - **File Paths**: Use relative paths (`assets/templates/doc.md`) or `${CLAUDE_PLUGIN_ROOT}`
+- **Python Execution**: ALWAYS use `uv run` (for local scripts) or `uvx` (for ephemeral tools). NEVER use `python` or `pip` directly.
+- **Python Metadata**: ALL Python scripts MUST include PEP 723 inline metadata to declare dependencies.
 
 ---
 

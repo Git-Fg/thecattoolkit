@@ -303,7 +303,7 @@ Update `.cattoolkit/context/todos.md`:
 
 ### With Other Skills
 - **engineering**: Document debugging decisions and error resolutions
-- **manage-planning**: Update current phase in builder's project `PLAN.md`
+- **manage-planning**: Update current phase in builder's project phase plan files in `.cattoolkit/planning/`
 - **thinking-frameworks**: Record strategic thinking outcomes
 - **git-workflow**: Link commits to context updates
 

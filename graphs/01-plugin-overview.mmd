@@ -1,0 +1,54 @@
+%%{init: {"theme": "base", "themeVariables": {"primaryColor": "#ff6b6b"}}}%%
+graph TB
+    subgraph sys-builder ["🧩 sys-builder"]
+        sys-builder_execution-core_skill["⚙️ execution-core"]
+        sys-builder_builder-core_skill["⚙️ builder-core"]
+        sys-builder_architecture_skill["⚙️ architecture"]
+        sys-builder_software-engineering_skill["⚙️ software-engineering"]
+        sys-builder_plan-execution_skill["⚙️ plan-execution"]
+        sys-builder_designer_agent["🤖 designer"]
+        sys-builder_director_agent["🤖 director"]
+        sys-builder_worker_agent["🤖 worker"]
+        sys-builder_audit_command["⚡ audit"]
+        sys-builder_build_command["⚡ build"]
+        sys-builder_plan_command["⚡ plan"]
+    end
+    subgraph sys-cognition ["🧩 sys-cognition"]
+        sys-cognition_thinking-frameworks_skill["⚙️ thinking-frameworks"]
+        sys-cognition_prompt-engineering_skill["⚙️ prompt-engineering"]
+        sys-cognition_context-engineering_skill["⚙️ context-engineering"]
+        sys-cognition_deep-analysis_skill["⚙️ deep-analysis"]
+        sys-cognition_reasoner_agent["🤖 reasoner"]
+        sys-cognition_think_command["⚡ think"]
+    end
+    subgraph sys-core ["🧩 sys-core"]
+        sys-core_audit-security_skill["⚙️ audit-security"]
+        sys-core_scaffold-component_skill["⚙️ scaffold-component"]
+        sys-core_validate-toolkit_skill["⚙️ validate-toolkit"]
+        sys-core_manage-healing_skill["⚙️ manage-healing"]
+        sys-core_toolkit-registry_skill["⚙️ toolkit-registry"]
+        sys-core_check-types_skill["⚙️ check-types"]
+        sys-core_security-auditor_agent["🤖 security-auditor"]
+        sys-core_hooks_sys-core["📦 hooks"]
+    end
+    subgraph sys-edge ["🧩 sys-edge"]
+        sys-edge_uv-ruff-python-tools_skill["⚙️ uv-ruff-python-tools"]
+        sys-edge_edge-ai-management_skill["⚙️ edge-ai-management"]
+        sys-edge_offline-sync_skill["⚙️ offline-sync"]
+        sys-edge_mobile-optimization_skill["⚙️ mobile-optimization"]
+        sys-edge_gitingest_skill["⚙️ gitingest"]
+    end
+    subgraph sys-meta ["🧩 sys-meta"]
+        sys-meta_meta-builder_skill["⚙️ meta-builder"]
+        sys-meta_plugin-expert_agent["🤖 plugin-expert"]
+    end
+    subgraph sys-multimodal ["🧩 sys-multimodal"]
+        sys-multimodal_intent-translation_skill["⚙️ intent-translation"]
+        sys-multimodal_multimodal-understanding_skill["⚙️ multimodal-understanding"]
+        sys-multimodal_video-editor_agent["🤖 video-editor"]
+    end
+    sys-builder_director_agent ==>|invokes| sys-cognition_prompt-engineering_skill
+    sys-builder_audit_command ==>|invokes| sys-core_security-auditor_agent
+    sys-meta_plugin-expert_agent ==>|invokes| sys-core_toolkit-registry_skill
+    sys-meta_plugin-expert_agent ==>|invokes| sys-core_manage-healing_skill
+    sys-meta_plugin-expert_agent ==>|invokes| sys-core_scaffold-component_skill

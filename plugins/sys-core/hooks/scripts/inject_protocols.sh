@@ -73,4 +73,24 @@ Session is successful when:
 
 "
 
+# Auto-load persistent context if available
+if [ -f ".cattoolkit/context/scratchpad.md" ]; then
+    SCRATCHPAD=$(cat .cattoolkit/context/scratchpad.md)
+    HEADER="$HEADER
+
+=== PERSISTENT CONTEXT (Auto-Loaded) ===
+$SCRATCHPAD
+"
+fi
+
+# Auto-load project roadmap if available
+if [ -f ".cattoolkit/planning" ] && find .cattoolkit/planning -name "ROADMAP.md" -type f 2>/dev/null | grep -q .; then
+    ROADMAP=$(find .cattoolkit/planning -name "ROADMAP.md" -type f -exec cat {} \;)
+    HEADER="$HEADER
+
+=== PROJECT ROADMAP (Auto-Loaded) ===
+$ROADMAP
+"
+fi
+
 jq -n --arg ctx "$HEADER" '{hookSpecificOutput: {hookEventName: "SessionStart", additionalContext: $ctx}}'

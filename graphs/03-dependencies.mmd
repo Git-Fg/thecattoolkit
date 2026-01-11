@@ -1,0 +1,14 @@
+%%{init: {"theme": "base", "themeVariables": {"primaryColor": "#81c784"}}}%%
+graph TB
+    subgraph DEPENDENCIES ["🔗 Cross-Plugin Dependencies"]
+        DEP1["sys-builder:director"]
+            -.->|invokes| DEP1_T["sys-cognition:prompt-engineering"]
+        DEP2["sys-builder:audit"]
+            -.->|invokes| DEP2_T["sys-core:security-auditor"]
+        DEP3["sys-meta:plugin-expert"]
+            -.->|invokes| DEP3_T["sys-core:toolkit-registry"]
+        DEP4["sys-meta:plugin-expert"]
+            -.->|invokes| DEP4_T["sys-core:manage-healing"]
+        DEP5["sys-meta:plugin-expert"]
+            -.->|invokes| DEP5_T["sys-core:scaffold-component"]
+    end

@@ -60,7 +60,7 @@ Read: context-engineering skill - references/scratchpad-maintenance.md
    - Read `.cattoolkit/context/todos.md`
    - Read `.cattoolkit/context/context.log` (recent raw actions)
    - Read `.cattoolkit/context/checkpoints/*.md` (auto-created by PreCompact hook)
-   - _Note: Optionally check builder project status via `.cattoolkit/planning/{project}/PLAN.md`_
+   - _Note: Optionally check builder project status via `.cattoolkit/planning/{project}/phases/XX-name/XX-YY-PLAN.md`_
 
 2. **Analyze Context**:
    - Count entries and estimate tokens

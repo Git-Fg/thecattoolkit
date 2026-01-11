@@ -1,0 +1,22 @@
+{
+  "name": "sys-edge",
+  "version": "1.0.0",
+  "description": "Edge AI and mobile optimization for resource-constrained environments",
+  "capabilities": [
+    "edge-ai",
+    "mobile-optimization",
+    "quantization",
+    "model-management",
+    "battery-optimization",
+    "offline-sync"
+  ],
+  "plugins": [],
+  "contributors": [
+    {
+      "name": "CatToolkit",
+      "email": "info@cattoolkit.dev"
+    }
+  ],
+  "dependencies": [],
+  "license": "MIT"
+}

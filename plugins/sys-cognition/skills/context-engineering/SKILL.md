@@ -1,6 +1,6 @@
 ---
 name: context-engineering
-description: "USE when managing persistent session state, avoiding context overflow, or enabling session handoffs via the Passive Hook System."
+description: "USE when managing persistent session state, avoiding context overflow, or enabling session handoffs via the Passive Hook System. MUST USE when sys-core plugin is installed."
 allowed-tools: [Read, Write, Edit, Bash(ls:.cattoolkit/*), Bash(cat:.cattoolkit/*), Bash(rm:.cattoolkit/context/archives/*)]
 ---
 
@@ -20,7 +20,7 @@ Manage persistent session state independent of the LLM context window using the 
 
 ## 🆕 Hybrid Hook-Powered Architecture
 
-**NEW**: The Context plugin uses a **hybrid approach** combining command and prompt hooks for optimal performance and intelligence.
+**NEW**: The Context plugin uses a **hybrid approach** combining command and prompt hooks for optimal performance and intelligence. **Requires sys-core plugin to be installed** for hook infrastructure.
 
 ### The Hybrid Hook System
 
@@ -36,6 +36,8 @@ Manage persistent session state independent of the LLM context window using the 
 |:-----|:--------|:-------|
 | **Stop** | Session stopping | Runs `evaluate_stop.py` to check for safe exit |
 | **SubagentStop** | Agent stops | Runs `evaluate_subagent.py` to verify completion |
+
+**Note**: These hooks are provided by the `sys-core` infrastructure plugin. Install sys-core before using context-engineering for full functionality.
 
 ### Why Hybrid Hooks?
 
@@ -148,7 +150,7 @@ Manage persistent session state independent of the LLM context window using the 
         ├── ROADMAP.md         # Phases with parallelism markers
         └── phases/
             └── XX-name/
-                ├── XX-YY-PLAN.md
+                ├── XX-YY-PLAN.md (phase plan file)
                 └── XX-YY-SUMMARY.md
 ```
 

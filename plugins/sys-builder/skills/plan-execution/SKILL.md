@@ -1,30 +1,33 @@
 ---
 name: plan-execution
-description: "USE when executing a project plan (PLAN.md). Orchestrates task execution, manages dependencies, delegates to workers, and verifies results."
-context: fork
-agent: director
+description: "USE when executing a project plan from .cattoolkit/planning/. Orchestrates task execution, manages dependencies, delegates to workers, and verifies results."
 allowed-tools: [Task, Read, Write, Bash(ls:*), Bash(cat:*), Bash(grep:*), Glob, Grep]
 ---
 
 # Plan Execution Protocol
 
-## Important: User-Facing Entry Point
+## Inline-First Execution Model
 
 **For user-invoked plan execution, use `builder-core` skill.**
 
 This skill provides the internal execution protocols and standards. The builder-core skill is the primary user-facing interface that wraps this functionality.
+
+**Execution Protocol:**
+- If phase context involves >10 files, the model SHOULD manually spawn a @director subagent; otherwise, execute INLINE to preserve RAM
+- Follow Solo Dev Principle: Read complete phase plan context before delegating to workers
+- Trust tool return codes for verification (no read-back unless error)
 
 ## 1. Context Discovery (MANDATORY)
 
 **Locate and read context files:**
 You MUST locate and read:
 - `BRIEF.md` (project brief)
-- `PLAN.md` (the execution plan)
+- Phase plan file from `.cattoolkit/planning/{project-slug}/phases/XX-name/XX-YY-PLAN.md`
 - `ADR.md` (architecture decisions, if exists)
 
 **Discovery Strategy:**
 - Follow `builder-core` standards for file location.
-- Use Glob tool to locate PLAN.md files if needed.
+- Use Glob tool to locate plan files in `.cattoolkit/planning/` if needed.
 
 **If any required file is missing:** Log error and abort.
 
@@ -105,7 +108,7 @@ Each `worker` agent receives natural language instructions with:
 
 1. **Trust tool return codes** - Subagent `{ success: true }` is sufficient for completion
 2. **Run high-fidelity validation** - Execute plan's "Verify" command (compiler, linter, tests)
-3. **Update PROJECT STATE** - Update PLAN.md status and ROADMAP.md
+3. **Update PROJECT STATE** - Update phase plan file status and ROADMAP.md
 4. **Log verification results**
 
 **Read-Back Protocol (ONLY when required):**
@@ -118,5 +121,5 @@ Each `worker` agent receives natural language instructions with:
 ## 6. Completion
 
 **When all tasks pass verification:**
-1. Update PLAN.md status: `status: complete`
+1. Update phase plan file status: `status: complete`
 2. Create SUMMARY.md using `builder-core/references/templates/summary.md`

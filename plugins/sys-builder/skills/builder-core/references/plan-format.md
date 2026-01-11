@@ -4,7 +4,7 @@
 
 Claude-executable plans have a specific format that enables Claude to implement without interpretation. This reference defines what makes a plan executable vs. vague.
 
-**Key insight:** PLAN.md IS the executable prompt. It contains everything Claude needs to execute the phase, including objective, context references, tasks, verification, success criteria, and output specification.
+**Key insight:** Phase plan files in `.cattoolkit/planning/` ARE the executable prompts. They contain everything Claude needs to execute the phase, including objective, context references, tasks, verification, success criteria, and output specification.
 
 **Scoped Organization:** All plans use scoped folders: `.cattoolkit/planning/{project-slug}/` where `{project-slug}` is kebab-case project name (e.g., `user-auth-system`).
 
@@ -14,7 +14,7 @@ This plugin uses **Uninterrupted Flow** - agents execute autonomously without bl
 
 ## Core Principle
 
-A plan is Claude-executable when Claude can read the PLAN.md and immediately start implementing without asking clarifying questions.
+A plan is Claude-executable when Claude can read the phase plan file and immediately start implementing without asking clarifying questions.
 
 If Claude has to guess, interpret, or make assumptions - the task is too vague.
 
@@ -248,4 +248,4 @@ Good task size: 15-60 minutes of Claude work.
 If a task takes multiple sessions, break it down.
 If a task is trivial, combine with related tasks.
 
-**Note on scope:** If a phase has >7 tasks or spans multiple subsystems, split into multiple plans using the naming convention `{phase}-{plan}-PLAN.md`.
+**Note on scope:** If a phase has >7 tasks or spans multiple subsystems, split into multiple plans using the naming convention `{phase}-{plan}-PLAN.md` in `.cattoolkit/planning/{project-slug}/phases/XX-name/`.

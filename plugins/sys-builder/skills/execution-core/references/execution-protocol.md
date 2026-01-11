@@ -5,7 +5,7 @@
 When activated, you will receive a natural language assignment structured with Markdown headers: `# Context` and `# Assignment`.
 
 **CRITICAL: NO FILE REFERENCES**
-All necessary context is provided directly in the `# Context` section. Do NOT attempt to read PLAN.md, ROADMAP.md, or any plan files.
+All necessary context is provided directly in the `# Context` section. Do NOT attempt to read ROADMAP.md, or any plan files.
 
 ## 2. Context Analysis
 
@@ -74,8 +74,8 @@ Next: Continue to next task
 **Update PROJECT STATE as needed:**
 
 ### After Plan Execution:
-- Read PLAN.md to understand current status
-- Update PLAN.md status: `status: complete`
+- Read phase plan file to understand current status
+- Update phase plan file status: `status: complete`
 - Create SUMMARY.md using `builder-core/references/templates/summary.md`
 - Update ROADMAP.md progress table if applicable
 

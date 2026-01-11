@@ -23,7 +23,7 @@
 ## Current State
 
 **Phase:** XX-name
-**Plan File:** `XX-YY-PLAN.md`
+**Plan File:** `XX-YY-PLAN.md` in `.cattoolkit/planning/{project-slug}/phases/XX-name/`
 **Status:** [In Progress / Partially Complete]
 
 ### Completed Tasks
@@ -84,7 +84,7 @@ When resuming, execute in this order:
 **To resume this session:**
 
 1. Read this HANDOFF.md file completely
-2. Read the phase PLAN.md to see full context
+2. Read the phase plan file to see full context
 3. Read BRIEF.md and ROADMAP.md for project context
 4. Continue from "In-Progress Task" section above
 5. Delete this HANDOFF.md file when phase is complete
@@ -92,7 +92,7 @@ When resuming, execute in this order:
 **DO NOT:** Restart the phase or redo completed tasks.
 
 **Verification before resuming:**
-- [ ] All completed tasks in this handoff match PLAN.md status
+- [ ] All completed tasks in this handoff match phase plan file status
 - [ ] In-progress task is clear on where to continue
 - [ ] All file modifications are saved
 - [ ] No merge conflicts or unresolved states
@@ -122,7 +122,7 @@ When resuming, execute in this order:
 ## Current State
 
 **Phase:** 01-foundation
-**Plan File:** `01-01-PLAN.md`
+**Plan File:** `01-01-PLAN.md` in `.cattoolkit/planning/{project-slug}/phases/01-name/`
 **Status:** Partially Complete
 
 ### Completed Tasks
@@ -177,7 +177,7 @@ None
 **To resume this session:**
 
 1. Read this HANDOFF.md file completely
-2. Read `01-01-PLAN.md` to see full task details
+2. Read the phase plan file to see full task details
 3. Read project BRIEF.md and ROADMAP.md for context
 4. Continue from Task 3: Configure database
 5. Delete this HANDOFF.md file when phase is complete

@@ -1,8 +1,6 @@
 ---
 name: builder-core
 description: PROACTIVELY USE when planning or executing projects. Auto-discovers codebase patterns, creates multi-phase plans, and orchestrates parallel agent execution. Primary entry point for all planning and execution workflows.
-context: fork
-agent: director
 allowed-tools: [Read, Write, Edit, Glob, Grep, Task, Bash(mkdir:-p), Bash(ls:*)]
 ---
 
@@ -27,7 +25,18 @@ Comprehensive planning and execution system with automatic codebase discovery an
 |:-----|:------------|:-------------|
 | **Plan** | User requests planning | "Create a plan for X", "I need a roadmap for Y" |
 | **Execute** | User requests execution | "Execute this plan", "Run phase 02" |
-| **Lite** | Simple features | "Add X feature" (2-3 tasks, single PLAN.md) |
+| **Lite** | Simple features | "Add X feature" (2-3 tasks, single phase plan file) |
+
+## Operational Protocol
+
+**Inline-First Model:**
+1. **Assess Scale**: If project files < 10, execute planning INLINE (no agent fork)
+2. **Standard/Large Scale**: If project > 10 files, MUST invoke `@director` agent to perform forked reconnaissance
+3. **Template Access**: Load `references/templates/` on-demand based on Plan Type
+
+## Workflow Routing
+- **Lite Plan**: Follow inline protocol (2-3 tasks, single phase plan file in .cattoolkit/planning/)
+- **Standard Plan**: Delegate to `@director` (Forked when >10 files)
 
 ## Document Templates
 
@@ -58,9 +67,9 @@ mkdir -p .cattoolkit/planning/{slug}/phases
 ├── ROADMAP.md         # Phases with parallelism markers
 └── phases/
     ├── 01-{name}/
-    │   └── 01-01-PLAN.md
+    │   └── 01-01-PLAN.md (phase plan file)
     └── 02-{name}/
-        └── 02-01-PLAN.md
+        └── 02-01-PLAN.md (phase plan file)
 ```
 
 ### Phase 2: Auto-Discovery
@@ -84,12 +93,12 @@ Synthesize findings into DISCOVERY.md using `references/templates/discovery.md`.
 
 ### Phase 3: Determine Plan Type
 
-**Lite Plan:** Simple feature (2-3 tasks). Create `PLAN.md` directly.
+**Lite Plan:** Simple feature (2-3 tasks). Create phase plan file directly in `.cattoolkit/planning/{project-slug}/phases/XX-name/`.
 
 **Standard Plan:** Complex project. Create full hierarchy:
 - `BRIEF.md` (Project goals)
 - `ROADMAP.md` (Phases and milestones)
-- Phase `PLAN.md` files
+- Phase plan files in `.cattoolkit/planning/{project-slug}/phases/XX-name/`
 
 ### Phase 4: Create Documents
 
@@ -105,7 +114,7 @@ Use templates from `references/templates/`:
 - Split phases with >7 tasks
 - **STRICTLY PROHIBITED:** Time estimates
 
-**PLAN.md** (using `phase-plan.md` template):
+**Phase plan file** (using `phase-plan.md` template):
 - 2-3 tasks per plan (split if >7)
 - Each task: Scope/Action/Verify/Done
 - Parallelism analysis table
@@ -128,7 +137,7 @@ Create ROADMAP.md with explicit parallelism markers:
 
 1. Read ROADMAP.md for phase overview
 2. Identify current phase (first pending or specified)
-3. Read phase PLAN.md for task details
+3. Read phase plan file for task details
 4. Parse parallelism analysis table
 
 ### Phase 2: Resumability Check
@@ -212,7 +221,7 @@ When complete, report:
 ### Phase 6: Update State
 
 **After each task:**
-- Update task status in PLAN.md (pending → in_progress → completed)
+- Update task status in phase plan file (pending → in_progress → completed)
 
 **After each phase:**
 - Update phase status in ROADMAP.md

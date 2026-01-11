@@ -1,8 +1,6 @@
 ---
 name: deep-analysis
-description: "USE when synthesis of research into a formal report is required."
-context: fork
-agent: reasoner
+description: "SHOULD USE when performing deep strategic analysis, comprehensive problem-solving, or synthesizing research into formal reports using structured thinking frameworks."
 allowed-tools: [Read, Write, Edit, Glob, Grep]
 ---
 
@@ -11,6 +9,10 @@ allowed-tools: [Read, Write, Edit, Glob, Grep]
 ## Purpose
 
 This skill provides comprehensive strategic analysis capabilities for complex problems. It guides autonomous deep discovery using structured thinking frameworks to generate thorough, actionable insights.
+
+## Solo Dev Principle
+
+**Favor reading one large ANALYSIS.md over many small fragments** - Consolidate findings into a single comprehensive output file to minimize file discovery overhead.
 
 ## Execution Framework
 

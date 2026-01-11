@@ -5,6 +5,5 @@
     "license": "MIT",
     "author": {
         "name": "Git-Fg"
-    },
-    "outputStyles": "./styles/"
+    }
 }

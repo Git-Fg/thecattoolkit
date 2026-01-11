@@ -38,7 +38,12 @@ allowed-tools: [Read, Write, Edit, Glob, Grep]
 **Trigger**: "Show me examples", "List templates", "What patterns exist..."
 **Action**: List contents of `assets/templates/` or `references/design-patterns.md`
 
-### 5. Agent Knowledge Injection
+### 5. Research Prompt Templates
+**Trigger**: "research prompts", "analysis templates", "critique prompt", "synthesis prompt", "inversion prompt", "research templates"
+**Action**: Load `references/research-prompts.md`, present cognitive mode categories
+**Purpose**: Access viral research prompts that transform AI into research weapons
+
+### 6. Agent Knowledge Injection
 **Trigger**: Agent loads this skill via `skills:` field
 **Purpose**: Ensure generated instructions follow 2026 standards
 **Key Standards**: Truth-First, Attention Management, Signal-to-Noise optimization
@@ -73,6 +78,7 @@ If user suggests flawed path → CONTRADICT immediately. No "Great idea!" or sup
 | **anti-patterns.md** | Common mistakes to avoid | Prevention |
 | **taxonomy.md** | Single vs Chain vs Meta categorization | Storage/planning |
 | **execution-protocol.md** | Standard completion reporting | Structured output |
+| **research-prompts.md** | Viral research prompt templates (11 prompts) | Analysis, critique, synthesis tasks |
 
 ## Template Library
 

@@ -160,7 +160,7 @@ Agents running in the background/async cannot ask for permissions.
 **Skill binding in agents:**
 ```yaml
 ---
-skills: [manage-skills, create-plans, react-patterns]
+skills: [toolkit-registry, builder-core, plan-execution]
 ---
 ```
 

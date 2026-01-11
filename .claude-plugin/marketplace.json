@@ -35,6 +35,21 @@
             "name": "sys-builder",
             "source": "./plugins/sys-builder",
             "strict": true
+        },
+        {
+            "name": "sys-meta",
+            "source": "./plugins/sys-meta",
+            "strict": true
+        },
+        {
+            "name": "sys-edge",
+            "source": "./plugins/sys-edge",
+            "strict": true
+        },
+        {
+            "name": "sys-multimodal",
+            "source": "./plugins/sys-multimodal",
+            "strict": true
         }
     ]
 }

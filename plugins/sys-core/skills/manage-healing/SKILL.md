@@ -38,6 +38,6 @@ Update the component's **Description** keywords to better match its actual succe
 
 ## Reference Assets
 - [bootstrap-protocol.md](references/bootstrap-protocol.md): Protocol for initializing healing environment
-- [shared-standards.md](../../styles/shared-standards.md): Cross-skill standards
+- [standards-communication.md](../toolkit-registry/references/standards-communication.md): Cross-skill standards
 - [diagnosis-patterns.md](references/diagnosis-patterns.md): Common error patterns
 - [bootstrap.sh](assets/scripts/bootstrap.sh): Environment setup script

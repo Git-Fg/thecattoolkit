@@ -1,0 +1,46 @@
+%%{init: {"theme": "base", "themeVariables": {"primaryColor": "#4fc3f7"}}}%%
+graph LR
+    title["Plugin Component Detail View"]
+
+    subgraph SKILLs
+        sys-multimodal_intent-translation_skill["intent-translation\n(sys-multimodal)\n📥0 → 📤0"]
+        sys-multimodal_multimodal-understanding_skill["multimodal-understanding\n(sys-multimodal)\n📥0 → 📤0"]
+        sys-builder_execution-core_skill["execution-core\n(sys-builder)\n📥0 → 📤0"]
+        sys-builder_builder-core_skill["builder-core\n(sys-builder)\n📥7 → 📤0"]
+        sys-builder_architecture_skill["architecture\n(sys-builder)\n📥0 → 📤0"]
+        sys-builder_software-engineering_skill["software-engineering\n(sys-builder)\n📥0 → 📤0"]
+        sys-builder_plan-execution_skill["plan-execution\n(sys-builder)\n📥1 → 📤0"]
+        sys-cognition_thinking-frameworks_skill["thinking-frameworks\n(sys-cognition)\n📥0 → 📤0"]
+        sys-cognition_prompt-engineering_skill["prompt-engineering\n(sys-cognition)\n📥0 → 📤0"]
+        sys-cognition_context-engineering_skill["context-engineering\n(sys-cognition)\n📥0 → 📤0"]
+        sys-cognition_deep-analysis_skill["deep-analysis\n(sys-cognition)\n📥0 → 📤0"]
+        sys-core_audit-security_skill["audit-security\n(sys-core)\n📥0 → 📤0"]
+        sys-core_scaffold-component_skill["scaffold-component\n(sys-core)\n📥0 → 📤0"]
+        sys-core_validate-toolkit_skill["validate-toolkit\n(sys-core)\n📥0 → 📤0"]
+        sys-core_manage-healing_skill["manage-healing\n(sys-core)\n📥0 → 📤0"]
+        sys-core_toolkit-registry_skill["toolkit-registry\n(sys-core)\n📥0 → 📤0"]
+        sys-core_check-types_skill["check-types\n(sys-core)\n📥0 → 📤0"]
+        sys-meta_meta-builder_skill["meta-builder\n(sys-meta)\n📥0 → 📤0"]
+        sys-edge_uv-ruff-python-tools_skill["uv-ruff-python-tools\n(sys-edge)\n📥0 → 📤0"]
+        sys-edge_edge-ai-management_skill["edge-ai-management\n(sys-edge)\n📥0 → 📤0"]
+        sys-edge_offline-sync_skill["offline-sync\n(sys-edge)\n📥0 → 📤0"]
+        sys-edge_mobile-optimization_skill["mobile-optimization\n(sys-edge)\n📥0 → 📤0"]
+        sys-edge_gitingest_skill["gitingest\n(sys-edge)\n📥0 → 📤0"]
+    end
+
+    subgraph AGENTs
+        sys-multimodal_video-editor_agent["video-editor\n(sys-multimodal)\n📥2 → 📤0"]
+        sys-builder_designer_agent["designer\n(sys-builder)\n📥3 → 📤0"]
+        sys-builder_director_agent["director\n(sys-builder)\n📥4 → 📤0"]
+        sys-builder_worker_agent["worker\n(sys-builder)\n📥3 → 📤0"]
+        sys-cognition_reasoner_agent["reasoner\n(sys-cognition)\n📥1 → 📤0"]
+        sys-core_security-auditor_agent["security-auditor\n(sys-core)\n📥0 → 📤0"]
+        sys-meta_plugin-expert_agent["plugin-expert\n(sys-meta)\n📥4 → 📤0"]
+    end
+
+    subgraph COMMANDs
+        sys-builder_audit_command["audit\n(sys-builder)\n📥1 → 📤0"]
+        sys-builder_build_command["build\n(sys-builder)\n📥1 → 📤0"]
+        sys-builder_plan_command["plan\n(sys-builder)\n📥1 → 📤0"]
+        sys-cognition_think_command["think\n(sys-cognition)\n📥1 → 📤0"]
+    end

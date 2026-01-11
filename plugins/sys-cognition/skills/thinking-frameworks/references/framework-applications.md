@@ -397,3 +397,64 @@ Result: 6 hrs/week recovered, velocity increased 20%
 - Use Markdown prompt to provide comprehensive context
 - Agent follows steps systematically
 - Deliver complete analysis following template structure
+
+---
+
+## Cross-Framework Synergies: Viral Research Prompts
+
+These research prompts operationalize thinking frameworks into copy-paste templates for rapid analysis.
+
+### First-Principles Operationalization
+
+**Prompts that apply First-Principles:**
+- **Contradictions Finder** - Exposes logical inconsistencies by testing against fundamental truths
+- **Explain It Backwards** - Deconstructs conclusions to verify base assumptions
+- **Assumption Stress Test** - Tests the foundational assumptions underlying arguments
+- **Translate Across Domains** - Uses analogies to reveal core mechanisms
+
+**Synergy Pattern:** Use First-Principles to establish base truths, then apply these prompts to validate reasoning.
+
+### Inversion Operationalization
+
+**Prompts that apply Inversion:**
+- **Reviewer #2** - Identifies failure modes through harsh critique
+- **What Would Break This?** - Maps realistic failure scenarios
+- **Assumption Stress Test** - Tests fragility of argument foundations
+
+**Synergy Pattern:** Apply Inversion framework to identify failure modes, then use these prompts to stress-test robustness.
+
+### Second-Order Thinking Operationalization
+
+**Prompts that apply Second-Order Thinking:**
+- **Turn Into Paper** - Structures first-order observations into coherent arguments
+- **What Changed My Mind?** - Triggers belief updates based on new evidence
+
+**Synergy Pattern:** Use Second-Order Thinking to map cascading effects, then apply these prompts to structure findings.
+
+### Occam's Razor Operationalization
+
+**Prompts that apply Occam's Razor:**
+- **One-Page Mental Model** - Compresses complex topics to simplest memorable form
+
+**Synergy Pattern:** After analysis, apply this prompt to distill insights to their essence.
+
+### Via Negativa Operationalization
+
+**Prompts that apply Via Negativa:**
+- **Reviewer #2** - Removes flattery and surface-level critique
+- **Steal the Structure** - Isolates effective patterns from noise
+
+**Synergy Pattern:** Use Via Negativa to remove unnecessary elements, then apply these prompts to extract what's essential.
+
+### Combined Workflow Example
+
+**Research Analysis Combo:**
+1. Apply **First-Principles** framework to establish baseline
+2. Use **Contradictions Finder** to identify inconsistencies
+3. Apply **Inversion** to map failure modes
+4. Use **What Would Break This?** to stress-test
+5. Apply **Second-Order Thinking** to evaluate cascading effects
+6. Use **Turn Into Paper** to structure findings
+7. Apply **Occam's Razor** via **One-Page Mental Model** to compress insights
+
+**Key Insight:** The thinking frameworks provide the methodology; the research prompts provide the operational tools. Together, they transform AI from conversational partner to research instrument.

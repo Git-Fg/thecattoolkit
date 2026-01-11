@@ -1,8 +1,6 @@
 ---
 name: scaffold-component
 description: "SHOULD USE when generating new plugin components (skills, agents, commands). Scaffolds with 2026 Universal Agentic Runtime standards, frontmatter, and templates."
-context: fork
-agent: plugin-expert
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash(mkdir:-p), Bash(ls:*), Bash(cat:*), Bash(find:*)]
 ---
 
@@ -146,9 +144,9 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash(mkdir:-p), Bash(ls:*), Bash(
 - CLAUDE.md Part II (COMMAND Patterns)
 
 **Bootstrap Patterns:**
-- manage-skills skill for skill creation standards
-- manage-subagents skill for agent patterns
-- manage-commands skill for command structure
+- toolkit-registry skill for component creation standards
+- meta-builder skill for component patterns
+- scaffold-component skill for generation workflows
 
 **Template Library:**
 - Consult existing templates in sys-core/skills/*/assets/templates/
