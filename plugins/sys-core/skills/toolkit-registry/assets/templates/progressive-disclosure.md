@@ -1,6 +1,6 @@
 ---
 name: NAME_HERE
-description: "{Action Verb} + {Trigger} + {Purpose} - MUST USE when WORKFLOW_TRIGGER_KEYWORDS to progressively disclose TASK_NAME_HERE knowledge"
+description: "MUST USE when WORKFLOW_TRIGGER_KEYWORDS to progressively disclose TASK_NAME_HERE knowledge. Performs {Action Verb} on {Trigger} for {Purpose}."
 ---
 
 # TASK_NAME_HERE

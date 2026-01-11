@@ -1,6 +1,6 @@
 ---
 name: toolkit-registry
-description: "SHOULD USE when creating, auditing, or managing plugin components (Skills, Commands, Agents). System Authority on 2026 Universal Agentic Runtime standards for all plugin components."
+description: "MUST USE when creating, auditing, or managing plugin components (Skills, Commands, Agents). System Authority on 2026 Universal Agentic Runtime standards for all plugin components."
 context: fork
 agent: plugin-expert
 allowed-tools: [Read, Write, Edit, Bash(ls:*), Bash(grep:*), Bash(cat:*), Bash(find:*), Glob, Grep]
@@ -90,7 +90,7 @@ For common principles, integration patterns, and anti-patterns, see:
 **Use for:** Creating new agents, selecting templates, persona binding, background execution safety.
 
 **Covers:**
-- Frontmatter requirements (name, description, tools, skills, model, permissionMode)
+- Frontmatter requirements (see Agent Security reference for full specification)
 - Persona binding for Skills
 - Background execution safety
 - Tool permissions and least privilege

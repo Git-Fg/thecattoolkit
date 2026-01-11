@@ -2,6 +2,7 @@
 description: "Ingest a Git repository into an AI-readable digest. Use this instead of reading raw git files."
 argument-hint: "<url> [options]"
 allowed-tools: [Skill(gitingest)]
+disable-model-invocation: true
 ---
 
 # Ingest Repository

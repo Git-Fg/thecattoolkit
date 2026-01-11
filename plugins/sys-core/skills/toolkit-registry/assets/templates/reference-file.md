@@ -1,6 +1,6 @@
 ---
 name: NAME_HERE
-description: "{Action Verb} + {Trigger} + {Purpose} - MUST USE when WORKFLOW_TRIGGER_KEYWORDS to provide REFERENCE_TOPIC reference documentation"
+description: "MUST USE when WORKFLOW_TRIGGER_KEYWORDS to provide REFERENCE_TOPIC reference documentation. Covers {Action Verb} for {Trigger}."
 ---
 
 # {Reference Title}

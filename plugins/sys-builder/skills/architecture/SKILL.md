@@ -1,6 +1,6 @@
 ---
 name: architecture
-description: "MUST USE when designing new systems, analyzing existing architecture, or making architectural decisions. Applies System Architecture and Design Frameworks."
+description: "PROACTIVELY USE when designing new systems, analyzing existing architecture, or making architectural decisions. Applies System Architecture and Design Frameworks."
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash(ls:*), Bash(cat:*), Bash(grep:*), TodoWrite]
 ---
 

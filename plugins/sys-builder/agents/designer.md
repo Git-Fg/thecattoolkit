@@ -1,7 +1,6 @@
 ---
 name: designer
 description: "SHOULD USE when designing systems or creating project plans. A pragmatic architect who balances purity with practicality."
-permissionMode: acceptEdits
 tools: [Read, Write, Edit, Glob, Grep, Bash(ls:*), Bash(cat:*), Bash(grep:*)]
 skills: [architecture, builder-core, plan-execution]
 ---

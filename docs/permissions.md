@@ -1,10 +1,15 @@
 # Permissions & Security Reference
 
+> **📘 Official Docs:** [Identity and Access Management](https://code.claude.com/docs/en/iam) - Complete official guide to permissions, security, and tool access rules.  
+> **📖 Quick Reference:** See [CLAUDE.md](../CLAUDE.md#permissions--security) for a summary with decision guidance.
+
 Complete reference for the Cat Toolkit permission system across Skills, Agents, and Commands.
 
 ---
 
 ## The Permission Cascade
+
+> **📘 Official Docs:** [Permission configuration](https://code.claude.com/docs/en/iam#configuring-permissions)
 
 ```
 Main Agent (baseline)
@@ -27,67 +32,42 @@ Main Agent (baseline)
 
 ## Skills: allowed-tools (Temporary Restriction)
 
-When a Skill specifies `allowed-tools`:
-- Claude can **only use the specified tools** while the Skill is active
-- No permission prompts for the listed tools during execution
-- **If omitted**: No restriction applies. Claude uses standard permission model and may prompt for tool usage.
+Temporary scoped restriction during Skill activation (not a permanent capability grant).
 
-> **Key Insight**: `allowed-tools` in Skills is a **temporary scoped restriction**, not a permanent capability grant. The restriction only exists during the Skill's activation.
+| Configuration | Behavior | Examples |
+|:--------------|:---------|:---------|
+| **Omitted** | No restriction; standard permission model (may prompt) | - |
+| **Specified** | ONLY listed tools available (no prompts for listed tools) | `[Read, Write, Bash]` or `"Read,Write,Bash"` |
+| **With specifiers** | Restricted tool access using parentheses syntax | `[Bash(git:*), Bash(npm:*), Read]` |
 
-### allowed-tools Format Examples
-
-```yaml
-# Recommended: YAML list (full tool access)
-allowed-tools: [Read, Write, Bash, Grep]
-
-# Alternative: String (requires parsing)
-allowed-tools: "Read,Write,Bash,Grep"
-
-# With tool restrictions using permission specifiers (parentheses syntax)
-allowed-tools: [Bash(git add:*), Bash(git status:*), Read]  # Bash restricted to git commands
-
-# Multiple Bash restrictions
-allowed-tools: [Bash(python:*), Bash(npm:*), Read]  # Bash can only run python and npm
-
-# Wildcard patterns
-allowed-tools: [Bash(npm run test:*), Bash(git * main)]  # Specific command patterns
-```
-
-### Behavior Summary
-
-| Configuration | Behavior |
-|:--------------|:---------|
-| **Omitted** | No restriction. Uses standard permission model (may prompt for tool usage) |
-| **Specified** | ONLY listed tools available during Skill activation (no prompts for listed tools) |
+**Syntax:** Use `Tool(specifier)` with parentheses, NOT brackets. Examples: `Bash(git add:*)`, `Bash(npm run test:*)`, `Bash(git * main)`.
 
 ---
 
 ## Agents: tools (Explicit Allowlist)
 
-When an Agent specifies `tools`:
-- Creates an **explicit allowlist** for the subagent
-- **If omitted**: Subagent inherits **ALL tools** from parent (including MCP servers)
-- **If specified**: Only the listed tools are available (deny-by-default)
-- Can be further restricted with `disallowedTools` (denylist)
-
-> **Security Warning**: Omitting `tools` in an Agent grants **full tool access** via inheritance. Always specify `tools` for security-critical agents.
-
-### Configuration Matrix
-
 | Configuration | Availability | Security Level |
 |:--------------|:-------------|:---------------|
-| **Omitted** | Inherits ALL tools from parent (including MCP) | Low (dangerous for security-critical agents) |
+| **Omitted** | Inherits ALL tools from parent (including MCP) | Low (dangerous for security-critical) |
 | **Specified** | ONLY listed tools available | High (explicit allowlist) |
-| **With disallowedTools** | Listed tools MINUS disallowed list | Medium (denylist on top of allowlist) |
+| **With disallowedTools** | Listed tools MINUS disallowed list | Medium (denylist filter) |
+
+**Security Warning:** Omitting `tools` grants full tool access via inheritance. Always specify `tools` for security-critical agents.
+
+**disallowedTools:** Removes specific tools from inherited/specified list. Acts as filter; cannot add tools.
 
 ---
 
 ## Permission Modes
 
+> **⚠️ Best Practice:** Do NOT specify `permissionMode` in agent frontmatter. Let the runtime or CLI arguments determine the mode for maximum compatibility.
+
+
 | Mode | Behavior | Security Level | Use Case |
-|:-----|:---------|::--------------|:---------|
+|:-----|:---------|:---------------|:---------|
 | `default` | Prompts for each tool | High | Uncertain operations |
 | `acceptEdits` | Auto-approves file operations | Medium | Trusted refactoring |
+| `dontAsk` | Auto-denies permission prompts (explicitly allowed tools still work) | High | Non-interactive environments (CI/CD, batch processing) |
 | `plan` | Read-only analysis | High | Exploration without changes |
 | `bypassPermissions` | All tools approved | **Very Low** | Dangerous automation |
 
@@ -97,29 +77,18 @@ When an Agent specifies `tools`:
 
 ## Permission Specifiers Syntax
 
-When restricting tools, use the `Tool(specifier)` syntax with **parentheses**, NOT brackets.
+Use `Tool(specifier)` with **parentheses**, NOT brackets.
 
 | Format | Example | Description |
 |:-------|:--------|:------------|
-| **Unrestricted** | `Bash`, `Read` | Full access to the tool |
+| **Unrestricted** | `Bash`, `Read` | Full tool access |
 | **Command-specific** | `Bash(git add:*)` | Allow only `git add` commands |
-| **Wildcard prefix** | `Bash(npm *)` | Allow `npm` followed by any arguments |
-| **Argument wildcard** | `Bash(git * main)` | Allow `git` with any command targeting `main` |
-| **Multiple patterns** | `[Bash(python:*), Bash(npm:*)]` | Combine multiple restrictions |
+| **Wildcard prefix** | `Bash(npm *)` | Allow `npm` + any arguments |
+| **Argument wildcard** | `Bash(git * main)` | Allow `git` commands targeting `main` |
+| **Multiple patterns** | `[Bash(python:*), Bash(npm:*)]` | Combine restrictions |
 
-### Syntax Rules
-
-- **Unrestricted tool:** `Tool` (e.g., `Bash`, `Read`)
-- **Restricted tool:** `Tool(specifier)` using parentheses, NOT brackets
-- **Bash specifiers:** Use shell-style patterns like `Bash(git add:*)`, `Bash(npm run test:*)`
-- **Wildcards:** `*` matches any characters, `:*` matches command arguments
-
-### Correct vs Incorrect
-
-| [X] Incorrect | [✓] Correct |
-|:-------------|:------------|
-| `allowed-tools: [Bash[python, npm]]` | `allowed-tools: [Bash(python:*), Bash(npm:*)]` |
-| Bracket syntax `Bash[...]` | Parentheses syntax `Bash(...)` |
+**Rules:** Unrestricted = `Tool`. Restricted = `Tool(specifier)`. Wildcards: `*` matches any chars, `:*` matches command args.  
+**Incorrect:** `Bash[python, npm]` → **Correct:** `Bash(python:*), Bash(npm:*)`
 
 ---
 
@@ -129,8 +98,8 @@ When restricting tools, use the `Tool(specifier)` syntax with **parentheses**, N
 # agents/auditor.md
 ---
 name: security-auditor
-model: opus
-permissionMode: plan          # Read-only
+# model: omit (use runtime default)
+# permissionMode: omit (use runtime default)
 tools: [Read, Grep, Glob]     # Whitelist: NO Write, NO Bash
 skills: [owasp-top-10, credential-scanner]
 ---
@@ -142,30 +111,12 @@ This agent can read files and search for patterns, but **cannot** modify files o
 
 ## Common Security Patterns
 
-### 1. Read-Only Agent
-```yaml
-permissionMode: plan
-tools: [Read, Grep, Glob]
-```
-
-### 2. Git-Restricted Skill
-```yaml
-allowed-tools: [Bash(git add:*), Bash(git commit:*), Bash(git status:*)]
-```
-
-### 3. Audit Agent with Knowledge Injection
-```yaml
-permissionMode: plan
-tools: [Read, Grep, Glob]
-skills: [owasp-top-10, credential-scanner]
-```
-
-### 4. Development Agent (Full Access)
-```yaml
-# Omit tools = inherits ALL tools (dangerous for security-critical)
-# Better: explicit allowlist
-tools: [Read, Write, Edit, Bash, Grep, Glob]
-```
+| Pattern | Configuration |
+|:--------|:--------------|
+| **Read-Only Agent** | `permissionMode: plan` + `tools: [Read, Grep, Glob]` |
+| **Git-Restricted Skill** | `allowed-tools: [Bash(git add:*), Bash(git commit:*), Bash(git status:*)]` |
+| **Audit Agent** | `permissionMode: plan` + `tools: [Read, Grep, Glob]` + `skills: [owasp-top-10, credential-scanner]` |
+| **Development Agent** | `tools: [Read, Write, Edit, Bash, Grep, Glob]` (explicit allowlist, not omitted) |
 
 ---
 
@@ -177,4 +128,5 @@ tools: [Read, Write, Edit, Bash, Grep, Glob]
 | **Git operations only** | `allowed-tools: [Bash(git:*)]` |
 | **Read-only exploration** | `permissionMode: plan` |
 | **Trusted refactor** | `permissionMode: acceptEdits` |
+| **Non-interactive (CI/CD)** | `permissionMode: dontAsk` + allow rules in settings.json |
 | **Dangerous automation** | Avoid `permissionMode: bypassPermissions` |

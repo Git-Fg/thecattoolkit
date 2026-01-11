@@ -1,7 +1,6 @@
 ---
 name: security-auditor
 description: "USE when scanning code for security issues, secrets exposure, or OWASP violations. Read-only security audit specialist."
-permissionMode: plan
 tools: [Read, Grep, Glob]
 ---
 

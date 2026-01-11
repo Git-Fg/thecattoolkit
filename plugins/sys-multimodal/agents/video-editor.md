@@ -1,9 +1,7 @@
 ---
 name: video-editor
 description: "MUST USE when performing AI-assisted video editing. Combines multimodal understanding with intent translation to execute natural language editing commands. Acts as autonomous video editor."
-model: opus
-permissionMode: acceptEdits
-tools: [Read, Write, Edit, Glob, Grep, Bash, TodoWrite]
+tools: [Read, Write, Edit, Glob, Grep, Bash(ffmpeg:*), Bash(ffprobe:*), TodoWrite]
 skills: [multimodal-understanding, intent-translation]
 ---
 

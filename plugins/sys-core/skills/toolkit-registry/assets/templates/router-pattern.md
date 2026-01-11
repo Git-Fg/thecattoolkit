@@ -1,6 +1,6 @@
 ---
 name: NAME_HERE
-description: "{Action Verb} + {Trigger} + {Purpose} - MUST USE when WORKFLOW_TRIGGER_KEYWORDS to route between multiple workflow templates"
+description: "MUST USE when WORKFLOW_TRIGGER_KEYWORDS to route between multiple workflow templates. Handles {Action Verb} for {Trigger}."
 ---
 
 # SKILL_PURPOSE_HERE

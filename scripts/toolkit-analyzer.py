@@ -44,11 +44,9 @@ ALLOWED_FIELDS = {
     "compatibility",
     "context",
     "agent",
-    "model",
     "user-invocable",
     "hooks",
     "tools",  # Added for agents
-    "permissionMode",  # Added for agents
 }
 
 # Built-in core tools
@@ -169,7 +167,9 @@ def _validate_name(name: str, skill_dir: Optional[Path] = None) -> List[str]:
         errors.append(f"CRITICAL: Name '{name_normalized}' cannot end with a hyphen.")
 
     if "--" in name_normalized:
-        errors.append(f"CRITICAL: Name '{name_normalized}' contains consecutive hyphens (--).")
+        errors.append(
+            f"CRITICAL: Name '{name_normalized}' contains consecutive hyphens (--)."
+        )
 
     if "_" in name_normalized:
         errors.append(
@@ -309,7 +309,13 @@ class ToolkitAnalyzer:
         self.validate_askuser_leakage()
         self.validate_token_budget()
 
-        # Phase 7: Architecture Validation
+        # Phase 7-10: 2026 Standards Validators
+        self.validate_zero_token_retention()
+        self.validate_description_modalities()
+        self.validate_permission_leakage()
+        self.validate_command_structure()
+
+        # Phase 11: Architecture Validation
         self.validate_architecture()
 
         # Display summary
@@ -539,7 +545,7 @@ class ToolkitAnalyzer:
     def validate_architecture(self) -> None:
         """Validate component graph architecture"""
         result = ValidationResult("Architecture Check", True)
-        print("Phase 6: Architecture & Circular Dependency Check")
+        print("Phase 11: Architecture & Circular Dependency Check")
         print("-" * 70)
 
         # Check for circular dependencies
@@ -835,7 +841,9 @@ class ToolkitAnalyzer:
 
                 # Description Check (AI needs terse descriptions for semantic routing)
                 if "description" in content:
-                    desc_match = re.search(r'description:\s*["\'](.*?)["\']', content, re.DOTALL)
+                    desc_match = re.search(
+                        r'description:\s*["\'](.*?)["\']', content, re.DOTALL
+                    )
                     if desc_match and len(desc_match.group(1)) > 200:
                         result.warnings.append(
                             f"{cmd_file}: Description is too long (>200 chars). "
@@ -1034,6 +1042,304 @@ class ToolkitAnalyzer:
             result.info.append(
                 f"Token Budget Usage: {usage_pct:.1f}% ({total_chars:,} chars)"
             )
+
+        print()
+        self.log_result(result)
+
+    def validate_zero_token_retention(self) -> None:
+        """Phase 7: Check if wrapper commands utilize disable-model-invocation"""
+        result = ValidationResult("Zero-Token Retention Check", True)
+
+        print("Phase 7: Zero-Token Retention Validation (2026 Quota Optimization)")
+        print("-" * 70)
+
+        command_files = list(self.plugins_dir.rglob("commands/*.md"))
+        print(f"  Checking {len(command_files)} commands...")
+
+        for cmd_file in command_files:
+            try:
+                content = cmd_file.read_text()
+                if not content.startswith("---"):
+                    continue
+
+                end_match = re.search(r"^---$", content[3:], re.MULTILINE)
+                if not end_match:
+                    continue
+
+                fm_text = content[3 : 3 + end_match.start()]
+                frontmatter = yaml.safe_load(fm_text)
+
+                if not isinstance(frontmatter, dict):
+                    continue
+
+                cmd_name = cmd_file.stem
+                allowed_tools = frontmatter.get("allowed-tools", [])
+                has_skill_invocation = False
+                has_disable_model = frontmatter.get("disable-model-invocation", False)
+
+                # Check if command delegates to a Skill
+                if isinstance(allowed_tools, list):
+                    for tool in allowed_tools:
+                        if "Skill(" in str(tool):
+                            has_skill_invocation = True
+                            break
+
+                # If command wraps a skill but lacks zero-token retention
+                if has_skill_invocation and not has_disable_model:
+                    result.warnings.append(
+                        f"{cmd_file}: Command '{cmd_name}' wraps a Skill but missing "
+                        f"'disable-model-invocation: true'. Add this to save ~15k tokens of context."
+                    )
+
+            except Exception as e:
+                result.errors.append(f"{cmd_file}: Error processing: {e}")
+
+        print()
+        self.log_result(result)
+
+    def validate_description_modalities(self) -> None:
+        """Phase 8: Validate description modalities follow 2026 Cat Toolkit convention"""
+        result = ValidationResult("Description Modality Validation", True)
+
+        print("Phase 8: Description Modality Validation (2026 Modal Pattern)")
+        print("-" * 70)
+
+        skill_files = list(self.plugins_dir.rglob("SKILL.md")) + list(
+            self.plugins_dir.rglob("skill.md")
+        )
+        print(f"  Checking {len(skill_files)} skills...")
+
+        # Expected modality prefixes by plugin tier (2026 convention)
+        tier_prefixes = {
+            "sys-core": ["MUST USE when"],
+            "sys-builder": ["PROACTIVELY USE when"],
+            "sys-cognition": ["USE when"],
+            "sys-research": ["USE when"],
+            "sys-meta": ["SHOULD USE when"],
+            "sys-multimodal": ["USE when"],
+            "sys-edge": ["USE when"],
+        }
+
+        for skill_file in skill_files:
+            try:
+                content = skill_file.read_text()
+                if not content.startswith("---"):
+                    continue
+
+                end_match = re.search(r"^---$", content[3:], re.MULTILINE)
+                if not end_match:
+                    continue
+
+                fm_text = content[3 : 3 + end_match.start()]
+                frontmatter = yaml.safe_load(fm_text)
+
+                if not isinstance(frontmatter, dict):
+                    continue
+
+                skill_name = frontmatter.get("name", "")
+                description = frontmatter.get("description", "")
+
+                # Find which plugin this skill belongs to
+                skill_plugin = None
+                for plugin_name in tier_prefixes.keys():
+                    if f"/plugins/{plugin_name}/" in str(skill_file):
+                        skill_plugin = plugin_name
+                        break
+
+                if not skill_plugin:
+                    continue
+
+                expected_prefixes = tier_prefixes.get(skill_plugin, [])
+
+                # Check if description starts with expected modality pattern
+                has_valid_prefix = False
+                for prefix in expected_prefixes:
+                    if description.strip().upper().startswith(prefix.upper()):
+                        has_valid_prefix = True
+                        break
+
+                if not has_valid_prefix and description:
+                    # Check for ANY modality pattern (fallback)
+                    any_modality = any(
+                        description.strip().upper().startswith(p)
+                        for prefixes in tier_prefixes.values()
+                        for p in prefixes
+                    )
+
+                    if not any_modality:
+                        result.errors.append(
+                            f"{skill_file}: Skill '{skill_name}' description missing modality prefix. "
+                            f"Expected: {' or '.join(expected_prefixes)}. "
+                            f"Current: '{description[:50]}...'"
+                        )
+                    else:
+                        # Has a modality but wrong tier
+                        result.warnings.append(
+                            f"{skill_file}: Skill '{skill_name}' has modality prefix but may not match "
+                            f"expected tier for {skill_plugin}. "
+                            f"Expected: {' or '.join(expected_prefixes)}"
+                        )
+
+                # STRICT ENFORCEMENT: Description MUST start with the modal
+                # Check for text before modality pattern (Cat Toolkit convention violation)
+                if description:
+                    lines = description.strip().split("\n")
+                    # Remove leading quotes and whitespace
+                    first_line_normalized = re.sub(r'^["\']', "", lines[0]).strip()
+
+                    # Strict regex: Start of string (^) must match the modal
+                    # Patterns: "PROACTIVELY USE when", "MUST USE when", "SHOULD USE when", "USE when"
+                    strict_modal_pattern = re.compile(
+                        r"^(PROACTIVELY\s+)?(MUST\s+USE|SHOULD\s+USE|USE)\s+WHEN",
+                        re.IGNORECASE
+                    )
+
+                    if not strict_modal_pattern.match(first_line_normalized):
+                        result.warnings.append(
+                            f"{skill_file}: Skill '{skill_name}' description has text before modality pattern. "
+                            f"2026 Cat Toolkit convention requires modality as the FIRST tokens. "
+                            f"Current start: '{first_line_normalized[:50]}...'"
+                        )
+
+            except Exception as e:
+                result.errors.append(f"{skill_file}: Error processing: {e}")
+
+        print()
+        self.log_result(result)
+
+    def validate_permission_leakage(self) -> None:
+        """Phase 9: Validate that permissionMode is only used in Agents, not Skills/Commands"""
+        result = ValidationResult("Permission Leakage Validation", True)
+
+        print("Phase 9: Permission Leakage Validation (2026 Security)")
+        print("-" * 70)
+
+        # Check Skills for permissionMode (CRITICAL: Agent-only field)
+        skill_files = list(self.plugins_dir.rglob("SKILL.md")) + list(
+            self.plugins_dir.rglob("skill.md")
+        )
+        print(f"  Checking {len(skill_files)} skills...")
+
+        for skill_file in skill_files:
+            try:
+                content = skill_file.read_text()
+                if "permissionMode" in content:
+                    result.errors.append(
+                        f"{skill_file}: CRITICAL - Skills cannot define 'permissionMode'. "
+                        f"This is an Agent-exclusive field. Remove from frontmatter."
+                    )
+            except Exception as e:
+                result.errors.append(f"{skill_file}: Error processing: {e}")
+
+        # Check Commands for permissionMode (CRITICAL: Agent-only field)
+        command_files = list(self.plugins_dir.rglob("commands/*.md"))
+        print(f"  Checking {len(command_files)} commands...")
+
+        for cmd_file in command_files:
+            try:
+                content = cmd_file.read_text()
+                if "permissionMode" in content:
+                    result.errors.append(
+                        f"{cmd_file}: CRITICAL - Commands cannot define 'permissionMode'. "
+                        f"This is an Agent-exclusive field. Commands inherit permissions from calling context."
+                    )
+            except Exception as e:
+                result.errors.append(f"{cmd_file}: Error processing: {e}")
+
+        # Check Agent tools allowlists (WARN if missing - security risk)
+        agent_files = list(self.plugins_dir.rglob("agents/*.md"))
+        print(f"  Checking {len(agent_files)} agents...")
+
+        for agent_file in agent_files:
+            try:
+                content = agent_file.read_text()
+                if not content.startswith("---"):
+                    continue
+
+                end_match = re.search(r"^---$", content[3:], re.MULTILINE)
+                if not end_match:
+                    continue
+
+                fm_text = content[3 : 3 + end_match.start()]
+                frontmatter = yaml.safe_load(fm_text)
+
+                if isinstance(frontmatter, dict) and "tools" not in frontmatter:
+                    agent_name = agent_file.stem
+                    result.warnings.append(
+                        f"{agent_file}: Agent '{agent_name}' missing 'tools' allowlist. "
+                        f"Agent inherits ALL tools from parent (security risk). "
+                        f"2026 Standard: Always specify explicit tools allowlist."
+                    )
+            except Exception as e:
+                result.errors.append(f"{agent_file}: Error processing: {e}")
+
+        print()
+        self.log_result(result)
+
+    def validate_command_structure(self) -> None:
+        """Phase 10: Validate Commands follow 2026 structure standards"""
+        result = ValidationResult("Command Structure Validation", True)
+
+        print("Phase 10: Command Structure Validation (2026 Standards)")
+        print("-" * 70)
+
+        command_files = list(self.plugins_dir.rglob("commands/*.md"))
+        print(f"  Checking {len(command_files)} commands...")
+
+        for cmd_file in command_files:
+            try:
+                content = cmd_file.read_text()
+                if not content.startswith("---"):
+                    continue
+
+                end_match = re.search(r"^---$", content[3:], re.MULTILINE)
+                if not end_match:
+                    continue
+
+                fm_text = content[3 : 3 + end_match.start()]
+                frontmatter = yaml.safe_load(fm_text)
+
+                if not isinstance(frontmatter, dict):
+                    continue
+
+                cmd_name = cmd_file.stem
+                description = frontmatter.get("description", "")
+                allowed_tools = frontmatter.get("allowed-tools", [])
+                argument_hint = frontmatter.get("argument-hint", "")
+
+                # Check 1: Commands should have argument-hint for user guidance
+                if not argument_hint:
+                    result.warnings.append(
+                        f"{cmd_file}: Command '{cmd_name}' missing 'argument-hint'. "
+                        f"2026 Standard: Always include argument-hint for user guidance."
+                    )
+
+                # Check 2: Commands should explicitly orchestrate Skills (no "magic" routing)
+                if isinstance(allowed_tools, list):
+                    skill_invocations = [t for t in allowed_tools if "Skill(" in str(t)]
+                    if not skill_invocations:
+                        # Check if command body has explicit skill references
+                        body_content = content[end_match.end() + 3 :]
+                        if not re.search(r"Skill\(|@[\w-]+|/[\w-]+", body_content):
+                            result.warnings.append(
+                                f"{cmd_file}: Command '{cmd_name}' has no explicit skill orchestration. "
+                                f"2026 Standard: Commands should explicitly list Skills in allowed-tools "
+                                f"or reference them by name in the command body."
+                            )
+
+                # Check 3: Check for square bracket syntax (deprecated)
+                content_str = str(allowed_tools) + str(frontmatter.get("tools", ""))
+                if "[" in content_str and "]" in content_str:
+                    # Check for tool restrictions using brackets (deprecated syntax)
+                    if re.search(r"\w+\[[^\]]+\]", str(allowed_tools)):
+                        result.errors.append(
+                            f"{cmd_file}: CRITICAL - Command '{cmd_name}' uses square bracket "
+                            f"tool restriction syntax (e.g., Bash[python]). 2026 Standard: "
+                            f"Use parentheses syntax: Bash(python:*)"
+                        )
+
+            except Exception as e:
+                result.errors.append(f"{cmd_file}: Error processing: {e}")
 
         print()
         self.log_result(result)

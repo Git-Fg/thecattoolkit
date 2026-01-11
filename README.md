@@ -22,7 +22,26 @@ Plugin marketplace for **The Cat Toolkit** - Vibecoding plugins for autonomous A
 
 ## Installation
 
-Load plugins using the `--plugin-dir` flag:
+### Marketplace Installation (Recommended)
+
+Add The Cat Toolkit marketplace and install plugins:
+
+```bash
+# Add the marketplace
+/plugin marketplace add Git-Fg/thecattoolkit
+
+# Install individual plugins
+/plugin install sys-core@cattoolkit
+/plugin install sys-builder@cattoolkit
+/plugin install sys-cognition@cattoolkit
+
+# Or install all plugins
+/plugin install sys-core@cattoolkit sys-builder@cattoolkit sys-cognition@cattoolkit sys-meta@cattoolkit sys-edge@cattoolkit sys-multimodal@cattoolkit sys-research@cattoolkit
+```
+
+### Development Installation
+
+For local development, load plugins using the `--plugin-dir` flag:
 
 ```bash
 # Load individual plugins
@@ -33,11 +52,30 @@ claude --plugin-dir ./plugins/sys-cognition
 claude --plugin-dir ./plugins/sys-builder --plugin-dir ./plugins/sys-cognition --plugin-dir ./plugins/sys-core
 ```
 
+### Installation Scopes
+
+- **User scope** (default): Personal use across all projects
+- **Project scope**: Team-shared plugins, committed to git
+- **Local scope**: Personal overrides, gitignored
+
+```bash
+# Project scope (team-shared)
+/plugin install sys-core@cattoolkit --scope project
+```
+
+See [Marketplace Configuration Guide](docs/marketplace.md) for complete installation and configuration details.
+
 ---
 
-## Development
+## Documentation
 
 - **[CLAUDE.md](CLAUDE.md)** - The Universal Agentic Runtime (Constitution & Manual)
+- **[Marketplace Guide](docs/marketplace.md)** - Complete marketplace configuration and plugin distribution guide
+- **[Commands Reference](docs/commands.md)** - Commands: Shortcuts & AI Macros
+- **[Infrastructure Reference](docs/infrastructure.md)** - Hooks, MCP, LSP, and runtime configuration
+- **[Permissions Reference](docs/permissions.md)** - Complete permissions and security guide
+
+## Development
 
 ---
 

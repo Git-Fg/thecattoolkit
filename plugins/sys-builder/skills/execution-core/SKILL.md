@@ -1,6 +1,6 @@
 ---
 name: execution-core
-description: "MUST USE when defining behavioral standards for autonomous agents or enforcing Uninterrupted Flow, Self-Verification, Auth-Gates, and Handoff protocols. Internal-only reference for agent behavior."
+description: "PROACTIVELY USE when defining behavioral standards for autonomous agents or enforcing Uninterrupted Flow, Self-Verification, Auth-Gates, and Handoff protocols. Internal-only reference for agent behavior."
 user-invocable: false
 allowed-tools: Bash, Edit, Read, Write, Glob, Grep
 ---

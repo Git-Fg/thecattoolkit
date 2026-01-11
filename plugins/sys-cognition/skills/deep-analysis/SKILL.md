@@ -1,6 +1,6 @@
 ---
 name: deep-analysis
-description: "SHOULD USE when performing deep strategic analysis, comprehensive problem-solving, or synthesizing research into formal reports using structured thinking frameworks."
+description: "USE when performing deep strategic analysis, comprehensive problem-solving, or synthesizing research into formal reports using structured thinking frameworks."
 allowed-tools: [Read, Write, Edit, Glob, Grep]
 ---
 

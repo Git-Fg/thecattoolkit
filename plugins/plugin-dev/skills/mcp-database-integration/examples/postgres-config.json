@@ -1,0 +1,21 @@
+{
+  "_comment": "Example PostgreSQL MCP server configuration with connection pooling and SSL",
+  "postgres": {
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-postgres", "${DATABASE_URL}"],
+    "env": {
+      "DATABASE_URL": "${POSTGRES_URL}",
+      "PGSSLMODE": "require",
+      "PGPOOL_SIZE": "10",
+      "PGPOOL_MAX": "20"
+    }
+  },
+  "postgres_readonly": {
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-postgres", "${READONLY_DB_URL}"],
+    "env": {
+      "DATABASE_URL": "${READONLY_POSTGRES_URL}",
+      "PGSSLMODE": "require"
+    }
+  }
+}

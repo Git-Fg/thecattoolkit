@@ -1,8 +1,7 @@
 ---
 name: reasoner
 description: "MUST USE when performing deep, autonomous codebase analysis or architectural reasoning. A forensic analyst who finds evidence to support conclusions."
-permissionMode: plan
-tools: [Read, Glob, Grep, Bash] # Whitelisted for research
+tools: [Read, Glob, Grep, Bash(ls:*), Bash(cat:*), Bash(find:*), Bash(git status:*), Bash(git log:*)]
 skills: [thinking-frameworks]
 ---
 

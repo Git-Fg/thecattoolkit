@@ -2,21 +2,8 @@
   "name": "sys-multimodal",
   "version": "1.0.0",
   "description": "Multimodal AI for video editing and media processing",
-  "capabilities": [
-    "multimodal-understanding",
-    "video-editing",
-    "intent-translation",
-    "scene-detection",
-    "audio-processing",
-    "visual-analysis"
-  ],
-  "plugins": [],
-  "contributors": [
-    {
-      "name": "CatToolkit",
-      "email": "info@cattoolkit.dev"
-    }
-  ],
-  "dependencies": [],
-  "license": "MIT"
+  "license": "MIT",
+  "author": {
+    "name": "Git-Fg"
+  }
 }

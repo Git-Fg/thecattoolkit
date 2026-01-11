@@ -52,7 +52,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash(mkdir:-p), Bash(ls:*), Bash(
 - description: role definition with "MUST USE when" trigger
 - tools: explicit whitelist (never omit)
 - skills: auto-load relevant skills
-- model: omit unless specified (defaults to configured subagent model)
+- model: do not specify (defaults to configured subagent model)
 
 ### 3. Hardcore Naming Constraints (Anti-Crash)
 
@@ -94,7 +94,12 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash(mkdir:-p), Bash(ls:*), Bash(
 
 **Generate valid YAML with:**
 - All required fields populated
-- Appropriate optional fields based on component type
+- **Description Enforcement:**
+  - IF type == 'skill': Ensure string starts with "(MODAL) USE when".
+  - IF user input was "Analyze code security":
+    - Transform to: "USE when analyzing code security."
+  - IF user input was "Help with git":
+    - Transform to: "USE when helping with git operations."
 - No redundant defaults (e.g., user-invocable: true)
 - Proper tool permissions and restrictions
 

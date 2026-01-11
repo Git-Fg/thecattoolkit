@@ -1,0 +1,37 @@
+{
+  "_comment": "Example multi-database configuration supporting PostgreSQL, MySQL, and SQLite simultaneously",
+  "postgres_primary": {
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-postgres", "${PRIMARY_DB_URL}"],
+    "env": {
+      "DATABASE_URL": "${PRIMARY_POSTGRES_URL}",
+      "PGSSLMODE": "require",
+      "PGPOOL_SIZE": "15"
+    }
+  },
+  "mysql_analytics": {
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-mysql", "${ANALYTICS_MYSQL_URL}"],
+    "env": {
+      "MYSQL_URL": "${ANALYTICS_MYSQL_CONNECTION_STRING}",
+      "MYSQL_SSL_ENABLED": "true",
+      "MYSQL_POOL_SIZE": "8"
+    }
+  },
+  "sqlite_cache": {
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-sqlite", "${CACHE_DB_PATH}"],
+    "env": {
+      "SQLITE_DB_PATH": "${SQLITE_CACHE_PATH}",
+      "SQLITE_TIMEOUT": "3000"
+    }
+  },
+  "postgres_readreplica": {
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-postgres", "${READ_REPLICA_DB_URL}"],
+    "env": {
+      "DATABASE_URL": "${READ_REPLICA_POSTGRES_URL}",
+      "PGSSLMODE": "require"
+    }
+  }
+}

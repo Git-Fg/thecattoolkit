@@ -1,273 +1,136 @@
-# Commands Reference
+# Commands: Best Practices & Tips
 
-Complete reference for Commands: Shortcuts & AI Macros in the Cat Toolkit.
+> **📘 Official Docs:** [Slash commands](https://code.claude.com/docs/en/slash-commands) - Complete official slash commands documentation  
+> **📘 Official Docs:** [Skill tool](https://code.claude.com/docs/en/slash-commands#skill-tool) - Official programmatic invocation reference  
+> **📖 Comprehensive Reference:** See [CLAUDE.md](../CLAUDE.md) for complete Cat Toolkit guidance on Skills, Commands, and Agents
+
+Best practices and practical tips for Commands in the Cat Toolkit. This guide focuses on **Cat Toolkit conventions** and **practical patterns** not covered in official documentation.
 
 ---
 
-## The Mental Model
+## Mental Model
 
 ```
-Command = Macro / Shortcut
+Command = Workflow Orchestrator / User Interaction Handler
 ├─ Human types: /deploy
 ├─ AI invokes: SlashCommand(deploy, args)
-└─ Claude executes: pre-deploy-check skill → build skill → deploy skill → post-deploy-test skill
+└─ Claude executes: Orchestrates multiple Skills/subagents → handles user interaction
 ```
 
----
-
-## Two Audiences
-
-Commands serve two distinct audiences with different purposes and configurations.
-
-### 1. For Humans (Zero-Token Retention)
-
-| Aspect | Detail |
-|:-------|:--------|
-| **Purpose** | Manual invocation only |
-| **Benefit** | With `disable-model-invocation: true`, the command description is **excluded from the Skill Tool's ~15k character budget** |
-| **Result** | Zero passive context cost—Claude doesn't know it exists until you invoke it manually |
-| **Use Cases** | Heavy playbooks, interactive wizards, personal shortcuts |
-
-### 2. For AI (Context Macros)
-
-| Aspect | Detail |
-|:-------|:--------|
-| **Purpose** | Standardized interfaces for complex tools |
-| **Benefit** | Reduces hallucination by abstracting complex Skill schemas into simple CLI-style arguments |
-| **Rule** | If a Command abstracts parameters significantly, expose it to the model |
-| **Control** | Use `disable-model-invocation: false` (default) to allow programmatic invocation via Skill tool |
-| **Use Cases** | Multi-skill workflows, standardized interfaces, complex tool wrappers |
+**Key Insight:** Commands excel at orchestrating workflows and handling user interaction. Skills provide domain/process knowledge. See [CLAUDE.md](../CLAUDE.md#commands-workflow-orchestration--user-interaction) for the complete distinction.
 
 ---
 
-## Command-Skill Pattern
+## Best Use Cases
 
-Create a command that simply points to a Skill via `allowed-tools: [Skill(name)]`. This forces the model to "Global Orientation" on that specific skill without context pollution.
+| Use Case | When to Use | Key Configuration |
+|:---------|:------------|:------------------|
+| **Multi-Skill/Subagent Orchestration** | Sequencing multiple Skills/subagents | `allowed-tools: [Skill, Bash]`, list skills explicitly in order |
+| **User Interaction** | Workflows requiring `AskUserQuestion` | `argument-hint: "..."`, consolidate questions early |
+| **Zero-Token Retention** | Heavy playbooks excluded from passive memory | `disable-model-invocation: true` |
+| **Deterministic Shortcuts** | Semantic discovery unreliable, need fixed alias | Simple command wrapping Skill |
 
-**Why this pattern matters:**
-- Commands become lightweight wrappers
-- Skills remain semantically discoverable
-- Zero-token retention for heavy workflows
-- Clean separation of concerns
-
----
-
-## Command Recipes (Three Types)
-
-### 1. Safe Read-Only
-
-**Use when:** You need read-only analysis without modifications.
-
-```yaml
----
-description: "Analyze project structure"
-allowed-tools: [Read, Grep]
----
-```
-
-**Characteristics:**
-- No write operations
-- No execution risks
-- Safe for autonomous invocation
-
-### 2. Autonomous Agent Wrapper
-
-**Use when:** You need self-contained analysis that outputs structured data.
-
-```yaml
----
-description: "Autonomous code review"
-allowed-tools: [Read, Grep, Glob]
----
-Analyze codebase. Output JSON. DO NOT ask questions.
-```
-
-**Characteristics:**
-- Fully autonomous
-- Structured output (JSON)
-- No user interaction required
-
-### 3. User Interactive (Wizard)
-
-**Use when:** You need to guide users through complex workflows.
-
-```yaml
----
-description: "Project scaffolding wizard"
-disable-model-invocation: true  # Human-only: Skill tool cannot invoke
----
-Guide user through setup. Ask for template preference.
-```
-
-**Characteristics:**
-- Interactive by design
-- `disable-model-invocation: true` (human-only)
-- Wizard-style guidance
+**Best Practices:** List skills in execution order, use explicit skill names, document dependencies, consolidate questions early, use `argument-hint` for user guidance.
 
 ---
 
-## When Commands Are Useful
+## When Skills Might Be Better
 
-| Pattern | Description | Example |
-|:--------|:------------|:--------|
-| **Multi-skill workflow** | Sequences multiple Skills in order | `/release` → version-bump → build → deploy → notify |
-| **Interactive wizard** | Guides users through complex setups | `/scaffold` → project setup wizard |
-| **Shortcut / Alias** | Quick access to specific Skills | `/think` → thinking-frameworks skill |
+**Rule:** For single capabilities, prefer Skills. Commands are for orchestration and user interaction.
 
----
+**Use Skills for:** Single domain capability, complex domain logic (with `references/`), pure knowledge injection.
 
-## 2026 Rule (Aliases)
-
-> **Commands are excellent for creating Shortcuts** (e.g., `/think`) to specific skills. This avoids semantic ambiguity and ensures zero-token invocation.
-
-**Why aliases matter:**
-- Natural language can be ambiguous
-- Slash commands are deterministic
-- Zero cost to invoke (with `disable-model-invocation: true`)
+See [CLAUDE.md](../CLAUDE.md#the-80-golden-rule) for complete decision flow.
 
 ---
 
-## 2026 Doctrine: Zero-Token Retention
+## Cat Toolkit Conventions
 
-> **Zero-Token Retention:** Use Commands with `disable-model-invocation: true` as deterministic entry points for humans. Such commands are **excluded from the Skill Tool's ~15k character budget**, consuming 0 passive tokens until manually invoked.
->
-> This is critical for **Anti-Context Rot**: Heavy playbooks (`/release`, `/setup`) won't pollute the model's limited attention span, keeping the Skill budget available for discoverable intelligent skills.
+**Zero-Token Retention:** `disable-model-invocation: true` excludes from ~15k budget. Use for heavy playbooks, infrequent wizards, personal shortcuts. Execution still costs tokens; only retention is zero.
 
-### Execution vs Retention
+**Command-Skill Pattern:** Command wraps Skill via `allowed-tools: [Skill(name)]`. Benefits: lightweight wrapper, semantic discovery, zero-retention. Set `user-invocable: false` on wrapped Skills.
 
-| Cost Type | When `disable-model-invocation: true` | When `false` (default) |
-|:----------|:--------------------------------------|:-----------------------|
-| **Retention (passive)** | **0 tokens** — excluded from Skill Tool budget | Standard — consumes part of ~15k char budget |
-| **Execution (active)** | Standard — consumes tokens when running | Standard — consumes tokens when running |
-
-**Key insight:** The zero-token benefit is **passive retention only**. Execution always costs tokens.
+**argument-hint:** Use clear, concise hints matching `AskUserQuestion` prompts. Keep short (appears in autocomplete). Example: `argument-hint: Optional feature description`.
 
 ---
 
-## Command-Skill Pattern: Complete Example
+## Practical Patterns
 
-### Command (Human-Only Entry Point)
+| Pattern | Configuration | Key Points |
+|:-------|:--------------|:-----------|
+| **Safe Read-Only** | `allowed-tools: [Read, Grep]` | Restrict tools (default allows all). Grep/Glob are fine. |
+| **Autonomous Wrapper** | `allowed-tools: [Read, Grep, Glob]` + "DO NOT ask questions" | Specify output format (JSON/markdown). Explicitly state no questions. |
+| **User Interactive (Wizard)** | `disable-model-invocation: true` + `argument-hint` | Consolidate questions early. Use clear options. |
 
-```yaml
-# commands/heavy-workflow.md
----
-description: "Complex workflow for humans only"
-# Zero-retention: This description is EXCLUDED from Skill Tool's ~15k char budget
-disable-model-invocation: true
-allowed-tools: [Skill(builder-core)]
----
-
-# Plan Initialization
-
-Invoke the builder-core skill to initialize a Standard Plan.
-```
-
-### Skill (AI-Discoverable, Hidden from Menu)
-
-```yaml
-# skills/builder-core/SKILL.md
----
-name: builder-core
-user-invocable: false  # Hidden from / menu (accessible via /plan command)
-description: "PROACTIVELY USE when planning or executing projects..."
----
-```
-
-### The Golden Rule
-
-> **When a Command wraps a Skill, set `user-invocable: false` on the Skill to hide it from the `/` menu while maintaining semantic discovery for the AI.**
-
-This ensures:
-- Humans access via `/plan` command (zero retention)
-- AI discovers via semantic description (when needed)
-- Clean `/` menu without clutter
+See [COMMAND_ORCHESTRATION_EXAMPLE.md](./COMMAND_ORCHESTRATION_EXAMPLE.md) for complete interactive wizard pattern.
 
 ---
 
-## Command that Orchestrates Multiple Skills
+## Best Practices & Common Pitfalls
 
-```markdown
-<!-- commands/release.md -->
----
-description: "Orchestrates the complete release workflow"
-allowed-tools: [Skill, Bash]
----
+**Quick Wins:**
+- Use `argument-hint` liberally for user guidance
+- Consolidate questions in one burst (Phase 3 pattern)
+- List skills explicitly by name in orchestration
+- Document dependencies and error handling
 
-# Release Workflow
+**Visibility Control:**
 
-You are orchestrating a release. Execute these skills in sequence:
+| Field | Scope | Effect |
+|:-----|:------|:-------|
+| `disable-model-invocation` | Commands | Excludes from ~15k budget when `true` |
+| `user-invocable` | Skills | Hides from `/` menu when `false` |
 
-1. **version-bump**: Increment version based on commit history
-2. **run-tests**: Execute full test suite
-3. **build-artifacts**: Create production builds
-4. **deploy**: Push to production environment
-5. **notify**: Send release notifications
+**Common Pitfalls & Fixes:**
 
-DO NOT ask for confirmation. Proceed autonomously.
-```
+| Problem | Fix |
+|:--------|:----|
+| Over-orchestrating simple tasks | Prefer Skill for single capabilities |
+| Missing `argument-hint` | Always include for interactive commands |
+| Scattered questions | Use Phase 3 pattern (consolidate early) |
+| Forgetting zero-token retention | Use `disable-model-invocation: true` for heavy workflows |
+| Vague skill orchestration | List skills explicitly by name and order |
 
-**Characteristics:**
-- Multi-skill orchestration
-- Autonomous execution
-- No user prompts
-- Sequential skill invocation
-
----
-
-## Command Frontmatter Reference
-
-```yaml
----
-description: "Orchestrate X workflow"  # Semantic matching for discovery
-allowed-tools: [Skill, Bash, Read]     # Restricts which tools this command can use
-disable-model-invocation: false        # true = human-only command (Skill tool cannot invoke)
----
-```
-
-| Field | Purpose | Default |
-|:-----|:--------|:--------|
-| `description` | Semantic matching for discovery | Required |
-| `allowed-tools` | Restricts which tools the command can access | All tools |
-| `disable-model-invocation` | Controls whether Skill tool can invoke + Zero-Token Retention | `false` |
-
-> **IMPORTANT:** `permissionMode` is **NOT valid** in Command frontmatter. This field is exclusive to Agents. Commands inherit permissions from the calling context. Use `allowed-tools` to restrict which tools the command can access.
+**Frontmatter:** `description` (required), `argument-hint`, `allowed-tools`, `disable-model-invocation` (optional). `permissionMode` is NOT valid (exclusive to Agents).
 
 ---
 
-## Quick Reference: Command Decision Matrix
+## Quick Decision Matrix
 
-| Scenario | Use Command? | Type | Configuration |
-|:---------|:-------------|:-----|:--------------|
-| Heavy playbook I want zero-retention | ✓ | Human-only | `disable-model-invocation: true` |
-| Standardized interface for complex tool | ✓ | AI-accessible | `disable-model-invocation: false` |
-| Alias to avoid semantic ambiguity | ✓ | Either | Depends on use case |
-| Simple one-shot task | ✗ | Use Skill directly | N/A |
-| Task needs AI semantic discovery | ✗ | Use Skill directly | N/A |
+| Scenario | Consider Command? | Configuration Tip |
+|:---------|:-----------------|:------------------|
+| Orchestrating multiple Skills/subagents | ✓ Yes | List skills explicitly |
+| User interaction requiring `AskUserQuestion` | ✓ Yes | Use `argument-hint` |
+| Heavy playbook (zero-retention needed) | ✓ Yes | `disable-model-invocation: true` |
+| Single capability | ✗ Prefer Skill | See [CLAUDE.md](../CLAUDE.md) |
+| Simple one-shot task | ✗ Prefer Skill | Skills handle this better |
+
+For comprehensive decision guidance, see [CLAUDE.md](../CLAUDE.md#the-prompt-churn-decision-flow-2026-standards).
 
 ---
 
-## Common Command Patterns
+## Common Patterns
 
-### 1. Release Workflow
+### Release Workflow
 ```yaml
 ---
 description: "Orchestrate complete release process"
 allowed-tools: [Skill, Bash]
-disable-model-invocation: false
 ---
 Execute: version-bump → tests → build → deploy → notify
 ```
 
-### 2. Interactive Wizard
+### Interactive Wizard
 ```yaml
 ---
 description: "Interactive project scaffolding"
+argument-hint: Optional template name
 disable-model-invocation: true
 ---
 Guide user through template selection and setup.
 ```
 
-### 3. Analysis Shortcut
+### Analysis Shortcut
 ```yaml
 ---
 description: "Quick codebase analysis"
@@ -279,13 +142,8 @@ Invoke analyzer skill for comprehensive audit.
 
 ---
 
-## Visibility: disable-model-invocation vs user-invocable
+## Further Reading
 
-| Field | Scope | Purpose | Effect |
-|:-----|:------|:--------|:-------|
-| `disable-model-invocation` | Commands only | Blocks Skill tool invocation + Zero-Token Retention | Excludes from ~15k budget when `true` |
-| `user-invocable` | Skills only | Controls `/` menu visibility | Hides from UI when `false` |
-
-**Key distinction:**
-- `disable-model-invocation` = Command visibility + **Zero-Token Retention**
-- `user-invocable` = Skill UI visibility only (no retention impact)
+- [CLAUDE.md](../CLAUDE.md) - Complete Cat Toolkit reference
+- [COMMAND_ORCHESTRATION_EXAMPLE.md](./COMMAND_ORCHESTRATION_EXAMPLE.md) - Advanced command pattern example
+- [Official Slash Commands Docs](https://code.claude.com/docs/en/slash-commands) - Official Claude Code documentation

@@ -1,6 +1,6 @@
 ---
 name: thinking-frameworks
-description: "SHOULD USE when performing strategic analysis, root-cause identification, or complex trade-off evaluation. Applies 12 structured frameworks including Pareto, Inversion, and First-Principles."
+description: "USE when performing strategic analysis, root-cause identification, or complex trade-off evaluation. Applies 12 structured frameworks including Pareto, Inversion, and First-Principles."
 user-invocable: false
 allowed-tools: [Read, Glob, Grep, Bash]
 ---

@@ -1,7 +1,7 @@
 ---
 description: "Shortcut: Autonomous video editing via the video-editor agent."
 argument-hint: "<request> (e.g. 'Make this cinematic')"
-allowed-tools: [Task]
+allowed-tools: [Skill(intent-translation), Skill(multimodal-understanding)]
 disable-model-invocation: true
 ---
 

@@ -2,7 +2,6 @@
 name: multimodal-understanding
 description: "USE when analyzing video content with vision and audio models. Combines frame analysis, audio processing, scene detection, and narrative flow understanding for intelligent video editing."
 context: fork
-model: opus
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 

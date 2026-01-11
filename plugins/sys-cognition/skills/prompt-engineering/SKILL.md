@@ -10,9 +10,12 @@ allowed-tools: [Read, Write, Edit, Glob, Grep]
 
 1. **Analyze Intent**: Determine if the goal is Drafting, Optimizing, Auditing, or serving as Knowledge Bank.
 2. **Consult Standards**: PROACTIVELY load `references/core-standards.md` for Attention Management rules.
-3. **Select Pattern**:
+3. **Select Pattern (Signal-to-Noise Rule)**:
    - **Markdown-First** (Default): Use for 80% of tasks.
-   - **Hybrid XML**: Use ONLY for Data Isolation (>50 lines) or strict constraints.
+   - **Hybrid XML**: Use ONLY if:
+     - Data Isolation (>50 lines raw data)
+     - Strict Constraints (NEVER/MUST rules)
+     - Internal Monologue (Complex reasoning)
 4. **Execute Workflow**:
    - **Drafting**: Use `workflows/draft.md`
    - **Optimizing**: Use `workflows/optimize.md`

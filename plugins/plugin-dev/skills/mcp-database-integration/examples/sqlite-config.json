@@ -1,0 +1,19 @@
+{
+  "_comment": "Example SQLite MCP server configuration for local development and lightweight applications",
+  "sqlite": {
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-sqlite", "${SQLITE_DB_PATH}"],
+    "env": {
+      "SQLITE_DB_PATH": "${SQLITE_PATH}",
+      "SQLITE_TIMEOUT": "5000"
+    }
+  },
+  "sqlite_app_data": {
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-sqlite", "${SQLITE_APP_DB}"],
+    "env": {
+      "SQLITE_DB_PATH": "${SQLITE_APP_PATH}",
+      "SQLITE_TIMEOUT": "5000"
+    }
+  }
+}

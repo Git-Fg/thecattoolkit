@@ -23,6 +23,8 @@ You are an **orchestration architect** specializing in the Cat Toolkit framework
 
 ## Crash Prevention Constraints
 
+> **📘 Official Docs:** [Agent Skills - Best Practices](https://docs.claude.com/en/docs/agents-and-tools/agent-skills/best-practices) for complete validation rules.
+
 **Violation of these constraints causes immediate CLI failure.**
 
 | Field | Constraint | Regex / Rule |
@@ -87,7 +89,7 @@ Bundle multiple actions into a single turn. The model can perform ~15 internal o
 We program with INTENT, not scripts.
 ```
 
-**Key Insight**: Skills and Agents are software you install into the runtime. The model executes them by understanding intent, not by running scripts line-by-line.
+**Best Practice**: Skills and Agents function as software you install into the runtime. The model typically executes them by understanding intent rather than running scripts line-by-line.
 
 ---
 
@@ -97,20 +99,35 @@ We program with INTENT, not scripts.
 
 ## The Unified 2026 Hybrid Runtime Standard
 
-> **Core Thesis:** All primitives (Skills, Commands, Agents) are **Hybrid**—invocable by both Model (semantic intent) and User (manual trigger). The structural placement determines the "RAM Cost" and "Logic Fidelity".
+> **📘 Official Docs:** See [Slash Commands](https://code.claude.com/docs/en/slash-commands), [Agent Skills](https://code.claude.com/docs/en/skills), and [Subagents](https://code.claude.com/docs/en/sub-agents) for official primitive documentation.
+
+> **🔧 Cat Toolkit Note:** This section describes forward-looking conventions (2026+) adopted by this toolkit for quota-optimized workflows. The core hybrid nature (model + user invocable) is official; the specific cost optimization patterns are toolkit conventions.
+
+**Best Practice:** All primitives (Skills, Commands, Agents) are designed as **Hybrid**—invocable by both Model (semantic intent) and User (manual trigger). The structural placement generally determines the "RAM Cost" and "Logic Fidelity".
 
 ### The 80% Golden Rule
 
-> **80% of capabilities achieve peak efficiency with a single, well-structured Skill.**
+> **80%+ of capabilities achieve peak efficiency with a single, well-structured Skill.**
 
-A **Skill** acts as a **Knowledge Base** (passive context) that enhances the model's native reasoning for a specific domain.
+A **Skill** typically acts as a **Knowledge Base** (passive context) that enhances the model's native reasoning for a specific domain or process.
+
+**Guideline: Skills vs Commands**
+
+| Aspect | Skills | Commands |
+|:-------|:-------|:---------|
+| **Role** | Domain/process knowledge (typically not workflow routers) | Workflow orchestration & user interaction |
+| **Use When** | Single capability, domain expertise | Multi-skill orchestration, `AskUserQuestion`, zero-retention playbooks |
+| **Structure** | `references/`, `examples/`, `scripts/`, `assets/templates/` | Simple markdown with frontmatter |
+| **Behavior** | Passive/hybrid (direct knowledge injection) | Interactive (orchestrates workflows) |
+
+**Best Practice:** For single capabilities, consider preferring Skills. Commands are generally better suited for orchestration and user interaction.
 
 ### The Hybrid Primitive Matrix
 
 | Primitive | RAM Cost | Logic Fidelity | Primary Role | Implementation |
 |:---|:---:|:---:|:---|:---|
-| **Skill (Inline)** | **1** | **High** | **Knowledge Base** | `skills/*/SKILL.md` (Default 80%) |
-| **Command** | **0*** | **Specific** | **Shortcut / Macro** | `commands/*.md` (Points to Skill) |
+| **Skill (Inline)** | **1** | **High** | **Knowledge Base** | `skills/*/SKILL.md` (Default 80%+) |
+| **Command** | **0*** | **Specific** | **Workflow Orchestrator** | `commands/*.md` (Multi-skill/subagent orchestration, user interaction) |
 | **Agent (Task)** | **2×N** | **Isolated** | **Shared-Nothing** | `agents/*.md` (Parallel/Background) |
 | **Skill (Fork)** | **3** | **Isolated** | **Volume Processing** | `context: fork` (Massive files) |
 
@@ -118,21 +135,33 @@ A **Skill** acts as a **Knowledge Base** (passive context) that enhances the mod
 
 ### The Prompt Churn Decision Flow (2026 Standards)
 
-To minimize 5-hour rolling window consumption:
+To minimize 5-hour rolling window consumption, consider the following guidance:
 
-1. **Can it be done with current context?**
-   → **USE INLINE SKILL** (Retention: 1 prompt). Uses current "RAM" instantly. **(80% Case)**
+1. **Is it domain/process knowledge that can be directly invoked?**
+   → **Consider using INLINE SKILL** (Retention: ~1 prompt). Uses current "RAM" instantly. **(80%+ Case)**
+   - Skills typically provide global knowledge on a domain or process
+   - Skills often handle complexity via progressive disclosure (`references/` subdirectories)
+   - Skills generally should not orchestrate workflows—they work best as knowledge bases
+   - **Recommended approach:** Prefer Skill for domain/process expertise
+   - **Guideline:** When choosing between one Command or one Skill for a single capability, a Skill is often the better choice
 
-2. **Is it a heavy workflow you want to keep out of model's passive memory?**
-   → **USE COMMAND** with `disable-model-invocation: true` (Retention: **0 tokens**)
+2. **Does it orchestrate multiple Skills/subagents OR require user interaction?**
+   → **Consider using COMMAND** (Orchestration: standard cost, Retention: **~0 tokens** with `disable-model-invocation: true`)
+   - **Primary use case:** Orchestrating several Skills/subagents—prefer a correctly crafted Command
+   - **User interaction:** Any workflow requiring `AskUserQuestion`—typically prioritize Commands (usually oriented with `argument-hint`)
+   - **Zero-token retention:** Heavy workflows you want excluded from passive memory
+   - **Best Practice:** Adding `disable-model-invocation: true` to command frontmatter excludes the command from the ~15k token budget, saving significant context space.
+   - **Note:** For single capabilities, generally prefer Skills over Commands
 
 3. **Does it require reading >10 Files or strict isolation?**
-   → **USE FORKED SKILL** (Cost: 3). Keeps massive distinct context out of main session.
+   → **Consider using FORKED SKILL** (Cost: ~3). Helps keep massive distinct context out of main session.
 
 4. **Do you need true parallelism (Shared-Nothing)?**
-   → **USE BACKGROUND AGENT** (Cost: 2×N). Spawn agents for independent directories.
+   → **Consider using BACKGROUND AGENT** (Cost: ~2×N). Spawn agents for independent directories.
 
 ## Cat Toolkit Convention: Description Patterns
+
+> **📘 Official Docs:** See [Agent Skills - Official Documentation](https://code.claude.com/docs/en/skills) for the standard Skill description format.
 
 **This is a LOCAL CONVENTION for this toolkit, not an official Claude Code rule.**
 
@@ -158,6 +187,8 @@ The Cat Toolkit enforces a specific pattern for skill descriptions to optimize s
 
 ## Discovery: The Semantic Matching Layer
 
+> **📘 Official Docs:** [Agent Skills - How Skills work](https://code.claude.com/docs/en/skills#how-skills-work)
+
 Skills are discovered by matching your intent against their `description` field. This is why description writing is critical.
 
 ### Discovery Tiering Matrix
@@ -175,10 +206,10 @@ Use at the **beginning of tasks** to gather requirements. Avoid mid-execution qu
 | Commands (`commands/*.md`) | [✓] | [✓] |
 | Agents (`agents/*.md`) | [✓] | [✓] |
 | Hooks (`hooks.json`) | [✓] | [✓] |
-| `.claude-plugin/` directory | [X] | [✓] (convention) |
-| `marketplace.json` (root) | [X] | [✓] (toolkit catalog) |
-| `plugin.json` (per-plugin) | [X] | [✓] (plugin metadata) |
-| Command namespacing | [X] | [✓] (automatic) |
+| `.claude-plugin/` directory | [✓] | [✓] (official) |
+| `marketplace.json` (root) | [✓] | [✓] (official feature) |
+| `plugin.json` (per-plugin) | [✓] | [✓] (official feature) |
+| Command namespacing | [✓] | [✓] (automatic) |
 | Description conventions | [X] | [✓] (MODAL + USE when) |
 
 ---
@@ -187,132 +218,38 @@ Use at the **beginning of tasks** to gather requirements. Avoid mid-execution qu
 
 **Detailed primitives, syntax, structure, and reference material.**
 
-## Primitive Selection Logic (Updated)
+## Primitive Mental Models
 
-### 1. Skill (The Default - 80%)
-- **Role:** Passive Knowledge Injection
-- **Trigger:** Hybrid (Model via description, User via `/` menu)
-- **Cost:** 1 Prompt (Inline)
-- **Best For:** Standard engineering tasks, audits, refactors, learning patterns
+> **Note:** For decision logic and selection guidance, see [The Prompt Churn Decision Flow](#the-prompt-churn-decision-flow-2026-standards) in Section 2.
 
-### 2. Command (The User-Only Shortcut)
-- **Role:** Deterministic Macro for Humans
-- **Trigger:** Manual ONLY (User via `/`)
-- **Context Cost (Passive):** **Zero Tokens** with `disable-model-invocation: true`
-- **Execution Cost (Active):** Standard
-- **Pattern:** Command wrapping Skill via `allowed-tools: [Skill(builder-core)]`
-- **Best For:** Heavy "Playbooks" (`/release`, `/setup`)
+**Skill = Knowledge:** "How to do X" encoded as reusable knowledge. Typically injects instructions into context when invoked.
 
-### 3. Agent (The Specialist)
-- **Role:** Distributed Computing
-- **Trigger:** Task delegation
-- **Cost:** High (2×N)
-- **Best For:** Parallel processing, incompatible contexts, background tasks
+**Agent = Delegation:** Autonomous subprocess for focused tasks. Model may auto-spawn or user can invoke via `@agent-name`.
 
-## Primitive 1: Skill = Knowledge
+**Best Practice:** Parallel agents should avoid modifying the same file (Shared-Nothing principle). This helps prevent conflicts and ensures clean parallel execution.
 
-A **Skill** is "how to do X" encoded as reusable knowledge. When invoked, it injects instructions into current context.
-
-**The Mental Model:**
-```
-Skill = Brain Extension
-├─ You say: "Use the security-audit skill"
-└─ Claude gains: The skill's expertise instantly
-```
-
-**Example: Inline Skill (Default)**
-```yaml
-# skills/format-code/SKILL.md
----
-name: format-code
-description: "USE when you need to format code according to project standards. Applies Prettier/Black and organizes imports."
-allowed-tools: [Write, Bash]
----
-```
-
-**Example: Forked Skill (Isolation)**
-```yaml
-# skills/deep-analysis/SKILL.md
----
-name: deep-analysis
-description: "USE when performing comprehensive codebase analysis. Analyzes architecture patterns, dependencies, and code quality."
-context: fork
-model: opus
-allowed-tools: [Read, Grep, Glob]
----
-```
-
-## Primitive 2: Agent/Task = Delegation
-
-An **Agent** is "delegate this work" to an autonomous subprocess. Like hiring a specialist for a focused job.
-
-**The Mental Model:**
-```
-Agent = Subcontractor
-├─ You say: "Map the entire authentication system"
-├─ Claude spawns: Explore agent
-├─ Agent works: Reads 50+ files, traces flows
-└─ Agent returns: "Auth uses JWT with refresh tokens."
-```
-
-**When to Delegate:**
-```
-Can this be done in current context?
-  ├─ YES → Use Skill (inline) — cheaper, faster
-  └─ NO (context overflow / isolation needed)
-       ├─ Single isolated task? → Skill with `context: fork`
-       └─ True parallelism? → Agent sub-agents
-```
-
-**Built-in Agent Types:**
-
-| Agent | Purpose | Tools | Example |
-|:------|:--------|:------|:--------|
-| **Explore** | Fast codebase reconnaissance | Read-only | "Map the auth system" |
-| **Plan** | Architecture design before coding | All tools | "Design refactor strategy" |
-| **general-purpose** | Multi-step reasoning | All tools | "Research and implement X" |
-
-**Example: Parallel Exploration (Shared-Nothing)**
-```
-Main Agent:
-├─ Agent A: Analyzes src/frontend/ → outputs/frontend-report.json
-├─ Agent B: Analyzes src/backend/  → outputs/backend-report.json
-└─ Synthesizes both into final report
-```
-
-**Critical Rule**: Parallel agents must NEVER modify the same file.
-
-## Commands: Shortcuts & AI Macros
+## Commands: Workflow Orchestration & User Interaction
 
 Complete reference: @docs/commands.md
 
 **The Mental Model:**
 ```
-Command = Macro / Shortcut
+Command = Workflow Orchestrator / User Interaction Handler
 ├─ Human types: /deploy
 ├─ AI invokes: SlashCommand(deploy, args)
-└─ Claude executes: pre-deploy-check → build → deploy → post-deploy-test
+└─ Claude executes: Orchestrates multiple Skills/subagents → handles user interaction
 ```
 
-**Two Audiences:**
+**When to Use Commands (80% Decision Matrix):**
 
-| Audience | Purpose | Key Setting |
-|:---------|:--------|:------------|
-| **Humans** | Manual invocation, zero retention | `disable-model-invocation: true` |
-| **AI** | Programmatic, context macros | `disable-model-invocation: false` |
+| Scenario | Use Command? | Configuration |
+|:---------|:------------|:--------------|
+| **Orchestrating multiple Skills/subagents** | ✓ Yes | `allowed-tools: [Skill, ...]` |
+| **User interaction (`AskUserQuestion`)** | ✓ Yes | `argument-hint: "..."` |
+| **Heavy playbook (zero-retention)** | ✓ Yes | `disable-model-invocation: true` |
+| **Single capability** | ✗ Prefer Skill | See 80% Golden Rule in Section 2 |
 
-**When to Use:**
-
-| Pattern | Example |
-|:--------|:--------|
-| Multi-skill workflow | `/release` → version-bump → build → deploy |
-| Interactive wizard | `/scaffold` → guides through setup |
-| Shortcut / Alias | `/think` → thinking-frameworks skill |
-
-**Key Patterns:**
-- **Command-Skill Pattern:** Command points to Skill via `allowed-tools: [Skill(name)]`
-- **Zero-Token Retention:** `disable-model-invocation: true` excludes from ~15k budget
-- **Golden Rule:** Set `user-invocable: false` on Skills wrapped by Commands
+**Critical Rule:** Commands orchestrate workflows and handle user interaction. Skills provide domain/process knowledge. For single capabilities, prefer Skills.
 
 ## Directory Structure: Standalone vs Plugin
 
@@ -321,7 +258,7 @@ Command = Macro / Shortcut
 | Type | Skills Location | Commands Location | Metadata |
 |:-----|:----------------|:------------------|:----------|
 | **Standalone Project** | `.claude/skills/` | `.claude/commands/` | `.claude/` directory only |
-| **Plugin (Distributable)** | `plugins/my-plugin/skills/` | `plugins/my-plugin/commands/` | `.claude-plugin/plugin.json` + root `marketplace.json` |
+| **Plugin (Distributable)** | `plugins/my-plugin/skills/` | `plugins/my-plugin/commands/` | `.claude-plugin/plugin.json` + `.claude-plugin/marketplace.json` at repository root |
 
 **Standalone Project Structure:**
 ```
@@ -360,36 +297,34 @@ plugins/my-plugin/
 - **Intra-Plugin Collaboration:** Components within same plugin collaborate freely
 - **Inter-Plugin Independence:** Cross-plugin coupling is forbidden
 
-## Skills Field vs Context Fork
+## Marketplace Configuration
 
-**Two distinct mechanisms in agents:**
+Complete reference: @docs/marketplace.md
 
-**1. Agent's `skills` list (Knowledge Injection)**
-When an agent lists skills, those skills' instructions are **injected as passive knowledge**. The agent becomes aware but does **NOT** automatically execute.
+**Quick Reference (80% Use Cases):**
 
-| Configuration | Availability | Execution Mode |
-|:--------------|:-------------|:---------------|
-| Listed in agent's `skills` | Available (knowledge injected) | Inline (default) |
-| Skill has `context: fork` | Per normal discovery | Forked subagent |
-| Both combined | Available | Forked (fork takes precedence) |
+| Aspect | Standalone Project | Plugin (Distributable) |
+|:-------|:-------------------|:----------------------|
+| **Location** | `.claude/` directory | `plugins/my-plugin/` |
+| **Metadata** | `.claude/` only | `.claude-plugin/plugin.json` + `.claude-plugin/marketplace.json` (root) |
+| **Command namespace** | `/command` (local) | `/plugin-name:command` (namespaced) |
+| **Distribution** | Local only | Via marketplace catalog |
 
-**2. Skill's `context: fork` (Execution Mode)**
-When a skill has `context: fork`, it **always executes in an isolated subagent context**.
+**Key Rule:** Marketplace configuration at repository root (`.claude-plugin/marketplace.json`) catalogs plugins for distribution. Use `claude plugin validate .` to verify.
 
-**Combining `context: fork` with `agent`:**
-```yaml
-# skills/deep-audit/SKILL.md
----
-name: deep-audit
-description: USE when you need a comprehensive security audit
-context: fork
-agent: security-analyzer
-model: opus
-allowed-tools: [Read, Grep, Bash]
----
-```
+## Skills Field vs Context Fork vs Skills Tools
 
-**Important:** The `agent` field is **only valid with `context: fork`**.
+**Three distinct mechanisms:**
+
+| Mechanism | Purpose | Behavior |
+|:----------|:--------|:---------|
+| **Agent's `skills` list** | Knowledge injection | Injects passive knowledge; agent aware but doesn't auto-execute |
+| **Skill's `context: fork`** | Execution isolation | Always executes in isolated subagent context |
+| **Command's `Skill(tool-name)`** | Force skill invocation | Forces command to use skill instead of task; works with Read/Edit tools |
+
+**Command Pattern:** Use `allowed-tools: [Skill(skill-name), Read, Edit, ...]` to force skill invocation. Pattern: "Read file X and invoke skill Y" works well. Still a tool but explicitly directs skill usage.
+
+**Combining:** When both present in agents, fork takes precedence. The `agent` field is only valid with `context: fork`.
 
 ## Visibility Control: user-invocable vs disable-model-invocation
 
@@ -412,6 +347,8 @@ allowed-tools: [Read, Grep, Bash]
 
 ## Permissions & Security
 
+> **📘 Official Docs:** [Identity and Access Management](https://code.claude.com/docs/en/iam) for complete official permissions guide.
+
 Complete reference: @docs/permissions.md
 
 **The Mental Model:**
@@ -422,71 +359,31 @@ Main Agent (baseline)
   └─→ Skill (can restrict during activation via allowed-tools)
 ```
 
-**Critical Distinction:**
+**Quick Reference (80% Use Cases):**
 
-| Aspect | Skills (`allowed-tools`) | Agents (`tools`) |
-|:-------|:------------------------|:-----------------|
-| **Purpose** | Temporary restriction during activation | Persistent allowlist for lifetime |
-| **If omitted** | No restriction (standard model) | Inherits ALL tools from parent |
-| **If specified** | Restricts to listed tools only | Allowlist: ONLY specified tools |
-| **Security model** | "Least privilege during task" | "Least privilege by default" |
+| Use Case | Skills | Agents | Permission Mode |
+|:---------|:-------|:-------|:---------------|
+| **Read-only analysis** | `allowed-tools: [Read, Grep, Glob]` | `tools: [Read, Grep, Glob]` | `plan` |
+| **Git operations only** | `allowed-tools: [Bash(git:*)]` | `tools: [Bash(git:*)]` | `default` |
+| **Security audit** | `allowed-tools: [Read, Grep]` | `tools: [Read, Grep]`, `permissionMode: plan` | `plan` |
+| **Full access (trusted)** | Omit or `[Read, Write, Bash, ...]` | `tools: [Read, Write, Bash, ...]` | `acceptEdits` |
 
-**Permission Modes:**
-
-| Mode | Behavior | Use Case |
-|:-----|:---------|:----------|
-| `default` | Prompts for each tool | Uncertain operations |
-| `acceptEdits` | Auto-approves file ops | Trusted refactoring |
-| `plan` | Read-only analysis | Exploration |
-| `bypassPermissions` | All tools approved | Avoid (dangerous) |
-
-**Syntax (Parentheses, NOT Brackets):**
-- ✅ `allowed-tools: [Bash(git add:*), Bash(git status:*)]`
-- ❌ `allowed-tools: [Bash[python, npm]]`
+**Critical Rule:** Skills use `allowed-tools` (temporary), Agents use `tools` (persistent). If omitted, Skills have no restriction; Agents inherit ALL tools (security risk).
 
 ## Specialized Patterns
 
 ### Plan Mode
 
-**Purpose**: Planning before implementation—read-only exploration requiring user approval.
+Read-only exploration before implementation. Use for complex implementations, architectural decisions, or large refactors.
 
-**The Mental Model:**
-```
-Plan Mode = Architect's Blueprint Phase
-├─ Explore and design (read-only)
-├─ Present plan for approval
-└─ Build (only after approval)
-```
-
-**When to Use Plan Mode:**
-
-| [✓] Use Plan Mode | [X] Don't Use Plan Mode |
-|:-----------------|:----------------------|
-| Complex implementations with multiple approaches | Simple bug fixes (1-2 line changes) |
-| Architectural decisions requiring user input | Pure research/exploration |
-| Refactoring affecting many files | Tasks with clear requirements |
-
-**Workflow:**
-1. **Phase 1 (READ-ONLY)**: Call `EnterPlanMode()`, explore with Read/Grep/Glob
-2. **Phase 2 (Design)**: Write plan to `implementation-plan.md`
-3. **Phase 3 (Approval)**: Call `ExitPlanMode()`, WAIT for approval
+**Workflow:** `EnterPlanMode()` → explore (Read/Grep/Glob) → write plan → `ExitPlanMode()` → wait for approval.
 
 ### Shared-Nothing Parallelism
 
-**The Golden Rule**: Parallel agents must NEVER modify the same file.
+**Rule:** Parallel agents must NEVER modify the same file.
 
-**Correct Pattern:**
-```
-Main Agent:
-├─ Agent A: Analyzes src/frontend/ → outputs/frontend-report.json
-├─ Agent B: Analyzes src/backend/  → outputs/backend-report.json
-└─ Synthesizes both into final-summary.md
-```
-
-**Anti-Pattern:**
-- Agents writing to same file (race condition)
-- Agents waiting for each other (breaks parallelism)
-- Direct agent communication (no orchestration)
+**Correct:** Each agent writes to separate outputs; main agent synthesizes.  
+**Anti-Pattern:** Agents writing to same file, waiting for each other, direct communication.
 
 ## Infrastructure (Reference)
 
@@ -501,52 +398,19 @@ Complete reference: @docs/infrastructure.md
 
 ## Quick Reference: Frontmatter
 
-### Skill Frontmatter
+**Critical Constraints:**
+- **Skill `name`:** 1-64 chars, lowercase, hyphens only, must match directory (`^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$`)
+- **Skill `description`:** 1-1024 chars, single line only (no `>` or `|` YAML syntax)
+- **Agent `tools`:** If omitted, inherits ALL tools (security risk). Always specify for security-critical agents.
+- **Command `permissionMode`:** NOT valid (exclusive to Agents)
 
-```yaml
----
-name: my-skill                    # Max 64 chars, must match directory
-description: "USE when [condition]. Concise, action-oriented single-line description."
-context: fork                     # Optional: runs in isolated subagent
-allowed-tools: [Read, Write, Bash]  # Optional: temporary restriction during activation
-model: sonnet                     # Optional: sonnet, opus, haiku, inherit
-agent: specialist-agent           # Optional: binds forked skill to agent
-user-invocable: true              # Optional: false hides from / menu
----
-```
+**Essential Fields:**
 
-**Description Formatting Rule**: Descriptions MUST be on a single line. Never use multi-line YAML syntax (`>` or `|`).
-
-**allowed-tools Syntax:**
-- **Unrestricted:** `Tool` (e.g., `Bash`, `Read`)
-- **Restricted:** `Tool(specifier)` using parentheses, NOT brackets
-- **Examples:** `Bash(git add:*)`, `Bash(npm run test:*)`
-
-### Agent Frontmatter
-
-```yaml
----
-name: my-agent
-model: opus                       # haiku, sonnet, opus, inherit
-permissionMode: plan              # default, acceptEdits, plan, dontAsk, bypassPermissions
-tools: [Read, Grep, Glob]         # Explicit allowlist (omit = inherits ALL tools)
-skills: [skill-name, another]     # Knowledge injection (passive)
----
-```
-
-**Critical Security**: If you omit `tools`, the agent inherits **ALL tools** from parent (including MCP). Always specify `tools` for security-critical agents.
-
-### Command Frontmatter
-
-```yaml
----
-description: "Orchestrate X workflow"
-allowed-tools: [Skill, Bash, Read]
-disable-model-invocation: false    # true = human-only command
----
-```
-
-**IMPORTANT:** `permissionMode` is **NOT valid** in Command frontmatter. This field is exclusive to Agents.
+| Primitive | Required | Common Optional |
+|:----------|:---------|:----------------|
+| **Skill** | `name`, `description` | `allowed-tools`, `context`, `user-invocable` |
+| **Agent** | `name` | `tools`, `skills` |
+| **Command** | `description` | `allowed-tools`, `disable-model-invocation`, `argument-hint` |
 
 ### Validation
 
@@ -563,7 +427,9 @@ disable-model-invocation: false    # true = human-only command
 
 ## Quota Optimization Anti-Patterns
 
-> **CRITICAL**: This toolkit is designed for providers with **5-hour rolling window quotas**. The unit of consumption is the **Prompt** (user intent), not the token.
+> **🔧 Cat Toolkit Convention:** This section describes optimization strategies for providers with 5-hour rolling window quotas (e.g., Z.ai, MiniMax). Official Claude Code (Anthropic) uses token-based billing without this quota structure.
+
+**CRITICAL**: This toolkit is designed for providers with **5-hour rolling window quotas**. The unit of consumption is the **Prompt** (user intent), not the token.
 
 **Quota Drains:**
 
@@ -613,6 +479,11 @@ disable-model-invocation: false    # true = human-only command
 **Fix:** Use Inline Skill (Cost: 1) for all tasks <10 files
 </forbidden_pattern>
 
+<forbidden_pattern>
+**Hardcoded Model/PermissionMode:** Specifying `model` or `permissionMode` in frontmatter
+**Fix:** Omit these fields to ensure compatibility with all endpoints (Cat Toolkit Best Practice)
+</forbidden_pattern>
+
 ## Additional Best Practices
 
 ### Progressive Disclosure Principle
@@ -621,17 +492,22 @@ disable-model-invocation: false    # true = human-only command
 
 When a skill exceeds ~400 lines, move detailed theory into `references/` subdirectory. The SKILL.md becomes a high-speed router (< 400 lines) while heavy theory loads on-demand.
 
-**Structure pattern:**
+**Standard Structure Pattern:**
 ```
 skills/my-skill/
-├── SKILL.md          # Router (< 400 lines)
+├── SKILL.md          # Main file (< 400 lines) - Domain/process knowledge
 ├── references/       # Theory and standards (load on-demand)
-├── assets/
-│   └── templates/     # Reusable scaffolding templates
-└── examples/         # Few-shot examples
+├── examples/         # Few-shot examples
+├── scripts/          # Executable code
+└── assets/
+    └── templates/     # Reusable scaffolding templates
 ```
 
+**Critical Note:** Skills should NOT be routers for workflows—they should be optimized for direct invocation as global knowledge. For workflow orchestration, use Commands.
+
 ### Solo Dev Principles (File Colocation)
+
+> **🔧 Cat Toolkit Convention:** This is a development philosophy adopted by this toolkit for solo development environments. Official Claude Code supports both file organization patterns.
 
 **Rule**: Favor **fewer, larger files** over many small files.
 
@@ -670,3 +546,4 @@ skills/my-skill/
 - @docs/permissions.md — Complete permissions and security reference
 - @docs/infrastructure.md — Hooks, MCP, LSP, and runtime configuration
 - @docs/commands.md — Commands: Shortcuts & AI Macros detailed guide
+- @docs/marketplace.md — Marketplace configuration and plugin distribution

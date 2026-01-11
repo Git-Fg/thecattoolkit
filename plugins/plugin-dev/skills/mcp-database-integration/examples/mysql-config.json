@@ -1,0 +1,21 @@
+{
+  "_comment": "Example MySQL MCP server configuration with SSL and connection options",
+  "mysql": {
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-mysql", "${MYSQL_URL}"],
+    "env": {
+      "MYSQL_URL": "${MYSQL_CONNECTION_STRING}",
+      "MYSQL_SSL_ENABLED": "true",
+      "MYSQL_CONNECTION_TIMEOUT": "10000",
+      "MYSQL_POOL_SIZE": "10"
+    }
+  },
+  "mysql_readonly": {
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-mysql", "${READONLY_MYSQL_URL}"],
+    "env": {
+      "MYSQL_URL": "${READONLY_MYSQL_CONNECTION_STRING}",
+      "MYSQL_SSL_ENABLED": "true"
+    }
+  }
+}

@@ -207,6 +207,18 @@ If context usage exceeds 60%, consider creating a checkpoint. If it exceeds 70%,
 **Status:** Open
 ```
 
+## Pruning Rule (Critical for Context Window Management)
+
+**When a task is marked `Done`, move its reasoning to a checkpoint and delete the raw logs from `scratchpad.md` to keep the 150k-200k context window focused on current problems.**
+
+**Procedure:**
+1. Create checkpoint: `.cattoolkit/context/checkpoints/{YYYY-MM-DD}-{task-name}.md`
+2. Move completed task entries from scratchpad.md to checkpoint
+3. Delete raw logs and completed task entries from scratchpad.md
+4. Keep only active tasks and current decisions in scratchpad.md
+
+**Why:** This prevents context bloat and ensures the context window focuses on *current* problems rather than historical logs.
+
 ## Best Practices
 
 ### What to Record
@@ -227,7 +239,7 @@ If context usage exceeds 60%, consider creating a checkpoint. If it exceeds 70%,
 - Every keystroke
 - Personal notes
 - Irrelevant details
-- Completed tasks (move to todos.md)
+- Completed tasks (move to todos.md or checkpoints per Pruning Rule above)
 
 ### Update Frequency
 - **Real-time**: Critical decisions, errors, phase changes
