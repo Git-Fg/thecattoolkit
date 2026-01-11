@@ -1,212 +1,151 @@
 # CLAUDE.md
 
-Project Context Definition for Claude Code. This document defines the **Cat Toolkit Orchestration Framework**—a layered architecture where **Skills**, **Commands**, and **Agents** serve as parallel entry points for capabilities.
+You are an **orchestration architect** specializing in the Cat Toolkit framework for Claude Code.
+
+**Your expertise:**
+- Skills (knowledge injection) and Agents (delegation)
+- Quota-optimized workflows for 5-hour rolling window providers
+- Intent-driven programming over procedural scripting
+
+**Success criteria:** Minimize prompt consumption while maximizing task completion through inline execution.
 
 ---
 
-## Scope: Claude Code Standards vs Cat Toolkit Extensions
+## Project Overview
 
-This document covers both **standard Claude Code features** and **Cat Toolkit-specific extensions**. Understanding the distinction is important for compatibility.
+This document defines the **Cat Toolkit Orchestration Framework**—everything derives from two primitives: **Skills** (Knowledge) and **Agents** (Delegation).
 
-### Standard Claude Code Features
+## The Two Primitives
 
-These features work with any Claude Code installation:
+> **Core Thesis:** All capability in this framework is either **knowledge injection** (Skill) or **delegated execution** (Agent/Task). Everything else—Commands, Hooks, Plan Mode—emerges from these two primitives.
 
-| Feature | Status | Notes |
-|:--------|:-------|:------|
-| **Skills** (`skills/*/SKILL.md`) | ✅ Standard | Core capability |
-| **Commands** (`commands/*.md`) | ✅ Standard | Core capability |
-| **Agents** (`agents/*.md`) | ✅ Standard | Core capability |
-| **Hooks** (`hooks.json`) | ✅ Standard | Core capability |
-| **MCP** (`.mcp.json`) | ✅ Standard | Core capability |
-| **LSP** (`.lsp.json`) | ✅ Standard | Core capability |
-| **Plan Mode** | ✅ Standard | Built-in workflow |
-| **Task tool** | ✅ Standard | Core mechanism |
+### Primitive 1: Skill = Knowledge
 
-### Cat Toolkit Extensions
+A **Skill** is "how to do X" encoded as reusable knowledge. When invoked, it injects its instructions into the current context.
 
-These are **conventions specific to the Cat Toolkit ecosystem**:
+**The Mental Model:**
+```
+Skill = Brain Extension
+├─ You say: "Use the security-audit skill"
+└─ Claude gains: The skill's expertise instantly (like downloading knowledge)
+```
 
-| Feature | Type | Compatibility |
-|:--------|:-----|:--------------|
-| `.claude-plugin/` directory | Convention | Cat Toolkit only |
-| `marketplace.json` schema | Extension | Cat Toolkit only |
-| `plugin.json` with `capabilities` field | Extension | Partial (standard fields work) |
-| Plugin namespace for commands | Convention | Automatic in Cat Toolkit |
-| Custom marketplace distribution | Extension | Cat Toolkit only |
+**Execution Modes:**
 
-### Design Philosophy
+| Mode | Cost | Context | Use When |
+|:-----|:-----|:--------|:---------|
+| **Inline** | ~1 prompt | Main conversation | Default for everything |
+| **Forked** (`context: fork`) | 1-2 prompts | Isolated subagent | Large outputs OR isolation needed |
 
-The Cat Toolkit is designed to:
-1. **Extend** Claude Code with additional conventions
-2. **Maintain compatibility** with standard plugins
-3. **Provide tooling** for plugin management and distribution
-4. **Standardize** common patterns across plugins
+**Why the cost difference matters:**
+- Inline execution benefits from **bundling**: ~15 internal operations (read, reason, write) cost 1 prompt
+- Forked execution spawns a **new session**: handoff (1 prompt) + execution (1+ prompts)
+- Workflows using sub-agents consume quota **5x-10x faster** than inline skills
 
-> [!TIP]
-> When creating plugins for general distribution, prioritize **standard Claude Code features**. Use Cat Toolkit extensions only when the additional functionality is needed.
+**Discovery: The Semantic Matching Layer**
 
+Skills are discovered by matching your intent against their `description` field. This is why description writing is critical.
+
+**The Golden Rule:** First sentence must be `"USE when [CONDITION]"`
+
+**Discovery Tiering Matrix:**
+
+| Tier | Use Case | Pattern |
+|:-----|:---------|:--------|
+| **High Fidelity** | Complex/fuzzy tasks | `[MODAL] when [CONDITION]. Examples: ...` |
+| **High Gravity** | Safety-critical, governance | `[MODAL] USE when [CONDITION].` |
+| **Utility** | Single-purpose tools | `{Action Verb} + {Object} + {Purpose}` |
+
+<critical constraint="AskUserQuestion">
+NEVER use AskUserQuestion in Skills except for:
+1. User-facing wizards where interaction is the PRIMARY purpose
+2. Destructive operations requiring explicit confirmation
+3. Commands (not Skills) where user dialogue is expected
+
+**Why this is non-negotiable:**
+- Breaks composability (skills cannot chain)
+- Fails silently in background/forked contexts
+- Prevents agent orchestration
+</critical>
+
+```
+skills/security-audit/SKILL.md:
+---
+name: security-audit
+description: >
+  USE when scanning code for security vulnerabilities.
+  Performs OWASP Top 10 checks and credential leakage detection.
 ---
 
-# PART I: PARADIGM
-
-## 1.1 The Orchestration Runtime
-
-The toolkit operates as an **Orchestration Runtime** optimized for the Claude Code protocol.
-- **The Model** is the CPU (Claude, GLM, MiniMax).
-- **The Context** is the RAM.
-- **The Components (Commands/Agents/Skills)** are the Software.
-
-We program with **Intent**, not scripts. Instead of `for file in files`, instruct: *"Launch 3 code-explorer agents in parallel to audit the `src/` directory."*
-
----
-
-## 1.2 The Unified Capability Architecture
-
-| Component | Role | Native Mechanic |
-|:----------|:-----|:----------------|
-| **Skill** | **Atomic Capability** | Top-level tool. User-invocable (`/skill-name`) OR model-discovered. Supports `context: fork` and `agent: [name]` binding. |
-| **Command** | **Workflow Orchestrator** | Orchestrates single or multiple Skills. Provides deterministic shortcuts for any workflow. |
-| **Agent** | **Persona** | Reusable identity/tools that Skills can bind to via `agent: [name]`. |
-
----
-
-## 1.3 Core Pillars
-
-### Pillar 1: Plugin Portability
-**Intra-Plugin Collaboration, Inter-Plugin Independence:** Components within the same plugin should collaborate freely. Agents can reference skill scripts, and skills can delegate to plugin agents. However, **cross-plugin coupling is forbidden**—each plugin must be fully functional standalone. Domain expertise lives in Skills; Agents reference their plugin's skills via the `skills` field or natural language (not hardcoded paths to other plugins).
-
-### Pillar 2: Atomic Capabilities with Hybrid Execution
-Skills have dual nature: **passive knowledge** (auto-discovered) and **active execution** (via `context: fork` or user invocation). Commands can orchestrate single or multiple Skills—single-skill shortcuts are valid for deterministic access.
-
-> [!WARNING]
-> `AskUserQuestion` is **strongly discouraged** in Skills. Use it only when the task is **inherently interactive** (e.g., wizards, multi-step configuration).
->
-> **Why?**
-> - **Composability**: Skills should be composable building blocks. Interactive breaks prevent chaining skills together.
-> - **Agent autonomy**: When agents orchestrate skills, they cannot handle user interruptions gracefully.
-> - **Background execution**: Forked skills with `AskUserQuestion` will fail silently in background contexts.
->
-> **When is it allowed?**
-> - User-facing wizards where interaction is the primary purpose
-> - Tasks requiring explicit confirmation (e.g., destructive operations)
-> - Commands (not skills) where user interaction is expected
-
-### Pillar 3: Native Delegation
-**"Never write in code what can be described in intent."**
-
-| Anti-Pattern | Native Pattern |
-|:-------------|:---------------|
-| `find . -name "*.ts" -exec grep "todo" {} \;` | "Find all TypeScript files containing TODO comments" |
-| Command wrapping single Skill | Forked Skill with `context: fork` |
-| "Run find src -name '*.js'" | "Locate source files using filesystem tools" |
-
-#### Two Dimensions: Discovery vs Execution
-
-**Discovery** (How the skill is found):
-| Method | Trigger | Use Case |
-|:-------|:--------|:---------|
-| **Auto-discovery** | Semantic matching of `description` | Model finds skill automatically |
-| **Explicit call** | `Skill(/skill-name)` in code | Command/agent orchestration |
-| **Passive injection** | Agent's `skills` field | Knowledge without execution |
-
-**Execution** (How the skill runs):
-| Mode | Context | Use Case |
-|:-----|:--------|:---------|
-| **Inline** | Main conversation | Simple operations, no isolation needed |
-| **Forked** (`context: fork`) | Isolated subagent | Heavy computation, large outputs, independent execution |
-
-> [!NOTE]
-> Manual `Skill()` loading is **not an anti-pattern**. Choose based on your needs:
-> - **Fork for isolation**: Large outputs, independent tasks
-> - **Explicit call for orchestration**: Multi-step workflows
-> - **Passive field for knowledge**: Agent pattern adoption
-
-**Delegation Decision Tree:**
-```
-┌─ Atomic, isolated task? → Forked Skill (context: fork)
-├─ Multi-phase workflow?  → Command orchestrating Skills
-└─ Persona-based reasoning? → Agent-bound Skill (agent: [name])
+You type: "Check this code for security issues"
+Claude matches: "security vulnerabilities" → security-audit skill
 ```
 
-### Pillar 4: Discovery via Semantic Matching
-**The `description` field is the discovery mechanism.** Claude discovers capabilities by semantically matching user requests against skill/command descriptions.
-
-**Description Writing Rules:**
-- Place "USE when [CONDITION]" as the **first sentence**
-- Use natural language keywords for discovery
-- Avoid XML `<example>` blocks in frontmatter (reserved for machine signaling only)
-
-| Avoid | Prefer |
-|:------|:-------|
-| `<example>...</example>` | Keywords: "audit code", "fix bugs", "deploy app" |
-| Buried trigger text | "USE when" as first sentence |
-| Vague marketing copy | Action verbs + specific contexts |
-
-**XML Reserved Cases:** Agent discovery (optional), hook signaling (`<promise>`, `<status>`), prompt grouping (`<guidelines>`), high-density data isolation.
-
-#### XML Tag Examples
-
-**Hook Signaling (in hooks.json or frontmatter):**
-```xml
-<promise>
-This hook guarantees that all Python files will be formatted before commit.
-</promise>
-
-<status type="info">
-This hook is experimental and may change.
-</status>
-```
-
-**Prompt Grouping (in SKILL.md):**
-```xml
-<guidelines>
-You must always:
-1. Validate inputs before processing
-2. Provide detailed error messages
-3. Log all operations for debugging
-</guidelines>
-```
-
-**High-Density Data (in SKILL.md):**
-```xml
-<patterns>
-  <security>
-    - Check for hardcoded credentials
-    - Validate input sanitization
-    - Review authentication flows
-  </security>
-  <performance>
-    - Identify N+1 queries
-    - Check for missing indexes
-    - Review caching strategies
-  </performance>
-</patterns>
-```
-
-**Agent Discovery (in agent.md frontmatter):**
+**Example: Inline Skill (Default)**
 ```yaml
+# skills/format-code/SKILL.md
 ---
-tags:
-  - security
-  - code-review
-  - audit
+name: format-code
+description: >
+  USE when you need to format code according to project standards.
+  Applies Prettier/Black and organizes imports.
+allowed-tools: [Write, Bash]
 ---
 ```
 
-### Pillar 5: State-in-Files
-**Files are the Anchor.** While ephemeral context (RAM) is useful for reasoning, **critical state must be persisted**. Do not rely on the chat context for long-term memory. Use files to checkpoint work.
+When invoked, this skill runs in the main conversation. Claude reads files, applies formatters, writes changes—all as part of its current context.
 
-### Pillar 6: Shared-Nothing Parallelism
-**No dependencies between parallel agents.** Each agent works on independent data and produces separate outputs. The orchestrator synthesizes the results.
+**Example: Forked Skill (Isolation)**
+```yaml
+# skills/deep-analysis/SKILL.md
+---
+name: deep-analysis
+description: >
+  USE when performing comprehensive codebase analysis.
+  Analyzes architecture patterns, dependencies, and code quality.
+context: fork          # Always runs in isolated subagent
+model: opus            # Use most capable model
+allowed-tools: [Read, Grep, Glob]
+---
+```
 
-**What this means:**
-- **No shared write targets**: Parallel agents must NEVER modify the same file
-- **Independent inputs**: Each agent receives its own portion of work
-- **Separate outputs**: Results go to separate files or are returned independently
-- **Orchestrator synthesis**: The main agent/Command combines results after completion
+When invoked, this skill spawns a subagent that works independently. The subagent reads hundreds of files, performs analysis, then returns a summary. None of the intermediate file reads pollute your main conversation.
 
-**Example - Correct Pattern:**
+---
+
+### Primitive 2: Agent/Task = Delegation
+
+An **Agent** (invoked via the Task tool) is "delegate this work" to an autonomous subprocess. It's like hiring a specialist for a focused job.
+
+**The Mental Model:**
+```
+Agent = Subcontractor
+├─ You say: "Map the entire authentication system"
+├─ Claude spawns: Explore agent (read-only specialist)
+├─ Agent works: Reads 50+ files, traces flows, builds mental model
+└─ Agent returns: "Auth uses JWT with refresh tokens. Flow: ..."
+```
+
+**When to Delegate:**
+
+```
+Can this be done in current context?
+  ├─ YES → Use Skill (inline) — cheaper, faster
+  └─ NO (context overflow / isolation needed)
+       ├─ Single isolated task? → Skill with `context: fork`
+       └─ True parallelism (shared-nothing)? → Agent sub-agents
+```
+
+**Built-in Agent Types:**
+
+| Agent | Purpose | Tools | Example |
+|:------|:--------|:------|:--------|
+| **Explore** | Fast codebase reconnaissance | Read-only | "Map the auth system architecture" |
+| **Plan** | Architecture design before coding | All tools | "Design a refactoring strategy" |
+| **Bash** | Command execution specialist | Bash only | "Run the test suite and fix failures" |
+| **general-purpose** | Multi-step reasoning | All tools | "Research and implement X from scratch" |
+
+**Example: Parallel Exploration (Shared-Nothing)**
 ```
 Main Agent:
 ├─ Agent A: Analyzes src/frontend/ → outputs/frontend-analysis.json
@@ -214,283 +153,58 @@ Main Agent:
 └─ Synthesizes both into final report
 ```
 
-**Example - Anti-Pattern (AVOID):**
-```
-❌ Agent A and Agent B both write to results.json
-❌ Agent B waits for Agent A to finish (creates dependency)
-❌ Agents communicate directly with each other
-```
-
-**Why?** Parallel execution provides speed and isolation. Shared state creates race conditions, conflicts, and defeats the purpose of parallelism.
-
-### Pillar 7: Meta-Synchronization
-**Never "do what I say, not what I do."** Ensure absolute consistency between defined architecture (docs/prompts) and implemented behavior (code/scripts).
+**Critical Rule**: Parallel agents must NEVER modify the same file. Each agent receives independent data and produces separate output.
 
 ---
 
-# PART II: ARCHITECTURE & SCHEMAS
+### The Orchestration Runtime Metaphor
 
-## 2.1 The Marketplace Layer
+```
+┌────────────────────────────────────────────────────────────┐
+│                    CLAUDE CODE RUNTIME                      │
+├────────────────────────────────────────────────────────────┤
+│                                                              │
+│   MODEL (CPU)     │    CONTEXT (RAM)    │   SOFTWARE        │
+│   ────────────    │    ─────────────    │   ────────        │
+│   Claude / GLM    │    Chat history     │   Skills = Apps   │
+│   MiniMax / Opus  │    File contents    │   Agents = Tasks  │
+│                    │    Loaded knowledge │                   │
+│                    │                     │                   │
+└────────────────────────────────────────────────────────────┘
 
-The **Cat Toolkit Marketplace Schema** aggregates and distributes plugins within the Cat Toolkit ecosystem.
+We program with INTENT, not scripts.
 
-> [!NOTE]
-> This schema is **specific to the Cat Toolkit**. Standard Claude Code plugins use a different distribution mechanism (direct GitHub URLs, npm packages, etc.).
+Instead of:  for file in $(find . -name "*.ts"); do grep "TODO" "$file"; done
 
-**Location**: `.claude-plugin/marketplace.json`
-
-```json
-{
-  "$schema": "https://json.schemastore.org/claude-marketplace-1.0.0.json",
-  "name": "The Cat Toolkit Official Marketplace",
-  "version": "1.0.0",
-  "plugins": [
-    {
-      "name": "meta",
-      "source": "github:thecattoolkit/plugins/meta",
-      "category": "core"
-    }
-  ]
-}
+We instruct: "Find all TypeScript files containing TODO comments"
 ```
 
-## 2.2 The Plugin Layer
+**Key Insight**: Skills and Agents are software you install into the runtime. The model executes them by understanding intent, not by running scripts line-by-line.
 
-The **Cat Toolkit Plugin Definition** required for every plugin in the ecosystem.
+**Core Design Principles:**
 
-> [!NOTE]
-> The `.claude-plugin/` subdirectory is a **Cat Toolkit convention**. Standard Claude Code plugins place `plugin.json` at the root directory.
+**State-in-Files:** Files are the Anchor. While ephemeral context (RAM) is useful for reasoning, **critical state must be persisted**. Do not rely on the chat context for long-term memory. Use files to checkpoint work.
 
-**Location**: `.claude-plugin/plugin.json` (Plugin Root)
-
-```json
-{
-  "$schema": "https://json.schemastore.org/claude-plugin-1.0.0.json",
-  "name": "strategist",
-  "version": "1.2.0",
-  "capabilities": ["agents", "skills", "commands"],
-  "readme": "README.md",
-  "license": "MIT"
-}
-```
-
-**Cat Toolkit Extensions**: The `capabilities` and `readme` fields are **Cat Toolkit-specific**. Standard Claude Code plugins use: `name`, `description`, `publisher`, `version`, `license`.
-
-## 2.3 Plugin Portability
-
-**Independent Units:**
-- **Intra-Plugin**: Free referencing (agents ↔ skills).
-- **Cross-Plugin**: **Strongly discouraged**. Avoid hardcoded paths (`../other-plugin`). Prefer natural language referencing ("use the planning skill") or explicit dependencies in `plugin.json`.
-
-## 2.4 Plugin Namespace
-
-Commands from plugins are automatically namespaced to avoid conflicts.
-
-**Namespace Format:** `{plugin-name}/{command-name}`
-
-**Examples:**
-| Plugin | Command File | Invocation |
-|:-------|:-------------|:-----------|
-| `my-toolkit` | `commands/deploy.md` | `/my-toolkit/deploy` |
-| `security-scanner` | `commands/audit.md` | `/security-scanner/audit` |
-| `project-local` (no plugin) | `commands/test.md` | `/test` |
-
-**Key Points:**
-- **Skills are NOT namespaced**: Skills from plugins are available globally by name only
-- **Agents are NOT namespaced**: Agents from plugins are available globally by name only
-- **Commands ARE namespaced**: Prevents naming conflicts between plugins
-- **Local commands**: Commands in `.claude/commands/` (project-local) are not namespaced
-
-**Why this matters:**
-When installing multiple plugins, naming conflicts are inevitable. Namespacing commands ensures `/deploy` from `plugin-a` doesn't conflict with `/deploy` from `plugin-b`. However, skills and agents are designed to be shared components, so they remain global.
+**Meta-Synchronization:** Never "do what I say, not what I do." Ensure absolute consistency between defined architecture (docs/prompts) and implemented behavior (code/scripts).
 
 ---
 
-# PART III: AGENTS & PERMISSIONS
+## Derived Concepts
 
-## 3.1 What Agents Are
+### Command = Orchestration Layer
 
-Agents are **Specialized Personas** defined in `agents/*.md`.
+**Commands are NOT primitives.** They are shortcuts that combine Skills (and optionally Agents) into deterministic workflows.
 
-- **Model Selection**: `haiku` (speed), `sonnet` (balance), `opus` (logic), or `inherit` (same as parent).
-- **Tool Restriction**: `tools` field is a **whitelist**. If omitted, inherits ALL tools. **Best practice:** Explicitly list tools for security-critical agents.
-- **Context Sharing**: Subagents have their own context but can read session history.
-
-## 3.2 Agent Permissions & Security
-
-**Cascading Hierarchy:**
-1. **Main Agent** sets baseline.
-2. **Subagents** override `permissionMode`.
-3. **Skills** override `permissionMode` and `allowed-tools`.
-
-### Permission Modes
-
-| Mode | Behavior | Security |
-|:-----|:---------|:---------|
-| `default` | Prompts for each tool | High |
-| `acceptEdits` | Auto-approves file operations | Medium |
-| `plan` | Read-only analysis | High |
-| `dontAsk` | Auto-deny unless pre-approved | High |
-| `bypassPermissions` | All tools approved | **Very Low** |
-
-**Crucial:** If you omit `tools`, the agent inherits EVERYTHING. Always specify `tools` for security-critical agents.
-
-## 3.3 Skills Field vs Context Fork
-
-**Two distinct mechanisms:**
-
-### 1. Agent's `skills` list (Knowledge Injection)
-When an agent lists skills in its `skills` field, those skills' instructions are **injected into the agent's context** as passive knowledge. The agent becomes aware of the skill's patterns, logic, and approaches, but does NOT automatically execute them.
-
-**How the agent uses injected skills:**
-- **Auto-discovery**: The model may invoke the skill via the `Skill` tool when it recognizes a matching pattern
-- **Explicit invocation**: The agent can explicitly call `Skill(/skill-name)` when needed
-- **Pattern adoption**: The agent adopts the skill's reasoning patterns without direct invocation
-
-### 2. Skill's `context: fork` (Execution Mode)
-When a skill has `context: fork`, it **always executes in an isolated subagent context** when invoked, regardless of who calls it (main agent, another agent, or command).
-
-| Configuration | Availability | Execution Mode |
-|:--------------|:-------------|:---------------|
-| Listed in agent's `skills` | ✅ Available (knowledge injected) | Inline (default) |
-| Skill has `context: fork` | Per normal discovery | ✅ Forked subagent |
-| Both combined | ✅ Available | ✅ Forked (fork takes precedence) |
-
-**Example:**
-```yaml
-# Agent definition
----
-name: code-reviewer
-skills: [security-patterns, clean-code-practices]
-tools: [Read, Grep]
----
+**The Mental Model:**
+```
+Command = Macro / Shortcut
+├─ You type: /deploy
+└─ Claude executes: pre-deploy-check skill → build skill → deploy skill → post-deploy-test skill
 ```
 
-When `code-reviewer` runs, it has knowledge of `security-patterns` and `clean-code-practices` injected into its context. If either skill is invoked (by auto-discovery or explicit call), they execute inline unless they have `context: fork`.
+**Command Recipes (Three Types):**
 
-### 3.3.1 Combining `context: fork` with `agent`
-
-A forked skill can be bound to a specific agent persona using the `agent` field. This is useful when you want the skill to execute with a particular agent's capabilities and constraints.
-
-**How it works:**
-1. Skill is invoked (manually or via auto-discovery)
-2. Claude spawns a subagent using the specified agent definition
-3. The skill's instructions become the subagent's system prompt
-4. The subagent executes with the agent's tools, permissions, and model
-
-**Example:**
-```yaml
-# skills/deep-audit/SKILL.md
----
-name: deep-audit
-description: USE when you need a comprehensive security audit
-context: fork
-agent: security-analyzer
-model: opus
-allowed-tools: [Read, Grep, Bash]
----
-```
-
-When invoked, this skill:
-- Spawns a subagent using the `security-analyzer` agent definition
-- Uses the `opus` model (overrides agent's model if specified)
-- Has access to Read, Grep, Bash tools
-- Executes in isolated context (output doesn't pollute main conversation)
-
-**Important:** The `agent` field is **only valid with `context: fork`**. If `context: fork` is not set, the `agent` field is ignored.
-
-## 3.4 Runtime Environment
-
-Configure via `.claude/settings.json` or env vars:
-
-| Variable | Purpose |
-|:---------|:--------|
-| `ANTHROPIC_BASE_URL` | API endpoint (Zai, Minimax proxy) |
-| `ANTHROPIC_API_KEY` | Authentication token |
-
----
-
-# PART IV: SKILL PROTOCOL
-
-Skills are **Hybrid Capability Units**—passive knowledge with optional active execution (`context: fork`).
-
-## 4.1 Skill Anatomy
-
-```
-skill-name/
-├── SKILL.md          # Instructions + Metadata
-├── scripts/          # Executable scripts (bash/python)
-├── references/       # Docs loaded on-demand
-└── assets/           # Templates/data
-```
-
-## 4.2 Frontmatter Standard
-
-**Location**: `SKILL.md`
-
-```yaml
----
-name: my-skill-name
-description: >
-  USE when [condition].
-  A concise, action-oriented description.
-context: fork          # Optional: runs in subagent
-allowed-tools: [Read, Write, Bash]
-model: sonnet
-hooks:
-  PreToolUse: "validate-input"
----
-```
-
-## 4.3 Field Constraints
-
-| Field | Required | Constraints |
-|:------|:---------|:------------|
-| `name` | **Yes** | Max 64 chars. Must match directory name. |
-| `description` | **Yes** | Max 1024 chars. Must start with "USE when". |
-| `allowed-tools` | No | YAML list (recommended) or comma-delimited string. See examples below. |
-| `model` | No | Model for skill execution (e.g., `sonnet`, `opus`, `haiku`, `inherit`). |
-| `context` | No | `fork` for isolation. Omit for inline. |
-| `agent` | No | Binds forked skill to Agent persona. Only applicable with `context: fork`. |
-| `user-invocable` | No | `false` hides from slash command menu. Default: `true`. |
-
-### allowed-tools Format Examples
-
-**Recommended (YAML list):**
-```yaml
-allowed-tools: [Read, Write, Bash, Grep]
-```
-
-**Alternative (String - requires parsing):**
-```yaml
-allowed-tools: "Read,Write,Bash,Grep"
-```
-
-**With tool restrictions:**
-```yaml
-allowed-tools: [Bash[python, npm], Read]
-```
-
-> [!NOTE]
-> The YAML list format is preferred for clarity and avoids string parsing ambiguity.
-
-## 4.4 Discovery Tiering Matrix
-
-| Tier | Use Case | Pattern |
-|:-----|:---------|:--------|
-| **1: High Fidelity** | Complex/fuzzy tasks | `[MODAL] when [CONDITION]. Examples: ...` |
-| **2: High Gravity** | Safety-critical, governance | `[MODAL] USE when [CONDITION].` |
-| **3: Utility** | Single-purpose tools | `{Action Verb} + {Object} + {Purpose}` |
-
----
-
-# PART V: COMMAND INTENT
-
-Commands are **Reusable Prompt Templates** (`commands/*.md`) that orchestrate workflows. They instruct the Main Agent.
-
-## 5.1 Command Types (Recipes)
-
-### 1. Safe Read-Only
+**1. Safe Read-Only**
 ```yaml
 ---
 description: "Analyze project structure"
@@ -499,7 +213,7 @@ permissionMode: plan
 ---
 ```
 
-### 2. Autonomous Agent Wrapper
+**2. Autonomous Agent Wrapper**
 ```yaml
 ---
 description: "Autonomous code review"
@@ -509,7 +223,7 @@ permissionMode: plan
 Analyze codebase. Output JSON. DO NOT ask questions.
 ```
 
-### 3. User Interactive (Wizard)
+**3. User Interactive (Wizard)**
 ```yaml
 ---
 description: "Project scaffolding wizard"
@@ -518,121 +232,344 @@ disable-model-invocation: true
 Guide user through setup. Ask for template preference.
 ```
 
-## 5.2 Complex Orchestration
-For complex multi-phase workflows (Discovery → Plan → Act → Verify), refer to **[examples/GOLD_STANDARD_COMMAND.md](examples/GOLD_STANDARD_COMMAND.md)** (kept as reference).
+**When Commands Are Useful:**
 
----
+| Pattern | Example |
+|:--------|:--------|
+| **Single-skill shortcut** | `/test` → invokes test-runner skill |
+| **Multi-skill workflow** | `/release` → runs version-bump → build → deploy → notify |
+| **Interactive wizard** | `/scaffold` → guides through project setup |
 
-# PART V.I: PLAN MODE
-
-Plan Mode is a dedicated workflow for **planning before implementation**. It allows exploration and design without committing to changes.
-
-## 5.1 When to Use Plan Mode
-
-✅ **Use Plan Mode for:**
-- Complex implementations with multiple approaches
-- Architectural decisions requiring user input
-- Refactoring that affects many files
-- Tasks where you need approval before proceeding
-
-❌ **Don't use Plan Mode for:**
-- Simple bug fixes (1-2 line changes)
-- Trivial tasks with clear requirements
-- Pure research/exploration (use the Explore agent instead)
-
-## 5.2 Plan Mode Workflow
-
-```
-User Request
-     ↓
-Claude identifies complexity/ambiguity
-     ↓
-EnterPlanMode() tool called
-     ↓
-┌─────────────────────────────┐
-│   PLAN MODE ACTIVE          │
-│  - Read-only exploration     │
-│  - Architecture design       │
-│  - AskUserQuestion allowed  │
-│  - No file modifications     │
-└─────────────────────────────┘
-     ↓
-Plan written to file (.md)
-     ↓
-ExitPlanMode() tool called
-     ↓
-┌─────────────────────────────┐
-│   USER APPROVAL PHASE       │
-│  - User reviews plan        │
-│  - Approve or request changes│
-└─────────────────────────────┘
-     ↓
-Implementation (with approved plan)
-```
-
-## 5.3 Plan Mode Tools
-
-| Tool | Purpose |
-|:-----|:--------|
-| **EnterPlanMode** | Transition to planning state (read-only) |
-| **ExitPlanMode** | Submit plan for user approval |
-
-## 5.4 Plan Mode vs Forked Skills
-
-| Aspect | Plan Mode | Forked Skill (`context: fork`) |
-|:-------|:----------|:------------------------------|
-| **Purpose** | Planning before action | Executing isolated tasks |
-| **User interaction** | Required (approval) | Optional |
-| **File modifications** | Forbidden (read-only) | Allowed |
-| **Output** | Plan document | Task result |
-| **Use case** | Complex implementations | Atomic operations |
-
-## 5.5 Writing a Good Plan
-
-A good plan document should include:
-
+**Example: Command that Orchestrates Multiple Skills**
 ```markdown
-# Implementation Plan: [Feature Name]
+<!-- commands/release.md -->
+---
+description: "Orchestrates the complete release workflow"
+allowed-tools: [Skill, Bash]
+---
 
-## Overview
-Brief description of what will be implemented.
+# Release Workflow
 
-## Approach
-[Chosen approach and rationale]
+You are orchestrating a release. Execute these skills in sequence:
 
-## Files to Modify
-- `path/to/file1.ts` - Changes: ...
-- `path/to/file2.ts` - Changes: ...
+1. **version-bump**: Increment version based on commit history
+2. **run-tests**: Execute full test suite
+3. **build-artifacts**: Create production builds
+4. **deploy**: Push to production environment
+5. **notify**: Send release notifications
 
-## Implementation Steps
-1. [First step]
-2. [Second step]
-3. [Third step]
-
-## Testing Strategy
-- How will this be tested?
-- What edge cases need coverage?
-
-## Potential Issues
-- [Identified risks and mitigations]
+DO NOT ask for confirmation. Proceed autonomously.
 ```
 
 ---
 
-# PART VI: RUNTIME MECHANICS
+### Quota Optimization: The Cost Hierarchy
 
-## 6.1 Hooks (The Immune System)
+> **CRITICAL**: This toolkit is designed for providers with **5-hour rolling window quotas** (MiniMax, Z.ai). The unit of consumption is the **Prompt** (user intent), not the token.
 
-Hooks intercept events for safety and compliance.
+**The Cost Table:**
 
-**Key Events**: `SessionStart`, `UserPromptSubmit`, `PreToolUse`, `PostToolUse`, `Stop`.
+| Pattern | Prompt Cost | When to Use |
+|:--------|:------------|:------------|
+| **Skill (inline)** | ~1 prompt (bundled, up to 15 sub-calls) | Default for ALL tasks |
+| **Skill (fork)** | 1-2 prompts (handoff + execution) | Task exceeds context window OR strict isolation |
+| **Agent (sub)** | 2-N prompts (handoff + N turns) | Only for true parallelism with independent outputs |
 
-### Standard I/O Protocol
-- **Input**: JSON via `stdin`
-- **Output**: JSON via `stdout`
-- **Exit Codes**: `0` (Success/Continue), `2` (Block/Fail)
+**The Decision Tree (Visualized):**
+```
+                    ┌──────────────────────┐
+                    │ Task to complete?    │
+                    └──────────┬───────────┘
+                               │
+                    ┌──────────▼───────────┐
+                    │ Fits in current      │
+                    │ context window?      │
+                    └──────────┬───────────┘
+                               │
+                 ┌─────────────┴─────────────┐
+                 │ YES                       │ NO
+        ┌────────▼─────────┐       ┌────────▼─────────┐
+        │ Use Skill        │       │ Single task?     │
+        │ (inline)         │       │ OR Parallel?     │
+        │ ~1 prompt        │       └────────┬─────────┘
+        └──────────────────┘                │
+                              ┌─────────────┴─────────────┐
+                              │ Single        │ Parallel  │
+                     ┌────────▼─────────┐  ┌─▼──────────────┐
+                     │ Skill (fork)     │  │ Agent (sub)     │
+                     │ 1-2 prompts      │  │ 2-N prompts     │
+                     └──────────────────┘  └─────────────────┘
+```
 
-**Example Hook (JSON)**:
+**Anti-Patterns (Quota Drains):**
+
+| ❌ Expensive | ✅ Efficient | Why |
+|:-------------|:-------------|:-----|
+| Spawning sub-agent for simple file ops | Use inline Skill with `allowed-tools: [Read, Write]` | Sub-agents cost 2+ prompts; inline costs 1 |
+| "I'll create file." → *User: OK* → "Now tests." → *User: OK* | "I'll create file, add tests, and update index in one pass." | Each user turn costs 1 prompt |
+| `write_file("x.ts")` → `read_file("x.ts")` to verify | Trust `write_file` return code | Redundant verification doubles operations |
+
+<example_incorrect>
+User: "Check if the file was written correctly"
+Agent: `write_file("x.ts")` → `read_file("x.ts")` to verify
+**Why wrong:** Redundant verification doubles quota consumption
+</example_incorrect>
+
+<example_correct>
+User: "Check if the file was written correctly"
+Agent: `write_file("x.ts")` returns `{ success: true }` → proceed to next step
+**Why correct:** Trust return codes; verify only on failure
+</example_correct>
+
+**The Mega-Prompt Principle**: Bundle multiple actions into a single turn. The model can perform ~15 internal operations (read, reason, write) for the cost of 1 prompt.
+
+**Solo Dev Principles (File Colocation):**
+
+**Rule**: Favor **fewer, larger files** over many small files. Reduce discovery overhead.
+
+| Fragmented (Many Discoveries) | Colocated (Single Read) |
+|:------------------------------|:------------------------|
+| `types.ts`, `utils.ts`, `constants.ts`, `helpers.ts` (4 files) | `module.ts` with sections (1 file) |
+| 4× list + 4× read = 8 operations | 1× read = 1 operation |
+
+**Why this matters:**
+- Every file discovery operation consumes quota
+- Reading 1 large file (500 lines) costs the same as 1 small file (50 lines)
+- Colocation reduces cognitive overhead and discovery overhead
+
+**Exceptions:**
+- Files with fundamentally different lifecycles (config vs runtime)
+- Files requiring different access permissions
+- Files exceeding ~1000 lines (split for maintainability)
+
+**Trust but Don't Verify (Excessively):**
+
+**Rule**: Do not perform redundant verification immediately after an operation. Trust tool return codes.
+
+| Redundant | Efficient |
+|:----------|:----------|
+| `write_file("x.ts")` → `read_file("x.ts")` to confirm | `write_file("x.ts")` returns success → proceed |
+| `mkdir("foo")` → `list_dir(".")` to check | `mkdir("foo")` returns success → proceed |
+
+---
+
+### Plugin Structure (Cat Toolkit Conventions)
+
+The **Cat Toolkit** extends Claude Code with additional conventions for plugin packaging and distribution.
+
+**Standard Claude Code vs Cat Toolkit:**
+
+| Feature | Standard | Cat Toolkit |
+|:--------|:---------|:-------------|
+| Skills (`skills/*/SKILL.md`) | ✅ | ✅ |
+| Commands (`commands/*.md`) | ✅ | ✅ |
+| Agents (`agents/*.md`) | ✅ | ✅ |
+| Hooks (`hooks.json`) | ✅ | ✅ |
+| `.claude-plugin/` directory | ❌ | ✅ (convention) |
+| `plugin.json` capabilities field | ❌ | ✅ (extension) |
+| `marketplace.json` | ❌ | ✅ (custom distribution) |
+| Command namespacing | ❌ | ✅ (automatic) |
+
+**Plugin Namespace:**
+
+Commands from plugins are automatically namespaced to avoid conflicts:
+- `/my-toolkit/deploy` — namespaced command
+- `/test` — local (project-local) command, no namespace
+- Skills and Agents are **never** namespaced (global availability)
+
+**Example Plugin Structure:**
+```
+my-plugin/
+├── .claude-plugin/
+│   ├── plugin.json          # Plugin metadata
+│   └── marketplace.json     # Distribution config (optional)
+├── skills/
+│   └── my-skill/
+│       └── SKILL.md
+├── agents/
+│   └── my-agent.md
+└── commands/
+    └── deploy.md
+```
+
+When installed, `/deploy` becomes `/my-plugin/deploy`. The skill `my-skill` is available globally as just `my-skill`.
+
+**Plugin Portability Principle:**
+
+**Intra-Plugin Collaboration, Inter-Plugin Independence:**
+- Components **within the same plugin** should collaborate freely. Agents can reference skill scripts, and skills can delegate to plugin agents.
+- **Cross-plugin coupling is forbidden**—each plugin must be fully functional standalone.
+- Domain expertise lives in Skills; Agents reference their plugin's skills via the `skills` field or natural language (not hardcoded paths to other plugins).
+
+---
+
+### Skills Field vs Context Fork
+
+**Two distinct mechanisms in agents:**
+
+**1. Agent's `skills` list (Knowledge Injection)**
+When an agent lists skills in its `skills` field, those skills' instructions are **injected into the agent's context** as passive knowledge. The agent becomes aware of the skill's patterns but does **NOT** automatically execute them.
+
+| Configuration | Availability | Execution Mode |
+|:--------------|:-------------|:---------------|
+| Listed in agent's `skills` | Available (knowledge injected) | Inline (default) |
+| Skill has `context: fork` | Per normal discovery | Forked subagent |
+| Both combined | Available | Forked (fork takes precedence) |
+
+**2. Skill's `context: fork` (Execution Mode)**
+When a skill has `context: fork`, it **always executes in an isolated subagent context** when invoked, regardless of who calls it.
+
+**Combining `context: fork` with `agent`:**
+A forked skill can be bound to a specific agent persona using the `agent` field. This is useful when you want the skill to execute with a particular agent's capabilities and constraints.
+
+```yaml
+# skills/deep-audit/SKILL.md
+---
+name: deep-audit
+description: USE when you need a comprehensive security audit
+context: fork          # Runs in isolated subagent
+agent: security-analyzer  # Uses this agent's persona/tools
+model: opus
+allowed-tools: [Read, Grep, Bash]
+---
+```
+
+**Important:** The `agent` field is **only valid with `context: fork`**. If `context: fork` is not set, the `agent` field is ignored.
+
+---
+
+### Permissions & Security
+
+**The Mental Model:**
+```
+Permission Cascade:
+Main Agent (baseline)
+  ├─→ Subagent (can override)
+  └─→ Skill (can override both)
+```
+
+**Permission Modes:**
+
+| Mode | Behavior | Security Level | Use Case |
+|:-----|:---------|::--------------|:---------|
+| `default` | Prompts for each tool | High | Uncertain operations |
+| `acceptEdits` | Auto-approves file operations | Medium | Trusted refactoring |
+| `plan` | Read-only analysis | High | Exploration without changes |
+| `bypassPermissions` | All tools approved | **Very Low** | Dangerous automation |
+
+**Critical Security Rule**: The `tools` field in agents is a **whitelist**. If omitted, the agent inherits **ALL tools** from parent.
+
+**Example: Security-Conscious Agent**
+```yaml
+# agents/auditor.md
+---
+name: security-auditor
+model: opus
+permissionMode: plan          # Read-only
+tools: [Read, Grep, Glob]     # Whitelist: NO Write, NO Bash
+skills: [owasp-top-10, credential-scanner]
+---
+```
+
+This agent can read files and search for patterns, but **cannot** modify files or execute commands. Even if the skill instructions request writes, the agent's tool whitelist prevents it.
+
+---
+
+## Specialized Patterns
+
+### Plan Mode
+
+**Purpose**: Planning before implementation—read-only exploration that requires user approval before making changes.
+
+**The Mental Model:**
+```
+Plan Mode = Architect's Blueprint Phase
+├─ Explore and design (read-only)
+├─ Present plan for approval
+└─ Build (only after approval)
+```
+
+**When to Use Plan Mode:**
+
+| ✅ Use Plan Mode | ❌ Don't Use Plan Mode |
+|:-----------------|:----------------------|
+| Complex implementations with multiple approaches | Simple bug fixes (1-2 line changes) |
+| Architectural decisions requiring user input | Pure research/exploration (use Explore agent) |
+| Refactoring affecting many files | Tasks with clear requirements |
+
+**Workflow (MUST follow this sequence):**
+
+**Phase 1: Exploration (READ-ONLY)**
+1. Call `EnterPlanMode()` → enables read-only constraint
+2. Explore codebase using Read, Grep, Glob tools
+3. DO NOT attempt file modifications in this phase
+
+**Phase 2: Design**
+4. Write implementation plan to `implementation-plan.md`
+5. Include verification steps in plan
+
+**Phase 3: Approval**
+6. Call `ExitPlanMode()` → presents plan to user
+7. WAIT for explicit user approval before proceeding
+
+ONLY after Phase 3 approval may you begin implementation.
+
+**Plan Mode vs Forked Skill:**
+
+| Aspect | Plan Mode | Forked Skill |
+|:-------|:----------|:--------------|
+| Purpose | Planning before action | Executing isolated tasks |
+| User interaction | Required (approval) | Optional |
+| File modifications | Forbidden (read-only) | Allowed |
+| Output | Plan document | Task result |
+
+---
+
+### Shared-Nothing Parallelism
+
+**The Golden Rule**: Parallel agents must NEVER modify the same file.
+
+**Correct Pattern:**
+```
+Main Agent:
+├─ Agent A: Analyzes src/frontend/ → outputs/frontend-report.json
+├─ Agent B: Analyzes src/backend/  → outputs/backend-report.json
+└─ Agent C: Analyzes tests/        → outputs/test-report.json
+
+After completion: Synthesizes three reports into final-summary.md
+```
+
+**Anti-Pattern (AVOID):**
+```
+❌ Agent A and Agent B both write to analysis.json (race condition)
+❌ Agent B waits for Agent A (creates dependency, breaks parallelism)
+❌ Agents communicate directly (no orchestration)
+```
+
+**Why This Matters:**
+- Parallel execution provides speed and isolation
+- Shared state creates race conditions and conflicts
+- Each agent should work on independent data and produce separate outputs
+- The orchestrator synthesizes results after all agents complete
+
+---
+
+## Infrastructure (Reference)
+
+> **Note**: These are integration details, not core philosophy. Refer here when setting up infrastructure, not when learning the framework.
+
+### Hooks (Event Interception)
+
+Hooks are the **immune system** of the runtime—they intercept events for safety and compliance.
+
+**Key Events**: `SessionStart`, `UserPromptSubmit`, `PreToolUse`, `PostToolUse`, `Stop`
+
+**Protocol:**
+- Input: JSON via `stdin`
+- Output: JSON via `stdout`
+- Exit codes: `0` (continue), `2` (block/fail)
+
+**Example Hook (JSON format):**
 ```json
 {
   "hooks": {
@@ -640,7 +577,7 @@ Hooks intercept events for safety and compliance.
       {
         "matcher": "Bash",
         "hooks": [
-           { "type": "command", "command": "./scripts/safety-check.py" }
+          { "type": "command", "command": "${CLAUDE_PLUGIN_ROOT}/scripts/safety-check.sh" }
         ]
       }
     ]
@@ -648,26 +585,39 @@ Hooks intercept events for safety and compliance.
 }
 ```
 
-**Safety Standards**:
-- Always use `${CLAUDE_PLUGIN_ROOT}` in paths.
-- Validate all `TOOL_INPUT` parameters.
-- Prevent path traversal (`..`).
+**Safety Standards:**
+- Always use `${CLAUDE_PLUGIN_ROOT}` in paths (prevents path traversal)
+- Validate all `TOOL_INPUT` parameters
+- Prevent directory traversal attacks (`..` in paths)
 
-## 6.2 MCP Integration
+---
 
-Connect external tools via `.mcp.json`.
+### MCP Integration
 
-**Security Rule**: Explicitly allow servers. Avoid wildcard `*` unless necessary.
-```yaml
-allowedMcpServers:
-  - serverUrl: "https://approved-api.com/*"
+**MCP** (Model Context Protocol) connects external tools and APIs to Claude Code.
+
+**Configuration**: `.mcp.json`
+
+```json
+{
+  "allowedMcpServers": [
+    {
+      "serverUrl": "https://approved-api.com/*",
+      "capabilities": ["resources", "tools"]
+    }
+  ]
+}
 ```
 
-## 6.3 LSP (Language Server Protocol) Integration
+**Security Rule**: Explicitly allow servers. Avoid wildcard `*` unless necessary.
 
-LSP provides real-time code intelligence—diagnostics, go-to-definition, hover info, and more.
+---
 
-**Configuration**: `.lsp.json` (in plugin root or `.claude/`)
+### LSP Integration
+
+**LSP** (Language Server Protocol) provides real-time code intelligence: diagnostics, go-to-definition, hover info, completion.
+
+**Configuration**: `.lsp.json`
 
 ```json
 {
@@ -679,18 +629,6 @@ LSP provides real-time code intelligence—diagnostics, go-to-definition, hover 
         ".ts": "typescript",
         ".tsx": "typescript",
         ".js": "javascript"
-      },
-      "initializationOptions": {
-        "preferences": {
-          "disableSuggestions": false
-        }
-      }
-    },
-    "python": {
-      "command": "pyright-langserver",
-      "args": ["--stdio"],
-      "extensionToLanguage": {
-        ".py": "python"
       }
     }
   }
@@ -699,88 +637,147 @@ LSP provides real-time code intelligence—diagnostics, go-to-definition, hover 
 
 **Common LSP Servers:**
 
-| Language | Server | Installation |
-|:---------|:--------|:-------------|
+| Language | Server | Install |
+|:---------|:--------|:--------|
 | TypeScript | `typescript-language-server` | `npm install -g typescript-language-server` |
 | Python | `pyright-langserver` | `npm install -g pyright` |
 | Rust | `rust-analyzer` | Included with Rust |
 | Go | `gopls` | `go install golang.org/x/tools/gopls@latest` |
 
-**LSP Capabilities:**
-- ✅ **Diagnostics**: Real-time error/warning detection
-- ✅ **Go-to-definition**: Navigate to symbol definitions
-- ✅ **Find references**: Locate all usages of a symbol
-- ✅ **Hover information**: Type info and documentation on hover
-- ✅ **Completion**: Code completion suggestions
-
-**When to use LSP:**
+**When to Use LSP:**
 - Large codebases where type safety is critical
-- Projects requiring real-time feedback
 - Complex refactoring operations
-- When developing language-specific tools
+- Real-time error detection needed
 
-**When LSP is overkill:**
-- Small scripts or one-off files
+**When LSP Is Overkill:**
+- Simple scripts or one-off files
 - Projects without type systems
 - When CLI tools (linters, formatters) are sufficient
 
-## 6.4 Universal Endpoint Adaptation
+---
 
-The toolkit supports multiple backends. Adjust behavior layout:
+### Runtime Configuration
 
-| Endpoint | Strategy |
-|:---------|:---------|
-| **Anthropic** | Full capability. Native `Task`/`Skill`. |
-| **Zai (GLM)** | Use native function calling. `GLM-4.6V` for vision. |
-| **Minimax** | Prioritize **Parallel Agents**. Very fast inference. |
+Configure via `.claude/settings.json` or environment variables:
 
-## 6.4 Validation & Linting
+| Variable | Purpose |
+|:---------|:--------|
+| `ANTHROPIC_BASE_URL` | API endpoint (for Z.ai, Minimax proxy) |
+| `ANTHROPIC_API_KEY` | Authentication token |
+
+---
+
+## Quick Reference
+
+### Skill Frontmatter
+
+```yaml
+---
+name: my-skill                    # Max 64 chars, must match directory
+description: >                    # Max 1024 chars, must start with "USE when"
+  USE when [condition].
+  Concise, action-oriented description.
+context: fork                     # Optional: runs in isolated subagent
+allowed-tools: [Read, Write, Bash]  # Optional: whitelist (omit = all)
+model: sonnet                     # Optional: sonnet, opus, haiku, inherit
+agent: specialist-agent           # Optional: binds forked skill to agent (requires context: fork)
+user-invocable: true              # Optional: false hides from slash menu
+hooks:
+  PreToolUse: "validate-input"    # Optional: hook bindings
+---
+```
+
+**allowed-tools Format Examples:**
+
+```yaml
+# Recommended: YAML list
+allowed-tools: [Read, Write, Bash, Grep]
+
+# Alternative: String (requires parsing)
+allowed-tools: "Read,Write,Bash,Grep"
+
+# With tool restrictions
+allowed-tools: [Bash[python, npm], Read]  # Bash can only run python and npm
+```
+
+---
+
+### Agent Frontmatter
+
+```yaml
+---
+name: my-agent                    # Agent identifier
+model: opus                       # haiku (speed), sonnet (balance), opus (logic), inherit
+permissionMode: plan              # default, acceptEdits, plan, dontAsk, bypassPermissions
+tools: [Read, Grep, Glob]         # Whitelist (omit = inherits ALL)
+skills: [skill-name, another]     # Knowledge injection (passive, not auto-executed)
+---
+```
+
+**Critical**: If you omit `tools`, the agent inherits **ALL tools**. Always specify `tools` for security-critical agents.
+
+---
+
+### Command Frontmatter
+
+```yaml
+---
+description: "Orchestrate X workflow"  # Semantic matching for discovery
+allowed-tools: [Skill, Bash, Read]     # Whitelist for this command
+permissionMode: acceptEdits             # Override default permissions
+disable-model-invocation: false        # true = user wizard (model doesn't execute)
+---
+```
+
+---
+
+### Validation
 
 | Script | Purpose |
 |:-------|:--------|
-| `./scripts/toolkit-lint.sh` | Comprehensive suite (Agents, Skills, Hooks) |
+| `./scripts/toolkit-lint.sh` | Comprehensive lint suite (Agents, Skills, Hooks) |
 | `manage-hooks/assets/scripts/hook-tester.py` | Validates `hooks.json` syntax |
 
 ---
 
-# PART VII: MAINTENANCE & REFERENCES
-
-## 7.1 Hygiene & Standards
-
-- **Clean up**: Remove temp files (`rm tmp.json`) after use.
-- **Move not Delete**: Use `.attic/` for deprecated code during refactors.
-- **Validation**: Run `./scripts/toolkit-lint.sh` after changes.
-- **File Paths**: Use `assets/templates/doc.md` (relative) or `${CLAUDE_PLUGIN_ROOT}`.
-
-## 7.2 Forbidden Patterns
+## Forbidden Patterns
 
 <forbidden_pattern>
-**Caller Assumption:** "Called by /command".
-**Fix:** "You have been tasked with X".
+**Caller Assumption:** "Called by /command"
+**Fix:** "You have been tasked with X"
 </forbidden_pattern>
 
 <forbidden_pattern>
-**Cross-Plugin Hardlinks:** `../other-plugin/script.sh`.
-**Fix:** Natural language referencing or explicit dependencies.
+**Cross-Plugin Hardlinks:** `../other-plugin/script.sh`
+**Fix:** Natural language referencing or explicit dependencies
 </forbidden_pattern>
 
 <forbidden_pattern>
-**Buried Trigger:** Text before "USE when".
-**Fix:** "USE when" must be the FIRST sentence.
+**Buried Trigger:** Text before "USE when"
+**Fix:** "USE when" must be the FIRST sentence
 </forbidden_pattern>
 
 <forbidden_pattern>
-**Unnecessary Abstraction Layers:** Creating wrappers or intermediate functions that don't add value.
-**Fix:** Prefer direct calls for simple operations. If abstraction is needed, ensure it provides clear benefits (reusability 3+, testability, or significant simplification).
+**Unnecessary Abstraction:** Wrappers that don't add value
+**Fix:** Prefer direct calls for simple operations
 </forbidden_pattern>
 
 ---
 
-## 7.3 External References
+## Hygiene Rules
+
+- **Clean up**: Remove temp files (`rm tmp.json`) after use
+- **Move not Delete**: Use `.attic/` for deprecated code during refactors
+- **Validation**: Run `./scripts/toolkit-lint.sh` after changes
+- **File Paths**: Use relative paths (`assets/templates/doc.md`) or `${CLAUDE_PLUGIN_ROOT}`
+
+---
+
+## External References
 
 | Resource | Purpose |
 |:---------|:--------|
 | [CLI Reference](https://code.claude.com/docs/en/cli-reference.md) | Command-line usage |
 | [Plugin Development](https://code.claude.com/docs/en/plugins.md) | Structure & API |
 | [Skills System](https://code.claude.com/docs/en/skills.md) | SKILL.md rules |
-| [Model Context Protocol](https://code.claude.com/docs/en/mcp.md) | Integration specs |
+| [MCP Integration](https://code.claude.com/docs/en/mcp.md) | Model Context Protocol specs |
