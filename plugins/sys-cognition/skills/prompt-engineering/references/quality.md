@@ -30,9 +30,9 @@ The standards used to evaluate prompt artifacts for production readiness.
 
 | Quality | Description | Ready? |
 |:---|:---|:---:|
-| **Production** | Meets all criteria, tested on edge cases, concise. | ✅ |
-| **Needs Work** | Good content but minor structural or clarity issues. | ⚠️ |
-| **Failing** | Nested XML, vague tasks, or missing output format. | ❌ |
+| **Production** | Meets all criteria, tested on edge cases, concise. |  |
+| **Needs Work** | Good content but minor structural or clarity issues. |  |
+| **Failing** | Nested XML, vague tasks, or missing output format. |  |
 
 ## The "AI Soup" Anti-Checklist
 - [ ] Is there any nested XML? (If yes, fix to flat).
@@ -201,7 +201,7 @@ How would you like to proceed?
 
 **Prompt:** {Name}
 
-**Automated Checks:** ✅ All passed
+**Automated Checks:**  All passed
 
 **Critical Issues:** {Count}
 **Recommended Issues:** {Count}

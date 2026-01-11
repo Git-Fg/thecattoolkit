@@ -65,8 +65,8 @@ GITHUB_TOKEN=your_token python code_analyzer.py https://github.com/user/private-
   CODE ANALYSIS REPORT
 ======================================================================
 
-📦 Repository: user/my-project
-📊 Files Analyzed: 42
+ Repository: user/my-project
+ Files Analyzed: 42
 
 ----------------------------------------------------------------------
   METRICS
@@ -359,7 +359,7 @@ df.to_csv('repo-analysis.csv')
 processor = BatchProcessor(max_concurrent=3)
 
 # Too high may trigger rate limiting
-processor = BatchProcessor(max_concurrent=50)  # ❌
+processor = BatchProcessor(max_concurrent=50)  # 
 ```
 
 ### 2. Filter Large Repositories
@@ -440,4 +440,4 @@ gitingest repo-url -i "*.py" -s 51200 -o -
 
 ---
 
-**Happy analyzing!** 🚀
+**Happy analyzing!** 

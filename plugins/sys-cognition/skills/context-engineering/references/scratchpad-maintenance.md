@@ -210,20 +210,20 @@ If context usage exceeds 60%, consider creating a checkpoint. If it exceeds 70%,
 ## Best Practices
 
 ### What to Record
-✅ **High Priority:**
+ **High Priority:**
 - Architectural decisions
 - Technology choices
 - Critical errors and fixes
 - Milestone completions
 - Context window approaching 60%
 
-✅ **Medium Priority:**
+ **Medium Priority:**
 - Minor decisions
 - Incremental progress
 - Research findings
 - Code patterns discovered
 
-❌ **Don't Record:**
+ **Don't Record:**
 - Every keystroke
 - Personal notes
 - Irrelevant details

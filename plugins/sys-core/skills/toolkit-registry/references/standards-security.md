@@ -77,8 +77,8 @@ Agents running in the background/async cannot ask for permissions.
 
 **Example:**
 ```
-❌ "Failed to create skill"
-✅ "Failed to create skill: Directory 'my-skill' already exists at .claude/skills/my-skill. Remove existing directory or use different name."
+ "Failed to create skill"
+ "Failed to create skill: Directory 'my-skill' already exists at .claude/skills/my-skill. Remove existing directory or use different name."
 ```
 
 ### Security Considerations

@@ -55,7 +55,7 @@ A catalog of known pitfalls, mistakes, and red flags to avoid.
 
 ### Example 1: Generic Persona Definition
 
-**❌ BAD:**
+** BAD:**
 ```markdown
 You are a helpful AI assistant that helps users with various tasks.
 ```
@@ -65,7 +65,7 @@ You are a helpful AI assistant that helps users with various tasks.
 - No specific competencies defined
 - No success criteria for evaluation
 
-**✅ GOOD:**
+** GOOD:**
 ```markdown
 You are a **Senior PostgreSQL Database Administrator**.
 Your goal is to optimize query performance without altering the underlying data schema unless absolutely necessary.
@@ -83,7 +83,7 @@ Your goal is to optimize query performance without altering the underlying data 
 
 ### Example 2: Missing Hard Boundaries
 
-**❌ BAD:**
+** BAD:**
 ```markdown
 You are a code reviewer. Review this code and provide feedback.
 ```
@@ -93,7 +93,7 @@ You are a code reviewer. Review this code and provide feedback.
 - Model might modify files unintentionally
 - No clear scope of review
 
-**✅ GOOD:**
+** GOOD:**
 ```markdown
 You are a code reviewer for Claude Code.
 
@@ -109,7 +109,7 @@ Your role is EXCLUSIVELY to analyze and review code. You do NOT have access to f
 
 ### Example 3: XML Soup (Too Many Tags)
 
-**❌ BAD:**
+** BAD:**
 ```markdown
 <persona>You are a database expert</persona>
 <success_criteria>Optimize queries</success_criteria>
@@ -124,7 +124,7 @@ Your role is EXCLUSIVELY to analyze and review code. You do NOT have access to f
 - Simple content wrapped in XML unnecessarily
 - Difficult to parse and maintain
 
-**✅ GOOD:**
+** GOOD:**
 ```markdown
 You are a **PostgreSQL Database Administrator**.
 Your expertise lies in query optimization and performance tuning.
@@ -150,7 +150,7 @@ Assistant: "I'll analyze the query plan..."
 
 ### Example 4: Scattered Questions
 
-**❌ BAD:**
+** BAD:**
 ```markdown
 [During implementation]
 "One more question — should we add logging here?"
@@ -163,7 +163,7 @@ Assistant: "I'll analyze the query plan..."
 - Information loss between phases
 - Wastes time revisiting completed work
 
-**✅ GOOD:**
+** GOOD:**
 ```markdown
 **=== CRITICAL: THIS IS THE ONLY QUESTION-ASKING PHASE ===**
 
@@ -182,7 +182,7 @@ Assistant: "I'll analyze the query plan..."
 
 ### Example 5: Vague Protocol Prerequisites
 
-**❌ BAD:**
+** BAD:**
 ```markdown
 Use the MCP tool to access the API.
 ```
@@ -192,7 +192,7 @@ Use the MCP tool to access the API.
 - Tool schemas never match expectations
 - May fail unexpectedly
 
-**✅ GOOD:**
+** GOOD:**
 ```markdown
 **MANDATORY PREREQUISITE - THIS IS A HARD REQUIREMENT**
 You MUST call `mcp-cli info <server>/<tool>` BEFORE ANY `mcp-cli call <server>/<tool>`.
@@ -207,7 +207,7 @@ You MUST call `mcp-cli info <server>/<tool>` BEFORE ANY `mcp-cli call <server>/<
 
 ### Example 6: Missing Contrastive Examples
 
-**❌ BAD:**
+** BAD:**
 ```markdown
 Here are some examples of good code:
 [Code examples]
@@ -218,7 +218,7 @@ Here are some examples of good code:
 - Doesn't teach nuance
 - Examples might be ignored
 
-**✅ GOOD:**
+** GOOD:**
 ```markdown
 <example_correct>
 User: "The server is down."
@@ -234,7 +234,7 @@ Reasoning: Do not take action without diagnosing the root cause first.
 
 ### Example 7: No Approval Gates
 
-**❌ BAD:**
+** BAD:**
 ```markdown
 "I'll start implementing now with some improvements I think would be better."
 ```
@@ -244,7 +244,7 @@ Reasoning: Do not take action without diagnosing the root cause first.
 - User may not approve the approach
 - Violates user ownership of decisions
 
-**✅ GOOD:**
+** GOOD:**
 ```markdown
 **=== CRITICAL: REQUIRES EXPLICIT USER APPROVAL ===**
 

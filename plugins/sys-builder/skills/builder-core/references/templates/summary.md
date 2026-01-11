@@ -48,12 +48,12 @@
 
 **MUST be substantive:**
 
-✅ Good:
+ Good:
 - "Token auth with refresh rotation"
 - "User model with email validation"
 - "Dashboard with real-time updates"
 
-❌ Bad:
+ Bad:
 - "Phase complete"
 - "Authentication implemented"
 - "All tasks done"

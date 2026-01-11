@@ -8,18 +8,18 @@ Persistent session state management independent of LLM context window. Enables c
 ### Why Persistent Context vs Ephemeral Context
 
 **Ephemeral Context (In-Conversation Only):**
-- ❌ Lost when session ends
-- ❌ No continuity across tools
-- ❌ Must rebuild context each time
-- ❌ Context window limits apply
-- ❌ Cannot track long-term decisions
+-  Lost when session ends
+-  No continuity across tools
+-  Must rebuild context each time
+-  Context window limits apply
+-  Cannot track long-term decisions
 
 **Persistent Context (File-Based):**
-- ✅ Survives session boundaries
-- ✅ Works across all tools
-- ✅ Quick context recovery
-- ✅ Scales beyond context window
-- ✅ Preserves decision history
+-  Survives session boundaries
+-  Works across all tools
+-  Quick context recovery
+-  Scales beyond context window
+-  Preserves decision history
 
 ## Directory Structure
 

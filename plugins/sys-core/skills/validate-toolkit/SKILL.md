@@ -1,6 +1,7 @@
 ---
 name: validate-toolkit
 description: "MUST USE when comprehensively testing and validating a Claude Code plugin or marketplace. Performs deep validation of logic, effectiveness, and interactivity by executing tests proportional to marketplace complexity (more components = more complex test cases)."
+user-invocable: false
 allowed-tools: [Read, Bash]
 ---
 
@@ -141,7 +142,7 @@ grep -r "description:" . | awk '{ sum += length($0) } END { print sum }'
 
 **Generate report:**
 ```
-✅ Validation Summary
+ Validation Summary
 ├─ Marketplace: VALID/INVALID
 ├─ Plugins: X/Y loaded successfully
 ├─ Components: A/B discovered
@@ -153,14 +154,14 @@ grep -r "description:" . | awk '{ sum += length($0) } END { print sum }'
 
 When executing tests, use clear natural language. The AI understands:
 
-✅ Good:
+ Good:
 ```
 "Add the marketplace and list all available plugins"
 "Use the audit-security skill to scan for secrets"
 "Create a new component using the scaffold-component skill"
 ```
 
-❌ Avoid:
+ Avoid:
 ```
 Over-specific machine instructions
 Over-structured command syntax
@@ -231,38 +232,38 @@ Provide a clear, structured report:
               VALIDATION REPORT - [Marketplace/Plugin Name]
 ════════════════════════════════════════════════════════════
 
-📊 OVERVIEW
+ OVERVIEW
 ├─ Target: [path]
 ├─ Complexity: [Simple/Medium/Large/Complex]
 ├─ Components: [X total]
 └─ Test Duration: [X minutes]
 
-✅ STRUCTURE VALIDATION
+ STRUCTURE VALIDATION
 ├─ marketplace.json: [VALID/INVALID]
 ├─ plugin.json files: [X/Y valid]
 └─ File references: [X/Y present]
 
-⚙️  COMPONENT LOADING
+  COMPONENT LOADING
 ├─ Plugins loaded: [X/Y]
 ├─ Agents discovered: [X/Y]
 ├─ Skills discovered: [X/Y]
 ├─ Commands discovered: [X/Y]
 └─ Hooks functional: [X/Y]
 
-🧪 INTERACTIVE TESTS
+ INTERACTIVE TESTS
 ├─ Basic invocation: [PASS/FAIL]
 ├─ Complex scenarios: [PASS/FAIL]
 ├─ Edge cases: [PASS/FAIL]
 └─ Performance: [ACCEPTABLE/DEGRADED]
 
-📋 ISSUES FOUND
+ ISSUES FOUND
 [If any]
 1. [Issue description]
    └─ Impact: [High/Medium/Low]
    └─ Suggested fix: [specific action]
 
 ════════════════════════════════════════════════════════════
-                    FINAL VERDICT: ✅ VALID / ❌ INVALID
+                    FINAL VERDICT:  VALID /  INVALID
 ════════════════════════════════════════════════════════════
 ```
 

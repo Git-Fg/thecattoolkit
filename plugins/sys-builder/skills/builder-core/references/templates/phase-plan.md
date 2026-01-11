@@ -147,18 +147,18 @@ Output: Working app with token auth and user model.
 
 ## Anti-Patterns
 
-❌ **Too vague:**
+ **Too vague:**
 ```markdown
 **Action**: Add auth to the app
 **Done**: Users can log in
 ```
 
-❌ **No verification:**
+ **No verification:**
 ```markdown
 **Verify**: It works correctly
 ```
 
-❌ **Tech-specific assumptions:**
+ **Tech-specific assumptions:**
 ```markdown
 **Verify**: npm run build && npm test
 ```

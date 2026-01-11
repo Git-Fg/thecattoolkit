@@ -99,7 +99,7 @@
 
 ## Common Architecture Anti-Patterns
 
-### ❌ Don't Do This
+###  Don't Do This
 - [ ] **God Objects**: Single components that do everything
 - [ ] **Spaghetti Code**: Unstructured, tangled code flow
 - [ ] **Tight Coupling**: Components that can't be changed independently
@@ -110,7 +110,7 @@
 - [ ] **Premature Optimization**: Optimizing before measuring
 - [ ] **Not Invented Here**: Avoiding proven solutions
 
-### ✅ Best Practices
+###  Best Practices
 - [ ] **YAGNI**: You Aren't Gonna Need It - don't add features until necessary
 - [ ] **KISS**: Keep It Simple, Stupid - prefer simple solutions
 - [ ] **Fail Fast**: Detect errors as early as possible

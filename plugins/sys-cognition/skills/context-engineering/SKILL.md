@@ -6,6 +6,16 @@ allowed-tools: [Read, Write, Edit, Bash(ls:.cattoolkit/*), Bash(cat:.cattoolkit/
 
 # Context Engineering Skill
 
+## CONSTRAINT: Scratchpad Hygiene
+
+**NEVER update the scratchpad for trivial file reads. ONLY update for:**
+- Critical decisions made
+- Errors encountered
+- Phase changes
+- Progress milestones
+
+This prevents "Context Churn" in the 150k token window.
+
 ## Available Resources
 
 - **[Context Initialization](references/context-initialization.md)**: Standards for setting up context foundations.
@@ -47,22 +57,22 @@ Manage persistent session state independent of the LLM context window using the 
 - Duplicate `plan.md` files → Conflicting sources of truth
 
 **NEW WAY (Hybrid Hooks):**
-- ✅ **Zero Friction**: Automatic operations via command hooks
-- ✅ **Intelligent**: Smart decisions via deterministic scripts
-- ✅ **Robust Parsing**: JSON output ensures reliable response parsing
-- ✅ **Single Source**: Reads Planner files directly, no duplicates
-- ✅ **Perfect Memory**: Every action logged, nothing lost
-- ✅ **Token Efficient**: File-based memory vs. chat history bloat
-- ✅ **Context-Aware**: Automated hooks evaluate when operations are safe
+-  **Zero Friction**: Automatic operations via command hooks
+-  **Intelligent**: Smart decisions via deterministic scripts
+-  **Robust Parsing**: JSON output ensures reliable response parsing
+-  **Single Source**: Reads Planner files directly, no duplicates
+-  **Perfect Memory**: Every action logged, nothing lost
+-  **Token Efficient**: File-based memory vs. chat history bloat
+-  **Context-Aware**: Automated hooks evaluate when operations are safe
 
 ## When to Use
 
 **The hooks auto-handle everything - use context-engineering for:**
 
 **Automatic (via hooks):**
-- ✅ Initializing session context (SessionStart hook)
-- ✅ Logging state changes (PostToolUse hook)
-- ✅ Context compaction (PreCompact hook)
+-  Initializing session context (SessionStart hook)
+-  Logging state changes (PostToolUse hook)
+-  Context compaction (PreCompact hook)
 
 **Manual operations (when needed):**
 - Creating comprehensive handoff documents

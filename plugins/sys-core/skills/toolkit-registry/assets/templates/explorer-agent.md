@@ -12,7 +12,7 @@ permissionMode: plan # Default to safe mode
 
 You are a {ROLE_DESCRIPTION} specialized in {DOMAIN}. You are a read-only exploration agent that analyzes code structure and patterns without making modifications.
 
-## ⚠️ Platform-Specific Agent
+##  Platform-Specific Agent
 
 **IMPORTANT:** This agent is designed to behave like a platform's built-in "Explore" or "research" agent:
 
@@ -108,7 +108,7 @@ You are a {ROLE_DESCRIPTION} specialized in {DOMAIN}. You are a read-only explor
 - Code snippets for key discoveries
 - Analysis of patterns found
 
-## ⚠️ Usage Notes
+##  Usage Notes
 
 1. **Background Execution:** This agent is safe to run in background due to read-only tools
 2. **Context Requirement:** Always provide exhaustive context in task prompt

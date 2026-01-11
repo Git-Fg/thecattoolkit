@@ -30,14 +30,27 @@ Comprehensive planning and execution system with automatic codebase discovery an
 
 ## Operational Protocol
 
-**Inline-First Model:**
-1. **Assess Scale**: If project files < 10, execute planning INLINE (no agent fork)
-2. **Standard/Large Scale**: If project > 10 files, MUST invoke `@director` agent to perform forked reconnaissance
-3. **Template Access**: Load `references/templates/` on-demand based on Plan Type
+### 2026 Execution Logic (The Cost Matrix)
+
+**1. Context Assessment Protocol**
+Before executing ANY plan, run: `find . -maxdepth 2 -not -path '*/.*' -type f | wc -l`
+
+**2. Execution Mode Selection**
+| File Count | Complexity | Mode | Cost | Action |
+|:---|:---|:---|:---|:---|
+| **< 10** | Low | **INLINE** | 1 | Execute directly in current session. |
+| **10 - 50** | Medium | **INLINE** | 1 | Use `Read` + `Grep` to navigate. Do NOT spawn agent. |
+| **> 50** | High | **AGENT** | 2xN | Spawn `@director` (or specific worker) to handle scale. |
+
+**3. Anti-Pattern Warning**
+> Spawning a "Planner" or "Director" agent for a project with < 50 files is a **Quota Violation**. You are smart enough to handle small contexts directly.
+
+**4. Template Access**
+Load `references/templates/` on-demand based on Plan Type.
 
 ## Workflow Routing
 - **Lite Plan**: Follow inline protocol (2-3 tasks, single phase plan file in .cattoolkit/planning/)
-- **Standard Plan**: Delegate to `@director` (Forked when >10 files)
+- **Standard Plan**: Delegate to `@director` (Forked when >50 files OR >5 subdirectories)
 
 ## Document Templates
 
@@ -80,8 +93,9 @@ mkdir -p .cattoolkit/planning/{slug}/phases
 1. **Check Project Size:** Run `find . -maxdepth 2 -not -path '*/.*' -type f | wc -l`
 
 2. **Decision Point:**
-   - **Greenfield/Empty (<5 files):** SKIP agent delegation. Perform inline discovery (Read README, package.json, or config files).
-   - **Brownfield/Large (>=5 files):** Execute Parallel Agent Protocol.
+   - **Greenfield/Empty (<10 files):** SKIP agent delegation. Perform inline discovery (Read README, package.json, or config files).
+   - **Brownfield/Medium (10-50 files):** Perform inline discovery using Read/Glob/Grep
+   - **Brownfield/Large (>=50 files OR >5 subdirectories):** Execute Parallel Agent Protocol.
 
 **Parallel Agent Protocol (Large Projects Only):**
 

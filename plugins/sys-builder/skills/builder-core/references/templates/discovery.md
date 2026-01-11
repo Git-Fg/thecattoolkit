@@ -99,7 +99,7 @@
 
 ---
 
-**Status:** ✅ Discovery Complete
+**Status:**  Discovery Complete
 **Next Phase:** [Brief / Roadmap / Plan Author]
 **Created by:** [Agent Name]
 **Last Updated:** YYYY-MM-DD

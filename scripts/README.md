@@ -2,7 +2,7 @@
 
 Unified Python-based analysis and validation suite for Cat Toolkit plugins.
 
-## 🚀 Usage
+## Usage
 
 ### Quick Start
 
@@ -30,7 +30,7 @@ python scripts/toolkit-analyzer.py --root-dir /path/to/cattoolkit
 python scripts/toolkit-analyzer.py --help
 ```
 
-## 🔍 What It Does
+## What It Does
 
 The unified analyzer performs 5 comprehensive validation phases:
 
@@ -63,44 +63,44 @@ The unified analyzer performs 5 comprehensive validation phases:
 - Validates permissionMode configurations
 - Enforces 2026 autonomous execution standards
 
-## 📊 Example Output
+## Example Output
 
 ```
 ======================================================================
-🔍 Cat Toolkit Plugin Analyzer & Validator
+Cat Toolkit Plugin Analyzer & Validator
 ======================================================================
 
-📋 Phase 1: Frontmatter Validation
+Phase 1: Frontmatter Validation
 ----------------------------------------------------------------------
   Validating 12 skills...
 
-🔗 Phase 2: Link Validation
+Phase 2: Link Validation
 ----------------------------------------------------------------------
   Checking 45 markdown files...
 
-🔗 Phase 3: Glue Code Detection
+Phase 3: Glue Code Detection
 ----------------------------------------------------------------------
   Checking 8 command files...
 
-⚡ Phase 4: Fork-Bloat Validation (2026 Inline-First)
+Phase 4: Fork-Bloat Validation (2026 Inline-First)
 ----------------------------------------------------------------------
   Checking 12 skills...
 
-🤖 Phase 5: AskUser-Leakage Validation (2026 Autonomous Agents)
+Phase 5: AskUser-Leakage Validation (2026 Autonomous Agents)
 ----------------------------------------------------------------------
   Checking 15 agents...
 
 ======================================================================
-📊 VALIDATION SUMMARY
+VALIDATION SUMMARY
 ======================================================================
 Validators Run: 5
 Total Errors: 0
 Total Warnings: 3
 
-✅ All validators passed!
+All validators passed!
 ```
 
-## 📦 Installation
+## Installation
 
 ### With uv (Recommended)
 
@@ -120,7 +120,7 @@ pip3 install --user pyyaml
 python3 scripts/toolkit-analyzer.py
 ```
 
-## 🔄 Continuous Integration
+## Continuous Integration
 
 ```bash
 # Check for errors (exit code 1 if issues found)
@@ -128,14 +128,14 @@ python3 scripts/toolkit-analyzer.py
 
 # Or check specific output
 if ./scripts/analyze.sh --json | jq -e '.all_passed' > /dev/null; then
-  echo "✅ All checks passed"
+  echo "All checks passed"
 else
-  echo "❌ Issues found"
+  echo "Issues found"
   exit 1
 fi
 ```
 
-## 🛠️ Requirements
+## Requirements
 
 - Python 3.7+
 - PyYAML
@@ -145,12 +145,12 @@ Install with:
 uv pip install pyyaml
 ```
 
-## 📝 Exit Codes
+## Exit Codes
 
 - `0` - All validators passed
 - `1` - One or more validators found issues
 
-## 🎯 Migration from Old Scripts
+## Migration from Old Scripts
 
 This unified script replaces:
 - `toolkit-lint.sh` (master orchestrator)
@@ -165,7 +165,7 @@ This unified script replaces:
 
 All functionality is now in a single, maintainable Python script.
 
-## 🤝 Contributing
+## Contributing
 
 To add new validation checks:
 
@@ -173,10 +173,10 @@ To add new validation checks:
 2. Call it from `validate_all()`
 3. Follow the pattern of returning a `ValidationResult` object
 
-## 📄 License
+## License
 
 Part of the Cat Toolkit project. See main project license.
 
 ---
 
-**Built with ❤️ for the Cat Toolkit ecosystem**
+**Built for the Cat Toolkit ecosystem**

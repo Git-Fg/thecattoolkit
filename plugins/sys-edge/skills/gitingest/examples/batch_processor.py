@@ -306,7 +306,7 @@ class BatchProcessor:
         """Export results to JSON"""
         with open(filename, 'w') as f:
             json.dump(results, f, indent=2)
-        print(f"✅ JSON export saved to {filename}")
+        print(f" JSON export saved to {filename}")
 
 
 def load_repositories_from_file(filename: str) -> List[str]:
@@ -378,7 +378,7 @@ Examples:
     with open(report_file, 'w') as f:
         f.write(report)
 
-    print(f"\n✅ Report saved to {report_file}")
+    print(f"\n Report saved to {report_file}")
 
     # Export JSON if requested
     if args.json:

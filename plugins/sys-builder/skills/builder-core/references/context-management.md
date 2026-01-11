@@ -37,11 +37,11 @@ Aim for balanced context usage:
 
 **Always use absolute or project-root relative paths:**
 
-✅ Good:
+ Good:
 - `@src/components/Button.tsx`
 - `@.cattoolkit/planning/my-project/BRIEF.md`
 
-❌ Bad:
+ Bad:
 - `@../../../components/Button.tsx`
 - `@Button.tsx`
 

@@ -208,7 +208,7 @@ These are normal gates, not errors.
 
 ## Differences: Old vs New
 
-### ❌ OLD: Wait and Loop
+###  OLD: Wait and Loop
 ```markdown
 [Error occurs]
 
@@ -219,7 +219,7 @@ Type "done" when authenticated
 [Agent waits in loop]
 ```
 
-### ✅ NEW: Exit and Handoff
+###  NEW: Exit and Handoff
 ```markdown
 [Error occurs]
 

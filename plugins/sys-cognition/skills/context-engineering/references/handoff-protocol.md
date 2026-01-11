@@ -327,17 +327,17 @@ HANDOFF COMPLETE
 =========================================
 
 Primary Handoff Document:
-  📄 .cattoolkit/context/handoff.md
+   .cattoolkit/context/handoff.md
 
 Tool-Specific Handoffs:
-  📄 .cattoolkit/context/handoff-claude.md
-  📄 .cattoolkit/context/handoff-cursor.md
+   .cattoolkit/context/handoff-claude.md
+   .cattoolkit/context/handoff-cursor.md
 
 Checkpoint:
   📸 .cattoolkit/context/checkpoints/{YYYY-MM-DD}-handoff-prep.md
 
 Archive:
-  📦 .cattoolkit/context/archives/session-{YYYYMMDD-HHMM}.tar.gz
+   .cattoolkit/context/archives/session-{YYYYMMDD-HHMM}.tar.gz
 
 Recovery Instructions:
   1. New session starts with .cattoolkit/context/handoff.md

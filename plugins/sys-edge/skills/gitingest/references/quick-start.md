@@ -494,4 +494,4 @@ for file in files:
 
 ---
 
-**Happy coding!** 🚀
+**Happy coding!** 

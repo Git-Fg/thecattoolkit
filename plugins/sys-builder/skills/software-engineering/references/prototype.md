@@ -126,10 +126,10 @@ Draft-then-harden approach:
 
 ## Anti-Patterns
 
-❌ **Skipping Phase 2** - Draft code shipping to production
-❌ **Over-drafting** - Spending too long in draft phase
-❌ **Draft in security-critical code** - Authentication, payments, data access
-❌ **Using as excuse** - "It's just a prototype" for code that will ship
+ **Skipping Phase 2** - Draft code shipping to production
+ **Over-drafting** - Spending too long in draft phase
+ **Draft in security-critical code** - Authentication, payments, data access
+ **Using as excuse** - "It's just a prototype" for code that will ship
 
 ## Success Criteria
 

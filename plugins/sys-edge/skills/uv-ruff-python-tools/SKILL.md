@@ -1,8 +1,8 @@
 ---
 name: uv-ruff-python-tools
 description: "USE when managing Python projects, dependencies, virtual environments, linting, or formatting. Covers uv (10-100x faster package manager) and ruff (extremely fast linter/formatter)."
+user-invocable: false
 allowed-tools: [Bash, Read, Write, Edit]
-user-invocable: true
 ---
 
 # UV & Ruff: Modern Python Development

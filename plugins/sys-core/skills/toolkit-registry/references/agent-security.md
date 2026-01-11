@@ -14,7 +14,7 @@ Agents (subagents) use the `tools` field in their frontmatter to control which t
 
 ### AskUserQuestion: Use Only When Explicitly Required
 
-⚠️ **WARNING**: `AskUserQuestion` should **NOT** be included in agent tools by default.
+ **WARNING**: `AskUserQuestion` should **NOT** be included in agent tools by default.
 
 **Only include `AskUserQuestion` when:**
 - The user **explicitly requests** interactive behavior
@@ -152,7 +152,7 @@ tools: Read, Write, Edit, Glob, Grep, Bash
 
 Background subagent execution allows agents to run asynchronously without blocking the main conversation. This enables parallel processing, long-running tasks, and improved user experience by deferring work to separate contexts.
 
-**⚠️ Platform-Specific Feature**
+** Platform-Specific Feature**
 
 Background execution is **platform-dependent**. Not all AI systems support it, and implementations vary:
 

@@ -312,7 +312,7 @@ class CodeAnalyzer:
     def print_report(self, report: Dict):
         """Print formatted analysis report"""
         if 'error' in report:
-            print(f"\n❌ Error: {report['error']}")
+            print(f"\n Error: {report['error']}")
             return
 
         repo = report['repository']
@@ -324,8 +324,8 @@ class CodeAnalyzer:
         print(f"  CODE ANALYSIS REPORT")
         print("=" * 70)
 
-        print(f"\n📦 Repository: {repo.get('Repository', 'Unknown')}")
-        print(f"📊 Files Analyzed: {repo.get('Files analyzed', 'Unknown')}")
+        print(f"\n Repository: {repo.get('Repository', 'Unknown')}")
+        print(f" Files Analyzed: {repo.get('Files analyzed', 'Unknown')}")
 
         print("\n" + "-" * 70)
         print("  METRICS")
@@ -350,7 +350,7 @@ class CodeAnalyzer:
         print("-" * 70)
 
         if not issues['security']:
-            print("  ✅ No security issues detected")
+            print("   No security issues detected")
         else:
             critical = [i for i in issues['security'] if i['severity'] == 'critical']
             high = [i for i in issues['security'] if i['severity'] == 'high']
@@ -379,7 +379,7 @@ class CodeAnalyzer:
             for i, rec in enumerate(recommendations, 1):
                 print(f"  {i}. {rec}")
         else:
-            print("  ✅ No recommendations - code looks good!")
+            print("   No recommendations - code looks good!")
 
         print("\n" + "=" * 70 + "\n")
 

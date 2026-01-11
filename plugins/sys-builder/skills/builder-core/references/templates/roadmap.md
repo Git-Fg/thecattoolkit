@@ -118,14 +118,14 @@ status: in_progress  # Tracks: in_progress | completed
 
 ## Milestones
 
-- ✅ **v1.0 MVP** - Phases 1-4 (shipped YYYY-MM-DD)
+-  **v1.0 MVP** - Phases 1-4 (shipped YYYY-MM-DD)
 - 🚧 **v1.1 [Name]** - Phases 5-6 (in progress)
-- 📋 **v2.0 [Name]** - Phases 7-10 (planned)
+-  **v2.0 [Name]** - Phases 7-10 (planned)
 
 ## Phases
 
 <details>
-<summary>✅ v1.0 MVP (Phases 1-4) - SHIPPED YYYY-MM-DD</summary>
+<summary> v1.0 MVP (Phases 1-4) - SHIPPED YYYY-MM-DD</summary>
 
 ### Phase 1: [Name]
 **Goal**: [What this phase delivers]
@@ -182,7 +182,7 @@ Plans:
 - [ ] 06-01: [Brief description]
 - [ ] 06-02: [Brief description]
 
-### 📋 v2.0 [Name] (Planned)
+###  v2.0 [Name] (Planned)
 
 **Milestone Goal:** [What v2.0 delivers]
 
@@ -213,7 +213,7 @@ Plans:
 
 **Notes:**
 
-- Milestone emoji: ✅ shipped, 🚧 in progress, 📋 planned
+- Milestone emoji:  shipped, 🚧 in progress,  planned
 - Completed milestones collapsed in `<details>` for readability
 - Current/future milestones expanded
 - Continuous phase numbering (01-99)

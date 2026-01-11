@@ -52,8 +52,8 @@ outputs-to: step-4-refine
 ### Execution Log
 | Step | Status | Notes |
 |:-----|:-------|:------|
-| {{STEP_1}} | ✅ Complete | {{NOTES}} |
-| {{STEP_2}} | ✅ Complete | {{NOTES}} |
+| {{STEP_1}} |  Complete | {{NOTES}} |
+| {{STEP_2}} |  Complete | {{NOTES}} |
 
 ### Issues Encountered
 {{ISSUES_OR_NONE}}

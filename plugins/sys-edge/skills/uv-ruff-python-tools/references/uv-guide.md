@@ -216,7 +216,7 @@ uv run --package myproject-api pytest  # Specific package
 | Feature | uv | pip | poetry | conda |
 |---------|-----|-----|--------|-------|
 | Speed | 10-100x | 1x | 2-5x | 0.5x |
-| Lockfiles | ✅ | ❌ | ✅ | ✅ |
-| Python Management | ✅ | ❌ | ❌ | ✅ |
-| Tool Running | ✅ | ❌ | ❌ | ❌ |
+| Lockfiles |  |  |  |  |
+| Python Management |  |  |  |  |
+| Tool Running |  |  |  |  |
 | Memory | Low | Med | Med | High |

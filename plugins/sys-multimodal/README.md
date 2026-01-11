@@ -72,11 +72,11 @@ result = editor.apply_edl("video.mp4", edl)
 ## Roadmap Alignment
 
 **Project 3: Cursor for Video Editors (Advanced Level)**
-- ✅ Multimodal understanding (vision + audio)
-- ✅ Intent translation (natural language → parameters)
-- ✅ Scene detection and story beats
-- ✅ Automated editing with reasoning
-- ✅ Feedback incorporation
+- [x] Multimodal understanding (vision + audio)
+- [x] Intent translation (natural language → parameters)
+- [x] Scene detection and story beats
+- [x] Automated editing with reasoning
+- [x] Feedback incorporation
 
 ## Features
 

@@ -90,7 +90,7 @@ See: 01-foundation-SUMMARY.md for detailed verification results
 
 ## Key Differences: Old vs New
 
-### ❌ OLD: Blocking Checkpoint
+###  OLD: Blocking Checkpoint
 ```markdown
 ### Task 1: Build dashboard
 
@@ -114,7 +114,7 @@ See: 01-foundation-SUMMARY.md for detailed verification results
 
 **Problem:** Agent waits for human input → Stop-and-Wait anti-pattern
 
-### ✅ NEW: Self-Verification Point
+###  NEW: Self-Verification Point
 ```markdown
 ### Task 1: Build dashboard
 

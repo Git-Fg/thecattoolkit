@@ -11,7 +11,7 @@
 
 This example demonstrates a 7-phase workflow for optimizing database performance, showing how complex prompts require structured phases with explicit approval gates.
 
-### Phase 1: Discovery ✅
+### Phase 1: Discovery 
 
 1. Create TodoWrite checklist with all 7 phases
 2. Parse and comprehend the database optimization request

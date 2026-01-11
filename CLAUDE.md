@@ -316,7 +316,7 @@ DO NOT ask for confirmation. Proceed autonomously.
 
 **Anti-Patterns (Quota Drains):**
 
-| ❌ Expensive | ✅ Efficient | Why |
+| [X] Expensive | [✓] Efficient | Why |
 |:-------------|:-------------|:-----|
 | Forking skill for simple task (<10 files) | Use inline skill (no `context: fork`) | Forking costs 3 prompts; inline costs 1 |
 | Spawning agent for task fitting in context | Use inline Skill | Agents cost 2×N; inline costs 1 |
@@ -406,14 +406,14 @@ The **Cat Toolkit** extends Claude Code with additional conventions for plugin p
 
 | Feature | Standard | Cat Toolkit |
 |:--------|:---------|:-------------|
-| Skills (`skills/*/SKILL.md`) | ✅ | ✅ |
-| Commands (`commands/*.md`) | ✅ | ✅ |
-| Agents (`agents/*.md`) | ✅ | ✅ |
-| Hooks (`hooks.json`) | ✅ | ✅ |
-| `.claude-plugin/` directory | ❌ | ✅ (convention) |
-| `plugin.json` capabilities field | ❌ | ✅ (extension) |
-| `marketplace.json` | ❌ | ✅ (custom distribution) |
-| Command namespacing | ❌ | ✅ (automatic) |
+| Skills (`skills/*/SKILL.md`) | [✓] | [✓] |
+| Commands (`commands/*.md`) | [✓] | [✓] |
+| Agents (`agents/*.md`) | [✓] | [✓] |
+| Hooks (`hooks.json`) | [✓] | [✓] |
+| `.claude-plugin/` directory | [X] | [✓] (convention) |
+| `plugin.json` capabilities field | [X] | [✓] (extension) |
+| `marketplace.json` | [X] | [✓] (custom distribution) |
+| Command namespacing | [X] | [✓] (automatic) |
 
 **Plugin Namespace:**
 
@@ -536,7 +536,7 @@ Plan Mode = Architect's Blueprint Phase
 
 **When to Use Plan Mode:**
 
-| ✅ Use Plan Mode | ❌ Don't Use Plan Mode |
+| [✓] Use Plan Mode | [X] Don't Use Plan Mode |
 |:-----------------|:----------------------|
 | Complex implementations with multiple approaches | Simple bug fixes (1-2 line changes) |
 | Architectural decisions requiring user input | Pure research/exploration (use Explore agent) |
@@ -586,9 +586,9 @@ After completion: Synthesizes three reports into final-summary.md
 
 **Anti-Pattern (AVOID):**
 ```
-❌ Agent A and Agent B both write to analysis.json (race condition)
-❌ Agent B waits for Agent A (creates dependency, breaks parallelism)
-❌ Agents communicate directly (no orchestration)
+[X] Agent A and Agent B both write to analysis.json (race condition)
+[X] Agent B waits for Agent A (creates dependency, breaks parallelism)
+[X] Agents communicate directly (no orchestration)
 ```
 
 **Why This Matters:**
@@ -820,12 +820,17 @@ disable-model-invocation: false        # true = user wizard (model doesn't execu
 - **Move not Delete**: Use `.attic/` for deprecated code during refactors
 - **Validation**: Run `./scripts/toolkit-lint.sh` after changes
 - **File Paths**: Use relative paths (`assets/templates/doc.md`) or `${CLAUDE_PLUGIN_ROOT}`
-- **Python Standard (Strict)**: 
-    - ALWAYS use `uv run` for executing local scripts (e.g., `uv run scripts/my-script.py`).
-    - ALWAYS use `uvx` for ephemeral tool invocation.
-    - NEVER use `python`, `pip`, `poetry`, or `conda` directly. 
-    - ALL Python scripts MUST include PEP 723 inline metadata to declare their dependencies.
-    - Installation: New dependencies MUST be added via `uv add` to ensure lockfile synchronization.
+- **Python Standard (STRICT)**:
+    - ALWAYS use `uv run` for executing local scripts (e.g., `uv run scripts/toolkit-analyzer.py`)
+    - ALWAYS use `uvx` for ephemeral tool invocation (e.g., `uvx ruff check`)
+    - NEVER use `python`, `python3`, `pip`, `poetry`, or `conda` directly
+    - ALL Python scripts MUST include PEP 723 inline metadata to declare their dependencies
+    - Installation: New dependencies MUST be added via `uv add` to ensure lockfile synchronization
+- **Documentation Synchronization (CRITICAL)**:
+    - AFTER ANY structural change (new skill/agent/command, refactor, delete): MUST update `graphs/ANALYSIS.md`
+    - AFTER ANY implementation change: MUST update relevant `README.md` (root and per-plugin)
+    - AFTER ANY capability change: MUST update `plugin.json` files (root `.claude-plugin/plugin.json` and per-plugin)
+    - These files are the SINGLE SOURCE OF TRUTH for toolkit architecture and capabilities
 
 ---
 

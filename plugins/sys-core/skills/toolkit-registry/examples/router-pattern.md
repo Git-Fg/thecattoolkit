@@ -93,10 +93,10 @@ def route_analysis_request(request):
 
 ## Anti-Patterns to Avoid
 
-❌ **Over-complex routing logic** - Keep it simple and clear
-❌ **Hardcoding all possible requests** - Use keyword matching
-❌ **No default route** - Always have a fallback
-❌ **Bypassing specialized skills** - Don't try to do everything in router
+ **Over-complex routing logic** - Keep it simple and clear
+ **Hardcoding all possible requests** - Use keyword matching
+ **No default route** - Always have a fallback
+ **Bypassing specialized skills** - Don't try to do everything in router
 
 ## Success Criteria
 

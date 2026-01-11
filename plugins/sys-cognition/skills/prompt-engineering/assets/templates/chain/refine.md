@@ -58,8 +58,8 @@ outputs-to: final-output
 ### Quality Assessment
 | Criterion | Status | Notes |
 |:----------|:-------|:------|
-| {{CRITERION_1}} | ✅ Met | {{NOTES}} |
-| {{CRITERION_2}} | ✅ Met | {{NOTES}} |
+| {{CRITERION_1}} |  Met | {{NOTES}} |
+| {{CRITERION_2}} |  Met | {{NOTES}} |
 
 ### Lessons Learned
 {{LESSONS_FOR_FUTURE}}

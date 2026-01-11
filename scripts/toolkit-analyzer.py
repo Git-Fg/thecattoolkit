@@ -267,11 +267,11 @@ class ToolkitAnalyzer:
         self.report.total_warnings += len(result.warnings)
         self.report.validators_run += 1
 
-    def validate_all(self, generate_reports: bool = False) -> ValidatorReport:
+    def validate_all(self) -> ValidatorReport:
         """Run all validators"""
         print("=" * 70)
-        print("🔍 Cat Toolkit Plugin Analyzer & Validator")
-        print(f"📂 Scanning: {self.plugins_dir}")
+        print("Cat Toolkit Plugin Analyzer & Validator")
+        print(f"Scanning: {self.plugins_dir}")
         print("=" * 70)
         print()
 
@@ -279,20 +279,16 @@ class ToolkitAnalyzer:
         self._discover_and_parse()
         self._extract_relationships()
 
-        # Phase 1-5: Existing Validators
+        # Phase 1-6: Existing Validators
         self.validate_frontmatter()
         self.validate_links()
         self.validate_glue_code()
         self.validate_fork_bloat()
         self.validate_askuser_leakage()
+        self.validate_token_budget()
 
-        # Phase 6: Architecture Validation
+        # Phase 7: Architecture Validation
         self.validate_architecture()
-
-        # Phase 7: Reporting (Optional)
-        if generate_reports:
-            print("\n📈 Generating reports...")
-            self.generate_reports()
 
         # Display summary
         self.print_summary()
@@ -521,7 +517,7 @@ class ToolkitAnalyzer:
     def validate_architecture(self) -> None:
         """Validate component graph architecture"""
         result = ValidationResult("Architecture Check", True)
-        print("🏗️  Phase 6: Architecture & Circular Dependency Check")
+        print("Phase 6: Architecture & Circular Dependency Check")
         print("-" * 70)
 
         # Check for circular dependencies
@@ -539,7 +535,9 @@ class ToolkitAnalyzer:
             if comp:
                 # Naive reference checking for graph traversal
                 # Simplify: just look at cross_links to find outgoing edges
-                outgoing = [l.target for l in self.cross_links if l.source == node]
+                outgoing = [
+                    link.target for link in self.cross_links if link.source == node
+                ]
                 for target_id in outgoing:
                     if target_id not in visited:
                         if has_cycle_dfs(target_id):
@@ -547,12 +545,13 @@ class ToolkitAnalyzer:
                             return True
                     elif target_id in rec_stack:
                         comp_target = self.components.get(target_id)
-                        cycle_path.append(node)
-                        result.errors.append(
-                            f"Circular dependency detected involving {comp.plugin}:{comp.name} -> {comp_target.plugin}:{comp_target.name}"
-                        )
-                        has_cycle = True
-                        return True
+                        if comp_target:
+                            cycle_path.append(node)
+                            result.errors.append(
+                                f"Circular dependency detected involving {comp.plugin}:{comp.name} -> {comp_target.plugin}:{comp_target.name}"
+                            )
+                            has_cycle = True
+                            return True
 
             rec_stack.remove(node)
             return False
@@ -576,7 +575,7 @@ class ToolkitAnalyzer:
         """Validate YAML frontmatter in skills, commands, and agents"""
         result = ValidationResult("Frontmatter Validation", True)
 
-        print("📋 Phase 1: Frontmatter Validation")
+        print("Phase 1: Frontmatter Validation")
         print("-" * 70)
 
         # Validate skills
@@ -699,7 +698,7 @@ class ToolkitAnalyzer:
         """Validate markdown links and references"""
         result = ValidationResult("Link Validation", True)
 
-        print("🔗 Phase 2: Link Validation")
+        print("Phase 2: Link Validation")
         print("-" * 70)
 
         link_pattern = re.compile(r"\[([^\]]+)\]\(([^)]+)\)")
@@ -790,10 +789,10 @@ class ToolkitAnalyzer:
         self.log_result(result)
 
     def validate_glue_code(self) -> None:
-        """Detect glue code patterns"""
-        result = ValidationResult("Glue Code Detection", True)
+        """Detect glue code patterns and enforce Zero-Token Shortcuts"""
+        result = ValidationResult("Glue Code & Zero-Token Standards", True)
 
-        print("🔗 Phase 3: Glue Code Detection")
+        print("Phase 3: Glue Code & Zero-Token Standards")
         print("-" * 70)
 
         command_files = list(self.plugins_dir.rglob("commands/*.md"))
@@ -801,13 +800,39 @@ class ToolkitAnalyzer:
 
         for cmd_file in command_files:
             try:
-                lines = cmd_file.read_text().split("\n")
+                content = cmd_file.read_text()
+                lines = content.split("\n")
                 if len(lines) > 100:
                     result.warnings.append(
                         f"{cmd_file}: Large command file ({len(lines)} lines)"
                     )
 
-                content = cmd_file.read_text()
+                # Zero-Token Shortcut Standard (2026 Hybrid Standard)
+                # If a command wraps a Skill, it MUST have disable-model-invocation: true
+                if "Skill(" in content and "allowed-tools" in content:
+                    if "disable-model-invocation: true" not in content:
+                        result.errors.append(
+                            f"{cmd_file}: VIOLATION - Command wraps a Skill but 'disable-model-invocation: true' is missing. "
+                            "This wastes tokens. Commands wrapping skills must be zero-token shortcuts."
+                        )
+
+                # Logic Duplication Check
+                # If a command wraps a Skill (is a Shortcut), it should be minimal (< 20 lines).
+                if "Skill(" in content and "allowed-tools" in content:
+                    if len(lines) > 20:
+                        result.warnings.append(
+                            f"{cmd_file}: Potential Logic Duplication. Command wraps a Skill but has > 20 lines. "
+                            "Shortcuts should be minimal (delegating logic to the Skill)."
+                        )
+
+                # Description Optimization
+                if "description" in content:
+                    desc_match = re.search(r'description:\s*["\'](.*?)["\']', content, re.DOTALL)
+                    if desc_match and len(desc_match.group(1)) > 150:
+                        result.warnings.append(
+                            f"{cmd_file}: Description is too long (>150 chars). Commands function as Semantic Shortcuts; keep descriptions terse."
+                        )
+
                 if "Skill(" in content and "allowed-tools" not in content:
                     result.warnings.append(
                         f"{cmd_file}: Uses Skill tool without allowed-tools restriction"
@@ -847,7 +872,7 @@ class ToolkitAnalyzer:
         """Check for unnecessary fork usage"""
         result = ValidationResult("Fork-Bloat Validation", True)
 
-        print("⚡ Phase 4: Fork-Bloat Validation (2026 Inline-First)")
+        print("Phase 4: Fork-Bloat Validation (2026 Inline-First)")
         print("-" * 70)
 
         skill_files = list(self.plugins_dir.rglob("SKILL.md")) + list(
@@ -892,10 +917,12 @@ class ToolkitAnalyzer:
                         not has_task
                         and not has_agent
                         and skill_name not in computational_fork_skills
+                        and "Read" not in allowed_tools
+                        and "Grep" not in allowed_tools
                     ):
                         result.warnings.append(
-                            f"{skill_file}: Skill '{skill_name}' has 'context: fork' but no 'Task' tool. "
-                            f"2026 Inline-First Rule: Tasks <10 files should use inline execution."
+                            f"{skill_file}: Skill '{skill_name}' has 'context: fork' but no 'Task', 'Read', or 'Grep' tools. "
+                            f"Forked skills should either be for isolation (Task) or volume processing (Read/Grep)."
                         )
             except Exception as e:
                 result.errors.append(f"{skill_file}: Error processing: {e}")
@@ -907,7 +934,7 @@ class ToolkitAnalyzer:
         """Check for AskUserQuestion in worker agents"""
         result = ValidationResult("AskUser-Leakage Validation", True)
 
-        print("🤖 Phase 5: AskUser-Leakage Validation (2026 Autonomous Agents)")
+        print("Phase 5: AskUser-Leakage Validation (2026 Autonomous Agents)")
         print("-" * 70)
 
         agent_files = list(self.plugins_dir.rglob("agents/*.md"))
@@ -970,111 +997,46 @@ class ToolkitAnalyzer:
         print()
         self.log_result(result)
 
-    def generate_reports(self):
-        """Generate mermaid diagrams and reports"""
-        self.graphs_dir.mkdir(exist_ok=True)
-        self._generate_consolidated_report()
-        print(
-            f"  ✨ Generated architectural analysis in {self.graphs_dir / 'ANALYSIS.md'}"
-        )
+    def validate_token_budget(self) -> None:
+        """Validate total metadata size against Token Budget"""
+        result = ValidationResult("Token Budget Validation", True)
 
-    def _generate_consolidated_report(self):
-        """Generates a single Markdown report with all graphs."""
-        overview = self._get_overview_graph()
-        detail = self._get_detail_graph()
-        deps = self._get_dependency_graph()
+        print("Phase 6: Token Budget Validation")
+        print("-" * 70)
 
-        report_content = [
-            "# Toolkit Architecture Analysis",
-            f"\nGenerated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
-            "\n## Plugin Overview",
-            "```mermaid",
-            overview,
-            "```",
-            "\n## Component Detail View",
-            "```mermaid",
-            detail,
-            "```",
-            "\n## Cross-Plugin Dependencies",
-            "```mermaid",
-            deps,
-            "```",
-        ]
+        total_chars = 0
+        limit = 15000
 
-        with open(self.graphs_dir / "ANALYSIS.md", "w") as f:
-            f.write("\n".join(report_content))
+        # Calculate total description and argument-hint length
+        for comp in self.components.values():
+            if comp.frontmatter:
+                desc = comp.frontmatter.get("description", "")
+                total_chars += len(str(desc))
 
-    def _get_overview_graph(self) -> str:
-        content = [
-            '%%{init: {"theme": "base", "themeVariables": {"primaryColor": "#ff6b6b"}}}%%',
-            "graph TB",
-        ]
-        plugins = set(c.plugin for c in self.components.values())
-        for plugin in sorted(plugins):
-            content.append(f'    subgraph {plugin} ["🧩 {plugin}"]')
-            plugin_comps = [
-                (k, v) for k, v in self.components.items() if v.plugin == plugin
-            ]
-            for comp_id, comp in plugin_comps:
-                name = comp.name
-                icon = {"skill": "⚙️", "agent": "🤖", "command": "⚡"}.get(
-                    comp.type, "📦"
-                )
-                content.append(f'        {comp_id.replace(":", "_")}["{icon} {name}"]')
-            content.append("    end")
+                # Check argument-hint if present (commands)
+                hint = comp.frontmatter.get("argument-hint", "")
+                total_chars += len(str(hint))
 
-        for link in self.cross_links:
-            source_id = link.source.replace(":", "_")
-            target_id = link.target.replace(":", "_")
-            style = {
-                "references": "-.->|references|",
-                "invokes": "==>|invokes|",
-                "delegates": "==>|delegates|",
-            }.get(link.link_type, "--->|")
-            content.append(f"    {source_id} {style} {target_id}")
+        print(f"  Total Metadata Size: {total_chars:,} / {limit:,} chars")
 
-        return "\n".join(content)
+        if total_chars > limit:
+            result.errors.append(
+                f"Token Budget Exceeded: {total_chars:,} chars > {limit:,} limit. "
+                "This risks context truncation. Consolidate skills or shorten descriptions."
+            )
+        else:
+            usage_pct = (total_chars / limit) * 100
+            result.info.append(
+                f"Token Budget Usage: {usage_pct:.1f}% ({total_chars:,} chars)"
+            )
 
-    def _get_detail_graph(self) -> str:
-        content = [
-            '%%{init: {"theme": "base", "themeVariables": {"primaryColor": "#4fc3f7"}}}%%',
-            "graph LR",
-            '    title["Plugin Component Detail View"]',
-        ]
-        for comp_type in ["skill", "agent", "command"]:
-            content.append(f"\n    subgraph {comp_type.upper()}s")
-            type_comps = [
-                (k, v) for k, v in self.components.items() if v.type == comp_type
-            ]
-            for comp_id, comp in type_comps:
-                label = f"{comp.name}\\n({comp.plugin})\\n📥{len(comp.references)} → 📤{len(comp.referenced_by)}"
-                content.append(f'        {comp_id.replace(":", "_")}["{label}"]')
-            content.append("    end")
-
-        return "\n".join(content)
-
-    def _get_dependency_graph(self) -> str:
-        content = [
-            '%%{init: {"theme": "base", "themeVariables": {"primaryColor": "#81c784"}}}%%',
-            "graph TB",
-            '    subgraph DEPENDENCIES ["🔗 Cross-Plugin Dependencies"]',
-        ]
-        for i, link in enumerate(self.cross_links, 1):
-            if link.source in self.components and link.target in self.components:
-                s = self.components[link.source]
-                t = self.components[link.target]
-                content.append(f'        DEP{i}["{s.plugin}:{s.name}"]')
-                content.append(
-                    f'            -.->|{link.link_type}| DEP{i}_T["{t.plugin}:{t.name}"]'
-                )
-        content.append("    end")
-
-        return "\n".join(content)
+        print()
+        self.log_result(result)
 
     def print_summary(self) -> None:
         """Print validation summary"""
         print("=" * 70)
-        print("📊 VALIDATION SUMMARY")
+        print("VALIDATION SUMMARY")
         print("=" * 70)
         print(f"Validators Run: {self.report.validators_run}")
         print(f"Total Errors: {self.report.total_errors}")
@@ -1082,13 +1044,13 @@ class ToolkitAnalyzer:
         print()
 
         if self.report.all_passed:
-            print("✅ All validators passed!")
+            print("All validators passed!")
         else:
-            print("❌ Validation issues found")
+            print("Validation issues found")
 
         # Always show errors if any
         if self.report.total_errors > 0:
-            print("\n🚨 ERRORS:")
+            print("\nERRORS:")
             for result in self.report.results:
                 if result.errors:
                     print(f"\n  {result.name}:")
@@ -1097,7 +1059,7 @@ class ToolkitAnalyzer:
 
         # Always show warnings if any
         if self.report.total_warnings > 0:
-            print("\n⚠️  WARNINGS:")
+            print("\nWARNINGS:")
             for result in self.report.results:
                 if result.warnings:
                     print(f"\n  {result.name}:")
@@ -1107,7 +1069,7 @@ class ToolkitAnalyzer:
         # Show info messages if any
         info_count = sum(len(r.info) for r in self.report.results)
         if info_count > 0:
-            print("\nℹ️  INFO:")
+            print("\nINFO:")
             for result in self.report.results:
                 if result.info:
                     print(f"\n  {result.name}:")
@@ -1131,11 +1093,6 @@ def main():
     parser.add_argument(
         "--json", action="store_true", help="Output results in JSON format"
     )
-    parser.add_argument(
-        "--generate-reports",
-        action="store_true",
-        help="Generate mermaid graphs and report files in graphs/",
-    )
 
     args = parser.parse_args()
 
@@ -1155,7 +1112,7 @@ def main():
             root_dir = str(Path(__file__).parent.parent)
 
     analyzer = ToolkitAnalyzer(root_dir)
-    report = analyzer.validate_all(generate_reports=args.generate_reports)
+    report = analyzer.validate_all()
 
     if args.json:
         # Output JSON

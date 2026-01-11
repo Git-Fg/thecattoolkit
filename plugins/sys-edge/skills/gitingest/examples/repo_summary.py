@@ -254,10 +254,10 @@ def main():
         with open(output_file, 'w') as f:
             f.write(summary)
 
-        print(f"\n✅ Summary saved to {output_file}")
+        print(f"\n Summary saved to {output_file}")
 
     except Exception as e:
-        print(f"\n❌ Error: {e}")
+        print(f"\n Error: {e}")
         sys.exit(1)
 
 

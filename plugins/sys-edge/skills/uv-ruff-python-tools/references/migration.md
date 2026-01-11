@@ -52,7 +52,7 @@ uv export --group dev -o requirements-dev.txt
 | Feature | conda | UV |
 |---------|-------|-----|
 | Speed | Slow | Fast |
-| Non-Python packages | ✅ | ❌ |
+| Non-Python packages |  |  |
 | PyPI packages | Limited | Full |
 | Memory | High | Low |
 

@@ -20,6 +20,15 @@ Optimizes AI models for deployment on mobile devices and edge environments throu
 
 ## Skills
 
+### gitingest
+**Git repository ingestion for AI analysis**
+
+- Transform repositories into AI-readable digests
+- CLI and Python package support
+- File filtering and size limits
+- Private repository authentication
+- Structured output for LLM consumption
+
 ### edge-ai-management
 **Model management for resource-constrained environments**
 
@@ -77,11 +86,11 @@ result = mobile_opt.run_inference(
 ## Roadmap Alignment
 
 **Project 1: AI Powered Mobile App with SLM (Beginner Level)**
-- ✅ Model management with lazy loading
-- ✅ Dynamic quantization strategies
-- ✅ Context window management
-- ✅ Battery optimization
-- ✅ Offline-first sync architecture
+- [x] Model management with lazy loading
+- [x] Dynamic quantization strategies
+- [x] Context window management
+- [x] Battery optimization
+- [x] Offline-first sync architecture
 
 ## Features
 
@@ -91,7 +100,22 @@ result = mobile_opt.run_inference(
 - **Battery Smart**: < 5% drain per hour
 - **Thermal Safe**: Automatic throttling at 75°C
 
+## Commands
+
+### /ingest
+**Shortcut for gitingest skill**
+
+- Zero-token invocation of repository ingestion
+- Pass repository URL and options as arguments
+- Example: `/ingest https://github.com/user/repo -i "*.py"`
+
 ## Usage
+
+Use `/ingest` or `gitingest` for:
+- Repository analysis for AI consumption
+- Code review automation
+- Documentation generation
+- Vulnerability scanning
 
 Use `edge-ai-management` for:
 - Mobile AI application optimization

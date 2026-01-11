@@ -1,5 +1,6 @@
 ---
 name: plan-execution
+user-invocable: false
 description: "USE when executing a project plan from .cattoolkit/planning/. Orchestrates task execution, manages dependencies, delegates to workers, and verifies results."
 allowed-tools: [Task, Read, Write, Bash(ls:*), Bash(cat:*), Bash(grep:*), Glob, Grep]
 ---

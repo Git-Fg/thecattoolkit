@@ -2,6 +2,7 @@
 name: worker
 description: "MUST USE when executing plans, implementing features, debugging code, or performing engineering tasks. Universal Builder Worker following execution-core standards."
 permissionMode: acceptEdits
+# Strict whitelist: NO AskUserQuestion allowed for workers
 tools: [Read, Write, Edit, TodoWrite, Bash, Glob, Grep]
 skills: [execution-core, software-engineering, builder-core]
 capabilities: ["plan-execution", "tdd-workflow", "debugging-protocol", "uninterrupted-flow", "self-verification"]

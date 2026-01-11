@@ -25,7 +25,12 @@ Provides the essential infrastructure for the Cat Toolkit: security auditing, su
 
 ## Hooks
 
-- **SessionStart** - Injects toolkit protocols into session context
+- **SessionStart** - Injects 2026 Universal Agentic Runtime Protocols:
+  - Prompt Churn Decision Flow (Inline Skill: 1, Fork: 3+, Agent: 2×N)
+  - Behavioral Constraints (Uninterrupted Flow, Trust Return Codes, No Permission Fishing)
+  - Autonomous Partner Overlay (No questions mid-execution, Strategic Assumption)
+  - Auto-loads persistent context (.cattoolkit/context/scratchpad.md)
+  - Auto-loads project roadmap (.cattoolkit/planning/**/ROADMAP.md)
 - **PostToolUse** - Logs all tool executions for forensic analysis
 
 ## Styles
