@@ -1,6 +1,6 @@
 ---
 name: thinking-frameworks
-description: "USE when a reasoning engine needs structured methodologies. Contains 12 passive frameworks (Strategic, Prioritization, Problem Analysis)."
+description: "SHOULD USE when strategic analysis or root-cause identification is required. Examples: SWOT, 5-Whys, First Principles, Inversion, Pareto Principle."
 allowed-tools: [Read]
 ---
 

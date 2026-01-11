@@ -76,7 +76,7 @@ Next: Continue to next task
 ### After Plan Execution:
 - Read PLAN.md to understand current status
 - Update PLAN.md status: `status: complete`
-- Create SUMMARY.md using `project-strategy/assets/templates/summary.md`
+- Create SUMMARY.md using `builder-core/references/templates/summary.md`
 - Update ROADMAP.md progress table if applicable
 
 ### After Engineering Tasks:

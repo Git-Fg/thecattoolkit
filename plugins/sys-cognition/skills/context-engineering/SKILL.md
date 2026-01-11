@@ -1,8 +1,6 @@
 ---
 name: context-engineering
 description: "USE when managing persistent session state, avoiding context overflow, or enabling session handoffs via the Passive Hook System."
-
-agent: scribe
 allowed-tools: [Read, Write, Edit, Bash(ls:.cattoolkit/*), Bash(cat:.cattoolkit/*), Bash(rm:.cattoolkit/context/archives/*)]
 ---
 

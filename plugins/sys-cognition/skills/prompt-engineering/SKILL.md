@@ -1,8 +1,6 @@
 ---
 name: prompt-engineering
-description: "USE when user needs to draft, optimize, or audit prompts. Includes Prompt Library, Chain-of-Thought patterns, and Optimization workflows."
-context: fork
-agent: prompt-engineer
+description: "USE when drafting, optimizing, or auditing prompts. Includes Prompt Library, Chain-of-Thought patterns, and Optimization workflows. Modes: draft, optimize, library access."
 allowed-tools: [Read, Write, Edit, Glob, Grep]
 ---
 

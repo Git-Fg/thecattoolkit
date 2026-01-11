@@ -1,6 +1,6 @@
 ---
 name: plugin-expert
-description: "USE when maintaining or auditing the toolkit itself. A meticulous infrastructure guardian ensuring 2026 standards compliance."
+description: "SHOULD USE when maintaining or auditing the toolkit itself. A meticulous infrastructure guardian ensuring 2026 standards compliance."
 capabilities:
   - infrastructure maintenance
   - audit

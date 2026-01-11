@@ -1,7 +1,6 @@
 ---
 name: software-engineering
-description: "MUST USE when writing code, debugging errors, or reviewing PRs. Universal Standard for TDD, Security, and Code Quality. Modes: debug, review, refactor, implement."
-
+description: "MUST USE when writing code, debugging errors, or reviewing PRs. Universal Standard for TDD, Security, and Code Quality. Modes: debug, review, refactor, implement. FORCE NON-INTERACTIVE EXECUTION (Bash must use -y/--yes)."
 allowed-tools: [Read, Write, Edit, Bash, Glob, Grep]
 ---
 

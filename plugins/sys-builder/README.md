@@ -15,7 +15,7 @@ The execution engine for the Cat Toolkit. Transforms plans into reality through 
 ## Skills
 
 - **execution-core** - Universal behavioral standards (Uninterrupted Flow, Self-Verification, Handoffs)
-- **project-strategy** - Document templates (BRIEF.md, ROADMAP.md, PLAN.md)
+- **builder-core** - Document templates (BRIEF.md, ROADMAP.md, PLAN.md) and orchestration standards
 - **software-engineering** - Engineering protocols (TDD, Debugging, Code Review, Security)
 - **architecture** - System design frameworks and ADR documentation
 

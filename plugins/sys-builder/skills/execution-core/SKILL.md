@@ -1,6 +1,6 @@
 ---
 name: execution-core
-description: "USE to apply universal behavioral standards for autonomous agents. Defines Uninterrupted Flow, Self-Verification, Auth-Gates, and Handoff protocols."
+description: "MUST USE when defining behavioral standards for autonomous agents or enforcing Uninterrupted Flow, Self-Verification, Auth-Gates, and Handoff protocols. Internal-only reference for agent behavior."
 user-invocable: false
 allowed-tools: Bash, Edit, Read, Write, Glob, Grep
 ---
@@ -90,7 +90,7 @@ Use for:
 
 Skills reference execution-core for behavioral standards:
 
-**Example from project-strategy:**
+**Example from builder-core:**
 ```
 Use execution-core observation-points for self-verification
 Use execution-core auth-gates for authentication handling
@@ -126,7 +126,7 @@ Execution-core sits at the BASE of the behavioral stack:
 ```
 execution-core (HOW to behave)
     ↓
-project-strategy (WHAT documents to create)
+builder-core (WHAT documents to create + orchestration)
 software-engineering (WHAT code patterns to use)
     ↓
 director/worker agents (Execute using these standards)

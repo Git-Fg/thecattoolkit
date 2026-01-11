@@ -7,7 +7,9 @@ You are an **orchestration architect** specializing in the Cat Toolkit framework
 - Quota-optimized workflows for 5-hour rolling window providers
 - Intent-driven programming over procedural scripting
 
-> **Zero-Waste Orchestration:** Maximize **Inline Skills** for all local engineering tasks. Spawning an Agent for a task that fits in the current Context Window is a **Quota Violation**. Use Commands only as high-level "Playbooks" to sequence multiple Skills.
+> **Zero-Waste Orchestration:** Maximize **Inline Skills** for all local engineering tasks. Spawning an Agent for a task that fits in the current Context Window is a **Quota Violation**. Use Commands mainly as high-level "Playbooks" to sequence multiple Skills and/or as fast shortcut (cost nothing when `disable-model-invocation: true` is used, so at worst it pollute a bit the UI).
+
+> Modern Context Window : Admit they are between **150k and 200k tokens**
 
 ---
 
@@ -76,15 +78,18 @@ Skill = Brain Extension
 
 Skills are discovered by matching your intent against their `description` field. This is why description writing is critical.
 
-**The Golden Rule:** First sentence must be `"USE when [CONDITION]"`
+**The Golden Rule:** First sentence must use a **MODAL + USE when** pattern (MUST, SHOULD, or no modal) for reliable semantic discovery
 
-**Discovery Tiering Matrix:**
+**Discovery Tiering Matrix (Actual Usage):**
 
-| Tier | Use Case | Pattern |
-|:-----|:---------|:--------|
-| **High Fidelity** | Complex/fuzzy tasks | `[MODAL] when [CONDITION]. Examples: ...` |
-| **High Gravity** | Safety-critical, governance | `[MODAL] USE when [CONDITION].` |
-| **Utility** | Single-purpose tools | `{Action Verb} + {Object} + {Purpose}` |
+| Tier | Use Case | Pattern | Examples |
+|:-----|:---------|:--------|:---------|
+| **Critical** | Non-optional, internal standards | `MUST USE when [CONDITION]` | execution-core, software-engineering, validate-toolkit |
+| **Advisory** | Recommended but situational | `SHOULD USE when [CONDITION]` | scaffold-component, deep-analysis, toolkit-registry |
+| **Direct** | Primary entry point, user-facing | `USE when [CONDITION]` | prompt-engineering, context-engineering, audit-security |
+| **Proactive** | Intent-assertive discovery | `PROACTIVELY USE when [CONDITION]` | builder-core (primary orchestration) |
+| **Role-Based** | Agent persona descriptions | `SHOULD USE when [ACTION] [CONTEXT]` | director (ORCHESTRATING), designer (designing) |
+| **Template** | Parametric descriptions | `{Action} + {Trigger} + {Purpose}` | Standard skill templates |
 
 **AskUserQuestion in Skills:** Use at the **beginning of tasks** to gather requirements. Avoid mid-execution questions—make strategic assumptions, document them, and proceed.
 
@@ -719,8 +724,8 @@ disable-model-invocation: false        # true = user wizard (model doesn't execu
 </forbidden_pattern>
 
 <forbidden_pattern>
-**Buried Trigger:** Text before "USE when"
-**Fix:** "USE when" must be the FIRST sentence
+**Buried Trigger:** Text before modal+USE pattern
+**Fix:** "MUST/SHOULD/PROACTIVELY USE when" must be the FIRST sentence (except agent role-based descriptions)
 </forbidden_pattern>
 
 <forbidden_pattern>

@@ -10,9 +10,9 @@ allowed-tools: [Task, Read, Write, Bash(ls:*), Bash(cat:*), Bash(grep:*), Glob, 
 
 ## Important: User-Facing Entry Point
 
-**For user-invoked plan execution, use `/execute-plan` skill.**
+**For user-invoked plan execution, use `builder-core` skill.**
 
-This skill provides the execution protocols and standards. The execute-plan skill is the primary user-facing interface that wraps this functionality with user intent clarification.
+This skill provides the internal execution protocols and standards. The builder-core skill is the primary user-facing interface that wraps this functionality.
 
 ## 1. Context Discovery (MANDATORY)
 
@@ -23,7 +23,7 @@ You MUST locate and read:
 - `ADR.md` (architecture decisions, if exists)
 
 **Discovery Strategy:**
-- Follow `project-strategy` standards for file location.
+- Follow `builder-core` standards for file location.
 - Use Glob tool to locate PLAN.md files if needed.
 
 **If any required file is missing:** Log error and abort.
@@ -65,7 +65,7 @@ Before proceeding with execution, you MUST check for interruption state:
 
 ## 2. Plan Validation
 
-**Validate the injected plan against project-strategy standards:**
+**Validate the injected plan against builder-core standards:**
 - YAML frontmatter exists (phase, type: execute, status)
 - Objective section is clear
 - Context section lists required reading
@@ -101,12 +101,17 @@ Each `worker` agent receives natural language instructions with:
 
 ## 5. Quality Assurance (CRITICAL)
 
-**After ANY subagent reports success, you MUST perform Objective Audit:**
+**After ANY subagent reports success, verify completion:**
 
-1. **READ the files they modified** - Do NOT trust their report (Read-Back Protocol)
-2. **Verify against the Plan's "Verify" criteria**
+1. **Trust tool return codes** - Subagent `{ success: true }` is sufficient for completion
+2. **Run high-fidelity validation** - Execute plan's "Verify" command (compiler, linter, tests)
 3. **Update PROJECT STATE** - Update PLAN.md status and ROADMAP.md
 4. **Log verification results**
+
+**Read-Back Protocol (ONLY when required):**
+- Tool returned an error or failed status
+- High-fidelity validation (compiler, type checker) is needed
+- Visual inspection is necessary for UI/generative output
 
 **If verification FAILS:** Respawn the worker with refined instructions (Correction Loop).
 
@@ -114,4 +119,4 @@ Each `worker` agent receives natural language instructions with:
 
 **When all tasks pass verification:**
 1. Update PLAN.md status: `status: complete`
-2. Create SUMMARY.md using `project-strategy/assets/templates/summary.md`
+2. Create SUMMARY.md using `builder-core/references/templates/summary.md`

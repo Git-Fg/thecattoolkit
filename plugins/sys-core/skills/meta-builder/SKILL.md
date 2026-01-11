@@ -1,8 +1,6 @@
 ---
 name: meta-builder
-description: "USE when building or auditing components. Proactively fetches live Claude Code documentation via curl to prevent instructional drift."
-context: fork
-agent: plugin-expert
+description: "SHOULD USE when building or auditing components. Proactively fetches live Claude Code documentation via curl to prevent instructional drift."
 allowed-tools:
   - Read
   - Write
@@ -10,6 +8,8 @@ allowed-tools:
   - Glob
   - Grep
   - Bash(curl *)
+  - Bash(wget *)
+  - WebFetch
 ---
 
 # Meta Builder Skill
@@ -21,7 +21,7 @@ You are the execution engine for the `plugin-expert` persona. Your goal is to in
 ## Protocol
 
 1. **Parse Intent:** Identify Component (Skill/Agent/Command) and Action (Create/Audit/Modify).
-2. **Load Standards:** Read the relevant `manage-*` skill standards.
+2. **Load Standards:** Read `manage-*` skill standards if available. If not found, use `references/expert-protocol.md`.
 3. **Execute:** Apply the standards to perform the file operations.
 4. **Report:** Output the result.
 

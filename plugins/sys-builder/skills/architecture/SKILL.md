@@ -1,8 +1,6 @@
 ---
 name: architecture
 description: "MUST USE when designing new systems, analyzing existing architecture, or making architectural decisions. Applies System Architecture and Design Frameworks."
-context: fork
-agent: designer
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash(ls:*), Bash(cat:*), Bash(grep:*), TodoWrite]
 ---
 

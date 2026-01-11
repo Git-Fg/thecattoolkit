@@ -52,7 +52,7 @@ validate_skill() {
   local skill_dir skill_dirname
   skill_dir=$(dirname "$file")
   skill_dirname=$(basename "$skill_dir")
-  
+
   local name
   name=$(get_yaml_value "$fm" "name")
   if [[ -z "$name" ]]; then
@@ -64,27 +64,31 @@ validate_skill() {
   elif [[ "$name" != "$skill_dirname" ]]; then
     log_warn "$file: name '$name' should match directory name '$skill_dirname'"
   fi
-  
+
   if ! has_yaml_key "$fm" "description"; then
     log_error "$file: Missing required field 'description'"
   else
     if echo "$fm" | grep -qE "description: [|>]"; then
       log_error "$file: description MUST be single-line (no '|' or '>' multi-line syntax)"
     fi
-    
+
     local desc
     desc=$(get_yaml_value "$fm" "description")
     if [[ ${#desc} -gt 1024 ]]; then
       log_warn "$file: description exceeds 1024 characters"
     fi
-    
+
     local first_line
     first_line=$(echo "$desc" | head -1)
-    if [[ -n "$first_line" ]] && [[ ! "$first_line" =~ ^[\"\']?(USE|MUST|SHOULD) ]]; then
-      log_info "$file: Consider starting description with trigger (USE when...) for better discovery"
+    # Normalize: remove quotes and uppercase for pattern matching
+    local normalized
+    normalized=$(echo "$first_line" | sed "s/^[\"']//" | tr '[:lower:]' '[:upper:]')
+
+    if [[ -n "$first_line" ]] && [[ ! "$normalized" =~ ^PROACTIVELY\ USE\ WHEN ]] && [[ ! "$normalized" =~ ^MUST\ USE\ WHEN ]] && [[ ! "$normalized" =~ ^SHOULD\ USE\ WHEN ]] && [[ ! "$normalized" =~ ^USE\ WHEN ]]; then
+      log_error "$file: Description MUST start with trigger pattern: PROACTIVELY USE when, MUST USE when, SHOULD USE when, or USE when (got: $first_line)"
     fi
   fi
-  
+
   if has_yaml_key "$fm" "context"; then
     local context
     context=$(get_yaml_value "$fm" "context")
@@ -92,13 +96,13 @@ validate_skill() {
       log_error "$file: context must be 'fork' if specified (got: '$context')"
     fi
   fi
-  
+
   if has_yaml_key "$fm" "agent"; then
     if ! has_yaml_key "$fm" "context"; then
       log_warn "$file: 'agent' field only valid with 'context: fork'"
     fi
   fi
-  
+
   if has_yaml_key "$fm" "user-invocable"; then
     local user_inv
     user_inv=$(get_yaml_value "$fm" "user-invocable")
@@ -106,7 +110,7 @@ validate_skill() {
       log_warn "$file: Redundant default 'user-invocable: true' (defaults to true, omit this)"
     fi
   fi
-  
+
   if has_yaml_key "$fm" "allowed-tools"; then
     local tools
     tools=$(get_yaml_value "$fm" "allowed-tools")
@@ -116,7 +120,7 @@ validate_skill() {
       fi
     fi
   fi
-  
+
   if has_yaml_key "$fm" "hooks"; then
     local hooks_content
     hooks_content=$(awk '/^hooks:/{f=1;next} /^[a-z-]+:/{if(f)f=0} f' "$file")
@@ -130,11 +134,24 @@ validate_command() {
   local file="$1"
   local fm
   fm=$(extract_frontmatter "$file")
-  
+
   if ! has_yaml_key "$fm" "description"; then
     log_error "$file: Missing required field 'description'"
+  else
+    local desc
+    desc=$(get_yaml_value "$fm" "description")
+
+    local first_line
+    first_line=$(echo "$desc" | head -1)
+    # Normalize: remove quotes and uppercase for pattern matching
+    local normalized
+    normalized=$(echo "$first_line" | sed "s/^[\"']//" | tr '[:lower:]' '[:upper:]')
+
+    if [[ -n "$first_line" ]] && [[ ! "$normalized" =~ ^PROACTIVELY\ USE\ WHEN ]] && [[ ! "$normalized" =~ ^MUST\ USE\ WHEN ]] && [[ ! "$normalized" =~ ^SHOULD\ USE\ WHEN ]] && [[ ! "$normalized" =~ ^USE\ WHEN ]]; then
+      log_error "$file: Description MUST start with trigger pattern: PROACTIVELY USE when, MUST USE when, SHOULD USE when, or USE when (got: $first_line)"
+    fi
   fi
-  
+
   if has_yaml_key "$fm" "model"; then
     log_warn "$file: Hardcoded 'model' field (keep components generalistic, omit model)"
   fi
@@ -146,7 +163,7 @@ validate_agent() {
   fm=$(extract_frontmatter "$file")
   local agent_name
   agent_name=$(basename "$file" .md)
-  
+
   if has_yaml_key "$fm" "name"; then
     local name
     name=$(get_yaml_value "$fm" "name")
@@ -154,11 +171,24 @@ validate_agent() {
       log_warn "$file: name '$name' should match filename '$agent_name'"
     fi
   fi
-  
+
   if ! has_yaml_key "$fm" "description"; then
     log_error "$file: Missing required field 'description'"
+  else
+    local desc
+    desc=$(get_yaml_value "$fm" "description")
+
+    local first_line
+    first_line=$(echo "$desc" | head -1)
+    # Normalize: remove quotes and uppercase for pattern matching
+    local normalized
+    normalized=$(echo "$first_line" | sed "s/^[\"']//" | tr '[:lower:]' '[:upper:]')
+
+    if [[ -n "$first_line" ]] && [[ ! "$normalized" =~ ^PROACTIVELY\ USE\ WHEN ]] && [[ ! "$normalized" =~ ^MUST\ USE\ WHEN ]] && [[ ! "$normalized" =~ ^SHOULD\ USE\ WHEN ]] && [[ ! "$normalized" =~ ^USE\ WHEN ]]; then
+      log_error "$file: Description MUST start with trigger pattern: PROACTIVELY USE when, MUST USE when, SHOULD USE when, or USE when (got: $first_line)"
+    fi
   fi
-  
+
   if has_yaml_key "$fm" "model"; then
     log_warn "$file: Hardcoded 'model' field (keep components generalistic, omit model)"
   fi

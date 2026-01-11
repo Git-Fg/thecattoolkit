@@ -1,6 +1,6 @@
 ---
 name: deep-analysis
-description: "USE when performing strategic analysis, comprehensive problem analysis, or systematic exploration. Applies frameworks (First Principles, Inversion, Pareto, 5-Whys)."
+description: "SHOULD USE when performing deep analysis, strategic analysis, or systematic exploration requiring structured thinking frameworks. Examples: First Principles, Inversion, Pareto, 5-Whys, SWOT, Second-Order Thinking."
 context: fork
 agent: strategist
 allowed-tools: [Read, Write, Edit, Glob, Grep]

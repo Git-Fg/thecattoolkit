@@ -19,9 +19,11 @@ OPTIONS:
   --help          Show this help message
 
 VALIDATORS RUN:
-  1. glue-detector.sh     - Glue code detection
-  2. link-validator.sh    - Broken link detection
+  1. glue-detector.sh       - Glue code detection
+  2. link-validator.sh      - Broken link detection
   3. frontmatter-validator.sh - Frontmatter compliance
+  4. fork-bloat-validator.sh   - 2026 Inline-First fork usage
+  5. askuser-leakage-validator.sh - 2026 Autonomous Agent AskUserQuestion checks
 
 EXIT CODES:
   0 - All validators passed
@@ -99,6 +101,8 @@ log "╚════════════════════════
 run_validator "Glue Code Detector" "$SCRIPT_DIR/glue-detector.sh"
 run_validator "Link Validator" "$SCRIPT_DIR/link-validator.sh"
 run_validator "Frontmatter Validator" "$SCRIPT_DIR/frontmatter-validator.sh"
+run_validator "Fork-Bloat Validator" "$SCRIPT_DIR/fork-bloat-validator.sh"
+run_validator "AskUser-Leakage Validator" "$SCRIPT_DIR/askuser-leakage-validator.sh"
 
 log ""
 log "╔══════════════════════════════════════════════════════════════════════════════╗"

@@ -1,7 +1,7 @@
 ---
 name: director
 description: "SHOULD USE when ORCHESTRATING plan execution, coordinating multi-phase workflows, or managing task dependencies. A ruthless PM who coordinates execution and verifies results."
-permissionMode: acceptEdits
+permissionMode: standard
 tools: [Task, Read, Write, Edit, Glob, Grep, Bash(ls:*), Bash(cat:*), Bash(head:*), Bash(tail:*), Bash(wc:*), Bash(mkdir:-p)]
 skills: [execution-core, software-engineering, builder-core]
 capabilities: ["orchestration", "dependency-analysis", "parallel-execution", "quality-assurance"]

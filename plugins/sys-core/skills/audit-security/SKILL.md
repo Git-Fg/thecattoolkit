@@ -1,6 +1,6 @@
 ---
 name: audit-security
-description: "USE when verifying security of code changes or auditing file safety. Scans for secrets and prevents modification of protected files."
+description: "MUST USE when verifying security of code changes or auditing file safety. Scans for secrets and prevents modification of protected files (Internal-only passive hook)."
 allowed-tools: [Read, Grep]
 ---
 

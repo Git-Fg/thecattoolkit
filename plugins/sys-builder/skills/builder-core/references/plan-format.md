@@ -19,7 +19,7 @@ A plan is Claude-executable when Claude can read the PLAN.md and immediately sta
 If Claude has to guess, interpret, or make assumptions - the task is too vague.
 
 ## Prompt Structure
-**Template:** `assets/templates/phase-plan.md`
+**Template:** `references/templates/phase-plan.md`
 
 ## 3. Plan Components
 
@@ -41,7 +41,7 @@ Every plan MUST start with specific metadata.
 - **Outcome**: Verifiable definition of done
 
 ### Task List
-**Format:** `assets/templates/phase-plan.md` (See Tasks section), you can omit this field.
+**Format:** `references/templates/phase-plan.md` (See Tasks section), you can omit this field.
 
 ### Field: Action
 
@@ -83,7 +83,7 @@ All tasks use a single format. Agents execute autonomously in Uninterrupted Flow
 
 ### Task Format
 
-See `assets/templates/phase-plan.md` for the exact task format.
+See `references/templates/phase-plan.md` for the exact task format.
 
 ### Self-Verification Points
 

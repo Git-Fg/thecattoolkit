@@ -1,7 +1,7 @@
 ---
 name: scaffold-component
-description: "USE when generating new plugin components (skills, agents, commands). Scaffolds with 2026 Universal Agentic Runtime standards, frontmatter, and templates."
-
+description: "SHOULD USE when generating new plugin components (skills, agents, commands). Scaffolds with 2026 Universal Agentic Runtime standards, frontmatter, and templates."
+context: fork
 agent: plugin-expert
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash(mkdir:-p), Bash(ls:*), Bash(cat:*), Bash(find:*)]
 ---

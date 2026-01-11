@@ -1,6 +1,6 @@
 ---
 name: validate-toolkit
-description: USE when you need to comprehensively test and validate a Claude Code plugin or marketplace. Performs deep validation of logic, effectiveness, and interactivity by executing tests proportional to the marketplace's complexity (more components = more complex test cases). Always executes in an isolated directory.
+description: "MUST USE when comprehensively testing and validating a Claude Code plugin or marketplace. Performs deep validation of logic, effectiveness, and interactivity by executing tests proportional to marketplace complexity (more components = more complex test cases). NOTE: Uses 'context: fork' for strict isolation in test directory."
 allowed-tools: [Read, Bash]
 model: sonnet
 context: fork
