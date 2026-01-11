@@ -1,9 +1,17 @@
 {
   "name": "sys-multimodal",
-  "version": "1.0.0",
-  "description": "MEDIA & MULTIMODAL DOMAIN - Advanced tools for video editing, media processing, multimodal AI, and visual content creation",
+  "version": "1.0.1",
+  "description": "MEDIA & MULTIMODAL DOMAIN - Advanced tools for video editing, media processing, multimodal AI, visual content creation, and data visualization",
   "license": "MIT",
   "author": {
     "name": "Git-Fg"
-  }
+  },
+  "keywords": [
+    "multimodal",
+    "video",
+    "visual",
+    "canvas",
+    "data-visualization",
+    "storytelling"
+  ]
 }

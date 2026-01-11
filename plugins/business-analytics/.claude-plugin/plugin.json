@@ -1,9 +1,10 @@
 {
     "name": "business-analytics",
-    "description": "RESEARCH & KNOWLEDGE DOMAIN (Business Intelligence) - Specialized tools for data visualization, business analytics, data storytelling, and business intelligence",
+    "description": "DEPRECATED - This plugin has been merged into sys-multimodal",
     "version": "1.0.0",
     "license": "MIT",
     "author": {
         "name": "Git-Fg"
-    }
+    },
+    "deprecated": true
 }
