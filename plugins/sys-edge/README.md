@@ -6,9 +6,9 @@
 
 This plugin follows 2026 Universal Agentic Runtime standards:
 
-- **[Toolkit Registry Standards](sys-core/skills/toolkit-registry/SKILL.md)** - Component management
-- **[Execution Core](sys-builder/skills/execution-core/SKILL.md)** - Behavioral protocols
-- **[Security Standards](sys-core/skills/audit-security/SKILL.md)** - Security patterns
+- **[Toolkit Registry Standards](../sys-core/skills/toolkit-registry/SKILL.md)** - Component management
+- **[Execution Core](../sys-builder/skills/execution-core/SKILL.md)** - Behavioral protocols
+- **[Security Standards](../sys-core/skills/audit-security/SKILL.md)** - Security patterns
 
 For component creation, use:
 - `use sys-core` → `toolkit-registry` skill

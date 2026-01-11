@@ -101,6 +101,89 @@
    - Check for regressions
    - Add regression test
 
+## Testing Strategy
+
+### Purpose
+Create a robust test suite following the Testing Pyramid.
+
+### Process
+
+#### Step 1: Unit Tests (70%)
+Focus on pure functions and business logic.
+- Mock all external dependencies (DB, Network).
+- Cover Happy Path + 2 Edge Cases + 1 Error State.
+
+#### Step 2: Integration Tests (20%)
+Test the interaction between modules (e.g., API -> DB).
+- Use real database (test instance).
+- Mock only 3rd party APIs (Stripe, Twilio).
+
+#### Step 3: E2E Tests (10%)
+Critical user journeys only.
+- Login -> Checkout -> Payment.
+
+### Success Criteria
+- [ ] Tests are deterministic (no flake).
+- [ ] Tests run fast (unit tests < 5ms).
+- [ ] Failure messages are descriptive.
+
+## Code Review
+
+### Purpose
+Act as a Senior Engineer reviewing a Junior Engineer's PR. Focus on Logic, Security, and Maintainability.
+
+### Review Checklist
+
+#### 1. Correctness
+- [ ] Does the logic handle edge cases (null, 0, empty array)?
+- [ ] Are error states handled (try/catch, promises)?
+
+#### 2. Security
+- [ ] No hardcoded secrets?
+- [ ] Inputs validated/sanitized?
+- [ ] Auth checks on sensitive endpoints?
+
+#### 3. Performance
+- [ ] No DB queries inside loops?
+- [ ] Large datasets paginated?
+- [ ] Heavy computations cached?
+
+#### 4. Maintainability
+- [ ] Variables named for intent (`userList` vs `data`)?
+- [ ] Functions do one thing?
+- [ ] No magic numbers?
+
+### Process
+
+#### Step 1: Gather Context
+```bash
+git diff --staged  # or git diff HEAD~1
+```
+
+#### Step 2: The "Blast Radius" Check
+Before reviewing lines, check imports and usages.
+```bash
+grep -r "ChangedFunctionName" .
+```
+
+#### Step 3: Analysis
+Review the changes against the checklist:
+1. **Correctness**: Does it actually solve the problem?
+2. **Security**: Are inputs sanitized? Auth checks present?
+3. **Performance**: Any N+1 queries? Loop inefficiencies?
+4. **Style**: Variable naming, folder structure.
+
+#### Step 4: Report Findings
+Group findings by severity:
+- **[CRITICAL]**: Must fix immediately (Bug/Security).
+- **[WARNING]**: Strong recommendation (Tech debt).
+- **[NIT]**: Style/Preference.
+
+### Success Criteria
+- [ ] Report is categorized by severity.
+- [ ] Every finding includes a specific file:line reference.
+- [ ] Every critical finding suggests a concrete fix.
+
 ## Security Checklist (OWASP Top 10)
 
 ### A01:2021 - Broken Access Control

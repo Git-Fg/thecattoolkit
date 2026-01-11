@@ -10,12 +10,13 @@ Plugin marketplace for **The Cat Toolkit** - Vibecoding plugins for autonomous A
 
 | Plugin | Purpose |
 |--------|---------|
-| **reason** | Strategic thinking frameworks (first-principles, SWOT, Pareto, 5-whys) |
-| **guide** | Prompt engineering and design templates |
-| **execute** | File modifications, project strategy, software engineering protocols |
-| **verify** | Validation hooks (security, type-checking, protected files) |
-| **persist** | Session state management and context engineering |
-| **bootstrap** | System initialization, healing, and plugin management |
+| **sys-cognition** | Brain layer for thinking frameworks, prompt engineering, and context management |
+| **sys-meta** | Meta-build tools for plugin creation, auditing, and maintenance |
+| **sys-builder** | File modifications, project strategy, and software engineering protocols |
+| **sys-core** | Infrastructure and Safety layer for plugin management, security auditing, and toolkit maintenance |
+| **sys-edge** | Edge AI management, offline sync, and mobile optimization |
+| **sys-multimodal** | Multimodal understanding and processing capabilities |
+| **sys-research** | Research tools and documentation analysis |
 
 ---
 
@@ -25,11 +26,11 @@ Load plugins using the `--plugin-dir` flag:
 
 ```bash
 # Load individual plugins
-claude --plugin-dir ./plugins/execute
-claude --plugin-dir ./plugins/reason
+claude --plugin-dir ./plugins/sys-builder
+claude --plugin-dir ./plugins/sys-cognition
 
 # Load multiple plugins
-claude --plugin-dir ./plugins/execute --plugin-dir ./plugins/reason --plugin-dir ./plugins/verify
+claude --plugin-dir ./plugins/sys-builder --plugin-dir ./plugins/sys-cognition --plugin-dir ./plugins/sys-core
 ```
 
 ---

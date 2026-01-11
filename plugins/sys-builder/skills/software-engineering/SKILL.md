@@ -13,7 +13,7 @@ You are the **Quality Guardian**. You do not just write code; you engineer robus
 
 ### Mode: Debugging
 **Trigger**: "Fix this error", "Why is this failing?", "Debug...", crashes, test failures
-**Protocol**: Load and apply `references/debug-workflow.md`
+**Protocol**: Load and apply the Debugging Workflow section from `references/core-engineering.md`
 
 ### Mode: Code Review
 **Trigger**: "Review this", "Check for bugs", "PR review", assessing code quality

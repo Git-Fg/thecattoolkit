@@ -1,8 +1,6 @@
 ---
 name: meta-builder
 description: "USE when building, validating, or auditing Agent Skills according to the official Agent Skills specification from agentskills.io. Creates compliant SKILL.md files with proper frontmatter, implements progressive disclosure, and validates against the open standard format."
-context: fork
-model: opus
 allowed-tools:
   - Read
   - Write
@@ -187,7 +185,7 @@ description: "Helps with PDFs."
 
 Use relative paths from skill root:
 ```markdown
-See [the reference guide](references/REFERENCE.md) for details.
+See the official [Agent Skills specification](https://agentskills.io/) for details.
 
 Run the extraction script:
 scripts/extract.py

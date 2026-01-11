@@ -1,6 +1,7 @@
 ---
-description: "USE when running comprehensive security audits on codebases, scanning for vulnerabilities, exposed secrets, and OWASP violations."
-allowed-tools: [Skill(security-auditor)]
+description: "Shortcut: Use the security-auditor agent to scan for vulnerabilities."
+allowed-tools: [Skill(audit-security)]
+disable-model-invocation: true
 ---
 
-Invoke the security-auditor skill to scan the codebase for vulnerabilities and secrets.
+Invoke the `audit-security` skill to perform a comprehensive security audit.

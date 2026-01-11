@@ -15,13 +15,14 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash(mkdir:-p), Bash(ls:*), Bash(
 ### 1. Parse Component Specification
 
 **Extract from user input:**
-- **Component Type**: skill, agent, or command
+- **Component Type**: skill (default 80%), agent, or command
 - **Component Name**: lowercase-with-hyphens (max 64 chars)
 - **Language/Framework**: python, typescript, javascript, etc.
 - **Complexity Level**: minimal, standard, or complex
 - **Special Requirements**: hooks, allowed-tools, specific templates
 
 **Default Values (when unspecified):**
+- Type: **Skill** (The 80% Rule)
 - Location: project-level (`.claude/`)
 - Language: based on project context
 - Complexity: standard
@@ -31,27 +32,27 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash(mkdir:-p), Bash(ls:*), Bash(
 
 **Generate compliant components following:**
 
-**For Skills:**
+**For Skills (The Knowledge Base):**
 - SKILL.md with proper frontmatter (name, description, allowed-tools)
-- Description following Discovery Tiering Matrix
-- context: fork for isolated execution
-- agent binding when appropriate
+- Description following Discovery Tiering Matrix ("USE when...")
+- **Recommendation:** Suggest generating a companion **Command Shortcut** (`commands/name.md`) for easier invocation according to the 2026 Hybrid Standard.
 - Directory structure: skill-name/SKILL.md (+ scripts/, references/, assets/ if needed)
 
-**For Agents:**
+**For Commands (The Shortcut):**
+- Markdown file with YAML frontmatter
+- **Shortcut Pattern:** If wrapping a skill, set `allowed-tools: [Skill(name)]` and `disable-model-invocation: true`.
+- description: clear purpose with natural language triggers
+- $ARGUMENTS placeholder for user input
+- argument-hint: UI documentation
+- allowed-tools: safety restrictions
+
+**For Agents (The Specialist):**
 - Markdown file with YAML frontmatter
 - name: lowercase-with-hyphens
 - description: role definition with "MUST USE when" trigger
 - tools: explicit whitelist (never omit)
 - skills: auto-load relevant skills
 - model: omit unless specified (defaults to configured subagent model)
-
-**For Commands:**
-- Markdown file with YAML frontmatter
-- description: clear purpose with natural language triggers
-- $ARGUMENTS placeholder for user input
-- argument-hint: UI documentation
-- allowed-tools: safety restrictions
 
 ### 3. Template Selection Logic
 

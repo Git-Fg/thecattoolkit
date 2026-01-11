@@ -1,0 +1,9 @@
+{
+    "name": "sys-research",
+    "description": "System Research - Deep research, knowledge retrieval, and experimental analysis capabilities",
+    "version": "1.0.2",
+    "license": "MIT",
+    "author": {
+        "name": "Git-Fg"
+    }
+}

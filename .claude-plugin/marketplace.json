@@ -50,6 +50,11 @@
             "name": "sys-multimodal",
             "source": "./plugins/sys-multimodal",
             "strict": true
+        },
+        {
+            "name": "sys-research",
+            "source": "./plugins/sys-research",
+            "strict": true
         }
     ]
 }

@@ -1,0 +1,22 @@
+{
+    "mcpServers": {
+        "deepwiki": {
+            "url": "https://mcp.deepwiki.com/mcp",
+            "type": "http"
+        },
+        "duckduckgo": {
+            "command": "uvx",
+            "args": [
+                "duckduckgo-mcp-server"
+            ],
+            "env": {}
+        },
+        "context7": {
+            "url": "https://mcp.context7.com/mcp",
+            "type": "http",
+            "headers": {
+                "CONTEXT7_API_KEY": "${CONTEXT7_API_KEY}"
+            }
+        }
+    }
+}

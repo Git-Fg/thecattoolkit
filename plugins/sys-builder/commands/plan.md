@@ -1,7 +1,7 @@
 ---
-description: "USE when initializing new project plans, creating project briefs, roadmaps, and detailed implementation plans."
-argument-hint: "What are we building?"
+description: "Shortcut: Initialize or update the project plan."
 allowed-tools: [Skill(builder-core)]
+disable-model-invocation: true
 ---
 
-Use the builder-core skill to initialize a Standard Plan for: $ARGUMENTS
+Invoke the `builder-core` skill to initialize or update the project plan.

@@ -13,35 +13,51 @@ You are an **orchestration architect** specializing in the Cat Toolkit framework
 
 ---
 
-## The Unified 2026 Primitive Matrix
+## The Unified 2026 Hybrid Runtime Standard
 
-> **Core Thesis:** Modern Claude Code orchestration is about **Cost & Logic**—choosing the primitive that minimizes **Context RAM** bloat while maximizing task completion.
+> **Core Thesis:** All primitives (Skills, Commands, Agents) are **Hybrid**—invocable by both Model (semantic intent) and User (manual trigger). The structural placement determines the "RAM Cost" and "Logic Fidelity".
 
-| Primitive | Prompt Cost | Primary Invoke | Context | Best Use Case |
-|:---|:---:|:---|:---|:---|
-| **Skill (Inline)** | **1** | **Semantic** (or `/`) | Main | **Expertise**: Teaching Claude a new "Standard" (TDD, Security Audit) |
-| **Command** | **1** | **Manual** (or Model) | Main | **Workflow**: A deterministic macro to sequence 2+ Skills |
-| **Skill (Fork)** | **3** | **Semantic** (or `/`) | Isolated | **Volume**: Processing massive files (>10) without "Context Bloat" |
-| **Agent (Task)** | **2×N** | **Direct** (via `@`) | Isolated | **Parallelism**: Running job A while job B happens in main chat (N = parallelism) |
+### The 80% Golden Rule
+
+> **80% of capabilities achieve peak efficiency with a single, well-structured Skill.**
+
+A **Skill** acts as a **Knowledge Base** (passive context) that enhances the model's native reasoning for a specific domain. It is the fundamental building block of the runtime.
+
+### The Hybrid Primitive Matrix
+
+| Primitive | RAM Cost | Logic Fidelity | Primary Role | Implementation |
+|:---|:---:|:---:|:---|:---|
+| **Skill (Inline)** | **1** | **High** | **Knowledge Base** | `skills/*/SKILL.md` (Default 80%) |
+| **Command** | **0** | **Specific** | **Shortcut / Macro** | `commands/*.md` (Points to Skill) |
+| **Agent (Task)** | **2×N** | **Isolated** | **Shared-Nothing** | `agents/*.md` (Parallel/Background) |
+| **Skill (Fork)** | **3** | **Isolated** | **Volume Processing** | `context: fork` (Massive files) |
 
 ---
 
-### Primitive Strengths & Weaknesses
+### Primitive Selection Logic (Updated)
 
-#### Skill (Knowledge Injection)
-- **Strength:** Semantic Discovery—Claude triggers it because the `description` matches your intent
-- **Weakness:** If `context: fork`, you lose ephemeral RAM of last 2-3 turns unless passed explicitly
-- **2026 Rule:** Default to `inline` for everything. Only use `fork` for "Large Scale Reconnaissance"
+#### 1. Skill (The Default - 80%)
+*   **Role:** Passive Knowledge Injection.
+*   **Trigger:** Hybrid.
+    *   **Model:** Semantically discovers via `description` ("Modal + USE when").
+    *   **User:** **ALWAYS Invocable** via `/` menu (unless explicitly set `user-invocable: false`).
+*   **Cost:** 1 Prompt (Inline).
+*   **Best For:** Standard engineering tasks, audits, refactors, learning new patterns.
 
-#### Command (Workflow Macros & Shortcuts)
-- **Strength:** Determinism & Efficiency—Commands cost **0 tokens** to invoke (unlike natural language).
-- **Use Case:** Creating shortcuts (aliases) for frequent skills (e.g., `/think` → `thinking-frameworks`) or orchestrating complex workflows.
-- **2026 Rule:** Embrace Commands for frequently used tools. They provide a precise, zero-cost entry point compared to semantic routing.
+#### 2. Command (The Shortcut)
+*   **Role:** Deterministic Macro or Zero-Token Shortcut.
+*   **Trigger:** Manual (User).
+*   **Cost:** **0 Tokens** (until invoked).
+*   **Pattern:** **Command wrapping Skill**.
+    *   Create a command that simply points to a Skill via `allowed-tools: [Skill(builder-core)]`.
+    *   This forces the model to "Global Orientation" on that specific skill without context pollution until the moment of need.
+*   **Best For:** Repetitive workflows (`/audit`, `/plan`), complex macros, or "Wizard" style interactions.
 
-#### Agent (Delegated Specialist)
-- **Strength:** State-in-Files Isolation—useful when you want an agent to "go away and work" while you keep typing
-- **Weakness:** State Desynchronization—if an agent modifies a file while you edit it, Git conflict or "Dirty State" error
-- **2026 Rule:** Use Agents only for **"Shared-Nothing"** tasks (different directories)
+#### 3. Agent (The Specialist)
+*   **Role:** Distributed Computing.
+*   **Trigger:** Task delegation.
+*   **Cost:** High (2×N).
+*   **Best For:** Parallel processing ("Shared-Nothing"), incompatible context constraints, or background tasks.
 
 ---
 
@@ -49,17 +65,17 @@ You are an **orchestration architect** specializing in the Cat Toolkit framework
 
 To minimize your 5-hour rolling window consumption:
 
-1. **Is it a simple file edit or a standard check?**
-   → **USE INLINE SKILL** (Cost: 1). Uses current "RAM" to make the fix instantly.
+1.  **Can it be done with current context?**
+    → **USE INLINE SKILL** (Cost: 1). Uses current "RAM" to make the fix instantly. **(80% Case)**
 
-2. **Does it require reading >1000 lines of docs/logs?**
-   → **USE FORKED SKILL** (Cost: 3). Keeps the "Noise" out of main implementation context.
+2.  **Is it a frequent workflow or shortcut?**
+    → **USE COMMAND** (Cost: 0). Create a shortcut that wraps the specific Skill.
 
-3. **Do you need to run a 10-minute test suite while you keep coding?**
-   → **USE BACKGROUND AGENT** (Cost: 2×N). Spawn explicitly as a background agent with prompt: "You are a background agent (async) which runs X and waits for Y completion."
+3.  **Does it require reading >10 Files or strict isolation?**
+    → **USE FORKED SKILL** (Cost: 3). Keeps massive distinct context out of main session.
 
-4. **Is it a repetitive, multi-skill sequence (Test → Commit → Push)?**
-   → **USE COMMAND** (Cost: 1). Provides a deterministic shortcut.
+4.  **Do you need true parallelism (Shared-Nothing)?**
+    → **USE BACKGROUND AGENT** (Cost: 2×N). Spawn agents to work on independent directories.
 
 ---
 
@@ -241,6 +257,35 @@ Guide user through setup. Ask for template preference.
 | **Shortcut / Alias** | `/think` → runs `thinking-frameworks` skill |
 
 > **2026 Rule (Aliases):** Commands are excellent for creating **Shortcuts** (e.g., `/think`) to specific skills. This avoids semantic ambiguity and ensures zero-token invocation.
+
+**2026 Doctrine: Zero-Token Shortcuts**
+
+> **Zero-Token Shortcuts:** Use Commands as deterministic entry points for humans. A command should ideally whitelist a single `Skill(name)` in `allowed-tools`. This restricts the AI's "RAM" to a specific protocol, ensuring high-fidelity execution at a cost of 1 (Inline Skill) rather than 2×N (Subagent).
+
+**Command-Skill Pattern:**
+```yaml
+# commands/plan.md
+---
+description: "Playbook: Initialize a new project plan"
+allowed-tools: [Skill(builder-core)]
+disable-model-invocation: true
+---
+
+# Plan Initialization
+Invoke the builder-core skill to initialize a Standard Plan.
+```
+
+**Skill Semantics:**
+```yaml
+# skills/builder-core/SKILL.md
+---
+name: builder-core
+user-invocable: false  # Hidden from menu (has command wrapper)
+description: "PROACTIVELY USE when planning or executing projects..."
+---
+```
+
+**The Golden Rule:** When a Command wraps a Skill, set `user-invocable: false` on the Skill to keep the `/` menu clean while maintaining semantic discovery for the AI.
 
 **Example: Command that Orchestrates Multiple Skills**
 ```markdown
@@ -775,8 +820,12 @@ disable-model-invocation: false        # true = user wizard (model doesn't execu
 - **Move not Delete**: Use `.attic/` for deprecated code during refactors
 - **Validation**: Run `./scripts/toolkit-lint.sh` after changes
 - **File Paths**: Use relative paths (`assets/templates/doc.md`) or `${CLAUDE_PLUGIN_ROOT}`
-- **Python Execution**: ALWAYS use `uv run` (for local scripts) or `uvx` (for ephemeral tools). NEVER use `python` or `pip` directly.
-- **Python Metadata**: ALL Python scripts MUST include PEP 723 inline metadata to declare dependencies.
+- **Python Standard (Strict)**: 
+    - ALWAYS use `uv run` for executing local scripts (e.g., `uv run scripts/my-script.py`).
+    - ALWAYS use `uvx` for ephemeral tool invocation.
+    - NEVER use `python`, `pip`, `poetry`, or `conda` directly. 
+    - ALL Python scripts MUST include PEP 723 inline metadata to declare their dependencies.
+    - Installation: New dependencies MUST be added via `uv add` to ensure lockfile synchronization.
 
 ---
 

@@ -1,6 +1,7 @@
 ---
 name: builder-core
 description: PROACTIVELY USE when planning or executing projects. Auto-discovers codebase patterns, creates multi-phase plans, and orchestrates parallel agent execution. Primary entry point for all planning and execution workflows.
+user-invocable: false
 allowed-tools: [Read, Write, Edit, Glob, Grep, Task, Bash(mkdir:-p), Bash(ls:*)]
 ---
 

@@ -1,8 +1,6 @@
 ---
 name: edge-ai-management
 description: "USE when managing AI models on mobile/edge devices. Implements lazy loading, quantization strategies, memory pressure handling, and dynamic model management for resource-constrained environments."
-context: fork
-model: sonnet
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 

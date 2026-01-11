@@ -11,9 +11,9 @@
 
 ## Intermediate Results
 {List links to files in the outputs/ directory}
-- [Research Findings](outputs/01-research.md)
-- [Implementation Plan](outputs/02-plan.md)
-- [Final Deliverable](outputs/03-execute.md)
+- Research Findings - Analysis and research findings
+- Implementation Plan - Detailed execution plan
+- Final Deliverable - Completed implementation
 
 ## Success Criteria
 {How will we know this entire chain was successful?}

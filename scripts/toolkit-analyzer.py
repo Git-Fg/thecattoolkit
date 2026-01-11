@@ -13,7 +13,6 @@ Merges strict validation with architectural analysis.
 """
 
 import sys
-import os
 import re
 import json
 import yaml
@@ -48,6 +47,7 @@ ALLOWED_FIELDS = {
     "permissionMode",  # Added for agents
 }
 
+# Built-in core tools
 VALID_TOOLS = [
     "Read",
     "Write",
@@ -59,6 +59,19 @@ VALID_TOOLS = [
     "AskUserQuestion",
     "Skill",
 ]
+
+# Known external/custom tools that are valid (not errors)
+KNOWN_CUSTOM_TOOLS = {
+    "WebFetch",
+    "WebSearch",
+    "TodoWrite",
+    "ExitPlanMode",
+    "EnterPlanMode",
+}
+
+# MCP tools pattern (mcp__plugin_namespace-toolname__)
+# Supports hyphens in namespace and tool names
+MCP_TOOL_PATTERN = re.compile(r"^mcp__plugin_[a-zA-Z0-9_-]+__[a-zA-Z0-9_-]+$")
 
 
 @dataclass
@@ -662,7 +675,16 @@ class ToolkitAnalyzer:
                             # Handle parameterized tools like Bash[python] or Bash(cat)
                             tool_base = re.split(r"[\[\(]", tool_clean)[0]
 
-                            if tool_base not in VALID_TOOLS and "Skill(" not in tool:
+                            # Skip validation for:
+                            # - Skill references (Skill(tool-name))
+                            # - Known custom tools
+                            # - MCP tools
+                            if (
+                                "Skill(" not in tool
+                                and tool_base not in VALID_TOOLS
+                                and tool_base not in KNOWN_CUSTOM_TOOLS
+                                and not MCP_TOOL_PATTERN.match(tool_base)
+                            ):
                                 result.warnings.append(
                                     f"{skill_file}: Unknown tool '{tool_clean}' (base: {tool_base})"
                                 )
@@ -729,17 +751,31 @@ class ToolkitAnalyzer:
                             result.errors.append(f"{md_file}: Broken link -> {link}")
 
                 # Validate backtick paths
+                # Template/documentation files may reference optional files
+                is_template = "templates" in str(md_file) or "assets" in str(md_file)
                 for match in backtick_pattern.finditer(content):
                     path = match.group(0).strip("`")
                     target = skill_root / path
                     if not target.exists():
-                        result.warnings.append(
-                            f"{md_file}: Backtick path not found -> {path}"
-                        )
+                        # Only warn for non-template files
+                        # Template files are documentation and may reference optional files
+                        if not is_template:
+                            result.warnings.append(
+                                f"{md_file}: Backtick path not found -> {path}"
+                            )
+                        else:
+                            result.info.append(
+                                f"{md_file}: Optional reference -> {path}"
+                            )
 
-                # Check for cross-skill references
-                for match in cross_ref_pattern.finditer(content):
-                    result.warnings.append(f"{md_file}: Cross-skill reference found")
+                # Check for cross-skill references (only flag in non-README files)
+                # README files are expected to have cross-skill references for documentation
+                is_readme = md_file.name.lower() in ["readme.md", "readme"]
+                if not is_readme:
+                    for match in cross_ref_pattern.finditer(content):
+                        result.warnings.append(
+                            f"{md_file}: Cross-skill reference found"
+                        )
 
                 # Check @[file] syntax misuse
                 if "@[" in content and "commands" not in str(md_file):
@@ -845,7 +881,18 @@ class ToolkitAnalyzer:
 
                     has_agent = "agent" in frontmatter
 
-                    if not has_task and not has_agent:
+                    # Skills that legitimately need fork context for computational complexity
+                    # (not just agent delegation)
+                    computational_fork_skills = {
+                        "intent-translation",
+                        "multimodal-understanding",
+                    }
+
+                    if (
+                        not has_task
+                        and not has_agent
+                        and skill_name not in computational_fork_skills
+                    ):
                         result.warnings.append(
                             f"{skill_file}: Skill '{skill_name}' has 'context: fork' but no 'Task' tool. "
                             f"2026 Inline-First Rule: Tasks <10 files should use inline execution."
@@ -926,12 +973,38 @@ class ToolkitAnalyzer:
     def generate_reports(self):
         """Generate mermaid diagrams and reports"""
         self.graphs_dir.mkdir(exist_ok=True)
-        self._generate_overview_graph()
-        self._generate_detail_graph()
-        self._generate_dependency_graph()
-        print(f"  ✨ Generated architectural graphs in {self.graphs_dir}")
+        self._generate_consolidated_report()
+        print(
+            f"  ✨ Generated architectural analysis in {self.graphs_dir / 'ANALYSIS.md'}"
+        )
 
-    def _generate_overview_graph(self):
+    def _generate_consolidated_report(self):
+        """Generates a single Markdown report with all graphs."""
+        overview = self._get_overview_graph()
+        detail = self._get_detail_graph()
+        deps = self._get_dependency_graph()
+
+        report_content = [
+            "# Toolkit Architecture Analysis",
+            f"\nGenerated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}",
+            "\n## Plugin Overview",
+            "```mermaid",
+            overview,
+            "```",
+            "\n## Component Detail View",
+            "```mermaid",
+            detail,
+            "```",
+            "\n## Cross-Plugin Dependencies",
+            "```mermaid",
+            deps,
+            "```",
+        ]
+
+        with open(self.graphs_dir / "ANALYSIS.md", "w") as f:
+            f.write("\n".join(report_content))
+
+    def _get_overview_graph(self) -> str:
         content = [
             '%%{init: {"theme": "base", "themeVariables": {"primaryColor": "#ff6b6b"}}}%%',
             "graph TB",
@@ -960,10 +1033,9 @@ class ToolkitAnalyzer:
             }.get(link.link_type, "--->|")
             content.append(f"    {source_id} {style} {target_id}")
 
-        with open(self.graphs_dir / "01-plugin-overview.mmd", "w") as f:
-            f.write("\n".join(content))
+        return "\n".join(content)
 
-    def _generate_detail_graph(self):
+    def _get_detail_graph(self) -> str:
         content = [
             '%%{init: {"theme": "base", "themeVariables": {"primaryColor": "#4fc3f7"}}}%%',
             "graph LR",
@@ -979,10 +1051,9 @@ class ToolkitAnalyzer:
                 content.append(f'        {comp_id.replace(":", "_")}["{label}"]')
             content.append("    end")
 
-        with open(self.graphs_dir / "02-component-detail.mmd", "w") as f:
-            f.write("\n".join(content))
+        return "\n".join(content)
 
-    def _generate_dependency_graph(self):
+    def _get_dependency_graph(self) -> str:
         content = [
             '%%{init: {"theme": "base", "themeVariables": {"primaryColor": "#81c784"}}}%%',
             "graph TB",
@@ -998,8 +1069,7 @@ class ToolkitAnalyzer:
                 )
         content.append("    end")
 
-        with open(self.graphs_dir / "03-dependencies.mmd", "w") as f:
-            f.write("\n".join(content))
+        return "\n".join(content)
 
     def print_summary(self) -> None:
         """Print validation summary"""
@@ -1016,23 +1086,33 @@ class ToolkitAnalyzer:
         else:
             print("❌ Validation issues found")
 
-            # Show errors
-            if self.report.total_errors > 0:
-                print("\n🚨 ERRORS:")
-                for result in self.report.results:
-                    if result.errors:
-                        print(f"\n  {result.name}:")
-                        for error in result.errors:
-                            print(f"    • {error}")
+        # Always show errors if any
+        if self.report.total_errors > 0:
+            print("\n🚨 ERRORS:")
+            for result in self.report.results:
+                if result.errors:
+                    print(f"\n  {result.name}:")
+                    for error in result.errors:
+                        print(f"    • {error}")
 
-            # Show warnings
-            if self.report.total_warnings > 0:
-                print("\n⚠️  WARNINGS:")
-                for result in self.report.results:
-                    if result.warnings:
-                        print(f"\n  {result.name}:")
-                        for warning in result.warnings:
-                            print(f"    • {warning}")
+        # Always show warnings if any
+        if self.report.total_warnings > 0:
+            print("\n⚠️  WARNINGS:")
+            for result in self.report.results:
+                if result.warnings:
+                    print(f"\n  {result.name}:")
+                    for warning in result.warnings:
+                        print(f"    • {warning}")
+
+        # Show info messages if any
+        info_count = sum(len(r.info) for r in self.report.results)
+        if info_count > 0:
+            print("\nℹ️  INFO:")
+            for result in self.report.results:
+                if result.info:
+                    print(f"\n  {result.name}:")
+                    for info in result.info:
+                        print(f"    • {info}")
 
         print()
         print("=" * 70)

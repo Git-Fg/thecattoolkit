@@ -1,8 +1,6 @@
 ---
 name: offline-sync
 description: "USE when implementing offline-first sync for mobile AI applications. Manages encrypted local storage, conflict resolution, incremental sync, and privacy-first data synchronization."
-context: fork
-model: sonnet
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 

@@ -47,7 +47,7 @@ quick_solution()
 
 **Advanced Topics:**
 - Create `references/` subdirectory for detailed documentation
-- Reference files with `[filename.md](references/filename.md)`
+- Reference files with appropriate markdown links
 - Keep SKILL.md under 500 lines
 - Load only relevant reference files based on workflow context
 

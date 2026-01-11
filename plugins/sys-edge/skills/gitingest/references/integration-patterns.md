@@ -206,7 +206,7 @@ def extract_api_endpoints(content: str) -> list:
 
             # Flask/Python patterns
             patterns = [
-                r"@app\.route\(['\"]([^'\"]+)['\"]",
+                r"""@app\.route\(['"]\w+['"])""",
                 r"def \w+\([^)]*\):\s*#\s*([^:]+)",
             ]
 
@@ -331,9 +331,9 @@ class VulnerabilityScanner:
                 r"os\.path\.join\s*\(.*\.\./",
             ],
             'hardcoded_secrets': [
-                r"password\s*=\s*['\"][^'\"]{8,}['\"]",
-                r"api_key\s*=\s*['\"][^'\"]{20,}['\"]",
-                r"secret\s*=\s*['\"][^'\"]{20,}['\"]",
+                r"password\s*=\s*['\"][^\"'\"]{8,}['\"]",
+                r"api_key\s*=\s*['\"][^\"'\"]{20,}['\"]",
+                r"secret\s*=\s*['\"][^\"'\"]{20,}['\"]",
             ],
             'weak_crypto': [
                 r"md5\s*\(",

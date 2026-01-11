@@ -1,8 +1,6 @@
 ---
 name: mobile-optimization
 description: "USE when optimizing AI applications for mobile devices. Implements battery-aware processing, thermal management, adaptive quality settings, and power-efficient inference patterns."
-context: fork
-model: sonnet
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 

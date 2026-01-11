@@ -2,8 +2,6 @@
 name: gitingest
 description: "USE when you need to ingest Git repositories into AI-readable format. Transforms repositories into structured plain-text digests optimized for LLM consumption with CLI and Python package support."
 allowed-tools: [Read, Write, Edit, Bash, Grep]
-context: fork
-model: sonnet
 ---
 
 # GitIngest Protocol

@@ -66,11 +66,15 @@ For common principles, integration patterns, and anti-patterns, see:
 
 **Essential Principles:**
 
-1. **Wrapper Commands are Anti-Patterns:** If a command only delegates to a single skill/agent, delete the command and configure the skill with `user-invocable: true` and `context: fork`.
+1.  **Command Shortcuts are Standard:** A Command that wraps a single Skill (e.g., `allowed-tools: [Skill(name)]`) is a **Recommended Pattern**. It acts as a Zero-Token Shortcut for the user.
 
-2. **Commands Orchestrate Multi-Skill Workflows:** Commands exist to sequence multiple Skills or provide complex delegation patterns.
+2.  **Redundancy Check (The "Glue" Trap):**
+    -   **FLAG**: A Command that *re-implements* the logic of a Skill in its prompt. This is code duplication.
+    -   **FIX**: Delete the prompt logic and replace it with a call to `Skill(name)`.
+    -   **FLAG**: A Command and a Skill with identical descriptions/triggers.
+    -   **FIX**: Differentiate them. Logic lives in Skill ("USE when..."), Shortcut lives in Command ("Shortcut for...").
 
-3. **User-Centric Design:** Commands are convenient shortcuts for human users, not programmatic interfaces.
+3.  **Commands Orchestrate Multi-Skill Workflows:** Commands are also used to sequence multiple Skills (Macro) or provide "Wizard" style interactions.
 
 **Template Selection:**
 
@@ -165,7 +169,7 @@ Ready-to-use canonical patterns:
 |:--------|:----------|:------------|
 | **Vague description** | Won't discover | Add specific purpose with "USE when" |
 | **XML in description** | Violates Law 4 | Natural Language + USE triggers |
-| **Single-skill wrapper commands** | Glue code, wasted quota | Configure skill with `user-invocable: true` |
+| **Logic Duplication** | Code rot, maintenance nightmare | Delegate to Skill via `allowed-tools` |
 | **Missing tool restrictions** | Security risk | Add `allowed-tools` whitelist |
 | **AskUser in worker agents** | Background deadlocks | Remove from worker `tools` whitelist |
 | **Overly complex** | Hard to use | Split into multiple components |

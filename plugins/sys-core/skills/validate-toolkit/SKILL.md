@@ -1,9 +1,7 @@
 ---
 name: validate-toolkit
-description: "MUST USE when comprehensively testing and validating a Claude Code plugin or marketplace. Performs deep validation of logic, effectiveness, and interactivity by executing tests proportional to marketplace complexity (more components = more complex test cases). NOTE: Uses 'context: fork' for strict isolation in test directory."
+description: "MUST USE when comprehensively testing and validating a Claude Code plugin or marketplace. Performs deep validation of logic, effectiveness, and interactivity by executing tests proportional to marketplace complexity (more components = more complex test cases)."
 allowed-tools: [Read, Bash]
-model: sonnet
-context: fork
 ---
 
 # Validate Toolkit - Comprehensive Plugin/Marketplace Testing
@@ -117,6 +115,20 @@ claude --plugin-dir <plugin-path> -p "<natural language task that uses the plugi
 - Security plugin: Test audit scenarios
 - Builder plugin: Test scaffolding scenarios
 - Cognition plugin: Test analysis scenarios
+
+#### Test Suite F: Token Budget Check (CRITICAL)
+
+**Verify Total Metadata Size:**
+Calculation: Sum of all `description` and `argument-hint` fields in the plugin.
+Limit: Must be **< 15,000 characters** (Skill tool safety margin).
+
+```bash
+# Calculate metadata weight
+grep -r "description:" . | awk '{ sum += length($0) } END { print sum }'
+```
+
+**Failure Condition:** > 15,000 characters risk functional truncation in the `Skill` tool.
+**Fix:** Shorten descriptions or consolidate Skills.
 
 ### Phase 4: Results Analysis
 
