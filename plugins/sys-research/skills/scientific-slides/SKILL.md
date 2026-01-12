@@ -83,7 +83,7 @@ See `references/beamer_workflow.md` for documentation.
 - `assets/beamer_template_conference.tex`: 15-minute conference talk
 - `assets/beamer_template_seminar.tex`: 45-minute academic seminar
 - `assets/beamer_template_defense.tex`: Dissertation defense
-- **Design Guide**: `assets/powerpoint_design_guide.md`
+- **Design Guide**: `references/powerpoint_design_guide.md`
 - **Timing**: `assets/timing_guidelines.md`
 
 ## Core Principles

@@ -50,7 +50,7 @@ Use the PPTX skill's html2pptx workflow to create slides that include:
 ## Key Resources
 
 ### Design Guide
-- `assets/powerpoint_design_guide.md`: Complete PowerPoint design guide
+- `references/powerpoint_design_guide.md`: Complete PowerPoint design guide
 
 ### PPTX Skill Scripts
 From `document-skills/pptx/scripts/`:

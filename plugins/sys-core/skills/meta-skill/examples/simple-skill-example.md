@@ -20,7 +20,7 @@ cd csv-validator
 
 ### Step 3: Use Template
 
-Copy from `meta-skill/assets/skill-standard.md`:
+Copy from `meta-skill/references/templates/skill-standard.md`:
 
 ```markdown
 ---
