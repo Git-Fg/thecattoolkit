@@ -61,10 +61,10 @@ pptx.writeFile({ fileName: "presentation.pptx" });
 
 **Workflow**:
 1. Start with template.pptx
-2. Use `../scripts/rearrange.py` to duplicate/reorder slides
-3. Use `../scripts/inventory.py` to extract text
+2. Use `scripts/rearrange.py` to duplicate/reorder slides
+3. Use `scripts/inventory.py` to extract text
 4. Generate replacement text JSON
-5. Use `../scripts/replace.py` to update content
+5. Use `scripts/replace.py` to update content
 6. Validate with thumbnail grids
 
 **Key Scripts**:
@@ -452,10 +452,10 @@ After creating presentation:
 
 ```bash
 # Create thumbnail grid for quick review
-python ../scripts/thumbnail.py presentation.pptx review/thumbnails --cols 4
+python scripts/thumbnail.py presentation.pptx review/thumbnails --cols 4
 
 # Or for individual slides
-python ../scripts/thumbnail.py presentation.pptx review/slide
+python scripts/thumbnail.py presentation.pptx review/slide
 ```
 
 ### Inspection Checklist
@@ -493,24 +493,24 @@ If you have an existing template:
 
 1. **Extract template structure**:
 ```bash
-python ../scripts/inventory.py template.pptx inventory.json
+python scripts/inventory.py template.pptx inventory.json
 ```
 
 2. **Create thumbnail grid**:
 ```bash
-python ../scripts/thumbnail.py template.pptx template_review
+python scripts/thumbnail.py template.pptx template_review
 ```
 
 3. **Analyze layouts** and document which slides to use
 
 4. **Rearrange slides**:
 ```bash
-python ../scripts/rearrange.py template.pptx working.pptx 0,5,5,12,18,22
+python scripts/rearrange.py template.pptx working.pptx 0,5,5,12,18,22
 ```
 
 5. **Replace content**:
 ```bash
-python ../scripts/replace.py working.pptx replacements.json output.pptx
+python scripts/replace.py working.pptx replacements.json output.pptx
 ```
 
 ## Best Practices Summary
