@@ -1,6 +1,6 @@
 ---
 name: python-tools
-description: "USE when managing Python projects, dependencies, virtual environments, linting, or formatting. Covers uv (10-100x faster package manager) and ruff (extremely fast linter/formatter)."
+description: "Covers uv (10-100x faster package manager) and ruff (extremely fast linter/formatter). Use when managing Python projects, dependencies, virtual environments, linting, or formatting."
 user-invocable: false
 allowed-tools: [Bash, Read, Write, Edit]
 ---

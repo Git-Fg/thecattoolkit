@@ -1,7 +1,9 @@
 ---
 name: execution-core
-description: "PROACTIVELY USE when defining behavioral standards for autonomous agents or enforcing Uninterrupted Flow, Self-Verification, Auth-Gates, and Handoff protocols. Internal-only reference for agent behavior."
+description: "Defines behavioral standards for autonomous agents and enforces Uninterrupted Flow, Self-Verification, Auth-Gates, and Handoff protocols. PROACTIVELY Use when defining behavioral standards for autonomous agents or enforcing protocols. Internal-only reference for agent behavior."
+context: fork
 user-invocable: false
+agent: worker
 allowed-tools: Bash, Edit, Read, Write, Glob, Grep
 ---
 

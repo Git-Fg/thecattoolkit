@@ -1,6 +1,6 @@
 ---
 name: context-engineering
-description: "USE when optimizing AI agent context: compression, degradation detection, KV-cache optimization, or session management. Unified interface for all context engineering patterns."
+description: "Provides unified interface for all context engineering patterns. Use when optimizing AI agent context: compression, degradation detection, KV-cache optimization, or session management."
 user-invocable: true
 allowed-tools: [Read, Write, Edit, Bash(ls:*), Bash(cat:*), Bash(rm:*), Glob, Grep]
 ---

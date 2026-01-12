@@ -8,7 +8,7 @@ Agents running in the background/async cannot ask for permissions.
 ## 2. Tool Restrictions
 *   **Commands:** Must use `allowed-tools` to restrict scope.
 *   **Agents:** Must specify `tools:` in frontmatter.
-*   **Skills:** You Can specifiy tools, which act as permission bypass.
+*   **Skills:** You Can specify tools, which act as permission bypass.
 
 ## 3. Path Traversal
 *   **Rule:** References must use `${CLAUDE_PLUGIN_ROOT}` or relative paths.

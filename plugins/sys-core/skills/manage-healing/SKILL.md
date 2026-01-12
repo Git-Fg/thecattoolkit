@@ -1,8 +1,7 @@
 ---
 name: manage-healing
-description: "MUST USE when diagnosing component failures, hallucinations, or instruction drift. Performs forensic investigation and applies permanent fixes."
+description: "Performs forensic investigation and applies permanent fixes. MUST USE when diagnosing component failures, hallucinations, or instruction drift."
 context: fork
-agent: plugin-expert
 allowed-tools: [Task, Read, Write, Edit, Glob, Grep]
 ---
 

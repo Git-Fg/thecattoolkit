@@ -1,128 +1,124 @@
-### 1. Define a "Specialized Persona" (Not just "Helpful Assistant")
-The tool never uses a generic system prompt. It assigns a specific job title, a set of allowed tools, and a mental framework.
+# Prompt Engineering & Orchestration Guide
 
-**From the Source (`Agent Architect` prompt):**
-> *"You are an elite AI agent architect... Your expertise lies in translating user requirements into precisely-tuned agent specifications..."*
+This guide consolidates best practices for prompt engineering, agent orchestration, and system-level behaviors within the Cat Toolkit.
+
+---
+
+## 1. Core Principles
+
+### Define a "Specialized Persona"
+Never use a generic system prompt. Assign a specific job title, a set of allowed tools, and a mental framework.
 
 **Best Practice:**
 Define the **Role**, the **Domain**, and the **Success Criteria** immediately.
 
-**Example Prompt:**
 ```markdown
 You are a **Senior PostgreSQL Database Administrator**.
-Your goal is to optimize query performance without altering the underlying data schema unless absolutely necessary.
+Your goal is to optimize query performance without altering the underlying data schema.
 
 **Your Strengths:**
 - Query plan analysis (EXPLAIN ANALYZE)
 - Indexing strategies (B-Tree vs GIN/GiST)
-- Vacuuming and maintenance configuration
 
 **Success Criteria:**
 - Reduced query execution time by >50%
-- No degradation in write performance
 - Zero downtime implementation
 ```
 
----
-
-### 2. Establish "Hard Boundaries" (Negative Constraints)
-The tool uses "Negative Prompting" extensively to prevent dangerous behaviors. The "Explore" agent is a prime example of this—it is psychologically "sandbox" by the prompt before it is technically sandboxed by the code.
-
-**From the Source (`Explore Agent` prompt):**
-> *"=== CRITICAL: READ-ONLY MODE - NO FILE MODIFICATIONS ===*
-> *You are STRICTLY PROHIBITED from:*
-> *- Creating new files*
-> *- Modifying existing files*
-> *- Running ANY commands that change system state"*
+### Establish "Hard Boundaries"
+Use "Negative Prompting" to prevent dangerous or unwanted behaviors.
 
 **Best Practice:**
-Do not just ask the model to do X; explicitly forbid it from doing Y, Z, and Q. Use upper case and "CRITICAL" markers.
+Explicitly forbid specific actions using upper case and "CRITICAL" markers.
 
-**Example Prompt:**
 ```markdown
 ### OPERATIONAL BOUNDARIES
-You are in **Audit Mode**.
-
 CRITICAL CONSTRAINTS:
-1. NEVER output your internal reasoning to the final user; only output the JSON result.
-2. DO NOT fix the bugs you find. You are a detector, not a fixer.
-3. DO NOT invent URLs. If a URL is not present in the source text, output null.
+1. NEVER output your internal reasoning to the final user.
+2. DO NOT fix the bugs you find; only detect them.
 ```
+
+### Professional Objectivity & Style
+- **Tone:** Technical accuracy over user validation. Short, concise responses.
+- **Style:** No unnecessary superlatives or emotional validation.
+- **Emoji Policy:** Only use if explicitly requested.
+- **Planning:** Concrete steps only; never suggest time estimates or timelines.
 
 ---
 
-### 3. Inject Dynamic Context via XML Tags (Parsimoniously)
-The tool injects the environment state (Git branch, OS, CWD) into every request. This grounds the model in reality.
+## 2. Environment & Context
 
-**From the Source (`Main Loop` prompt):**
-> *"Here is useful information about the environment... <env> Working directory: /src... Is directory a git repo: Yes... </env>"*
+### XML Usage & Budget
+Wrap dynamic context in XML tags (`<context>`, `<env>`, `<file_contents>`) to distinguish instructions from data.
 
-**Best Practice:**
-Wrap dynamic context in XML tags (`<context>`, `<env>`, `<file_contents>`). This helps the model distinguish between your instructions and the data it needs to process.
+**The 5-8 Tag Rule:**
+Limit prompts to **5-8 XML tag pairs maximum**. Excessive XML confuses models and wastes tokens.
 
-> [!IMPORTANT]
-> **Limit to 5-8 XML tag pairs maximum.** Excessive XML confuses some LLMs and increases token count. See Section 7 for prioritization.
+| Priority | Tag Type | Purpose | Keep? |
+|----------|----------|---------|-------|
+| 1 (Essential) | `<env>` | Runtime context injection | Always |
+| 2 (Essential) | `<example_correct>` / `<example_incorrect>` | Contrastive few-shot learning | Always |
+| 3 (High) | `<sub_agents>` | Sub-agent definitions | Consolidate to 1 |
+| 4 (Medium) | `<file_contents>` | File data separation | When needed |
+| 5 (Low) | `<protocol>`, `<output_format>` | Structural wrappers | Convert to markdown |
 
-**Example Prompt:**
+### Dynamic Context Injection
+Inject environment state (Git branch, OS, CWD) to ground the model in reality.
+
 ```markdown
-I need you to write a unit test for the following component.
-
 <env>
-Framework: React 18
-Testing Library: Vitest + React Testing Library
-TypeScript: Strict Mode
+Working directory: {{CWD}}
+Is directory a git repo: {{YES/NO}}
+Platform: {{PLATFORM}}
+OS Version: {{VERSION}}
+Today's date: {{DATE}}
 </env>
-
-<file_contents filename="UserProfile.tsx">
-export const UserProfile = ({ user }) => <div>{user.name}</div>;
-</file_contents>
-
-Please write the test file.
 ```
 
 ---
 
-### 4. Enforce "Protocol Prerequisites" (Chain of Thought)
-The tool forces the model to follow a specific sequence of operations before taking action. The MCP (Model Context Protocol) prompt is the best example: it forces the model to read a schema before calling a tool.
+## 3. Protocol & Workflow Orchestration
 
-**From the Source (`MCP tool` prompt):**
-> *"MANDATORY PREREQUISITE... You MUST call 'mcp-tool info' BEFORE ANY 'mcp-tool call'. Why this is non-negotiable: Tool schemas NEVER match your expectations."*
+### Protocol Prerequisites
+Force the model to follow a specific sequence. Dictate the **Order of Operations** and explain *why*.
 
-**Best Practice:**
-If a task is complex, dictate the **Order of Operations**. Explicitly tell the model *why* it must follow this order to prevent "lazy" guessing.
-
-**Example Prompt:**
 ```markdown
 ### DIAGNOSTIC PROTOCOL
-Before recommending a solution, you MUST follow this sequence:
-
-1. **Symptom Check:** specificy exactly which error logs you are analyzing.
+Before recommending a solution, you MUST:
+1. **Symptom Check:** Identify specific error logs.
 2. **Hypothesis Generation:** List 3 potential causes.
 3. **Verification:** Explain how you would verify the top hypothesis.
-
-ONLY after these 3 steps are complete may you propose a code fix.
 ```
+
+### Command Orchestration Example
+Commands excel at orchestrating complex, multi-phase workflows using specialized sub-agents.
+
+**Absolute Rules:**
+1. **NEVER skip codebase exploration.**
+2. **NEVER ask questions across multiple phases.** Consolidate into Phase 3.
+3. **NEVER begin implementation without explicit user approval.**
+4. **ALWAYS delegate specialized tasks to sub-agents.**
+
+**Execution Protocol:**
+- **Phase 1: Discovery:** Parse requirements, form mental model.
+- **Phase 2: Exploration:** Launch **Parallel Explore Agents** to map architecture and patterns.
+- **Phase 3: Question Burst:** Resolve ALL ambiguities in a single organized list.
+- **Phase 4: Architecture Design:** Present options (Minimal vs Clean vs Pragmatic) with trade-offs.
+- **Phase 5: Implementation:** WRITE mode following chosen architecture strictly.
+- **Phase 6: Quality Review:** Launch **Parallel Review Agents** (Simplicity, Bugs, Conventions).
+- **Phase 7: Summary:** Document accomplishments and key decisions.
 
 ---
 
-### 5. Use XML-Structured Few-Shot Examples
-The tool avoids vague examples. It uses `<example>` and `<bad-example>` tags to demonstrate exactly how the model should (and should not) behave.
+## 4. Examples & Few-Shot Learning
 
-**From the Source (`Bash` tool prompt):**
-> *<bad-example>*
-> *User: Use the slack tool*
-> *Assistant: [Calls slack/search directly]*
-> *WRONG - You must call mcp-tool info for ALL tools before making ANY call*
-> *</bad-example>*
+### Contrastive Examples
+Use `<example_correct>` and `<example_incorrect>` tags to teach nuance.
 
-**Best Practice:**
-Provide "Contrastive Examples." Show a "Good" interaction and a "Bad" interaction. This teaches the model the nuance of your requirements.
-
-**Example Prompt:**
 ```markdown
 <example_correct>
 User: "The server is down."
-Assistant: "I see the server is unresponsive. I will check the Nginx logs to identify the error code."
+Assistant: "I will check the Nginx logs to identify the error code."
 </example_correct>
 
 <example_incorrect>
@@ -134,28 +130,67 @@ Reasoning: Do not take action without diagnosing the root cause first.
 
 ---
 
-### 6. The "Plan Mode" Workflow (State Machines)
-The tool switches the model into a "Plan Mode" where it cannot execute code, only write to a `PLAN.md`. This separates "Thinking" from "Doing."
+## 5. Official Reference: System Prompts
 
-**From the Source (`Plan Mode` prompt):**
-> *"Phase 1: Initial Understanding... Phase 2: Design... Phase 4: Final Plan... This is the only file you are allowed to edit."*
+### Specialized Sub-Agents
 
-**Best Practice:**
-For complex tasks, create a **Phased Workflow**. Ask the model to output a plan to a specific artifact (like a scratchpad or a `<thinking>` block) before it attempts to generate the final output.
+#### The "Explore" Agent (Read-Only)
+*Used for searching code and understanding architecture.*
+- **Constraints:** STICKLY PROHIBITED from modifying files or system state.
+- **Tools:** Glob (file patterns), Grep (regex search), Read (content), Bash (ls, git status/log).
 
-**Example Prompt:**
-```markdown
-### EXECUTION PHASES
+#### The "Plan" Agent (Architect)
+*Used to generate implementation steps.*
+- **Process:** Understand requirements → Explore thoroughly → Design solution → Detail the plan.
+- **Required Output:** End with "Critical Files for Implementation" list.
 
-**Phase 1: Analysis**
-Read the provided CSV data. Identify outliers and missing values. Output your findings in a <analysis> tag.
+#### The "Bash" Agent
+*Specialist for complex terminal operations.*
+- **Guidelines:** Chain commands with `&&`, follow git safety, quote paths with spaces properly.
 
-**Phase 2: Strategy**
-Based on Phase 1, determine the best imputation method for missing values.
+#### The "Claude Guide" Agent
+*RAG Agent for documentation.*
+- **Expertise:** Claude Code, Agent SDK, API.
 
-**Phase 3: Code Generation**
-Write the Python Pandas code to clean the dataset based on the Phase 2 strategy.
-```
+#### The "Agent Architect" (Meta-Agent)
+*Used to create new custom agents.*
+- **Output:** JSON with `identifier`, `whenToUse`, and `systemPrompt`.
+
+### Tool-Specific Protocols
+
+- **MCP CLI:** You MUST call `mcp-cli info` BEFORE `mcp-cli call`. Schemas never match expectations.
+- **AskUserQuestion:** Use at the **beginning of tasks** to gather requirements. Avoid mid-execution questions.
+- **ExitPlanMode:** Signal completion of planning; triggers user approval.
+- **Browser Tools:** Consult screenshots via `computer` before clicking; use `read_page` for accessibility trees.
+
+---
+
+## 6. Special Output & Maintenance Modes
+
+### Output Styles
+- **Explanatory Style:** Provide educational insights about the codebase using the `* Insight ──` format.
+- **Learning Style:** Encourage "Learn by Doing" by requesting 2-10 line human contributions.
+
+### Magic Doc Updater
+Mandatory maintenance tool. Update document in-place, BE TERSE, high signal only. Focus on WHY things exist and WHERE to start reading.
+
+### Session Quality Classifier
+Internal sentiment analysis tracking `<frustrated>` state and `<pr_request>` intent.
+
+---
+
+## 7. Optimization for 2026 Standards
+
+### Skill Archetypes
+- **Task-Oriented:** Action verbs, gerund names (`deploying-app`), Execute → Validate → Report pattern.
+- **Knowledge-Oriented:** Domain nouns (`prompt-engineering`), Query → Load context → Synthesize pattern.
+
+### Validator Pattern
+Task-Oriented Skills MUST include an autonomous correction loop (max 3 iterations) before returning control.
+
+### Visibility Control
+- `user-invocable: false`: Hides from `/` menu but remains semantically discoverable.
+- `disable-model-invocation: true`: Excludes from ~15k token budget and blocks spontaneous AI invocation.
 
 ---
 
@@ -168,62 +203,3 @@ Write the Python Pandas code to clean the dataset based on the Phase 2 strategy.
 5.  **Examples:** "<example>...</example>"
 6.  **Output Format:** "Respond ONLY with..."
 7.  **XML Budget:** Max 5-8 tag pairs
-
----
-
-### 7. Parsimonious XML Usage (LLM Compatibility)
-
-Not all LLMs handle XML equally well. Excessive or nested XML tags can confuse models, increase token consumption, and reduce prompt portability.
-
-**The 5-8 Tag Rule:**
-Limit your prompt to **5-8 XML tag pairs maximum**. Prioritize tags by semantic value.
-
-**XML Tag Priority Matrix:**
-
-| Priority | Tag Type | Purpose | Keep? |
-|----------|----------|---------|-------|
-| 1 (Essential) | `<env>` | Runtime context injection | Always |
-| 2 (Essential) | `<example_correct>` / `<example_incorrect>` | Contrastive few-shot learning | Always |
-| 3 (High) | `<sub_agents>` or `<agent_persona>` | Sub-agent definitions | Consolidate to 1 |
-| 4 (Medium) | `<file_contents>` | File data separation | When needed |
-| 5 (Low) | `<protocol>`, `<output_format>` | Structural wrappers | Convert to markdown |
-
-**What to Convert to Markdown:**
-- `<persona>` → **Bold header**
-- `<success_criteria>` → **Numbered list**
-- `<protocol>` → Steps listed directly
-- `<output_format>` → Inline code block or table
-- `<prerequisites>` → Checkbox list
-
-**Bad (11+ tag pairs):**
-```markdown
-<persona>...</persona>
-<success_criteria>...</success_criteria>
-<env>...</env>
-<agent_persona type="Explore">...</agent_persona>
-<protocol>...<agent_dispatch>...</agent_dispatch>...</protocol>
-<example_correct>...</example_correct>
-<example_incorrect>...</example_incorrect>
-<agent_persona type="Plan">...<output_format>...</output_format>...</agent_persona>
-```
-
-**Good (6 tag pairs):**
-```markdown
-**Your Strengths:** [markdown list]
-**Success Criteria:** [markdown list]
-
-<env>...</env>
-
-<sub_agents>
-[All agent personas consolidated here]
-</sub_agents>
-
-<example_correct>...</example_correct>
-<example_incorrect>...</example_incorrect>
-```
-
-**Why This Matters:**
-- **GPT-4/GPT-4o:** Handles XML well, but nested tags reduce attention efficiency
-- **Claude:** Native XML support, but excessive nesting still wastes tokens
-- **Gemini:** Less reliable XML parsing; simpler is better
-- **Llama/Mistral:** Variable XML support; flat structures work best

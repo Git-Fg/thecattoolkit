@@ -1,6 +1,6 @@
 ---
 name: check-types
-description: "MUST USE when validating Python type safety. Runs configured type checkers (pyrefly, mypy) on files after editing (Internal-only passive hook)."
+description: "Runs configured type checkers (pyrefly, mypy) on files after editing. MUST USE when validating Python type safety (Internal-only passive hook)."
 user-invocable: false
 allowed-tools: [Read, Bash(pyrefly), Bash(mypy), Bash(python3:-m pyrefly), Bash(python3:-m mypy)]
 ---

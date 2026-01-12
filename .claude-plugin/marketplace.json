@@ -1,130 +1,193 @@
 {
-    "name": "cattoolkit",
-    "metadata": {
-        "description": "Official plugin marketplace for The Cat Toolkit - A layered orchestration framework for autonomous AI development with vibecoding principles.",
-        "version": "1.3.0",
-        "keywords": [
-            "vibecoding",
-            "ai-development",
-            "plugins",
-            "automation",
-            "orchestration",
-            "agents",
-            "skills",
-            "framework"
-        ],
-        "homepage": "https://github.com/Git-Fg/thecattoolkit",
-        "repository": "https://github.com/Git-Fg/thecattoolkit",
-        "license": "MIT"
-    },
-    "owner": {
+  "name": "cattoolkit",
+  "metadata": {
+    "description": "Official plugin marketplace for The Cat Toolkit - A layered orchestration framework for autonomous AI development with vibecoding principles.",
+    "version": "1.3.0",
+    "keywords": [
+      "vibecoding",
+      "ai-development",
+      "plugins",
+      "automation",
+      "orchestration",
+      "agents",
+      "skills",
+      "framework"
+    ],
+    "homepage": "https://github.com/Git-Fg/thecattoolkit",
+    "repository": "https://github.com/Git-Fg/thecattoolkit",
+    "license": "MIT"
+  },
+  "owner": {
+    "name": "Git-Fg"
+  },
+  "plugins": [
+    {
+      "name": "sys-core",
+      "source": "./plugins/sys-core",
+      "description": "INFRASTRUCTURE & SYSTEM DOMAIN - Foundation tools for system stability, security auditing, plugin management, validation, hooks, MCP integration, and development infrastructure",
+      "version": "1.0.4",
+      "author": {
         "name": "Git-Fg"
+      },
+      "repository": "https://github.com/Git-Fg/thecattoolkit",
+      "license": "MIT",
+      "category": "Infrastructure",
+      "tags": ["security", "infrastructure", "validation", "hooks"],
+      "keywords": [
+        "security",
+        "audit",
+        "validation",
+        "toolkit",
+        "infrastructure",
+        "safety",
+        "hooks",
+        "scaffolding",
+        "mcp"
+      ],
+      "strict": true
     },
-    "plugins": [
-        {
-            "name": "sys-core",
-            "source": "./plugins/sys-core",
-            "description": "System Core - Infrastructure layer for plugin management, security auditing, hooks, MCP integration, and toolkit maintenance",
-            "version": "1.0.4",
-            "author": {
-                "name": "Git-Fg"
-            },
-            "repository": "https://github.com/Git-Fg/thecattoolkit",
-            "license": "MIT",
-            "category": "infrastructure",
-            "tags": ["security", "validation", "toolkit", "infrastructure", "safety", "hooks", "mcp", "meta"],
-            "keywords": ["security", "audit", "validation", "toolkit", "infrastructure", "safety", "hooks", "scaffolding", "mcp"],
-            "strict": true
-        },
-        {
-            "name": "sys-builder",
-            "source": "./plugins/sys-builder",
-            "description": "System Builder - Action layer for execution, architecture design, testing, and project implementation",
-            "version": "1.0.1",
-            "author": {
-                "name": "Git-Fg"
-            },
-            "repository": "https://github.com/Git-Fg/thecattoolkit",
-            "license": "MIT",
-            "category": "execution",
-            "tags": ["execution", "architecture", "implementation", "planning", "tdd", "testing"],
-            "keywords": ["execution", "architecture", "implementation", "planning", "tdd", "software-engineering", "builder", "testing"],
-            "strict": true
-        },
-        {
-            "name": "sys-cognition",
-            "source": "./plugins/sys-cognition",
-            "description": "System Cognition - Context engineering, memory systems, thinking frameworks, prompt engineering, and agent orchestration",
-            "version": "1.0.2",
-            "author": {
-                "name": "Git-Fg"
-            },
-            "repository": "https://github.com/Git-Fg/thecattoolkit",
-            "license": "MIT",
-            "category": "cognition",
-            "tags": ["thinking", "prompt-engineering", "context-engineering", "analysis", "frameworks", "agent-orchestration"],
-            "keywords": ["thinking", "prompt-engineering", "context-engineering", "analysis", "frameworks", "reasoning", "memory-systems"],
-            "strict": true
-        },
-        {
-            "name": "sys-research",
-            "source": "./plugins/sys-research",
-            "description": "System Research - Research tools, knowledge retrieval, codebase analysis, gitingest, and experimental analysis",
-            "version": "1.0.3",
-            "author": {
-                "name": "Git-Fg"
-            },
-            "repository": "https://github.com/Git-Fg/thecattoolkit",
-            "license": "MIT",
-            "category": "research",
-            "tags": ["research", "knowledge", "analysis", "experimental", "gitingest"],
-            "keywords": ["research", "knowledge-retrieval", "analysis", "experimental", "documentation", "gitingest", "codebase-analysis"],
-            "strict": true
-        },
-        {
-            "name": "sys-edge",
-            "source": "./plugins/sys-edge",
-            "description": "Edge AI, mobile optimization, Python tooling (uv/ruff), and resource-constrained environments",
-            "version": "1.0.2",
-            "author": {
-                "name": "Git-Fg"
-            },
-            "repository": "https://github.com/Git-Fg/thecattoolkit",
-            "license": "MIT",
-            "category": "edge",
-            "tags": ["edge", "mobile", "optimization", "offline", "sync", "python-tools"],
-            "keywords": ["edge", "mobile", "optimization", "offline-sync", "battery", "quantization", "uv", "ruff", "python-tools"],
-            "strict": true
-        },
-        {
-            "name": "sys-multimodal",
-            "source": "./plugins/sys-multimodal",
-            "description": "Multimodal AI for video editing, media processing, and data visualization",
-            "version": "1.0.1",
-            "author": {
-                "name": "Git-Fg"
-            },
-            "repository": "https://github.com/Git-Fg/thecattoolkit",
-            "license": "MIT",
-            "category": "multimodal",
-            "tags": ["multimodal", "video", "editing", "media", "vision", "audio", "data-visualization"],
-            "keywords": ["multimodal", "video-editing", "media-processing", "vision", "audio", "scene-detection", "intent-translation", "data-visualization", "storytelling"],
-            "strict": true
-        },
-        {
-            "name": "llm-application-dev",
-            "source": "./plugins/llm-application-dev",
-            "description": "LLM Application Development - RAG systems, hybrid search, vector databases, and LLM application patterns",
-            "version": "1.0.0",
-            "author": {
-                "name": "Git-Fg"
-            },
-            "repository": "https://github.com/Git-Fg/thecattoolkit",
-            "license": "MIT",
-            "category": "application-development",
-            "tags": ["llm", "rag", "vector-search", "hybrid-search", "application-development"],
-            "keywords": ["llm", "rag", "vector-databases", "hybrid-search", "retrieval", "embedding", "semantic-search"],
-            "strict": true
-        }
-    ]
+    {
+      "name": "sys-builder",
+      "source": "./plugins/sys-builder",
+      "description": "DEVELOPMENT & ENGINEERING DOMAIN - Software development, architecture design, planning, execution, testing, and project implementation",
+      "version": "1.0.1",
+      "author": {
+        "name": "Git-Fg"
+      },
+      "repository": "https://github.com/Git-Fg/thecattoolkit",
+      "license": "MIT",
+      "category": "Development",
+      "tags": ["development", "architecture", "engineering", "software"],
+      "keywords": [
+        "execution",
+        "architecture",
+        "implementation",
+        "planning",
+        "tdd",
+        "software-engineering",
+        "builder",
+        "testing"
+      ],
+      "strict": true
+    },
+    {
+      "name": "sys-cognition",
+      "source": "./plugins/sys-cognition",
+      "description": "AI/ML & COGNITIVE DOMAIN - Context engineering, memory systems, reasoning, prompt engineering, and agent orchestration",
+      "version": "1.0.2",
+      "author": {
+        "name": "Git-Fg"
+      },
+      "repository": "https://github.com/Git-Fg/thecattoolkit",
+      "license": "MIT",
+      "category": "AI/ML",
+      "tags": ["ai", "cognition", "reasoning", "prompt-engineering"],
+      "keywords": [
+        "thinking",
+        "prompt-engineering",
+        "context-engineering",
+        "analysis",
+        "frameworks",
+        "reasoning",
+        "memory-systems"
+      ],
+      "strict": true
+    },
+    {
+      "name": "sys-research",
+      "source": "./plugins/sys-research",
+      "description": "RESEARCH & KNOWLEDGE DOMAIN - Research tools, knowledge retrieval, codebase analysis, gitingest, and experimental analysis",
+      "version": "1.0.3",
+      "author": {
+        "name": "Git-Fg"
+      },
+      "repository": "https://github.com/Git-Fg/thecattoolkit",
+      "license": "MIT",
+      "category": "Research",
+      "tags": ["research", "analysis", "knowledge", "documentation"],
+      "keywords": [
+        "research",
+        "knowledge-retrieval",
+        "analysis",
+        "experimental",
+        "documentation",
+        "gitingest",
+        "codebase-analysis"
+      ],
+      "strict": true
+    },
+    {
+      "name": "sys-edge",
+      "source": "./plugins/sys-edge",
+      "description": "EDGE & TOOLING DOMAIN - Edge AI, mobile optimization, offline-first systems, Python tooling, and resource-constrained environments",
+      "version": "1.0.2",
+      "author": {
+        "name": "Git-Fg"
+      },
+      "repository": "https://github.com/Git-Fg/thecattoolkit",
+      "license": "MIT",
+      "category": "Tools",
+      "tags": ["edge", "mobile", "optimization", "python"],
+      "keywords": [
+        "edge",
+        "mobile",
+        "optimization",
+        "offline-sync",
+        "battery",
+        "quantization",
+        "uv",
+        "ruff",
+        "python-tools"
+      ],
+      "strict": true
+    },
+    {
+      "name": "sys-multimodal",
+      "source": "./plugins/sys-multimodal",
+      "description": "MEDIA & MULTIMODAL DOMAIN - Advanced tools for video editing, media processing, multimodal AI, visual content creation, and data visualization",
+      "version": "1.0.1",
+      "author": {
+        "name": "Git-Fg"
+      },
+      "repository": "https://github.com/Git-Fg/thecattoolkit",
+      "license": "MIT",
+      "category": "Media",
+      "tags": ["multimodal", "video", "media", "visualization"],
+      "keywords": [
+        "multimodal",
+        "video-editing",
+        "media-processing",
+        "vision",
+        "audio",
+        "scene-detection",
+        "intent-translation",
+        "data-visualization",
+        "storytelling"
+      ],
+      "strict": true
+    },
+    {
+      "name": "llm-application-dev",
+      "source": "./plugins/llm-application-dev",
+      "description": "AI/ML & COGNITIVE DOMAIN (LLM Applications) - Specialized tools for LLM application development, RAG systems, hybrid search, vector databases, and LLM application patterns",
+      "version": "1.0.0",
+      "author": {
+        "name": "Git-Fg"
+      },
+      "repository": "https://github.com/Git-Fg/thecattoolkit",
+      "license": "MIT",
+      "category": "AI/ML",
+      "tags": ["llm", "rag", "vector-database", "semantic-search"],
+      "keywords": [
+        "llm",
+        "rag",
+        "vector-databases",
+        "hybrid-search",
+        "retrieval",
+        "embedding",
+        "semantic-search"
+      ],
+      "strict": true
+    }
+  ]
 }

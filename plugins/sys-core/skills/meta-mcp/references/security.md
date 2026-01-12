@@ -387,7 +387,7 @@ Example validation rules:
   'users': {
     'id': {'type': 'uuid', 'required': True},
     'name': {'type': 'string', 'max_length': 100, 'required': True},
-    'email': {'type': 'string', 'pattern': '^[^@]+@[^@]+\.[^@]+$', 'required': True},
+    'email': {'type': 'string', 'pattern': '^[a-zA-Z0-9._%+-]+@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}$', 'required': True},
     'age': {'type': 'integer', 'min': 0, 'max': 150, 'required': False}
   }
 }

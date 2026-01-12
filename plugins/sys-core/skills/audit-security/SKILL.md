@@ -1,7 +1,9 @@
 ---
 name: audit-security
-description: "MUST USE when verifying security of code changes or auditing file safety. Scans for secrets and prevents modification of protected files (Internal-only passive hook)."
+description: "Scans for secrets and prevents modification of protected files (Internal-only passive hook). MUST USE when verifying security of code changes or auditing file safety."
+context: fork
 user-invocable: false
+agent: security-auditor
 allowed-tools: [Read, Grep]
 ---
 

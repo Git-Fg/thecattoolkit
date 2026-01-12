@@ -1,9 +1,9 @@
 ---
 name: {SKILL_NAME}
 description: {SKILL_DESCRIPTION}
-context: fork
-agent: {OPTIONAL_PERSONA}
 allowed-tools: {RESTRICTED_TOOLS}
+# context: fork  # Optional: use when isolation needed
+# agent: {AGENT_NAME}  # Optional: bind to agent persona
 ---
 
 # {HUMAN_READABLE_NAME}

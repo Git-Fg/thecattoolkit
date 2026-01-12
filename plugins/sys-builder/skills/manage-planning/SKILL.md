@@ -1,6 +1,8 @@
 ---
 name: manage-planning
-description: "PROACTIVELY USE when planning projects or executing phases. Unified interface for creating specifications (BRIEF, ROADMAP) and dispatching autonomous workers."
+description: "Provides unified interface for creating specifications (BRIEF, ROADMAP) and dispatching autonomous workers. PROACTIVELY Use when planning projects or executing phases."
+context: fork
+agent: worker
 allowed-tools: [Read, Write, Edit, Glob, Grep, Task, Bash]
 ---
 

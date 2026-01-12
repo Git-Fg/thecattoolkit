@@ -1,6 +1,6 @@
 ---
 name: prompt-engineering
-description: "USE when designing, optimizing, or auditing AI prompts, system instructions, or multi-step chains. Applies 2026 Complexity-Based Guidance standards with Attention Management, Sycophancy Prevention, and XML/Markdown decision matrix."
+description: "Applies 2026 Complexity-Based Guidance standards with Attention Management, Sycophancy Prevention, and XML/Markdown decision matrix. Use when designing, optimizing, or auditing AI prompts, system instructions, or multi-step chains."
 allowed-tools: [Read, Write, Edit, Glob, Grep]
 ---
 
@@ -17,20 +17,20 @@ allowed-tools: [Read, Write, Edit, Glob, Grep]
      - Strict Constraints (NEVER/MUST rules)
      - Internal Monologue (Complex reasoning)
 4. **Execute Workflow**:
-   - **Drafting**: Use `workflows/draft.md`
-   - **Optimizing**: Use `workflows/optimize.md`
+   - **Drafting**: Use `references/draft-workflow.md`
+   - **Optimizing**: Use `references/optimization-workflow.md`
 5. **Verify**: Apply `references/quality.md` gates before final output.
 
 ## Router Protocol
 
 ### 1. Drafting New Prompts
 **Trigger**: "Create a prompt", "Draft system instructions", "New prompt for..."
-**Protocol**: Apply workflow from `workflows/draft.md`
+**Protocol**: Apply workflow from `references/draft-workflow.md`
 **Assets**: Use templates from `assets/templates/`
 
 ### 2. Optimizing Existing Prompts
 **Trigger**: "Fix this prompt", "Make this prompt better", "Optimize..."
-**Protocol**: Apply workflow from `workflows/optimize.md`
+**Protocol**: Apply workflow from `references/optimization-workflow.md`
 **Theory**: Apply `references/optimization.md`
 
 ### 3. Auditing Prompts

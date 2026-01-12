@@ -1,6 +1,6 @@
 ---
 name: canvas-design
-description: "USE when creating beautiful visual art in .png and .pdf documents using design philosophy. Create posters, artwork, designs, and static visual pieces with original designs. Never copy existing artists' work to avoid copyright violations."
+description: "Creates beautiful visual art in .png and .pdf documents using design philosophy. Use when creating posters, artwork, designs, and static visual pieces with original designs. Never copy existing artists' work to avoid copyright violations."
 allowed-tools: [Read, Write, Edit, Bash]
 ---
 

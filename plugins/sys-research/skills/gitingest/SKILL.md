@@ -1,6 +1,6 @@
 ---
 name: gitingest
-description: "USE when analyzing GitHub repositories, digesting codebases, or ingesting git repos for AI analysis. Transforms repositories into structured plain-text digests optimized for LLM consumption."
+description: "Transforms repositories into structured plain-text digests optimized for LLM consumption. Use when analyzing GitHub repositories, digesting codebases, or ingesting git repos for AI analysis."
 allowed-tools: [Read, Write, Edit, Bash, Grep]
 ---
 

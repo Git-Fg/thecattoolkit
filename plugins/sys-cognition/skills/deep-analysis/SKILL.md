@@ -1,6 +1,8 @@
 ---
 name: deep-analysis
-description: "USE when performing deep strategic analysis, comprehensive problem-solving, or synthesizing research into formal reports using structured thinking frameworks."
+description: "Performs deep strategic analysis using structured frameworks. Use when solving complex architectural problems or root-cause identification."
+context: fork
+agent: reasoner
 allowed-tools: [Read, Write, Edit, Glob, Grep]
 ---
 

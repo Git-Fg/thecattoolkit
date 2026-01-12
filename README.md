@@ -63,17 +63,17 @@ claude --plugin-dir ./plugins/sys-builder --plugin-dir ./plugins/sys-cognition -
 /plugin install sys-core@cattoolkit --scope project
 ```
 
-See [Marketplace Configuration Guide](docs/marketplace.md) for complete installation and configuration details.
+See [Marketplace Configuration Guide](docs/REFERENCES.md#1-marketplace-configuration) for complete installation and configuration details.
 
 ---
 
 ## Documentation
 
-- **[CLAUDE.md](CLAUDE.md)** - The Universal Agentic Runtime (Constitution & Manual)
-- **[Marketplace Guide](docs/marketplace.md)** - Complete marketplace configuration and plugin distribution guide
-- **[Commands Reference](docs/commands.md)** - Commands: Shortcuts & AI Macros
-- **[Infrastructure Reference](docs/infrastructure.md)** - Hooks, MCP, LSP, and runtime configuration
-- **[Permissions Reference](docs/permissions.md)** - Complete permissions and security guide
+- **[CLAUDE.md](CLAUDE.md)** — The Universal Agentic Runtime (Constitution & Manual)
+- **[Marketplace Reference](docs/REFERENCES.md#1-marketplace-configuration)** — Complete marketplace configuration and plugin distribution guide
+- **[Commands Reference](docs/REFERENCES.md#3-commands--permissions)** — Commands: Shortcuts & AI Macros
+- **[Infrastructure Reference](docs/REFERENCES.md#4-infrastructure)** — Hooks, MCP, LSP, and runtime configuration
+- **[Permissions Reference](docs/REFERENCES.md#3-commands--permissions)** — Complete permissions and security guide
 
 ## Development
 

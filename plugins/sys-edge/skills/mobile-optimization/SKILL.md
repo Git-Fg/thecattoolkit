@@ -1,12 +1,10 @@
 ---
 name: mobile-optimization
-description: "USE when optimizing AI applications for mobile devices. Implements battery-aware processing, thermal management, adaptive quality settings, and power-efficient inference patterns."
+description: "Implements battery-aware processing, thermal management, adaptive quality settings, and power-efficient inference patterns. Use when optimizing AI applications for mobile devices."
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 
 # Mobile Optimization Protocol
-
-## Purpose
 
 Ensures AI applications run efficiently on mobile devices through intelligent battery management, thermal optimization, and adaptive quality controls.
 
@@ -16,259 +14,60 @@ Ensures AI applications run efficiently on mobile devices through intelligent ba
 
 **Battery State Monitoring:**
 
-```python
-class BatteryMonitor:
-    def __init__(self):
-        self.battery = psutil.sensors_battery()
-        self.power_plan = self._determine_power_plan()
-        self.monitoring_interval = 60  # seconds
+Monitor battery level and adjust processing configuration:
 
-    def _determine_power_plan(self) -> str:
-        """Determine optimal power mode based on battery state"""
-        if not self.battery:
-            return "AC_POWER"  # Desktop or AC power
+- HIGH_PERFORMANCE (>75% battery): Batch size 32, high quality, 4 workers
+- BALANCED (50-75%): Batch size 16, medium quality, 2 workers
+- POWER_SAVER (20-50%): Batch size 8, low quality, 1 worker
+- CRITICAL_POWER_SAVER (<20%): Batch size 4, minimal quality, 1 worker
 
-        percent = self.battery.percent
-
-        if percent > 75:
-            return "HIGH_PERFORMANCE"
-        elif percent > 50:
-            return "BALANCED"
-        elif percent > 20:
-            return "POWER_SAVER"
-        else:
-            return "CRITICAL_POWER_SAVER"
-
-    def get_processing_config(self) -> Dict[str, Any]:
-        """Get processing configuration based on battery state"""
-        plans = {
-            "HIGH_PERFORMANCE": {
-                "batch_size": 32,
-                "quality": "high",
-                "parallel_workers": 4,
-                "cache_size_mb": 512
-            },
-            "BALANCED": {
-                "batch_size": 16,
-                "quality": "medium",
-                "parallel_workers": 2,
-                "cache_size_mb": 256
-            },
-            "POWER_SAVER": {
-                "batch_size": 8,
-                "quality": "low",
-                "parallel_workers": 1,
-                "cache_size_mb": 128
-            },
-            "CRITICAL_POWER_SAVER": {
-                "batch_size": 4,
-                "quality": "minimal",
-                "parallel_workers": 1,
-                "cache_size_mb": 64,
-                "defer_non_critical": True
-            }
-        }
-
-        return plans[self.power_plan]
-```
+**See:** `references/battery-management.md` for complete implementation
 
 ### 2. Adaptive Quality Settings
 
 **Dynamic Quality Adjustment:**
 
-```python
-class AdaptiveQualityController:
-    def __init__(self):
-        self.current_quality = "medium"
-        self.performance_history = []
-        self.quality_thresholds = {
-            "high": {"fps": 30, "latency_ms": 100, "cpu_percent": 70},
-            "medium": {"fps": 20, "latency_ms": 200, "cpu_percent": 50},
-            "low": {"fps": 10, "latency_ms": 500, "cpu_percent": 30}
-        }
+Automatically adjust quality based on performance metrics:
+- **High:** 30 FPS target, 100ms latency, 70% CPU
+- **Medium:** 20 FPS target, 200ms latency, 50% CPU
+- **Low:** 10 FPS target, 500ms latency, 30% CPU
+- **Minimal:** 5 FPS target, 1000ms latency, 20% CPU
 
-    def adjust_quality(self, metrics: Dict[str, float]) -> str:
-        """Dynamically adjust quality based on performance metrics"""
-        current_threshold = self.quality_thresholds[self.current_quality]
-
-        # Check if current quality is sustainable
-        if self._is_quality_sustainable(metrics, current_threshold):
-            return self.current_quality
-
-        # Determine if we need to reduce quality
-        if metrics["cpu_percent"] > current_threshold["cpu_percent"]:
-            return self._reduce_quality()
-        elif metrics["fps"] < current_threshold["fps"]:
-            return self._reduce_quality()
-
-        # Check if we can increase quality
-        if (metrics["cpu_percent"] < current_threshold["cpu_percent"] * 0.7 and
-            metrics["fps"] > current_threshold["fps"] * 1.2):
-            return self._increase_quality()
-
-        return self.current_quality
-
-    def _reduce_quality(self) -> str:
-        """Reduce processing quality to save battery"""
-        quality_levels = ["high", "medium", "low", "minimal"]
-        current_index = quality_levels.index(self.current_quality)
-        return quality_levels[min(current_index + 1, len(quality_levels) - 1)]
-
-    def _increase_quality(self) -> str:
-        """Increase quality if resources allow"""
-        quality_levels = ["high", "medium", "low", "minimal"]
-        current_index = quality_levels.index(self.current_quality)
-        return quality_levels[max(current_index - 1, 0)]
-```
+**See:** `references/adaptive-quality.md` for complete implementation
 
 ### 3. Thermal Management
 
 **Temperature-Based Throttling:**
 
-```python
-class ThermalManager:
-    def __init__(self):
-        self.temperature_threshold = 75  # Celsius
-        self.critical_threshold = 85
-        self.throttling_active = False
-        self.cooldown_period = 300  # 5 minutes
+Monitor device temperature and apply throttling:
+- **Normal** (<75°C): Full performance
+- **Warning** (75-85°C): Reduce load by 50%
+- **Critical** (>85°C): Emergency shutdown
 
-    def monitor_temperature(self) -> Dict[str, Any]:
-        """Monitor device temperature and apply throttling if needed"""
-        temp = self._get_cpu_temperature()
-
-        if temp > self.critical_threshold:
-            return self._emergency_shutdown()
-        elif temp > self.temperature_threshold:
-            return self._activate_throttling(temp)
-        elif self.throttling_active and temp < (self.temperature_threshold - 10):
-            return self._deactivate_throttling()
-        else:
-            return {"status": "normal", "temperature": temp}
-
-    def _activate_throttling(self, temp: float) -> Dict[str, Any]:
-        """Reduce processing load to cool device"""
-        self.throttling_active = True
-
-        throttling_config = {
-            "status": "throttling",
-            "temperature": temp,
-            "actions": [
-                "reduce_batch_size_by_50%",
-                "limit_parallel_workers_to_1",
-                "disable_non_essential_features",
-                "increase_processing_intervals"
-            ]
-        }
-
-        return throttling_config
-
-    def _emergency_shutdown(self) -> Dict[str, Any]:
-        """Critical temperature - shut down non-essential processing"""
-        return {
-            "status": "emergency_shutdown",
-            "actions": [
-                "stop_all_non_critical_processing",
-                "save_state_and_pause",
-                "notify_user_of_thermal_event"
-            ]
-        }
-```
+**See:** `references/thermal-management.md` for complete implementation
 
 ### 4. Power-Efficient Inference
 
 **Batch Processing and Wake Cycle Optimization:**
 
-```python
-class PowerEfficientInference:
-    def __init__(self):
-        self.pending_requests = []
-        self.batch_timeout = 2.0  # seconds
-        self.wake_lock = None
+Reduce wake cycles by batching requests:
+- Process up to 10 requests per batch
+- 2-second timeout for batch formation
+- Priority-based processing (high → normal → low)
+- Wake lock acquisition during batch processing
 
-    def schedule_inference(self, request: Dict) -> None:
-        """Schedule inference with power-efficient batching"""
-        self.pending_requests.append({
-            "data": request,
-            "timestamp": time.time(),
-            "priority": request.get("priority", "normal")
-        })
-
-        # Determine if we should process batch now
-        if self._should_process_batch():
-            self._process_pending_batch()
-
-    def _should_process_batch(self) -> bool:
-        """Determine if batch should be processed now"""
-        if len(self.pending_requests) >= 10:
-            return True  # Process when batch is full
-
-        if time.time() - self.pending_requests[0]["timestamp"] > self.batch_timeout:
-            return True  # Process when timeout reached
-
-        # Check if high-priority request exists
-        return any(req["priority"] == "high" for req in self.pending_requests)
-
-    def _process_pending_batch(self) -> List[Dict]:
-        """Process all pending requests in a single wake cycle"""
-        if not self.pending_requests:
-            return []
-
-        # Acquire wake lock to prevent device sleep
-        self._acquire_wake_lock()
-
-        try:
-            # Combine all requests into batch
-            batch_input = self._combine_batch_inputs(self.pending_requests)
-
-            # Single inference for entire batch
-            batch_results = self._run_batch_inference(batch_input)
-
-            # Distribute results back to individual requests
-            return self._distribute_results(batch_results)
-        finally:
-            self._release_wake_lock()
-            self.pending_requests.clear()
-```
+**See:** `references/power-efficient-inference.md` for complete implementation
 
 ### 5. Background Processing Optimization
 
 **Deferred Processing for Non-Critical Tasks:**
 
-```python
-class BackgroundTaskManager:
-    def __init__(self):
-        self.critical_tasks = []
-        self.background_tasks = []
-        self.charging_only_tasks = []
+Automatically defer non-critical tasks:
+- **Critical tasks:** Execute immediately
+- **Background tasks:** Execute when battery >50% or device idle
+- **Charging-only tasks:** Execute only when plugged in
 
-    def defer_non_critical(self, task: Dict) -> None:
-        """Mark task as non-critical and defer if on battery"""
-        battery = psutil.sensors_battery()
-
-        if not battery or battery.power_plugged:
-            # Execute immediately if on AC power
-            self._execute_task(task)
-        else:
-            # Defer to charging or background processing
-            if task.get("requires_charging", False):
-                self.charging_only_tasks.append(task)
-            else:
-                self.background_tasks.append(task)
-
-    def process_background_tasks(self) -> None:
-        """Process background tasks during idle time"""
-        if not self.background_tasks:
-            return
-
-        # Only process if battery > 50% or device is idle
-        battery = psutil.sensors_battery()
-        is_idle = self._check_device_idleness()
-
-        if (battery and battery.percent > 50) or is_idle:
-            task = self.background_tasks.pop(0)
-            self._execute_task(task)
-```
+**See:** `references/background-processing.md` for complete implementation
 
 ## Implementation Patterns
 
@@ -354,6 +153,15 @@ model = edge_manager.load_model(
 - `thermal_manager.py`: Temperature monitoring and throttling logic
 - `adaptive_quality.py`: Dynamic quality adjustment based on performance
 - `power_efficient_scheduler.py`: Batch processing and wake cycle optimization
+
+## Reference Materials
+
+**Implementation Guides:**
+- `references/battery-management.md` - Complete battery monitoring and power management
+- `references/thermal-management.md` - Temperature monitoring and throttling
+- `references/adaptive-quality.md` - Dynamic quality adjustment algorithms
+- `references/power-efficient-inference.md` - Batch processing and wake cycle optimization
+- `references/background-processing.md` - Deferred processing strategies
 
 ## Next Steps
 

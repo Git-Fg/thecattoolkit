@@ -1,7 +1,8 @@
 ---
 name: multimodal-understanding
-description: "USE when analyzing video content with vision and audio models. Combines frame analysis, audio processing, scene detection, and narrative flow understanding for intelligent video editing."
+description: "Analyzes video content with vision and audio models. Use when analyzing video content, combining frame analysis, audio processing, scene detection, and narrative flow understanding for intelligent video editing."
 context: fork
+agent: video-editor
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 

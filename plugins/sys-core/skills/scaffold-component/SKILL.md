@@ -1,6 +1,6 @@
 ---
 name: scaffold-component
-description: "SHOULD USE when creating new plugin components (skills, agents, commands). Scaffolds 2026 Universal Agentic Runtime components with proper frontmatter and templates."
+description: "Scaffolds 2026 Universal Agentic Runtime components with proper frontmatter and templates. MUST Use when creating new plugin components (skills, agents, commands)."
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash(mkdir:-p), Bash(ls:*), Bash(cat:*), Bash(find:*)]
 ---
 
@@ -139,7 +139,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash(mkdir:-p), Bash(ls:*), Bash(
 ```
 ✓ Created skill: database-validator
   Location: .claude/skills/database-validator/SKILL.md
-  Features: context: fork, agent: plugin-expert, allowed-tools: [Read, Grep]
+  Features: context: fork, allowed-tools: [Read, Grep]
   Status: Ready to use
 ```
 

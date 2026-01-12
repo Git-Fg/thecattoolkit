@@ -1,7 +1,6 @@
 ---
 name: intent-translation
-description: "USE when translating natural language editing commands into concrete video editing parameters. Converts user intent like 'make this cinematic' into specific cuts, transitions, color grades, and effects."
-context: fork
+description: "Converts user intent like 'make this cinematic' into specific cuts, transitions, color grades, and effects. Use when translating natural language editing commands into concrete video editing parameters."
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 

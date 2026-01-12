@@ -1,7 +1,6 @@
 ---
 name: validate-toolkit
-description: "MUST USE when comprehensively testing and validating a Claude Code plugin or marketplace. Performs deep validation of logic, effectiveness, and interactivity by executing tests proportional to marketplace complexity (more components = more complex test cases)."
-user-invocable: false
+description: "Performs deep validation of logic, effectiveness, and interactivity by executing tests proportional to marketplace complexity. MUST USE when comprehensively testing and validating a Claude Code plugin or marketplace."
 allowed-tools: [Read, Bash]
 ---
 

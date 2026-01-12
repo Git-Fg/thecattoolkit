@@ -1,6 +1,6 @@
 ---
 name: edge-ai-management
-description: "USE when managing AI models on mobile/edge devices. Implements lazy loading, quantization strategies, memory pressure handling, and dynamic model management for resource-constrained environments."
+description: "Implements lazy loading, quantization strategies, memory pressure handling, and dynamic model management for resource-constrained environments. Use when managing AI models on mobile/edge devices."
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 

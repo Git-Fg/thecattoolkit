@@ -1,6 +1,8 @@
 ---
 name: software-engineering
-description: "PROACTIVELY USE when writing code, debugging errors, or reviewing PRs. Universal Standard for TDD, Security, and Code Quality. Modes: debug, review, refactor, implement. FORCE NON-INTERACTIVE EXECUTION (Bash must use -y/--yes)."
+description: "Provides Universal Standard for TDD, Security, and Code Quality. PROACTIVELY Use when writing code, debugging errors, or reviewing PRs. Modes: debug, review, refactor, implement. FORCE NON-INTERACTIVE EXECUTION (Bash must use -y/--yes)."
+context: fork
+agent: worker
 allowed-tools: [Read, Write, Edit, Bash, Glob, Grep]
 ---
 

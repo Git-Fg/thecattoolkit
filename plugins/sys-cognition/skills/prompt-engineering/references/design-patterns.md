@@ -369,18 +369,18 @@ We use a simplified two-pattern model designed specifically for AI Agents.
 #### 1. Single Prompts
 Standalone, reusable prompts for direct, one-shot execution.
 - **Storage:** `.cattoolkit/prompts/`
-- **Template:** `../assets/templates/single-prompt.md`
+- **Template:** `assets/templates/single-prompt.md`
 
 #### 2. Prompt Chains
 Sequential multi-step workflows where output from one step feeds the next.
 - **Storage:** `.cattoolkit/chains/{number}-{topic}/`
 - **Pattern:** Research → Plan → Execute → Refine
-- **Templates:** `../assets/templates/chain/`
+- **Templates:** `assets/templates/chain/`
 
 #### 3. Meta-Prompts
 Higher-order prompts that generate, optimize, or analyze other prompts.
 - **Storage:** `.cattoolkit/generators/`
-- **Templates:** `../assets/templates/meta/`
+- **Templates:** `assets/templates/meta/`
 
 ---
 

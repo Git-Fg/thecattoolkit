@@ -2,6 +2,7 @@
 # requires-python = ">=3.11"
 # dependencies = [
 #     "pyyaml",
+#     "ruamel.yaml",
 # ]
 # ///
 
@@ -18,11 +19,16 @@ import json
 import yaml
 import argparse
 import unicodedata
+import io
+import shutil
 from pathlib import Path
 from datetime import datetime
-from typing import List, Optional, Dict, Set
+from typing import List, Optional, Dict, Set, Tuple
 from dataclasses import dataclass, field
 from collections import defaultdict
+
+from ruamel.yaml import YAML
+from ruamel.yaml.scalarstring import DoubleQuotedScalarString
 
 
 # --- Validation Constants ---
@@ -34,20 +40,40 @@ MAX_COMPATIBILITY_LENGTH = 500
 # Pattern: lowercase alphanumeric, hyphens allowed, no start/end hyphen, no consecutive hyphens
 NAME_PATTERN = re.compile(r"^[a-z0-9](?:[a-z0-9-]*[a-z0-9])?$")
 
-# Allowed frontmatter fields per Agent Skills Spec
-ALLOWED_FIELDS = {
+# Allowed frontmatter fields per CLAUDE.md and component type
+# Base fields that apply to all components
+ALLOWED_FIELDS_BASE = {
     "name",
     "description",
     "license",
-    "allowed-tools",
-    "metadata",
     "compatibility",
-    "context",
-    "agent",
-    "user-invocable",
-    "hooks",
-    "tools",  # Added for agents
+    "version",
+    "author",
 }
+
+# Component-specific allowed fields
+ALLOWED_FIELDS_SKILL = ALLOWED_FIELDS_BASE | {
+    "allowed-tools",
+    "context",
+    "user-invocable",
+    "disable-model-invocation",
+    "agent",  # Valid when context: fork (per CLAUDE.md line 1358-1361)
+}
+
+ALLOWED_FIELDS_AGENT = ALLOWED_FIELDS_BASE | {
+    "tools",
+    "skills",
+    "agent",  # For fork context skills
+}
+
+ALLOWED_FIELDS_COMMAND = ALLOWED_FIELDS_BASE | {
+    "allowed-tools",
+    "disable-model-invocation",
+    "argument-hint",
+}
+
+# Legacy: Keep ALLOWED_FIELDS for backward compatibility (union of all)
+ALLOWED_FIELDS = ALLOWED_FIELDS_SKILL | ALLOWED_FIELDS_AGENT | ALLOWED_FIELDS_COMMAND
 
 # Built-in core tools
 VALID_TOOLS = [
@@ -127,17 +153,595 @@ class CrossPluginLink:
     description: str = ""
 
 
+# --- Fixer Logic (2026 Auto-Fix Standards) ---
+
+# Initialize ruamel.yaml for round-trip preservation
+_ruamel_yaml = YAML()
+_ruamel_yaml.preserve_quotes = True
+_ruamel_yaml.width = 4096  # Prevent unwanted line wrapping
+_ruamel_yaml.indent(mapping=2, sequence=4, offset=2)
+
+
+def clean_description_text(text: str) -> str:
+    """
+    Sanitizes string: removes newlines, double spaces, special chars,
+    and ensures it's a tight single line.
+    """
+    if not text:
+        return ""
+
+    # 1. Replace newlines and tabs with spaces
+    text = text.replace('\n', ' ').replace('\r', ' ').replace('\t', ' ')
+
+    # 2. Remove illegal/invisible special characters (control characters)
+    text = "".join(ch for ch in text if ch.isprintable())
+
+    # 3. Collapse multiple spaces into one and strip edges
+    text = " ".join(text.split())
+
+    # 4. Ensure it ends with proper punctuation
+    if text and not text.endswith(('.', '!', '?')):
+        text += '.'
+
+    return text
+
+
+def normalize_name(name: str) -> str:
+    """Normalize name to lowercase kebab-case."""
+    if not name:
+        return ""
+    return name.lower().replace('_', '-').strip()
+
+
+def normalize_tool_syntax(tools_list: list) -> list:
+    """Convert deprecated square bracket syntax to parentheses."""
+    normalized = []
+    for tool in tools_list:
+        if isinstance(tool, str):
+            # Convert Bash[python] -> Bash(python:*)
+            match = re.match(r'^(\w+)\[([^\]]+)\]$', tool)
+            if match:
+                tool_name = match.group(1)
+                params = match.group(2)
+                # Split multiple params and convert each
+                param_parts = [p.strip() for p in params.split(',')]
+                for param in param_parts:
+                    if ':' not in param:
+                        param = f"{param}:*"
+                    normalized.append(f"{tool_name}({param})")
+            else:
+                normalized.append(tool)
+        else:
+            normalized.append(tool)
+    return normalized
+
+
+@dataclass
+class FixResult:
+    """Result of a fix operation."""
+    file_path: str
+    fixed: bool
+    changes: List[str] = field(default_factory=list)
+    errors: List[str] = field(default_factory=list)
+
+
+class ComponentFixer:
+    """Handles auto-fixing of component files."""
+
+    def __init__(self, plugins_dir: Path, dry_run: bool = False):
+        self.plugins_dir = plugins_dir
+        self.dry_run = dry_run
+        self.results: List[FixResult] = []
+
+    def fix_all(self) -> List[FixResult]:
+        """Fix all component files."""
+        print("=" * 70)
+        print("🛠️  Cat Toolkit Auto-Fixer")
+        print(f"Mode: {'DRY RUN (no changes)' if self.dry_run else 'LIVE'}")
+        print(f"Scanning: {self.plugins_dir}")
+        print("=" * 70)
+        print()
+
+        # Fix skills
+        skill_files = list(self.plugins_dir.rglob("SKILL.md")) + list(
+            self.plugins_dir.rglob("skill.md")
+        )
+        skill_files = list(set(skill_files))
+        print(f"Phase 1: Fixing {len(skill_files)} skills...")
+        for skill_file in skill_files:
+            result = self.fix_component_file(skill_file, "skill")
+            self.results.append(result)
+
+        # Fix agents
+        agent_files = list(self.plugins_dir.rglob("agents/*.md"))
+        print(f"Phase 2: Fixing {len(agent_files)} agents...")
+        for agent_file in agent_files:
+            result = self.fix_component_file(agent_file, "agent")
+            self.results.append(result)
+
+        # Fix commands
+        command_files = list(self.plugins_dir.rglob("commands/*.md"))
+        print(f"Phase 3: Fixing {len(command_files)} commands...")
+        for cmd_file in command_files:
+            result = self.fix_component_file(cmd_file, "command")
+            self.results.append(result)
+
+        # Directory-name synchronization for skills
+        print("Phase 4: Checking directory-name synchronization...")
+        self.fix_directory_name_sync()
+
+        self.print_summary()
+        return self.results
+
+    def fix_component_file(self, file_path: Path, comp_type: str) -> FixResult:
+        """Fix a single component file."""
+        result = FixResult(file_path=str(file_path), fixed=False)
+
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
+                full_content = f.read()
+
+            # Split into frontmatter and body
+            if not full_content.startswith('---'):
+                return result
+
+            parts = full_content.split('---', 2)
+            if len(parts) < 3:
+                return result
+
+            fm_raw = parts[1]
+            body = parts[2]
+
+            # Parse YAML with ruamel for round-trip
+            try:
+                data = _ruamel_yaml.load(fm_raw)
+                if not isinstance(data, dict):
+                    return result
+            except Exception as e:
+                result.errors.append(f"YAML parse error: {e}")
+                return result
+
+            changes_made = []
+
+            # --- Fix 1: Sanitize Description ---
+            if 'description' in data:
+                original_desc = str(data['description'])
+                cleaned = clean_description_text(original_desc)
+
+                if cleaned != original_desc:
+                    data['description'] = DoubleQuotedScalarString(cleaned)
+                    changes_made.append("Sanitized description (removed newlines/special chars)")
+
+            # --- Fix 2: Normalize Name ---
+            if 'name' in data:
+                original_name = str(data['name'])
+                normalized = normalize_name(original_name)
+                if normalized != original_name:
+                    data['name'] = normalized
+                    changes_made.append(f"Normalized name: {original_name} -> {normalized}")
+
+            # --- Fix 3: Tool Syntax Normalization ---
+            tools_field = 'allowed-tools' if comp_type in ['skill', 'command'] else 'tools'
+            if tools_field in data:
+                tools = data[tools_field]
+                if isinstance(tools, list):
+                    normalized_tools = normalize_tool_syntax(tools)
+                    if normalized_tools != tools:
+                        data[tools_field] = normalized_tools
+                        changes_made.append(f"Normalized tool syntax in {tools_field}")
+
+            # --- Fix 4: Ensure description is double-quoted ---
+            if 'description' in data and not isinstance(data['description'], DoubleQuotedScalarString):
+                data['description'] = DoubleQuotedScalarString(str(data['description']))
+                changes_made.append("Enforced double-quoted description")
+
+            if changes_made:
+                result.changes = changes_made
+                result.fixed = True
+
+                if not self.dry_run:
+                    # Write back
+                    stream = io.StringIO()
+                    _ruamel_yaml.dump(data, stream)
+                    new_fm = stream.getvalue()
+
+                    # Reconstruct file
+                    new_content = f"---\n{new_fm}---{body}"
+                    with open(file_path, 'w', encoding='utf-8') as f:
+                        f.write(new_content)
+
+        except Exception as e:
+            result.errors.append(f"Error: {e}")
+
+        return result
+
+    def fix_directory_name_sync(self) -> None:
+        """Check and optionally fix directory-name mismatches for skills."""
+        skills_dirs = list(self.plugins_dir.rglob("skills/*"))
+
+        for skill_dir in skills_dirs:
+            if not skill_dir.is_dir():
+                continue
+
+            skill_file = skill_dir / "SKILL.md"
+            if not skill_file.exists():
+                skill_file = skill_dir / "skill.md"
+            if not skill_file.exists():
+                continue
+
+            try:
+                content = skill_file.read_text()
+                if not content.startswith('---'):
+                    continue
+
+                end_match = re.search(r'^---$', content[3:], re.MULTILINE)
+                if not end_match:
+                    continue
+
+                fm_text = content[3:3 + end_match.start()]
+                frontmatter = yaml.safe_load(fm_text)
+
+                if not isinstance(frontmatter, dict):
+                    continue
+
+                yaml_name = frontmatter.get('name', '')
+                dir_name = skill_dir.name
+
+                if yaml_name and yaml_name != dir_name:
+                    result = FixResult(
+                        file_path=str(skill_dir),
+                        fixed=False,
+                        changes=[f"Name mismatch: YAML='{yaml_name}' vs Dir='{dir_name}'"]
+                    )
+
+                    # Determine which to use (prefer dir name as it's the canonical reference)
+                    if NAME_PATTERN.match(dir_name):
+                        # Directory name is valid, update YAML
+                        if not self.dry_run:
+                            new_content = content.replace(
+                                f"name: {yaml_name}",
+                                f"name: {dir_name}"
+                            ).replace(
+                                f'name: "{yaml_name}"',
+                                f'name: "{dir_name}"'
+                            ).replace(
+                                f"name: '{yaml_name}'",
+                                f"name: '{dir_name}'"
+                            )
+                            skill_file.write_text(new_content)
+                        result.changes.append(f"Updated YAML name to match directory: {dir_name}")
+                        result.fixed = True
+                    elif NAME_PATTERN.match(yaml_name):
+                        # YAML name is valid, rename directory
+                        if not self.dry_run:
+                            new_dir = skill_dir.parent / yaml_name
+                            shutil.move(str(skill_dir), str(new_dir))
+                        result.changes.append(f"Renamed directory to match YAML: {yaml_name}")
+                        result.fixed = True
+
+                    self.results.append(result)
+
+            except Exception:
+                pass
+
+    def print_summary(self) -> None:
+        """Print fix summary."""
+        print()
+        print("=" * 70)
+        print("FIX SUMMARY")
+        print("=" * 70)
+
+        fixed_count = sum(1 for r in self.results if r.fixed)
+        error_count = sum(1 for r in self.results if r.errors)
+
+        print(f"Files Processed: {len(self.results)}")
+        print(f"Files Fixed: {fixed_count}")
+        print(f"Files with Errors: {error_count}")
+        print()
+
+        if fixed_count > 0:
+            print("CHANGES MADE:" if not self.dry_run else "CHANGES (DRY RUN - NOT APPLIED):")
+            for result in self.results:
+                if result.fixed:
+                    print(f"\n  {result.file_path}:")
+                    for change in result.changes:
+                        print(f"    ✓ {change}")
+
+        if error_count > 0:
+            print("\nERRORS:")
+            for result in self.results:
+                if result.errors:
+                    print(f"\n  {result.file_path}:")
+                    for error in result.errors:
+                        print(f"    ✗ {error}")
+
+        if fixed_count == 0 and error_count == 0:
+            print("✅ No fixes needed - all files are clean!")
+
+        # Show next steps
+        print("\n" + "=" * 70)
+        print("NEXT STEPS")
+        print("=" * 70)
+        print("Run validation to verify fixes:")
+        print()
+        print("  uv run scripts/toolkit-analyzer.py")
+        print()
+        print("=" * 70)
+
+        print()
+
+
+# --- Marketplace Synchronization (2026 Bi-Directional Source of Truth) ---
+
+
+def clean_json_value(value):
+    """Clean JSON field values - apply same rules as descriptions."""
+    if not isinstance(value, str):
+        return value
+    return " ".join(value.split()).strip()
+
+
+def sanitize_json_fields(data: dict) -> Tuple[bool, List[str]]:
+    """Clean all string values in a JSON object."""
+    changes = []
+    for key, value in data.items():
+        if isinstance(value, str):
+            cleaned = clean_json_value(value)
+            if cleaned != value:
+                data[key] = cleaned
+                changes.append(f"Cleaned '{key}' field")
+        elif isinstance(value, dict):
+            sub_changed, sub_changes = sanitize_json_fields(value)
+            if sub_changed:
+                changes.extend([f"  - {c}" for c in sub_changes])
+    return bool(changes), changes
+
+
+def sync_marketplace(plugins_dir: Path, marketplace_path: Path, dry_run: bool = False) -> Tuple[List[str], List[str]]:
+    """
+    Synchronize marketplace.json with local plugin.json files.
+    plugin.json acts as local authority, marketplace.json as compiled index.
+    """
+    warnings = []
+    errors = []
+
+    if not marketplace_path.exists():
+        warnings.append(f"⚠️ No marketplace.json found at {marketplace_path}")
+        return warnings, errors
+
+    try:
+        with open(marketplace_path, 'r', encoding='utf-8') as f:
+            mkt_data = json.load(f)
+
+        mkt_plugins = mkt_data.get('plugins', [])
+        updated = False
+
+        # 1. Identify all actual plugin folders on disk
+        local_plugin_folders = [f for f in plugins_dir.iterdir() if f.is_dir() and not f.name.startswith('.')]
+        local_plugin_names = []
+
+        for plugin_folder in local_plugin_folders:
+            plugin_json_path = plugin_folder / ".claude-plugin" / "plugin.json"
+            if not plugin_json_path.exists():
+                continue
+
+            local_plugin_names.append(plugin_folder.name)
+
+            try:
+                with open(plugin_json_path, 'r', encoding='utf-8') as f:
+                    local_metadata = json.load(f)
+
+                plugin_name = local_metadata.get('name', plugin_folder.name)
+
+                # Find the corresponding entry in marketplace
+                mkt_entry = next((p for p in mkt_plugins if p.get('name') == plugin_name), None)
+
+                if mkt_entry:
+                    # Check for drift between local plugin.json and marketplace.json
+                    fields_to_sync = ['description', 'version', 'author', 'license', 'tags', 'category']
+                    for field in fields_to_sync:
+                        local_val = local_metadata.get(field)
+                        mkt_val = mkt_entry.get(field)
+
+                        # Skip if local has no value (None/empty) - don't overwrite marketplace
+                        if local_val is None or local_val == "":
+                            continue
+
+                        # Normalize for comparison
+                        if isinstance(local_val, str):
+                            local_val = clean_json_value(local_val)
+                        if isinstance(mkt_val, str):
+                            mkt_val = clean_json_value(mkt_val)
+
+                        if local_val != mkt_val:
+                            msg = f"📊 Drift detected in '{plugin_name}' [{field}]: Local='{local_val}' vs Mkt='{mkt_val}'"
+                            warnings.append(msg)
+                            if not dry_run:
+                                # Propagate local changes to marketplace
+                                if field == 'tags' and isinstance(local_val, list):
+                                    # Merge and deduplicate tags
+                                    existing_tags = mkt_entry.get('tags', [])
+                                    merged_tags = list(set(existing_tags + local_val))
+                                    mkt_entry['tags'] = merged_tags
+                                else:
+                                    mkt_entry[field] = local_val
+                                updated = True
+                else:
+                    # plugin exists on disk but not in marketplace
+                    msg = f"➕ Missing Plugin: '{plugin_name}' exists on disk but not in marketplace.json"
+                    warnings.append(msg)
+                    if not dry_run:
+                        new_entry = {
+                            "name": plugin_name,
+                            "source": f"./plugins/{plugin_folder.name}",
+                            "description": clean_json_value(local_metadata.get('description', '')),
+                            "version": local_metadata.get('version', '1.0.0'),
+                            "strict": True
+                        }
+                        # Copy additional fields if present
+                        for field in ['author', 'license', 'tags', 'category']:
+                            if field in local_metadata:
+                                new_entry[field] = local_metadata[field]
+
+                        mkt_plugins.append(new_entry)
+                        updated = True
+
+            except Exception as e:
+                errors.append(f"✗ Error processing {plugin_folder.name}: {e}")
+
+        # 2. Cleanup: Find entries in marketplace that no longer exist on disk
+        original_count = len(mkt_plugins)
+
+        # Keep entries that:
+        # - Exist locally, OR
+        # - Are remote (http/https/git sources)
+        mkt_plugins = [
+            p for p in mkt_plugins
+            if any(
+                p.get('name', '') == local_name
+                for local_name in local_plugin_names
+            ) or any(
+                p.get('source', '').startswith(prefix)
+                for prefix in ['http', 'git', 'github:']
+            )
+        ]
+
+        if len(mkt_plugins) != original_count:
+            removed = original_count - len(mkt_plugins)
+            msg = f"🗑️ Removed {removed} dead plugin references from marketplace.json"
+            warnings.append(msg)
+            mkt_data['plugins'] = mkt_plugins
+            updated = True
+
+        # Save if updated
+        if updated and not dry_run:
+            with open(marketplace_path, 'w', encoding='utf-8') as f:
+                json.dump(mkt_data, f, indent=2, ensure_ascii=False)
+            print("🚀 Marketplace synchronized and saved.")
+        elif updated and dry_run:
+            print("💾 Marketplace changes ready (DRY RUN - not saved)")
+
+    except Exception as e:
+        errors.append(f"✗ Error synchronizing marketplace: {e}")
+
+    return warnings, errors
+
+
+class MarketplaceSyncer:
+    """Handles marketplace.json synchronization with local plugin.json files."""
+
+    def __init__(self, plugins_dir: Path, marketplace_path: Path, dry_run: bool = False):
+        self.plugins_dir = plugins_dir
+        self.marketplace_path = marketplace_path
+        self.dry_run = dry_run
+        self.results: Dict[str, Any] = {
+            'warnings': [],
+            'errors': [],
+            'plugins_checked': 0,
+            'plugins_synced': 0
+        }
+
+    def sync_all(self) -> Dict[str, Any]:
+        """Run complete marketplace synchronization."""
+        print("=" * 70)
+        print("🔄 Marketplace Synchronization")
+        print(f"Source of Truth: plugin.json (local authority)")
+        print(f"Index: marketplace.json (compiled registry)")
+        print(f"Mode: {'DRY RUN' if self.dry_run else 'LIVE'}")
+        print("=" * 70)
+        print()
+
+        # Phase 1: Sync marketplace with plugin.json
+        print("Phase 1: Synchronizing marketplace.json with plugin.json...")
+        sync_warnings, sync_errors = sync_marketplace(
+            self.plugins_dir,
+            self.marketplace_path,
+            dry_run=self.dry_run
+        )
+        self.results['warnings'].extend(sync_warnings)
+        self.results['errors'].extend(sync_errors)
+
+        # Phase 2: Lint and sanitize all plugin.json files
+        print("Phase 2: Linting and sanitizing plugin.json files...")
+        plugin_json_files = list(self.plugins_dir.rglob(".claude-plugin/plugin.json"))
+        self.results['plugins_checked'] = len(plugin_json_files)
+
+        for plugin_json_path in plugin_json_files:
+            try:
+                with open(plugin_json_path, 'r', encoding='utf-8') as f:
+                    plugin_data = json.load(f)
+
+                # Sanitize fields
+                changed, changes = sanitize_json_fields(plugin_data)
+
+                if changed:
+                    self.results['plugins_synced'] += 1
+                    if not self.dry_run:
+                        with open(plugin_json_path, 'w', encoding='utf-8') as f:
+                            json.dump(plugin_data, f, indent=2, ensure_ascii=False)
+                        print(f"  ✓ Sanitized: {plugin_json_path.parent.parent.name}")
+                    else:
+                        print(f"  • Would sanitize: {plugin_json_path.parent.parent.name}")
+                        for change in changes:
+                            print(f"    - {change}")
+
+            except Exception as e:
+                error_msg = f"✗ Error processing {plugin_json_path}: {e}"
+                self.results['errors'].append(error_msg)
+
+        self.print_summary()
+        return self.results
+
+    def print_summary(self) -> None:
+        """Print synchronization summary."""
+        print()
+        print("=" * 70)
+        print("MARKETPLACE SYNC SUMMARY")
+        print("=" * 70)
+
+        print(f"Plugin .json files checked: {self.results['plugins_checked']}")
+        print(f"Plugin .json files updated: {self.results['plugins_synced']}")
+        print(f"Warnings: {len(self.results['warnings'])}")
+        print(f"Errors: {len(self.results['errors'])}")
+        print()
+
+        if self.results['warnings']:
+            print("WARNINGS:")
+            for warning in self.results['warnings']:
+                print(f"  ⚠️ {warning}")
+            print()
+
+        if self.results['errors']:
+            print("ERRORS:")
+            for error in self.results['errors']:
+                print(f"  ✗ {error}")
+            print()
+
+        # Show next steps
+        print("=" * 70)
+        print("NEXT STEPS")
+        print("=" * 70)
+        print("Run validation to verify sync:")
+        print()
+        print("  uv run scripts/toolkit-analyzer.py")
+        print()
+        print("=" * 70)
+
+        print()
+
+
 # --- Validation Logic (Ported from skills-ref) ---
 
 
-def _validate_name(name: str, skill_dir: Optional[Path] = None) -> List[str]:
+def _validate_name(name: str, skill_dir: Optional[Path] = None) -> tuple[List[str], List[str]]:
     """Validate skill name format and directory match.
     Violation causes CLI crash - errors are CRITICAL."""
     errors = []
+    warnings = []
 
     if not name or not isinstance(name, str) or not name.strip():
         errors.append("CRITICAL: Field 'name' is missing. Code will crash.")
-        return errors
+        return errors, warnings
 
     name_normalized = unicodedata.normalize("NFKC", name.strip())
 
@@ -146,6 +750,11 @@ def _validate_name(name: str, skill_dir: Optional[Path] = None) -> List[str]:
         errors.append(
             f"CRITICAL: Name length ({len(name_normalized)}) exceeds limit ({MAX_NAME_LENGTH}). "
             "Code will crash."
+        )
+    elif len(name_normalized) > 30:
+        warnings.append(
+            f"Name is quite long ({len(name_normalized)} chars). "
+            f"Consider shorter names for better usability (current: '{name_normalized}')."
         )
 
     # 2. Pattern check (comprehensive)
@@ -185,18 +794,29 @@ def _validate_name(name: str, skill_dir: Optional[Path] = None) -> List[str]:
                 f"CRITICAL: Skill name '{name_normalized}' MUST match directory name '{dir_name}'. "
                 "Code will crash."
             )
+        elif len(name_normalized) > 50:
+            warnings.append(
+                f"Skill name '{name_normalized}' matches directory but is very long. "
+                f"Consider a shorter name for better maintainability."
+            )
 
-    return errors
+    return errors, warnings
 
 
-def _validate_description(description: str) -> List[str]:
+def _validate_description(description: str, comp_type: str = "skill") -> tuple[List[str], List[str]]:
     """Validate description format.
-    Violation causes CLI crash - errors are CRITICAL."""
+    Violation causes CLI crash - errors are CRITICAL.
+    
+    Args:
+        description: The description string to validate
+        comp_type: Component type ('skill', 'agent', 'command')
+    """
     errors = []
+    warnings = []
 
     if not description or not isinstance(description, str) or not description.strip():
         errors.append("CRITICAL: Field 'description' is missing. Code will crash.")
-        return errors
+        return errors, warnings
 
     # 1. Length check
     if len(description) > MAX_DESCRIPTION_LENGTH:
@@ -204,21 +824,50 @@ def _validate_description(description: str) -> List[str]:
             f"CRITICAL: Description length ({len(description)}) exceeds limit ({MAX_DESCRIPTION_LENGTH}). "
             "Code will crash."
         )
+    elif len(description) > 500:
+        warnings.append(
+            f"Description is quite long ({len(description)} chars). "
+            f"Consider shortening for better readability (current: '{description[:100]}...')."
+        )
 
     # 2. Multi-line check (YAML parsing safety)
     if "\n" in description.strip():
         errors.append("CRITICAL: Description must be a single-line string only.")
 
-    # 3. Pattern check (discovery tiering)
-    first_line = description.split("\n")[0]
-    normalized = re.sub(r'^["\']', "", first_line).upper()
-    if not re.match(r"^(PROACTIVELY|MUST|SHOULD)?\s*USE\s+WHEN", normalized):
-        errors.append(
-            "CRITICAL: Description must start with 'USE when', 'MUST USE when', "
-            "'SHOULD USE when', or 'PROACTIVELY USE when' pattern for semantic discovery."
-        )
+    # 3. Pattern check (2026 Standard Pattern from CLAUDE.md)
+    # Only Skills require "Use when" pattern for semantic discovery
+    # Commands and Agents have more flexible description formats
+    if comp_type == "skill":
+        # Standard Pattern: {CAPABILITY}. Use when {TRIGGERS}.
+        # Enhanced Pattern: {CAPABILITY}. {MODAL} Use when {TRIGGERS}.
+        # Both should START with capability, NOT with "USE when"
+        first_line = description.split("\n")[0].strip()
+        normalized = re.sub(r'^["\']', "", first_line)
 
-    return errors
+        # Check for "Use when" pattern (required for semantic discovery in skills)
+        use_when_pattern = r'\.?\s*Use when'
+        has_use_when = bool(re.search(use_when_pattern, normalized, re.IGNORECASE))
+
+        if not has_use_when:
+            errors.append(
+                "CRITICAL: Description must contain 'Use when' pattern for semantic discovery. "
+                "Standard Pattern: '{CAPABILITY}. Use when {TRIGGERS}.' "
+                "Enhanced Pattern: '{CAPABILITY}. {MODAL} Use when {TRIGGERS}.'"
+            )
+
+        # Check for Enhanced Pattern (MUST/PROACTIVELY/SHOULD)
+        has_modal = bool(re.search(r'\.\s*(MUST|PROACTIVELY|SHOULD)\s+Use when', normalized, re.IGNORECASE))
+
+        # 4. Optional: Check if description starts with capability (good practice)
+        # Should start with capital letter and NOT start with "Use when"
+        if re.match(r'^Use when', normalized, re.IGNORECASE):
+            errors.append(
+                "CRITICAL: Description should start with CAPABILITY statement, not 'Use when'. "
+                "Format: '{CAPABILITY}. Use when {TRIGGERS}.' "
+                f"Current: '{normalized[:100]}...'"
+            )
+
+    return errors, warnings
 
 
 def _validate_compatibility(compatibility: str) -> List[str]:
@@ -238,15 +887,27 @@ def _validate_compatibility(compatibility: str) -> List[str]:
     return errors
 
 
-def _validate_metadata_fields(metadata: dict) -> List[str]:
-    """Validate that only allowed fields are present."""
+def _validate_metadata_fields(metadata: dict, comp_type: str = "skill") -> List[str]:
+    """Validate that only allowed fields are present per component type."""
     errors = []
-    extra_fields = set(metadata.keys()) - ALLOWED_FIELDS
+    
+    # Select appropriate allowed fields based on component type
+    if comp_type == "skill":
+        allowed = ALLOWED_FIELDS_SKILL
+    elif comp_type == "agent":
+        allowed = ALLOWED_FIELDS_AGENT
+    elif comp_type == "command":
+        allowed = ALLOWED_FIELDS_COMMAND
+    else:
+        allowed = ALLOWED_FIELDS  # Fallback to union
+    
+    extra_fields = set(metadata.keys()) - allowed
     if extra_fields:
         errors.append(
             f"Unexpected fields in frontmatter: {', '.join(sorted(extra_fields))}. "
-            f"Only {sorted(ALLOWED_FIELDS)} are allowed."
+            f"For {comp_type}, only {sorted(allowed)} are allowed per CLAUDE.md."
         )
+    
     return errors
 
 
@@ -317,6 +978,9 @@ class ToolkitAnalyzer:
 
         # Phase 11: Architecture Validation
         self.validate_architecture()
+
+        # Phase 12: Claude Plugin Validation
+        self.validate_claude_plugin()
 
         # Display summary
         self.print_summary()
@@ -647,7 +1311,7 @@ class ToolkitAnalyzer:
                         continue
 
                     # 1. Field Validation
-                    field_errors = _validate_metadata_fields(frontmatter)
+                    field_errors = _validate_metadata_fields(frontmatter, "skill")
                     result.errors.extend([f"{skill_file}: {e}" for e in field_errors])
 
                     # 2. Name Validation
@@ -656,9 +1320,12 @@ class ToolkitAnalyzer:
                             f"{skill_file}: Missing required field 'name'"
                         )
                     else:
-                        name_errors = _validate_name(frontmatter["name"], skill_dir)
+                        name_errors, name_warnings = _validate_name(frontmatter["name"], skill_dir)
                         result.errors.extend(
                             [f"{skill_file}: {e}" for e in name_errors]
+                        )
+                        result.warnings.extend(
+                            [f"{skill_file}: {e}" for e in name_warnings]
                         )
 
                     # 3. Description Validation
@@ -667,9 +1334,12 @@ class ToolkitAnalyzer:
                             f"{skill_file}: Missing required field 'description'"
                         )
                     else:
-                        desc_errors = _validate_description(frontmatter["description"])
+                        desc_errors, desc_warnings = _validate_description(frontmatter["description"], "skill")
                         result.errors.extend(
                             [f"{skill_file}: {e}" for e in desc_errors]
+                        )
+                        result.warnings.extend(
+                            [f"{skill_file}: {e}" for e in desc_warnings]
                         )
 
                     # 4. Compatibility Validation
@@ -718,6 +1388,109 @@ class ToolkitAnalyzer:
 
                 except Exception as e:
                     result.errors.append(f"{skill_file}: Error processing: {e}")
+
+        # Validate agents
+        agent_files = list(self.plugins_dir.rglob("agents/*.md"))
+        if agent_files:
+            print(f"  Validating {len(agent_files)} agents...")
+            for agent_file in agent_files:
+                try:
+                    content = agent_file.read_text()
+                    if not content.startswith("---"):
+                        result.errors.append(f"{agent_file}: Missing YAML frontmatter")
+                        continue
+
+                    end_match = re.search(r"^---$", content[3:], re.MULTILINE)
+                    if not end_match:
+                        result.errors.append(
+                            f"{agent_file}: Missing closing frontmatter marker"
+                        )
+                        continue
+
+                    fm_text = content[3 : 3 + end_match.start()]
+                    try:
+                        frontmatter = yaml.safe_load(fm_text)
+                        if not isinstance(frontmatter, dict):
+                            raise ValueError("Frontmatter is not a dict")
+                    except Exception as e:
+                        result.errors.append(
+                            f"{agent_file}: Invalid YAML frontmatter: {e}"
+                        )
+                        continue
+
+                    # Field Validation
+                    field_errors = _validate_metadata_fields(frontmatter, "agent")
+                    result.errors.extend([f"{agent_file}: {e}" for e in field_errors])
+
+                    # Name Validation (required for agents)
+                    if "name" not in frontmatter:
+                        result.errors.append(
+                            f"{agent_file}: Missing required field 'name'"
+                        )
+                    else:
+                        name_errors, name_warnings = _validate_name(frontmatter["name"])
+                        result.errors.extend(
+                            [f"{agent_file}: {e}" for e in name_errors]
+                        )
+                        result.warnings.extend(
+                            [f"{agent_file}: {e}" for e in name_warnings]
+                        )
+
+                except Exception as e:
+                    result.errors.append(f"{agent_file}: Error processing: {e}")
+
+        # Validate commands
+        command_files = list(self.plugins_dir.rglob("commands/*.md"))
+        if command_files:
+            print(f"  Validating {len(command_files)} commands...")
+            for cmd_file in command_files:
+                try:
+                    content = cmd_file.read_text()
+                    if not content.startswith("---"):
+                        result.errors.append(f"{cmd_file}: Missing YAML frontmatter")
+                        continue
+
+                    end_match = re.search(r"^---$", content[3:], re.MULTILINE)
+                    if not end_match:
+                        result.errors.append(
+                            f"{cmd_file}: Missing closing frontmatter marker"
+                        )
+                        continue
+
+                    fm_text = content[3 : 3 + end_match.start()]
+                    try:
+                        frontmatter = yaml.safe_load(fm_text)
+                        if not isinstance(frontmatter, dict):
+                            raise ValueError("Frontmatter is not a dict")
+                    except Exception as e:
+                        result.errors.append(
+                            f"{cmd_file}: Invalid YAML frontmatter: {e}"
+                        )
+                        continue
+
+                    # Field Validation
+                    field_errors = _validate_metadata_fields(frontmatter, "command")
+                    result.errors.extend([f"{cmd_file}: {e}" for e in field_errors])
+
+                    # Description Validation (required for commands)
+                    if "description" not in frontmatter:
+                        result.errors.append(
+                            f"{cmd_file}: Missing required field 'description'"
+                        )
+                    else:
+                        # Commands don't require "Use when" pattern (more flexible format)
+                        desc_errors, desc_warnings = _validate_description(
+                            frontmatter["description"], "command"
+                        )
+                        result.errors.extend(
+                            [f"{cmd_file}: {e}" for e in desc_errors]
+                        )
+                        result.warnings.extend(
+                            [f"{cmd_file}: {e}" for e in desc_warnings]
+                        )
+
+                except Exception as e:
+                    result.errors.append(f"{cmd_file}: Error processing: {e}")
 
         print()
         self.log_result(result)
@@ -1109,15 +1882,18 @@ class ToolkitAnalyzer:
         )
         print(f"  Checking {len(skill_files)} skills...")
 
-        # Expected modality prefixes by plugin tier (2026 convention)
-        tier_prefixes = {
-            "sys-core": ["MUST USE when"],
-            "sys-builder": ["PROACTIVELY USE when"],
-            "sys-cognition": ["USE when"],
-            "sys-research": ["USE when"],
-            "sys-meta": ["SHOULD USE when"],
-            "sys-multimodal": ["USE when"],
-            "sys-edge": ["USE when"],
+        # Expected modality patterns by plugin tier (2026 convention)
+        # Standard Pattern: {CAPABILITY}. Use when {TRIGGERS}.
+        # Enhanced Pattern: {CAPABILITY}. {MODAL} Use when {TRIGGERS}.
+        tier_guidance = {
+            "sys-core": "Enhanced Pattern (MUST/PROACTIVELY/SHOULD) recommended for internal standards",
+            "sys-builder": "Enhanced Pattern (PROACTIVELY/MUST) recommended for orchestration",
+            "sys-cognition": "Standard Pattern (USE when) or Enhanced (SHOULD)",
+            "sys-research": "Standard Pattern (USE when) recommended",
+            "sys-meta": "Enhanced Pattern (SHOULD) recommended for best practices",
+            "sys-multimodal": "Standard Pattern (USE when) recommended",
+            "sys-edge": "Standard Pattern (USE when) recommended",
+            "llm-application-dev": "Standard Pattern (USE when) recommended",
         }
 
         for skill_file in skill_files:
@@ -1139,66 +1915,39 @@ class ToolkitAnalyzer:
                 skill_name = frontmatter.get("name", "")
                 description = frontmatter.get("description", "")
 
+                if not description:
+                    continue
+
                 # Find which plugin this skill belongs to
                 skill_plugin = None
-                for plugin_name in tier_prefixes.keys():
+                for plugin_name in tier_guidance.keys():
                     if f"/plugins/{plugin_name}/" in str(skill_file):
                         skill_plugin = plugin_name
                         break
 
-                if not skill_plugin:
-                    continue
+                # Check for Enhanced Pattern
+                has_enhanced = bool(re.search(r'\.\s*(MUST|PROACTIVELY|SHOULD)\s+Use when', description, re.IGNORECASE))
+                has_standard = bool(re.search(r'\.\s*Use when', description, re.IGNORECASE)) and not has_enhanced
 
-                expected_prefixes = tier_prefixes.get(skill_plugin, [])
+                # Provide tier-specific guidance
+                if skill_plugin:
+                    expected_type = tier_guidance.get(skill_plugin, "")
 
-                # Check if description starts with expected modality pattern
-                has_valid_prefix = False
-                for prefix in expected_prefixes:
-                    if description.strip().upper().startswith(prefix.upper()):
-                        has_valid_prefix = True
-                        break
-
-                if not has_valid_prefix and description:
-                    # Check for ANY modality pattern (fallback)
-                    any_modality = any(
-                        description.strip().upper().startswith(p)
-                        for prefixes in tier_prefixes.values()
-                        for p in prefixes
-                    )
-
-                    if not any_modality:
-                        result.errors.append(
-                            f"{skill_file}: Skill '{skill_name}' description missing modality prefix. "
-                            f"Expected: {' or '.join(expected_prefixes)}. "
-                            f"Current: '{description[:50]}...'"
-                        )
-                    else:
-                        # Has a modality but wrong tier
+                    # Check if using Enhanced in non-infrastructure context (warning)
+                    is_infrastructure = skill_plugin in ["sys-core", "sys-builder", "sys-meta"]
+                    if has_enhanced and not is_infrastructure:
                         result.warnings.append(
-                            f"{skill_file}: Skill '{skill_name}' has modality prefix but may not match "
-                            f"expected tier for {skill_plugin}. "
-                            f"Expected: {' or '.join(expected_prefixes)}"
+                            f"{skill_file}: Skill '{skill_name}' uses Enhanced Pattern but '{skill_plugin}' "
+                            f"is not an infrastructure plugin. Consider Standard Pattern for portability. "
+                            f"Guidance: {expected_type}"
                         )
 
-                # STRICT ENFORCEMENT: Description MUST start with the modal
-                # Check for text before modality pattern (Cat Toolkit convention violation)
-                if description:
-                    lines = description.strip().split("\n")
-                    # Remove leading quotes and whitespace
-                    first_line_normalized = re.sub(r'^["\']', "", lines[0]).strip()
-
-                    # Strict regex: Start of string (^) must match the modal
-                    # Patterns: "PROACTIVELY USE when", "MUST USE when", "SHOULD USE when", "USE when"
-                    strict_modal_pattern = re.compile(
-                        r"^(PROACTIVELY\s+)?(MUST\s+USE|SHOULD\s+USE|USE)\s+WHEN",
-                        re.IGNORECASE
-                    )
-
-                    if not strict_modal_pattern.match(first_line_normalized):
-                        result.warnings.append(
-                            f"{skill_file}: Skill '{skill_name}' description has text before modality pattern. "
-                            f"2026 Cat Toolkit convention requires modality as the FIRST tokens. "
-                            f"Current start: '{first_line_normalized[:50]}...'"
+                    # Check if using Standard in infrastructure context (info)
+                    if has_standard and is_infrastructure:
+                        result.info.append(
+                            f"{skill_file}: Skill '{skill_name}' in '{skill_plugin}' uses Standard Pattern. "
+                            f"Consider Enhanced Pattern (MUST/PROACTIVELY/SHOULD) for internal toolkit standards. "
+                            f"Guidance: {expected_type}"
                         )
 
             except Exception as e:
@@ -1344,6 +2093,74 @@ class ToolkitAnalyzer:
         print()
         self.log_result(result)
 
+    def validate_claude_plugin(self) -> None:
+        """Phase 12: Run claude plugin validate on marketplace and each plugin"""
+        result = ValidationResult("Claude Plugin Validation", True)
+
+        print("Phase 12: Running claude plugin validate")
+        print("-" * 70)
+
+        import subprocess
+
+        # Validate marketplace
+        marketplace_path = self.root_dir / ".claude-plugin" / "marketplace.json"
+        if marketplace_path.exists():
+            print(f"  Validating marketplace: {marketplace_path}")
+            try:
+                proc = subprocess.run(
+                    ["claude", "plugin", "validate", str(marketplace_path)],
+                    capture_output=True,
+                    text=True,
+                    timeout=30
+                )
+                if proc.returncode != 0:
+                    result.errors.append(
+                        f"Marketplace validation failed (exit code {proc.returncode}):\n"
+                        f"{proc.stdout}\n{proc.stderr}"
+                    )
+                else:
+                    result.info.append("Marketplace validation passed")
+            except subprocess.TimeoutExpired:
+                result.errors.append("Marketplace validation timed out (>30s)")
+            except FileNotFoundError:
+                result.warnings.append("'claude' command not found - skipping marketplace validation")
+            except Exception as e:
+                result.errors.append(f"Marketplace validation error: {e}")
+        else:
+            result.warnings.append(f"Marketplace not found at {marketplace_path}")
+
+        # Validate each plugin
+        plugin_json_files = list(self.plugins_dir.rglob(".claude-plugin/plugin.json"))
+        print(f"  Validating {len(plugin_json_files)} plugins...")
+
+        for plugin_json_path in plugin_json_files:
+            plugin_name = plugin_json_path.parent.parent.name
+            print(f"    - {plugin_name}")
+            try:
+                proc = subprocess.run(
+                    ["claude", "plugin", "validate", str(plugin_json_path)],
+                    capture_output=True,
+                    text=True,
+                    timeout=30
+                )
+                if proc.returncode != 0:
+                    result.errors.append(
+                        f"Plugin '{plugin_name}' validation failed (exit code {proc.returncode}):\n"
+                        f"{proc.stdout}\n{proc.stderr}"
+                    )
+                else:
+                    result.info.append(f"Plugin '{plugin_name}' validation passed")
+            except subprocess.TimeoutExpired:
+                result.errors.append(f"Plugin '{plugin_name}' validation timed out (>30s)")
+            except FileNotFoundError:
+                result.warnings.append("'claude' command not found - skipping plugin validations")
+                break  # Don't repeat this warning for each plugin
+            except Exception as e:
+                result.errors.append(f"Plugin '{plugin_name}' validation error: {e}")
+
+        print()
+        self.log_result(result)
+
     def print_summary(self) -> None:
         """Print validation summary"""
         print("=" * 70)
@@ -1355,9 +2172,9 @@ class ToolkitAnalyzer:
         print()
 
         if self.report.all_passed:
-            print("All validators passed!")
+            print("✓ All validators passed!")
         else:
-            print("Validation issues found")
+            print("⚠️  Validation issues found")
 
         # Always show errors if any
         if self.report.total_errors > 0:
@@ -1366,7 +2183,7 @@ class ToolkitAnalyzer:
                 if result.errors:
                     print(f"\n  {result.name}:")
                     for error in result.errors:
-                        print(f"    • {error}")
+                        print(f"    ✗ {error}")
 
         # Always show warnings if any
         if self.report.total_warnings > 0:
@@ -1375,7 +2192,7 @@ class ToolkitAnalyzer:
                 if result.warnings:
                     print(f"\n  {result.name}:")
                     for warning in result.warnings:
-                        print(f"    • {warning}")
+                        print(f"    ⚠️  {warning}")
 
         # Show info messages if any
         info_count = sum(len(r.info) for r in self.report.results)
@@ -1385,7 +2202,21 @@ class ToolkitAnalyzer:
                 if result.info:
                     print(f"\n  {result.name}:")
                     for info in result.info:
-                        print(f"    • {info}")
+                        print(f"    ℹ️  {info}")
+
+        # Show recommendation to use --fix if there are issues
+        if not self.report.all_passed:
+            print("\n" + "=" * 70)
+            print("💡 RECOMMENDATION")
+            print("=" * 70)
+            print("Run with --fix to automatically resolve fixable issues:")
+            print()
+            print("  uv run scripts/toolkit-analyzer.py --fix")
+            print()
+            print("Or preview fixes first:")
+            print("  uv run scripts/toolkit-analyzer.py --fix --dry-run")
+            print()
+            print("=" * 70)
 
         print()
         print("=" * 70)
@@ -1403,6 +2234,12 @@ def main():
     )
     parser.add_argument(
         "--json", action="store_true", help="Output results in JSON format"
+    )
+    parser.add_argument(
+        "--fix", action="store_true", help="Automatically fix linting errors"
+    )
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Show what would be fixed without making changes"
     )
 
     args = parser.parse_args()
@@ -1422,8 +2259,75 @@ def main():
             # Fallback to parent of script dir (assuming script is in scripts/)
             root_dir = str(Path(__file__).parent.parent)
 
-    analyzer = ToolkitAnalyzer(root_dir)
-    report = analyzer.validate_all()
+    root_path = Path(root_dir)
+
+    if args.fix:
+        # Run the fixer
+        analyzer = ToolkitAnalyzer(root_dir)
+        analyzer._discover_and_parse()
+
+        print("\n" + "=" * 70)
+        print("STEP 1: Component Fixes (Markdown & YAML)")
+        print("=" * 70 + "\n")
+
+        fixer = ComponentFixer(analyzer.plugins_dir, dry_run=args.dry_run)
+        component_results = fixer.fix_all()
+
+        # Check if marketplace.json exists
+        marketplace_path = root_path / ".claude-plugin" / "marketplace.json"
+        sync_results = {'errors': []}  # Initialize to avoid undefined variable
+
+        if marketplace_path.exists():
+            print("\n" + "=" * 70)
+            print("STEP 2: Marketplace Synchronization (JSON)")
+            print("=" * 70 + "\n")
+
+            syncer = MarketplaceSyncer(
+                analyzer.plugins_dir,
+                marketplace_path,
+                dry_run=args.dry_run
+            )
+            sync_results = syncer.sync_all()
+
+        # Run full validation including claude plugin validate
+        print("\n" + "=" * 70)
+        print("STEP 3: Full Validation (Including Claude Plugin Validate)")
+        print("=" * 70 + "\n")
+
+        report = analyzer.validate_all()
+
+        # Exit with appropriate code
+        if args.json:
+            # Output JSON
+            output = {
+                "timestamp": report.timestamp,
+                "validators_run": report.validators_run,
+                "total_errors": report.total_errors,
+                "total_warnings": report.total_warnings,
+                "all_passed": report.all_passed,
+                "results": [],
+            }
+
+            for result in report.results:
+                output["results"].append(
+                    {
+                        "name": result.name,
+                        "passed": result.passed,
+                        "errors": result.errors,
+                        "warnings": result.warnings,
+                        "info": result.info,
+                    }
+                )
+
+            print(json.dumps(output, indent=2))
+
+        # Exit with appropriate code
+        has_errors = any(r.errors for r in component_results) or sync_results.get('errors', []) or not report.all_passed
+        sys.exit(1 if has_errors else 0)
+    else:
+        # Run validation
+        analyzer = ToolkitAnalyzer(root_dir)
+        report = analyzer.validate_all()
 
     if args.json:
         # Output JSON

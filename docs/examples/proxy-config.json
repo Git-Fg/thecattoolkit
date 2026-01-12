@@ -1,0 +1,6 @@
+{
+  "env": {
+    "ANTHROPIC_BASE_URL": "https://api.minimax.ai/v1",
+    "ANTHROPIC_API_KEY": "your-api-key"
+  }
+}

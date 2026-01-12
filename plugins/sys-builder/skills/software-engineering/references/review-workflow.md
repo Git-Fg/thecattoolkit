@@ -1,64 +1,84 @@
-# Code Review Workflow
+# Code Review Protocol
 
-## Phase 1: Security Scan (OWASP)
-1. **Input Validation**
-   - All user inputs validated
-   - No injection vulnerabilities (SQL, NoSQL, OS command)
-   - Proper sanitization
+## Core Purpose
 
-2. **Authentication & Authorization**
-   - Auth checks on sensitive endpoints
-   - Proper access control
-   - No broken authentication patterns
+Act as a Senior Engineer reviewing a Junior Engineer's PR. Focus on Logic, Security, and Maintainability.
 
-3. **Data Protection**
-   - No hardcoded secrets
-   - Proper encryption
-   - Secure data transmission
+## Review Checklist
 
-## Phase 2: Logic Verification
-1. **Correctness**
-   - Logic handles edge cases
-   - No obvious bugs or race conditions
-   - Error handling is comprehensive
+### 1. Correctness
+- [ ] Does the logic handle edge cases (null, 0, empty array)?
+- [ ] Are error states handled (try/catch, promises)?
 
-2. **Edge Cases**
-   - Null/undefined handling
-   - Boundary conditions
-   - Error scenarios
+### 2. Security (OWASP Top 10)
+- [ ] **Injection Prevention**: All user inputs validated/sanitized, no dynamic SQL
+- [ ] **Authentication**: Auth checks on sensitive endpoints, no hardcoded secrets
+- [ ] **Access Control**: Authorization checks on every protected resource
+- [ ] **Cryptography**: No hardcoded passwords or keys
+- [ ] **Input Validation**: All entry points validated
+- [ ] **Error Handling**: Errors don't expose sensitive information
+- [ ] **Dependencies**: No vulnerable/outdated components
 
-## Phase 3: Performance Check
-1. **Efficiency**
-   - No obvious performance bottlenecks
-   - Appropriate data structures
-   - Efficient algorithms
+### 3. Performance
+- [ ] No DB queries inside loops?
+- [ ] Large datasets paginated?
+- [ ] Heavy computations cached?
 
-2. **Resource Usage**
-   - No memory leaks
-   - Proper cleanup
-   - Appropriate resource management
+### 4. Maintainability
+- [ ] Variables named for intent (`userList` vs `data`)?
+- [ ] Functions do one thing?
+- [ ] No magic numbers?
 
-## Phase 4: Report Findings by Severity
+### 5. Testing
+- [ ] Test coverage for new functionality?
+- [ ] Edge cases tested?
+- [ ] Test quality and assertions correct?
 
-### Critical
-- Security vulnerabilities
-- Data loss risks
-- System crashes
+### 6. Documentation
+- [ ] Complex logic commented?
+- [ ] Function signatures documented?
+- [ ] README updated if needed?
 
-### High
-- Significant bugs
-- Performance issues
-- Maintainability concerns
+## Review Process
 
-### Medium
-- Code quality issues
-- Minor bugs
-- Improvement suggestions
+### Step 1: Gather Context
+```bash
+git diff --staged  # or git diff HEAD~1
+```
 
-### Low
-- Style preferences
-- Documentation
-- Minor optimizations
+### Step 2: The "Blast Radius" Check
+Before reviewing lines, check imports and usages:
+```bash
+grep -r "ChangedFunctionName" .
+```
 
-## Integration with Security Standards
-Refer to `references/core-engineering.md` for the complete OWASP Top 10 security checklist to use during code review.
+### Step 3: Analysis
+Review the changes against the checklist:
+
+1. **Correctness**: Does it actually solve the problem?
+2. **Security**: Are inputs sanitized? Auth checks present?
+3. **Performance**: Any N+1 queries? Loop inefficiencies?
+4. **Style**: Variable naming, folder structure
+5. **Testing**: Adequate test coverage?
+
+### Step 4: Report Findings
+Group findings by severity and provide specific file:line references:
+
+- **[CRITICAL]**: Must fix immediately (Bug/Security)
+- **[WARNING]**: Strong recommendation (Tech debt)
+- **[NIT]**: Style/Preference
+
+## Output Format
+
+Each finding must include:
+- File:line reference
+- Category (security/performance/correctness/style)
+- Description of the issue
+- Concrete fix suggestion (for CRITICAL/WARNING)
+
+## Success Criteria
+- [ ] Report is categorized by severity
+- [ ] Every finding includes a specific file:line reference
+- [ ] Every critical finding suggests a concrete fix
+- [ ] Security checklist verified
+- [ ] All affected files reviewed

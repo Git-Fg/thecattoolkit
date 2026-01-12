@@ -1,6 +1,6 @@
 ---
 name: researcher
-description: "USE when answering technical questions requiring external verification, documentation lookup, or library/repo research. Automatically determines the optimal research tool based on query type and available information."
+description: "Automatically determines the optimal research tool based on query type and available information. Use when answering technical questions requiring external verification, documentation lookup, or library/repo research."
 user-invocable: false
 allowed-tools:
   - mcp__plugin_sys-research_context7__resolve-library-id

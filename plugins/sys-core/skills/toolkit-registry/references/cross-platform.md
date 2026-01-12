@@ -19,7 +19,6 @@ A comparison of slash command implementations across major AI coding platforms.
 description: Required - shown in /help and used for auto-discovery
 allowed-tools: Optional - restrict tools (not enable)
 argument-hint: Optional - shown in autocomplete
-model: Optional - specific model to use
 disable-model-invocation: Optional - prevent programmatic invocation via SlashCommand tool
 ---
 ```
