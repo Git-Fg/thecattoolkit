@@ -1495,6 +1495,24 @@ class ToolkitAnalyzer:
         print()
         self.log_result(result)
 
+    def _resolve_skill_path(self, path: str, skill_root: Path, file_dir: Path) -> Path:
+        try:
+            parsed = Path(path)
+        except Exception:
+            return (file_dir / path).resolve()
+
+        if parsed.parts and parsed.parts[0] in {"scripts", "assets", "references"}:
+            return (skill_root / path).resolve()
+
+        return (file_dir / path).resolve()
+
+    def _path_within_skill(self, path: Path, skill_root: Path) -> bool:
+        try:
+            path.relative_to(skill_root)
+            return True
+        except ValueError:
+            return False
+
     def validate_links(self) -> None:
         """Validate markdown links and references"""
         result = ValidationResult("Link Validation", True)
@@ -1540,22 +1558,29 @@ class ToolkitAnalyzer:
                     if not link.strip():
                         continue
 
-                    target_path = file_dir / link
-                    target_path = target_path.resolve()
+                    target_path = self._resolve_skill_path(link, skill_root, file_dir)
                     if "#" in str(target_path):
                         target_path = Path(str(target_path).split("#")[0])
 
                     if not target_path.exists():
-                        target_path_root = skill_root / link
-                        if not target_path_root.exists():
-                            result.errors.append(f"{md_file}: Broken link -> {link}")
+                        result.errors.append(f"{md_file}: Broken link -> {link}")
+                    elif not self._path_within_skill(target_path, skill_root):
+                        is_readme = md_file.name.lower() in ["readme.md", "readme"]
+                        if is_readme:
+                            result.errors.append(
+                                f"{md_file}: Cross-skill link detected -> {link}"
+                            )
+                        else:
+                            result.warnings.append(
+                                f"{md_file}: Skill entry must remain self-contained; reference `{link}` via its SKILL.md."
+                            )
 
                 # Validate backtick paths
                 # Template/documentation files may reference optional files
                 is_template = "templates" in str(md_file) or "assets" in str(md_file)
                 for match in backtick_pattern.finditer(content):
                     path = match.group(0).strip("`")
-                    target = skill_root / path
+                    target = self._resolve_skill_path(path, skill_root, file_dir)
                     if not target.exists():
                         # Only warn for non-template files
                         # Template files are documentation and may reference optional files
@@ -1573,8 +1598,8 @@ class ToolkitAnalyzer:
                 is_readme = md_file.name.lower() in ["readme.md", "readme"]
                 if not is_readme:
                     for match in cross_ref_pattern.finditer(content):
-                        result.warnings.append(
-                            f"{md_file}: Cross-skill reference found"
+                        result.errors.append(
+                            f"{md_file}: Cross-skill reference found -> {match.group(0)}"
                         )
 
                 # Check @[file] syntax misuse

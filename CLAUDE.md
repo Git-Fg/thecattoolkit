@@ -213,7 +213,7 @@ Main Agent → Subagent (override) → Skill (temporary)
 | Verify writes | Trust return codes | Redundant verification |
 
 ## 🚨 ABSOLUTE CONSTRAINTS
-- **NO DEEP LINKING**: Skills MUST NOT link to other Skills via file paths.
+- **NO DEEP LINKING**: Skills MUST NOT link to other Skills via file paths. Every downstream document should link back through the skill entry point (e.g., `references/xyz.md`, `scripts/foo.py`) so Claude starts at `SKILL.md` and navigates downwards without needing `../`.
 - **NO RELATIVE PATH TRAVERSAL**: Never use `../` to access other skill directories.
 - **ZERO GLUE**: Avoid pass-through functions; call implementation directly.
 
