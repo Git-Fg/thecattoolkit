@@ -4,6 +4,7 @@ import * as path from "path";
 /**
  * Advanced wrapper for @just-every/crawl via npx.
  * Optimized for LLM consumption with token awareness and robust error handling.
+ * Supports multiple URLs in a single execution.
  */
 
 interface CrawlResult {
@@ -27,7 +28,8 @@ interface Options {
   userAgent?: string;
   cacheDir?: string;
   timeout?: number;
-  maxContentLength?: number; // LLM Optimization: Truncate long content
+  maxContentLength?: number;
+  parallel?: boolean; // Run multiple URLs in parallel
 }
 
 async function runCrawl(url: string, options: Options = {}): Promise<CrawlResult[]> {
@@ -48,7 +50,6 @@ async function runCrawl(url: string, options: Options = {}): Promise<CrawlResult
     let stdout = "";
     let stderr = "";
 
-    // Use a larger buffer or handle data chunks carefully
     child.stdout.on("data", (data) => {
       stdout += data.toString();
     });
@@ -61,7 +62,13 @@ async function runCrawl(url: string, options: Options = {}): Promise<CrawlResult
       const duration = Date.now() - startTime;
       
       if (code !== 0 && code !== null) {
-        reject(new Error(`npx @just-every/crawl failed with code ${code}: ${stderr}`));
+        // We resolve with an error object instead of rejecting for batch processing
+        resolve([{
+            url,
+            markdown: "",
+            error: `Failed with code ${code}: ${stderr}`,
+            metadata: { length: 0, truncated: false, duration }
+        }]);
         return;
       }
 
@@ -74,7 +81,13 @@ async function runCrawl(url: string, options: Options = {}): Promise<CrawlResult
         else if (objStart !== -1) start = objStart;
 
         if (start === -1) {
-          throw new Error("No JSON found in output. Possible crawl block or network issue.");
+            resolve([{
+                url,
+                markdown: "",
+                error: "No JSON found in output. Blocked or empty result.",
+                metadata: { length: 0, truncated: false, duration }
+            }]);
+            return;
         }
 
         const data = JSON.parse(stdout.substring(start));
@@ -106,7 +119,12 @@ async function runCrawl(url: string, options: Options = {}): Promise<CrawlResult
 
         resolve(results);
       } catch (e) {
-        reject(new Error(`Failed to parse output: ${e}\nRaw stderr: ${stderr}`));
+        resolve([{
+            url,
+            markdown: "",
+            error: `Failed to parse output: ${e}`,
+            metadata: { length: 0, truncated: false, duration }
+        }]);
       }
     });
   });
@@ -114,13 +132,13 @@ async function runCrawl(url: string, options: Options = {}): Promise<CrawlResult
 
 // Parse CLI arguments
 const args = process.argv.slice(2);
-const url = args.find(a => a.startsWith("http"));
+const urls = args.filter(a => a.startsWith("http"));
 
-if (!url) {
+if (urls.length === 0) {
   console.error(JSON.stringify({ 
     status: "error", 
-    message: "Missing URL",
-    usage: "bun run url-to-md.ts <url> [options]",
+    message: "Missing URL(s)",
+    usage: "bun run url-to-md.ts <url1> [url2] ... [options]",
     options: [
       "--pages <n>",
       "--concurrency <n>",
@@ -129,7 +147,8 @@ if (!url) {
       "--user-agent <string>",
       "--timeout <ms>",
       "--cache-dir <path>",
-      "--max-length <n> (LLM optimization)"
+      "--max-length <n>",
+      "--parallel"
     ]
   }));
   process.exit(1);
@@ -148,27 +167,42 @@ const options: Options = {
   userAgent: getArg("--user-agent"),
   timeout: parseInt(getArg("--timeout") || "30000"),
   cacheDir: getArg("--cache-dir") || ".cache",
-  maxContentLength: parseInt(getArg("--max-length") || "30000") // Default LLM limit
+  maxContentLength: parseInt(getArg("--max-length") || "30000"),
+  parallel: args.includes("--parallel")
 };
 
-runCrawl(url, options)
-  .then((results) => {
-    const hasErrors = results.some(r => r.error);
-    const allEmpty = results.every(r => !r.markdown || r.markdown.trim().length < 50);
+async function main() {
+    let allResults: CrawlResult[] = [];
+    
+    if (options.parallel) {
+        const promises = urls.map(url => runCrawl(url, options));
+        const resultsArray = await Promise.all(promises);
+        allResults = resultsArray.flat();
+    } else {
+        for (const url of urls) {
+            const results = await runCrawl(url, options);
+            allResults.push(...results);
+        }
+    }
+
+    const hasErrors = allResults.some(r => r.error);
+    const allEmpty = allResults.every(r => !r.markdown || r.markdown.trim().length < 50);
     
     const output: any = { 
       status: "success", 
-      count: results.length,
-      results 
+      urlCount: urls.length,
+      resultCount: allResults.length,
+      results: allResults 
     };
 
-    if (allEmpty && results.length > 0) {
-      output.recommendation = "Content seems empty or blocked. Consider using full Playwright mode or disabling robots.txt.";
+    if (allEmpty && allResults.length > 0) {
+      output.recommendation = "Content seems empty or blocked for most URLs. Consider full Playwright mode.";
     }
 
     console.log(JSON.stringify(output, null, 2));
-  })
-  .catch((error) => {
+}
+
+main().catch(error => {
     console.error(JSON.stringify({ status: "error", message: error.message }));
     process.exit(1);
-  });
+});
