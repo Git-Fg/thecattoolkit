@@ -1,0 +1,19 @@
+{
+    "name": "sys-nodejs",
+    "description": "NODE.JS/TS RUNTIME DOMAIN - Language-specific tooling for Node.js, TypeScript, Bun, and npm/pnpm/bun package ecosystems",
+    "version": "1.0.0",
+    "license": "MIT",
+    "author": {
+        "name": "Git-Fg"
+    },
+    "keywords": [
+        "nodejs",
+        "typescript",
+        "bun",
+        "javascript",
+        "npm",
+        "pnpm",
+        "type-safety",
+        "language"
+    ]
+}

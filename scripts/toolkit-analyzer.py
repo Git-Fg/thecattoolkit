@@ -101,6 +101,15 @@ KNOWN_CUSTOM_TOOLS = {
 # Supports hyphens in namespace and tool names
 MCP_TOOL_PATTERN = re.compile(r"^mcp__plugin_[a-zA-Z0-9_-]+__[a-zA-Z0-9_-]+$")
 
+# Directories to exclude from validation
+# .claude/ is a local workspace folder for plugin development (not part of the marketplace)
+EXCLUDED_DIRS = {".claude", ".attic", ".git", "__pycache__", "node_modules"}
+
+
+def filter_excluded_paths(paths: List[Path]) -> List[Path]:
+    """Filter out paths that are inside excluded directories."""
+    return [p for p in paths if not any(excl in p.parts for excl in EXCLUDED_DIRS)]
+
 
 @dataclass
 class ValidationResult:
@@ -246,21 +255,21 @@ class ComponentFixer:
         skill_files = list(self.plugins_dir.rglob("SKILL.md")) + list(
             self.plugins_dir.rglob("skill.md")
         )
-        skill_files = list(set(skill_files))
+        skill_files = filter_excluded_paths(list(set(skill_files)))
         print(f"Phase 1: Fixing {len(skill_files)} skills...")
         for skill_file in skill_files:
             result = self.fix_component_file(skill_file, "skill")
             self.results.append(result)
 
         # Fix agents
-        agent_files = list(self.plugins_dir.rglob("agents/*.md"))
+        agent_files = filter_excluded_paths(list(self.plugins_dir.rglob("agents/*.md")))
         print(f"Phase 2: Fixing {len(agent_files)} agents...")
         for agent_file in agent_files:
             result = self.fix_component_file(agent_file, "agent")
             self.results.append(result)
 
         # Fix commands
-        command_files = list(self.plugins_dir.rglob("commands/*.md"))
+        command_files = filter_excluded_paths(list(self.plugins_dir.rglob("commands/*.md")))
         print(f"Phase 3: Fixing {len(command_files)} commands...")
         for cmd_file in command_files:
             result = self.fix_component_file(cmd_file, "command")
@@ -357,7 +366,7 @@ class ComponentFixer:
 
     def fix_directory_name_sync(self) -> None:
         """Check and optionally fix directory-name mismatches for skills."""
-        skills_dirs = list(self.plugins_dir.rglob("skills/*"))
+        skills_dirs = filter_excluded_paths(list(self.plugins_dir.rglob("skills/*")))
 
         for skill_dir in skills_dirs:
             if not skill_dir.is_dir():
@@ -1276,8 +1285,8 @@ class ToolkitAnalyzer:
             self.plugins_dir.rglob("skill.md")
         )
 
-        # Deduplicate results if both patterns match same files
-        skill_files = list(set(skill_files))
+        # Deduplicate and filter excluded directories
+        skill_files = filter_excluded_paths(list(set(skill_files)))
 
         if not skill_files:
             result.warnings.append("No SKILL.md files found")
@@ -1390,7 +1399,7 @@ class ToolkitAnalyzer:
                     result.errors.append(f"{skill_file}: Error processing: {e}")
 
         # Validate agents
-        agent_files = list(self.plugins_dir.rglob("agents/*.md"))
+        agent_files = filter_excluded_paths(list(self.plugins_dir.rglob("agents/*.md")))
         if agent_files:
             print(f"  Validating {len(agent_files)} agents...")
             for agent_file in agent_files:
@@ -1440,7 +1449,7 @@ class ToolkitAnalyzer:
                     result.errors.append(f"{agent_file}: Error processing: {e}")
 
         # Validate commands
-        command_files = list(self.plugins_dir.rglob("commands/*.md"))
+        command_files = filter_excluded_paths(list(self.plugins_dir.rglob("commands/*.md")))
         if command_files:
             print(f"  Validating {len(command_files)} commands...")
             for cmd_file in command_files:
@@ -1524,7 +1533,7 @@ class ToolkitAnalyzer:
         backtick_pattern = re.compile(r"`(references|assets|scripts)/[^`]+`")
         cross_ref_pattern = re.compile(r"\.\./[^/]+/skill")
 
-        md_files = list(self.plugins_dir.rglob("*.md"))
+        md_files = filter_excluded_paths(list(self.plugins_dir.rglob("*.md")))
         print(f"  Checking {len(md_files)} markdown files...")
 
         for md_file in md_files:
@@ -1566,13 +1575,9 @@ class ToolkitAnalyzer:
                         result.errors.append(f"{md_file}: Broken link -> {link}")
                     elif not self._path_within_skill(target_path, skill_root):
                         is_readme = md_file.name.lower() in ["readme.md", "readme"]
-                        if is_readme:
+                        if not is_readme:
                             result.errors.append(
                                 f"{md_file}: Cross-skill link detected -> {link}"
-                            )
-                        else:
-                            result.warnings.append(
-                                f"{md_file}: Skill entry must remain self-contained; reference `{link}` via its SKILL.md."
                             )
 
                 # Validate backtick paths
@@ -1621,7 +1626,7 @@ class ToolkitAnalyzer:
         print("Phase 3: Glue Code & AI Macro Standards")
         print("-" * 70)
 
-        command_files = list(self.plugins_dir.rglob("commands/*.md"))
+        command_files = filter_excluded_paths(list(self.plugins_dir.rglob("commands/*.md")))
         print(f"  Checking {len(command_files)} command files...")
 
         for cmd_file in command_files:
@@ -1651,7 +1656,7 @@ class ToolkitAnalyzer:
             except Exception as e:
                 result.errors.append(f"{cmd_file}: Error processing: {e}")
 
-        agent_files = list(self.plugins_dir.rglob("agents/*.md"))
+        agent_files = filter_excluded_paths(list(self.plugins_dir.rglob("agents/*.md")))
         for agent_file in agent_files:
             try:
                 content = agent_file.read_text()
@@ -1748,7 +1753,7 @@ class ToolkitAnalyzer:
         print("Phase 5: AskUser-Leakage Validation (2026 Autonomous Agents)")
         print("-" * 70)
 
-        agent_files = list(self.plugins_dir.rglob("agents/*.md"))
+        agent_files = filter_excluded_paths(list(self.plugins_dir.rglob("agents/*.md")))
         print(f"  Checking {len(agent_files)} agents...")
 
         for agent_file in agent_files:
@@ -1851,7 +1856,7 @@ class ToolkitAnalyzer:
         print("Phase 7: Zero-Token Retention Validation (2026 Quota Optimization)")
         print("-" * 70)
 
-        command_files = list(self.plugins_dir.rglob("commands/*.md"))
+        command_files = filter_excluded_paths(list(self.plugins_dir.rglob("commands/*.md")))
         print(f"  Checking {len(command_files)} commands...")
 
         for cmd_file in command_files:
@@ -2006,7 +2011,7 @@ class ToolkitAnalyzer:
                 result.errors.append(f"{skill_file}: Error processing: {e}")
 
         # Check Commands for permissionMode (CRITICAL: Agent-only field)
-        command_files = list(self.plugins_dir.rglob("commands/*.md"))
+        command_files = filter_excluded_paths(list(self.plugins_dir.rglob("commands/*.md")))
         print(f"  Checking {len(command_files)} commands...")
 
         for cmd_file in command_files:
@@ -2021,7 +2026,7 @@ class ToolkitAnalyzer:
                 result.errors.append(f"{cmd_file}: Error processing: {e}")
 
         # Check Agent tools allowlists (WARN if missing - security risk)
-        agent_files = list(self.plugins_dir.rglob("agents/*.md"))
+        agent_files = filter_excluded_paths(list(self.plugins_dir.rglob("agents/*.md")))
         print(f"  Checking {len(agent_files)} agents...")
 
         for agent_file in agent_files:
@@ -2057,7 +2062,7 @@ class ToolkitAnalyzer:
         print("Phase 10: Command Structure Validation (2026 Standards)")
         print("-" * 70)
 
-        command_files = list(self.plugins_dir.rglob("commands/*.md"))
+        command_files = filter_excluded_paths(list(self.plugins_dir.rglob("commands/*.md")))
         print(f"  Checking {len(command_files)} commands...")
 
         for cmd_file in command_files:

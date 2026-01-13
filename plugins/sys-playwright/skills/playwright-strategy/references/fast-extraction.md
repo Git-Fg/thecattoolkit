@@ -17,7 +17,7 @@ The `url-to-md.ts` script provides a high-speed, token-efficient way to extract 
 ## Usage
 
 ```bash
-bun run scripts/url-to-md.ts <url> [pages] [concurrency]
+npx/bunx run scripts/url-to-md.ts <url> [pages] [concurrency]
 ```
 
 ### Parameters

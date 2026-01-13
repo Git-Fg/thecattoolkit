@@ -1,0 +1,9 @@
+{
+  "name": "sys-playwright",
+  "version": "1.0.0",
+  "description": "Browser automation strategy. PROACTIVELY Use when handling any browser-related tasks including automation, crawling, scraping, research, QA, testing, and debugging.",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "Git-Fg"
+  }
+}

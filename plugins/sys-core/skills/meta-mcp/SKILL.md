@@ -3,32 +3,84 @@ name: meta-mcp
 description: "Provides comprehensive MCP integration guidance for Claude Code plugins. MUST Use when integrating databases via MCP, setting up MCP servers, or configuring connections."
 ---
 
-# Database MCP Integration for Claude Code Plugins
+# MCP Integration for Claude Code Plugins
 
-Integrate databases into Claude Code plugins using Model Context Protocol (MCP). Database MCP servers provide secure, structured access to databases through a standardized interface.
+Integrate external services into Claude Code plugins using Model Context Protocol (MCP). MCP servers provide secure, structured access to databases, APIs, and other services through a standardized interface.
 
-## Guidelines
+## Critical: Tool Definition Bloat Problem
 
-- **Configuration**: See [references/mcp-configuration.md](references/mcp-configuration.md) for server types, connection patterns, and environment setup.
-- **Security**: See [references/security.md](references/security.md) for authentication, SSL, and access control.
-- **Performance**: See [references/performance.md](references/performance.md) for connection pooling and query optimization.
-- **Schema**: See [references/schema-management.md](references/schema-management.md) for introspection and management.
+**As MCP usage scales, two common patterns increase cost and latency:**
+
+1. **Tool definitions overload the context window**
+2. **Intermediate tool results consume additional tokens**
+
+### The Problem:
+More MCP servers → More tool definitions bloating context → Higher costs and slower performance
+
+### Solutions:
+
+#### 1. Code Execution Pattern (Recommended)
+Instead of direct tool calls, **expose code APIs** rather than tool call definitions:
+
+```json
+{
+  "mcpServers": {
+    "code-exec": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-code-exec"],
+      "env": {
+        "SANDBOX_PATH": "/tmp/sandbox"
+      }
+    }
+  }
+}
+```
+
+**Benefits:**
+- Give Claude a sandbox execution environment with filesystem
+- Let Claude write code to make tool calls
+- Elegant, prompt-on-demand pattern (similar to skills)
+- Reduces token overhead
+
+#### 2. Selective Tool Exposure
+Only expose essential tools:
+
+```json
+{
+  "mcpServers": {
+    "minimal-db": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-postgres"],
+      "env": {
+        "MCP_TOOLS": "query,schema"
+      }
+    }
+  }
+}
+```
+
+#### 3. Connection Management
+- **Pool connections** to reuse
+- **Lazy load** servers only when needed
+- **Disconnect** inactive servers
 
 ---
 
-## Quick Reference
+## Database Integration
 
-### 1. Choose Database Type and Configure
+### Quick Reference
+
+**1. Choose Database Type and Configure**
 - PostgreSQL: `@modelcontextprotocol/server-postgres`
 - MySQL: `@modelcontextprotocol/server-mysql`
 - SQLite: `@modelcontextprotocol/server-sqlite`
 
-### 2. Set Environment Variables
+**2. Set Environment Variables**
 ```bash
 export POSTGRES_URL="postgresql://user:pass@host:5432/db?sslmode=require"
 ```
 
-### 3. Add to settings.json
+**3. Add to settings.json**
 ```json
 {
   "mcpServers": {
@@ -42,6 +94,28 @@ export POSTGRES_URL="postgresql://user:pass@host:5432/db?sslmode=require"
 
 ---
 
+## Context Optimization Best Practices
+
+### Token Management
+- **Cache tool definitions** when possible
+- **Batch operations** to reduce calls
+- **Stream results** for large datasets
+- **Compress** intermediate outputs
+
+### Performance Guidelines
+- **Connection pooling** for database servers
+- **Query optimization** - limit result sets
+- **Pagination** for large datasets
+- **Async operations** for non-blocking execution
+
+### Security Considerations
+- **Authentication** - use environment variables
+- **SSL/TLS** - encrypt all connections
+- **Access control** - limit permissions
+- **Input validation** - sanitize queries
+
+---
+
 ## Resources
 
 ### References
@@ -52,6 +126,4 @@ export POSTGRES_URL="postgresql://user:pass@host:5432/db?sslmode=require"
 
 ### Examples
 - **[examples/postgres-config.json](examples/postgres-config.json)**: PostgreSQL configuration.
-- **[examples/mysql-config.json](examples/mysql-config.json)**: MySQL configuration.
-- **[examples/sqlite-config.json](examples/sqlite-config.json)**: SQLite configuration.
 - **[examples/multi-db-config.json](examples/multi-db-config.json)**: Multiple database setup.

@@ -51,6 +51,125 @@ Before enabling hooks, verify:
 jq . .claude/hooks.json
 ```
 
+## Practical Hook Examples
+
+### 1. "Do More" Prompt (Keep Claude Running)
+
+**Use Case:** Auto-continue tasks after Claude finishes
+
+**Hook Type:** `Stop` - Runs after Claude responds
+
+**Implementation:**
+```json
+{
+  "hooks": {
+    "Stop": {
+      "if": "${stop_hook_active} == false",
+      "timeout": 30,
+      "command": "echo 'Continue with the next logical step of the current task. What should be done next?'"
+    }
+  }
+}
+```
+
+**Why It Works:**
+- Keeps Claude running for extended tasks
+- Automatically prompts for next steps
+- Prevents idle time between completions
+
+### 2. Notification Sound (Completion Alert)
+
+**Use Case:** Audio notification when Claude finishes
+
+**Hook Type:** `Stop` - Audio alert on completion
+
+**Implementation:**
+```bash
+#!/bin/bash
+# notify.sh
+afplay /System/Library/Sounds/Ping.aiff
+```
+
+**hooks.json:**
+```json
+{
+  "hooks": {
+    "Stop": {
+      "timeout": 10,
+      "command": "notify.sh"
+    }
+  }
+}
+```
+
+**Use Cases:**
+- Long-running tasks (debugging, builds)
+- Background monitoring
+- Task completion alerts
+
+### 3. Pre-Execution Validation
+
+**Use Case:** Validate commands before execution
+
+**Hook Type:** `PreToolUse` - Check commands before running
+
+**Implementation:**
+```json
+{
+  "hooks": {
+    "PreToolUse": {
+      "if": "${tool_name} == 'Bash' && ${input} =~ /rm -rf/",
+      "timeout": 5,
+      "command": "echo 'WARNING: Destructive command detected. Confirm with user before proceeding.'"
+    }
+  }
+}
+```
+
+### 4. Context Management Hook
+
+**Use Case:** Add reminders during long tasks
+
+**Hook Type:** `UserPromptSubmit` - Inject reminders at intervals
+
+**Implementation:**
+```json
+{
+  "hooks": {
+    "UserPromptSubmit": {
+      "if": "${message_count} % 10 == 0",
+      "timeout": 5,
+      "command": "echo 'Reminder: Maintain focus on authentication edge cases.'"
+    }
+  }
+}
+```
+
+### 5. Task Tracking Hook
+
+**Use Case:** Auto-update todo list after tool usage
+
+**Hook Type:** `PostToolUse` - Update progress tracking
+
+**Implementation:**
+```bash
+#!/bin/bash
+# track.sh
+echo "$(date): ${tool_name} completed" >> .cattoolkit/context/tool-usage.log
+```
+
+**hooks.json:**
+```json
+{
+  "hooks": {
+    "PostToolUse": {
+      "timeout": 3,
+      "command": "track.sh"
+    }
+  }
+}
+```
+
 ## Success Criteria
 
 A working hook configuration has:

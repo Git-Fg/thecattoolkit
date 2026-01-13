@@ -1,6 +1,15 @@
 # Cat Toolkit: Complete Technical Reference
 
 > **📘 Quick Start:** [CLAUDE.md](../CLAUDE.md) - Summary of the Tiered Authority.
+>
+> **Deep Dive Guides (Learning Path):**
+> *   [🏛 Architecture & Structure](guides/architecture.md) - Cache, Config, Filesystem.
+> *   [⚡️ Commands](guides/commands.md) - Syntax, Archetypes, Interactivity.
+> *   [🧠 Skills](guides/skills.md) - Progressive Disclosure, Isolation.
+> *   [🤖 Agents](guides/agents.md) - Anatomy, Triggering, Memory.
+> *   [🔌 Infrastructure](guides/infrastructure.md) - Hooks, MCP, LSP.
+> *   [💾 Persistence](guides/persistence.md) - Sessions, Save/Restore Patterns.
+> *   [🐞 Debugging](guides/debugging.md) - Audit and Troubleshooting.
 
 ---
 
@@ -59,8 +68,8 @@
 | Primitive | Required Fields | Whitelisted Optional |
 |:----------|:----------------|:---------------------|
 | **Skill** | `name`, `description` | `allowed-tools`, `context`, `user-invocable`, `disable-model-invocation` |
-| **Agent** | `name` | `tools`, `skills` |
-| **Command** | `description` | `allowed-tools`, `disable-model-invocation`, `argument-hint` |
+| **Agent** | `name` | `tools`, `skills`, `disallowedTools`, `hooks` |
+| **Command** | `description` | `allowed-tools`, `disable-model-invocation`, `argument-hint`, `hooks` |
 
 ### Naming & Identity
 - **Skill Name Regex**: `^[a-z][a-z0-9-]{2,49}$` (Lowercase, start with letter, hyphens/numbers allowed).
@@ -371,7 +380,23 @@ This avoids reliance on repository-level `CLAUDE.md` while keeping the system fu
 | `UserPromptSubmit` | Before processing | Input validation |
 | `PreToolUse` | Before tool call | Safety checks |
 | `PostToolUse` | After tool completes | Logging, validation |
+| `PostToolUseFailure` | After tool execution fails | Error handling |
+| `PermissionRequest` | When permission dialog shown | Custom validation |
+| `Notification` | When Claude Code sends notifications | Custom responses |
+| `SubagentStart` | Subagent initializes | Resource setup (DB connection) |
+| `SubagentStop` | Subagent finishes | Resource cleanup |
 | `Stop` | Main agent finishes | Cleanup |
+| `PreCompact` | Before conversation history compacted | Data preservation |
+
+### Hook Types
+
+| Type | Description | Use Case |
+|:-----|:-----------|:---------|
+| **command** | Execute shell commands or scripts | Deterministic operations, linting, formatting |
+| **prompt** | Evaluate a prompt with an LLM (uses `$ARGUMENTS` placeholder for context) | Context-aware validation, intelligent decisions |
+| **agent** | Run an agentic verifier with tools for complex verification tasks | Multi-step verification, complex analysis |
+
+**Note**: Prompt-based hooks are currently only supported for `Stop` and `SubagentStop` events.
 
 ### Configuration Example
 ```json
@@ -384,13 +409,26 @@ This avoids reliance on repository-level `CLAUDE.md` while keeping the system fu
           {
             "type": "command",
             "command": "${CLAUDE_PLUGIN_ROOT}/scripts/safety-check.sh",
-            "timeout": 30
+            "timeout": 30,
+            "once": false
           }
         ]
       }
     ]
   }
 }
+
+### Local Hooks (Scoped)
+Hooks can be defined directly in `SKILL.md` or `AGENT.md` frontmatter. Use `once: true` for initialization scripts.
+```yaml
+hooks:
+  PreToolUse:
+    - matcher: "Bash"
+      hooks:
+        - type: command
+          command: "${CLAUDE_PLUGIN_ROOT}/scripts/init.sh"
+          once: true
+```
 ```
 
 ## 4.2 MCP (Model Context Protocol)
@@ -461,6 +499,7 @@ This avoids reliance on repository-level `CLAUDE.md` while keeping the system fu
 | **Local** | `.claude/*.local.*` | You (project) | No |
 | **Project** | `.claude/settings.json` | All collaborators | Yes |
 | **User** | `~/.claude/settings.json` | You (all projects) | No |
+| **Plugin** | `plugins/*/Settings` | Plugin-specific | Yes |
 
 ### Model Aliases
 | Alias | Purpose |

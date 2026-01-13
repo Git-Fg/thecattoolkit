@@ -1,9 +1,0 @@
-{
-    "name": "llm-application-dev",
-    "description": "AI/ML & COGNITIVE DOMAIN (LLM Applications) - Specialized tools for LLM application development, RAG systems, hybrid search, vector databases, and LLM application patterns",
-    "version": "1.0.0",
-    "license": "MIT",
-    "author": {
-        "name": "Git-Fg"
-    }
-}

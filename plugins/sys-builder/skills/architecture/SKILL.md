@@ -9,7 +9,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash(ls:*), Bash(cat:*), Bash(gre
 # Architecture Design & Analysis
 
 ## Operational Protocol
-1. **Discovery**: Check for `.cattoolkit/planning/{project}/DISCOVERY.md`. If missing, execute discovery protocol.
+1. **Discovery**: Check for `.cattoolkit/plan/{project}/DISCOVERY.md`. If missing, execute discovery protocol.
 2. **Analysis**: Apply appropriate workflow (Greenfield vs. Brownfield) based on requirements.
 3. **Design**: Select patterns using architecture patterns and quality criteria.
 4. **Documentation**: Create or update ADRs using ADR template.
@@ -37,7 +37,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash(ls:*), Bash(cat:*), Bash(gre
 **ADR Creation Protocol:**
 1. **Auto-increment**: Count existing ADR entries and add 1
 2. **Append**: Add to bottom of ADR.md (never delete or modify old entries)
-3. **File location**: `.cattoolkit/planning/{project-slug}/ADR.md`
+3. **File location**: `.cattoolkit/plan/{project-slug}/ADR.md`
 4. **Numbering**: Sequential (ADR-001, ADR-002, etc.)
 5. **Append-Only Rule**: Never delete, modify, or reorder entries
 

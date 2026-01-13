@@ -47,10 +47,299 @@ This document uses a few overloaded terms. These definitions are the canonical m
 ## 1.3 Hygiene & Pollution Control
 - ✓ **Run `uv run scripts/toolkit-analyzer.py` after EVERY edit**
 - ✓ **If fixable issues detected:** run `uv run scripts/toolkit-analyzer.py --fix`
-- ✓ **Pollution Control:** ANY external/temp file (PLAN.md, PROMPTS.md) MUST be in `.claudetoolkit/`. NEVER pollute root.
+- ✓ **Pollution Control:** ANY external/temp file (PLAN.md, PROMPTS.md) MUST be in `.cattoolkit/`. NEVER pollute root.
 - ✓ **Attic:** Move deprecated code to `.attic/` instead of deleting.
 - ✓ **Relative Paths:** Use relative paths from skill root within skills.
 - ✓ **Hooks:** Use `$CLAUDE_PROJECT_DIR`/`${CLAUDE_PLUGIN_ROOT}` for hooks.
+
+## 1.4 Local Development Workspace (`.claude/`)
+The `.claude/` folder at the repository root is a **local workspace** for plugin/marketplace development:
+- Contains local settings, rules, and temporary development files
+- **Excluded from validation** by `toolkit-analyzer.py`
+- NOT part of the distributed marketplace - kept in `.gitignore`
+- Use for: local `settings.json`, `rules/*.md`, scratch files during development
+
+---
+
+# SECTION 1.5: PLATFORM AGNOSTICISM (CRITICAL)
+
+*Claude Code is provider-agnostic. Use this section to understand alternatives to direct Anthropic API access.*
+
+## 1.5.1 Provider Options
+
+Claude Code can operate with different API providers through environment variable configuration:
+
+| Provider | Endpoint | Model Access | Cost Model | Quotas |
+|:---------|:---------|:-------------|:----------|:-------|
+| **Anthropic Direct** | `api.anthropic.com` | Claude 3.5 Sonnet, Haiku, Opus | Standard API pricing | Per-token billing |
+| **Z.AI Routing** | `api.z.ai/api/anthropic` | GLM-4.7, 4.6, 4.5, 4.5-Air | Subscription-based | Prompt-based cycles |
+
+**Alternative Endpoint for Non-Claude Tools:**
+```yaml
+# For tools like Cline, OpenCode, etc.
+BASE_URL: "https://api.z.ai/api/paas/v4"
+MODEL: "glm-4.7"
+```
+
+### Key Configuration Variables
+
+```yaml
+ANTHROPIC_BASE_URL: "https://api.z.ai/api/anthropic"  # or https://api.anthropic.com
+ANTHROPIC_AUTH_TOKEN: "your_api_key_here"
+API_TIMEOUT_MS: "3000000"  # 50 minutes (Z.AI recommended)
+```
+
+## 1.5.2 Z.AI GLM Coding Plan Alternative
+
+**Overview:** Z.AI offers a cost-effective subscription plan providing access to GLM models through Claude Code's interface, effectively routing requests through their platform.
+
+### Pricing & Quotas
+
+| Plan | Price/Month | Prompts per 5hrs | Model Calls per Prompt | MCP Quota (Search/Reader) | Vision Pool |
+|:-----|:------------|:-----------------|:----------------------|:-------------------------|:------------|
+| **Lite** | ~$3 | ~120 | 15-20 | 100/month | 5-hour cycle |
+| **Pro** | ~$15 | ~600 | 15-20 | 1,000/month | 5-hour cycle |
+| **Max** | ~$60 | ~2,400 | 15-20 | 4,000/month | 5-hour cycle |
+
+**Cost Efficiency:** Approximately **1% of standard API pricing** with 3× more usage than comparable Anthropic plans. Each prompt allows 15-20 model calls, providing tens of billions of tokens monthly.
+
+**Speed:** Generate **>55 tokens per second** for real-time interaction.
+
+### Model Mapping (Z.AI → Claude Interface)
+
+```yaml
+# Default mappings (configurable)
+ANTHROPIC_DEFAULT_OPUS_MODEL: "glm-4.7"     # Top-tier reasoning
+ANTHROPIC_DEFAULT_SONNET_MODEL: "glm-4.7"  # Balanced performance
+ANTHROPIC_DEFAULT_HAIKU_MODEL: "glm-4.5-air" # Fast, efficient
+```
+
+### Setup Process (Z.AI)
+
+**Step 1: Subscribe**
+- Register at [z.ai](https://z.ai)
+- Choose plan (Lite/Pro/Max)
+- Generate API key
+
+**Step 2: Configure Claude Code**
+
+```bash
+# Method 1: Coding Tool Helper (Recommended)
+# Automated setup for all supported tools
+npx @z_ai/coding-helper
+
+# Method 2: Automated Script (macOS/Linux only)
+curl -O "https://cdn.bigmodel.cn/install/claude_code_zai_env.sh" && \
+  bash ./claude_code_zai_env.sh
+
+# Method 3: Manual Configuration
+# Edit ~/.claude/settings.json
+{
+  "env": {
+    "ANTHROPIC_AUTH_TOKEN": "your_zai_api_key",
+    "ANTHROPIC_BASE_URL": "https://api.z.ai/api/anthropic",
+    "API_TIMEOUT_MS": "3000000"
+  }
+}
+
+# Method 4: Environment Variables
+export ANTHROPIC_AUTH_TOKEN="your_zai_api_key"
+export ANTHROPIC_BASE_URL="https://api.z.ai/api/anthropic"
+```
+
+**Step 2.5: Configure MCP Servers (Optional)**
+
+Add Z.AI's exclusive MCP servers for enhanced capabilities:
+
+```bash
+# Vision MCP (Local Installation)
+claude mcp add -s user zai-mcp-server \
+  --env Z_AI_API_KEY=your_api_key Z_AI_MODE=ZAI \
+  -- npx -y "@z_ai/mcp-server"
+
+# Web Search MCP (Remote)
+claude mcp add -s user -t http web-search-prime \
+  https://api.z.ai/api/mcp/web_search_prime/mcp \
+  --header "Authorization: Bearer your_api_key"
+
+# Web Reader MCP (Remote)
+claude mcp add -s user -t http web-reader \
+  https://api.z.ai/api/mcp/web_reader/mcp \
+  --header "Authorization: Bearer your_api_key"
+
+# ZRead MCP for GitHub Q&A (Remote)
+claude mcp add -s user -t http zread \
+  https://api.z.ai/api/mcp/zread/mcp \
+  --header "Authorization: Bearer your_api_key"
+```
+
+**Step 3: Verify**
+```bash
+claude  # Start Claude Code
+/status  # Check model status
+```
+
+### Exclusive MCP Servers (Z.AI Only)
+
+Z.AI provides **4 exclusive MCP servers** for coding plan subscribers:
+
+#### 1. Vision MCP Server (`@z_ai/mcp-server`)
+**Model:** GLM-4.6V | **Installation:** Local npm | **Prerequisites:** Node.js >= v22
+
+**Capabilities:**
+- `ui_to_artifact` - Turn UI screenshots into code, prompts, specs, or descriptions
+- `extract_text_from_screenshot` - OCR screenshots for code, terminals, docs
+- `diagnose_error_screenshot` - Analyze error snapshots and propose fixes
+- `understand_technical_diagram` - Interpret architecture, flow, UML, ER diagrams
+- `analyze_data_visualization` - Read charts and dashboards for insights
+- `ui_diff_check` - Compare UI shots to flag visual or implementation drift
+- `image_analysis` - General-purpose image understanding
+- `video_analysis` - Inspect videos (local/remote ≤8 MB; MP4/MOV/M4V)
+
+#### 2. Web Search MCP Server (`web-search-prime`)
+**Installation:** Remote HTTP service
+
+**Capabilities:**
+- `webSearchPrime` - Comprehensive web search with titles, URLs, summaries, site metadata
+
+#### 3. Web Reader MCP Server (`web-reader`)
+**Installation:** Remote HTTP service
+
+**Capabilities:**
+- `webReader` - Fetch complete webpage content including text, links, and structured data (title, body, metadata)
+
+#### 4. ZRead MCP Server (`zread`)
+**Installation:** Remote HTTP service | **Powered by:** zread.ai
+
+**Capabilities:**
+- `search_doc` - Search documentation, code, and comments in GitHub repositories
+- `get_repo_structure` - Get directory structure and file lists of repositories
+- `read_file` - Read complete code content of specified files for deep analysis
+
+**Use Cases:**
+- Quick start with open source libraries
+- Issue troubleshooting and history research
+- Deep source code analysis
+- Dependency library research
+
+### Comparison: Direct Anthropic vs Z.AI Routing
+
+| Aspect | Anthropic Direct | Z.AI Routing |
+|:-------|:-----------------|:-------------|
+| **Models** | Claude 3.5 Sonnet/Haiku/Opus | GLM-4.7/4.6/4.5/4.5-Air |
+| **Pricing** | ~$15-75/M (Pro/Max) | ~$3-60/M (Lite/Max) |
+| **Quota Model** | Token-based | Prompt-based cycles |
+| **Speed** | Standard | >55 tokens/sec |
+| **MCP Access** | Standard MCP | +4 Exclusive MCP servers |
+| **Reliability** | Standard network | No account bans |
+| **Geographic** | US-based | Singapore-based |
+| **Data Policy** | Standard | No content storage |
+| **Cancellation** | Standard | Must cancel 24hrs before renewal |
+| **Supported Tools** | Claude Code only | Claude Code, Cline, OpenCode, Roo Code, Kilo Code, Crush, Goose, Cursor, others |
+
+### Decision Matrix
+
+**Choose Z.AI when:**
+- ✓ Cost efficiency is critical
+- ✓ High-volume usage expected
+- ✓ Need exclusive MCP tools
+- ✓ Require guaranteed reliability
+- ✓ Prefer subscription model
+
+**Choose Direct Anthropic when:**
+- ✓ Need latest Claude models exclusively
+- ✓ Existing Anthropic infrastructure
+- ✓ Per-token billing preferred
+- ✓ US-based data residency required
+- ✓ Complex enterprise compliance needs
+
+### Platform Switching
+
+To switch between providers:
+
+```bash
+# 1. Update configuration
+export ANTHROPIC_BASE_URL="https://api.anthropic.com"  # or Z.AI URL
+export ANTHROPIC_AUTH_TOKEN="new_api_key"
+
+# 2. Restart Claude Code
+claude
+
+# 3. Verify
+/status
+```
+
+### Troubleshooting
+
+**Common Issues:**
+
+1. **Configuration Not Taking Effect**
+   ```bash
+   # Solution: Restart terminal completely
+   # Delete ~/.claude/settings.json and regenerate
+   ```
+
+2. **Model Mapping Confusion**
+   ```bash
+   # Remove hardcoded model mappings to use defaults
+   # Delete model-specific env vars from settings.json
+   # Claude Code will automatically use latest default models
+   ```
+
+3. **Quota Exhaustion**
+   - **Z.AI:** Wait for 5-hour cycle reset. The system will NOT consume account balance
+   - **Anthropic:** Check billing dashboard
+
+4. **Manual Configuration Not Working**
+   - Close all Claude Code windows, open new command-line window
+   - Verify JSON format in settings.json (use online validator)
+   - Check variable names and ensure no missing/extra commas
+
+5. **MCP Server Connection Issues**
+   ```bash
+   # Vision MCP requires Node.js >= v22
+   node -v  # Verify version
+
+   # Clear npx cache for latest version
+   npx -y @z_ai/mcp-server@latest
+
+   # Check API key is activated and has sufficient balance
+   # Verify Z_AI_MODE=ZAI for Vision MCP
+   ```
+
+6. **Invalid API Key Errors**
+   - Confirm API key is correctly copied
+   - Check if API key is activated
+   - Ensure API key has sufficient balance
+   - Verify Authorization header format (Bearer token)
+
+7. **Network/Timeout Issues**
+   - Check network connection and firewall settings
+   - Verify server URL is correct
+   - Increase timeout settings if needed
+   - Z.AI is Singapore-based (check geographic access)
+
+### Subscription Management
+
+**Cancellation:**
+- Must cancel at least 24 hours before renewal to avoid auto-renewal
+- Current plan remains valid until expiration after cancellation
+- No refunds - payments are non-refundable
+
+**Billing:**
+- Auto-renews at end of each billing cycle
+- Fees deducted in order: Credits → Cash balance → Payment method
+- Small minimum applies when charging credit card (rounded up if needed)
+
+**Upgrade/Downgrade:**
+- Changes take effect after current billing cycle ends
+- Can also cancel and re-subscribe to desired plan
+
+**Credits Program:**
+- Credits earned via "Invite Friends, Get Credits" program
+- Credits cannot be withdrawn, transferred, or refunded
+- Used to offset purchases on Z.AI platform
+- Issued within 24-48 hours after friend's payment confirmed
 
 ---
 
@@ -84,79 +373,54 @@ This document uses a few overloaded terms. These definitions are the canonical m
 
 # SECTION 3: ENGINEERING PATTERNS (BEST PRACTICES)
 
-*Architectural principles for peak efficiency and token economy.*
+*For deep architectural details, consult the [Deep Dive Guides](docs/REFERENCES.md).*
 
-## 3.1 Token Economy & Mechanics
-To maintain simplicity and efficiency, distinguish these three costs:
-1.  **Indexing Cost**: Tokens used by metadata (name/description) to be visible to Claude.
-    *   *Optimization*: Use `disable-model-invocation: true` to remove metadata from context (0 indexing cost).
-2.  **Execution Cost**: Tokens consumed when a command/skill is actually run (content injected).
-3.  **Retention**: Data that persists in context.
-    *   *Rule*: Commands have 0 retention (output is transient unless explicitly saved). Sub-agents isolate retention.
+## 3.1 Plugin Architecture
 
-### The "Router Button" Pattern
-For complex tasks, use a **Command** with `allowed-tools: [Read, AskUserQuestion, Skill(brain)]`.
-1. **Command** (The Button): Asks clarifying questions and gathers initial context.
-2. **Skill** (The Brain): Contains the heavy methodology and logic.
-3. **Model Call**: The Command programmatically invokes the Skill via the `Skill` tool.
+The Cat Toolkit organizes capabilities into domain-specific plugins:
 
-### Auto-Invocation Rules
-- **Visible Tools**: Default. Claude sees them and can invoke them via `Skill(...)`.
-- **Human-Only ("Buttons")**: If `disable-model-invocation: true`, the tool is invisible to Claude.
-    *   *Use case*: `/sys-builder:run` (Batch macros that should not be triggered accidentally).
+| Plugin | Domain | Focus |
+|:-------|:-------|:------|
+| **sys-core** | Infrastructure | Validation, scaffolding, hooks, MCP, security |
+| **sys-builder** | Engineering | Architecture, planning, execution, testing, TDD |
+| **sys-cognition** | Reasoning | Thinking frameworks, prompt engineering, analysis (directly actionable) |
+| **sys-agents** | Agent Development | Context engineering, memory systems, orchestration (requires implementation) |
+| **sys-research** | Knowledge | Research tools, documentation, codebase analysis |
+| **sys-multimodal** | Media | Vision, audio, video processing |
+| **sys-edge** | Edge/Mobile | Optimization, offline-first, resource-constrained environments |
 
-## 3.2 Architecture: The "Min Core" Pattern
-Structure capabilities using the **Brain + Button** approach to avoid over-engineering.
+### sys-cognition vs sys-agents (Key Distinction)
+- **sys-cognition**: Skills that are **directly actionable** for any project (prompt patterns, reasoning frameworks, meta-prompts)
+- **sys-agents**: Skills that **require external frameworks or code implementation** (Vector DBs, GraphRAG, multi-agent architectures)
 
-### 1. The Brain (Auto-Active Skill)
-- **Role**: Methodology, heuristics, "How to think", routing logic.
-- **Pattern**: Single Core Skill (e.g., `sys-builder-core`).
-- **Activation**: Natural language description (auto-discovered).
+## 3.2 Core Architecture Summary
 
-### 2. The Buttons (Manual Commands)
-- **Role**: Explicit workflow triggers, rigid orchestration.
-- **Pattern**: Two standard modes.
-    - `/plugin:run` (Batch): **No interruptions**. Make assumptions. Log TODOs.
-    - `/plugin:run-interactive` (HITL): **AskUserQuestion** allowed. Validate plans.
+| Component | Role | Reference Guide |
+|:----------|:-----|:----------------|
+| **Commands** | Orchestration, User Interaction | [⚡️ Commands](docs/guides/commands.md) |
+| **Skills** | Domain Knowledge, Procedures | [🧠 Skills](docs/guides/skills.md) |
+| **Agents** | Background Tasks, High Volume | [🤖 Agents](docs/guides/agents.md) |
+| **Hooks/MCP** | Infrastructure, Integration | [🔌 Infrastructure](docs/guides/infrastructure.md) |
 
-### 3. Isolation (Sub-agents)
-- **Rule**: Use Sub-agents ONLY for:
-    - **Volume**: Reading 50+ files (prevents polluting main context).
-    - **Safety**: Read-only exploration.
-- **Note**: Sub-agents do **not** inherit Skills automatically; inject via `skills:` config.
+## 3.3 The "Min Core" Pattern (Brain + Button)
+Structure capabilities using the **Brain (Skill)** + **Button (Command)** approach.
+1.  **Skill**: Contains the methodology (auto-discovered).
+2.  **Command**: Invocable trigger. Two modes:
+    *   `/plugin:run`: Batch mode (Assumptions).
+    *   `/plugin:run-interactive`: Interactive mode (AskUserQuestion).
 
-## 3.3 Optimization Standards (Scripts & Refs)
-To maintain "Min Core" efficiency, strict adherence to these mechanical rules is required.
+## 3.4 Skill Architecture Standards
+1.  **Progressive Disclosure**: Keep `SKILL.md` < 500 lines. Move details to `references/`.
+2.  **Flat Hierarchy**: `SKILL.md` must link directly to resources. No nesting.
+3.  **Zero-Context Scripts**: Use `scripts/` for logic. Only stdout assumes tokens.
 
-### A. The "Output-Only" Rule (Scripts)
-- **Mechanism**: When a Skill invokes a python script (e.g., `scripts/concat.py`), Claude runs it via bash.
-- **Benefit**: The script **code** is NOT loaded into context. Only the **output** (stdout) consumes tokens.
-- **Rule**: Prefer deterministic Python scripts over text instructions for data processing (cleaning, formatting, validation).
-
-### B. Flat Reference Hierarchy
-- **Anti-Pattern**: Deep nesting (`SKILL.md` -> `refs/a.md` -> `refs/b.md`). Causes partial reads and hallucinations.
-- **Golden Rule**: **1 Level Deep**. `SKILL.md` must directly link to all necessary resources.
-- **Structure**:
-  ```text
-  skills/core/
-  ├── SKILL.md          # Router / Context Entry
-  ├── references/       # Lazy-loaded docs (loaded ONLY if needed)
-  └── scripts/          # Executable logic (0 context cost until run)
-  ```
-
-## 3.4 Decision Matrix
-| If you need... | Use |
-|:-------------|:----|
-| Single capability | **SKILL (inline)** |
+## 3.5 Decision Matrix
+| Need | Use |
+|:---|:---|
+| Single capability | **SKILL** |
 | Multi-skill orchestration | **COMMAND** |
 | User interaction | **COMMAND** |
-| Domain expertise | **SKILL (inline)** |
-| >10 files or isolation | **SKILL (fork)** or **AGENT** |
-
-## 3.5 Progressive Disclosure (The 500-Line Rule)
-- Keep `SKILL.md` core instructions **< 500 lines** (Standard).
-- Move deep theory to `references/` and templates to `assets/`.
-- Reference explicitly: `See [references/api.md](references/api.md)`.
+| Isolation (>10 files) | **AGENT** |
 
 ## 3.6 File Structure Standards ("Where things go")
 Avoid redundant READMEs. Follow this strict mapping:

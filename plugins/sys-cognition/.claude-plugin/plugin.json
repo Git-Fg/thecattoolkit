@@ -1,7 +1,7 @@
 {
     "name": "sys-cognition",
     "description": "AI/ML & COGNITIVE DOMAIN - Context engineering, memory systems, reasoning, prompt engineering, and agent orchestration",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "license": "MIT",
     "author": {
         "name": "Git-Fg"

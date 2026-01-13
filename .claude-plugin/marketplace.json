@@ -32,7 +32,12 @@
       "repository": "https://github.com/Git-Fg/thecattoolkit",
       "license": "MIT",
       "category": "Infrastructure",
-      "tags": ["security", "infrastructure", "validation", "hooks"],
+      "tags": [
+        "security",
+        "infrastructure",
+        "validation",
+        "hooks"
+      ],
       "keywords": [
         "security",
         "audit",
@@ -57,7 +62,12 @@
       "repository": "https://github.com/Git-Fg/thecattoolkit",
       "license": "MIT",
       "category": "Development",
-      "tags": ["development", "architecture", "engineering", "software"],
+      "tags": [
+        "development",
+        "architecture",
+        "engineering",
+        "software"
+      ],
       "keywords": [
         "execution",
         "architecture",
@@ -74,22 +84,56 @@
       "name": "sys-cognition",
       "source": "./plugins/sys-cognition",
       "description": "AI/ML & COGNITIVE DOMAIN - Context engineering, memory systems, reasoning, prompt engineering, and agent orchestration",
-      "version": "1.0.2",
+      "version": "1.0.3",
       "author": {
         "name": "Git-Fg"
       },
       "repository": "https://github.com/Git-Fg/thecattoolkit",
       "license": "MIT",
       "category": "AI/ML",
-      "tags": ["ai", "cognition", "reasoning", "prompt-engineering"],
+      "tags": [
+        "cognition",
+        "reasoning",
+        "prompt-engineering",
+        "thinking"
+      ],
       "keywords": [
         "thinking",
         "prompt-engineering",
-        "context-engineering",
         "analysis",
         "frameworks",
         "reasoning",
-        "memory-systems"
+        "deep-analysis"
+      ],
+      "strict": true
+    },
+    {
+      "name": "sys-agents",
+      "source": "./plugins/sys-agents",
+      "description": "Agent & LLM development patterns, orchestration, context management, and memory systems for building effective AI agents.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Git-Fg"
+      },
+      "repository": "https://github.com/Git-Fg/thecattoolkit",
+      "license": "MIT",
+      "category": "AI/ML",
+      "tags": [
+        "agents",
+        "orchestration",
+        "context-engineering",
+        "memory"
+      ],
+      "keywords": [
+        "agent-design",
+        "context-engineering",
+        "memory-systems",
+        "orchestration",
+        "multi-agent",
+        "sub-agents",
+        "rag",
+        "hybrid-search",
+        "vector-databases"
       ],
       "strict": true
     },
@@ -104,7 +148,12 @@
       "repository": "https://github.com/Git-Fg/thecattoolkit",
       "license": "MIT",
       "category": "Research",
-      "tags": ["research", "analysis", "knowledge", "documentation"],
+      "tags": [
+        "research",
+        "analysis",
+        "knowledge",
+        "documentation"
+      ],
       "keywords": [
         "research",
         "knowledge-retrieval",
@@ -127,7 +176,12 @@
       "repository": "https://github.com/Git-Fg/thecattoolkit",
       "license": "MIT",
       "category": "Tools",
-      "tags": ["edge", "mobile", "optimization", "python"],
+      "tags": [
+        "edge",
+        "mobile",
+        "optimization",
+        "python"
+      ],
       "keywords": [
         "edge",
         "mobile",
@@ -152,7 +206,12 @@
       "repository": "https://github.com/Git-Fg/thecattoolkit",
       "license": "MIT",
       "category": "Media",
-      "tags": ["multimodal", "video", "media", "visualization"],
+      "tags": [
+        "multimodal",
+        "video",
+        "media",
+        "visualization"
+      ],
       "keywords": [
         "multimodal",
         "video-editing",
@@ -167,25 +226,59 @@
       "strict": true
     },
     {
-      "name": "llm-application-dev",
-      "source": "./plugins/llm-application-dev",
-      "description": "AI/ML & COGNITIVE DOMAIN (LLM Applications) - Specialized tools for LLM application development, RAG systems, hybrid search, vector databases, and LLM application patterns",
+      "name": "sys-nodejs",
+      "source": "./plugins/sys-nodejs",
+      "description": "NODE.JS/TS RUNTIME DOMAIN - Language-specific tooling for Node.js, TypeScript, Bun, and npm/pnpm/bun package ecosystems",
       "version": "1.0.0",
       "author": {
         "name": "Git-Fg"
       },
       "repository": "https://github.com/Git-Fg/thecattoolkit",
       "license": "MIT",
-      "category": "AI/ML",
-      "tags": ["llm", "rag", "vector-database", "semantic-search"],
+      "category": "Development",
+      "tags": [
+        "nodejs",
+        "typescript",
+        "javascript",
+        "bun",
+        "npm"
+      ],
       "keywords": [
-        "llm",
-        "rag",
-        "vector-databases",
-        "hybrid-search",
-        "retrieval",
-        "embedding",
-        "semantic-search"
+        "nodejs",
+        "typescript",
+        "javascript",
+        "bun",
+        "npm",
+        "pnpm",
+        "runtime",
+        "package-manager"
+      ],
+      "strict": true
+    },
+    {
+      "name": "sys-playwright",
+      "source": "./plugins/sys-playwright",
+      "description": "Browser automation strategy. PROACTIVELY Use when handling any browser-related tasks including automation, crawling, scraping, research, QA, testing, and debugging.",
+      "version": "1.0.0",
+      "author": {
+        "name": "Git-Fg"
+      },
+      "repository": "https://github.com/Git-Fg/thecattoolkit",
+      "license": "Apache-2.0",
+      "category": "Testing",
+      "tags": [
+        "automation",
+        "testing",
+        "browser",
+        "playwright"
+      ],
+      "keywords": [
+        "browser-automation",
+        "testing",
+        "playwright",
+        "qa",
+        "crawling",
+        "scraping"
       ],
       "strict": true
     }
