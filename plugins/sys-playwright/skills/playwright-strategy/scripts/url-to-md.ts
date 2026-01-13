@@ -2,8 +2,8 @@ import { spawn } from "child_process";
 import * as path from "path";
 
 /**
- * Wraps @just-every/crawl via npx to provide fast URL-to-Markdown conversion.
- * Returns structured JSON for the Agent to consume.
+ * Advanced wrapper for @just-every/crawl via npx.
+ * Optimized for LLM consumption with token awareness and robust error handling.
  */
 
 interface CrawlResult {
@@ -12,24 +12,43 @@ interface CrawlResult {
   title?: string;
   links?: string[];
   error?: string;
+  metadata?: {
+    length: number;
+    truncated: boolean;
+    duration: number;
+  };
 }
 
-async function runCrawl(url: string, options: { pages?: number; concurrency?: number } = {}): Promise<CrawlResult[]> {
+interface Options {
+  pages?: number;
+  concurrency?: number;
+  respectRobots?: boolean;
+  sameOriginOnly?: boolean;
+  userAgent?: string;
+  cacheDir?: string;
+  timeout?: number;
+  maxContentLength?: number; // LLM Optimization: Truncate long content
+}
+
+async function runCrawl(url: string, options: Options = {}): Promise<CrawlResult[]> {
+  const startTime = Date.now();
   return new Promise((resolve, reject) => {
     const args = ["@just-every/crawl", url, "--output", "json"];
     
-    if (options.pages) {
-      args.push("--pages", options.pages.toString());
-    }
-    if (options.concurrency) {
-      args.push("--concurrency", options.concurrency.toString());
-    }
+    if (options.pages) args.push("--pages", options.pages.toString());
+    if (options.concurrency) args.push("--concurrency", options.concurrency.toString());
+    if (options.respectRobots === false) args.push("--no-robots");
+    if (options.sameOriginOnly === false) args.push("--all-origins");
+    if (options.userAgent) args.push("--user-agent", options.userAgent);
+    if (options.timeout) args.push("--timeout", options.timeout.toString());
+    if (options.cacheDir) args.push("--cache-dir", options.cacheDir);
 
     const child = spawn("npx", args);
 
     let stdout = "";
     let stderr = "";
 
+    // Use a larger buffer or handle data chunks carefully
     child.stdout.on("data", (data) => {
       stdout += data.toString();
     });
@@ -39,45 +58,115 @@ async function runCrawl(url: string, options: { pages?: number; concurrency?: nu
     });
 
     child.on("close", (code) => {
-      if (code !== 0) {
+      const duration = Date.now() - startTime;
+      
+      if (code !== 0 && code !== null) {
         reject(new Error(`npx @just-every/crawl failed with code ${code}: ${stderr}`));
         return;
       }
 
       try {
-        // The library might output logs before the JSON, so we find the first '[' or '{'
         const jsonStart = stdout.indexOf("[");
-        if (jsonStart === -1) {
-            // Try object if array not found
-            const objStart = stdout.indexOf("{");
-            if (objStart === -1) {
-                throw new Error("No JSON found in output");
-            }
-            const data = JSON.parse(stdout.substring(objStart));
-            resolve(Array.isArray(data) ? data : [data]);
-            return;
+        const objStart = stdout.indexOf("{");
+        
+        let start = -1;
+        if (jsonStart !== -1 && (objStart === -1 || jsonStart < objStart)) start = jsonStart;
+        else if (objStart !== -1) start = objStart;
+
+        if (start === -1) {
+          throw new Error("No JSON found in output. Possible crawl block or network issue.");
         }
-        const data = JSON.parse(stdout.substring(jsonStart));
-        resolve(Array.isArray(data) ? data : [data]);
+
+        const data = JSON.parse(stdout.substring(start));
+        const rawResults: any[] = Array.isArray(data) ? data : [data];
+
+        const results: CrawlResult[] = rawResults.map((res: any) => {
+          let markdown = res.markdown || "";
+          let truncated = false;
+          const originalLength = markdown.length;
+
+          if (options.maxContentLength && markdown.length > options.maxContentLength) {
+            markdown = markdown.substring(0, options.maxContentLength) + "\n\n... [TRUNCATED FOR LLM OPTIMIZATION] ...";
+            truncated = true;
+          }
+
+          return {
+            url: res.url,
+            markdown,
+            title: res.title,
+            links: res.links,
+            error: res.error,
+            metadata: {
+              length: originalLength,
+              truncated,
+              duration
+            }
+          };
+        });
+
+        resolve(results);
       } catch (e) {
-        reject(new Error(`Failed to parse JSON output: ${e}\nRaw output: ${stdout}`));
+        reject(new Error(`Failed to parse output: ${e}\nRaw stderr: ${stderr}`));
       }
     });
   });
 }
 
-const url = process.argv[2];
-const pages = process.argv[3] ? parseInt(process.argv[3], 10) : 1;
-const concurrency = process.argv[4] ? parseInt(process.argv[4], 10) : 3;
+// Parse CLI arguments
+const args = process.argv.slice(2);
+const url = args.find(a => a.startsWith("http"));
 
 if (!url) {
-  console.error(JSON.stringify({ status: "error", message: "Usage: bun run url-to-md.ts <url> [pages] [concurrency]" }));
+  console.error(JSON.stringify({ 
+    status: "error", 
+    message: "Missing URL",
+    usage: "bun run url-to-md.ts <url> [options]",
+    options: [
+      "--pages <n>",
+      "--concurrency <n>",
+      "--no-robots",
+      "--all-origins",
+      "--user-agent <string>",
+      "--timeout <ms>",
+      "--cache-dir <path>",
+      "--max-length <n> (LLM optimization)"
+    ]
+  }));
   process.exit(1);
 }
 
-runCrawl(url, { pages, concurrency })
+function getArg(flag: string): string | undefined {
+  const idx = args.indexOf(flag);
+  return idx !== -1 && args[idx + 1] ? args[idx + 1] : undefined;
+}
+
+const options: Options = {
+  pages: parseInt(getArg("--pages") || "1"),
+  concurrency: parseInt(getArg("--concurrency") || "3"),
+  respectRobots: !args.includes("--no-robots"),
+  sameOriginOnly: !args.includes("--all-origins"),
+  userAgent: getArg("--user-agent"),
+  timeout: parseInt(getArg("--timeout") || "30000"),
+  cacheDir: getArg("--cache-dir") || ".cache",
+  maxContentLength: parseInt(getArg("--max-length") || "30000") // Default LLM limit
+};
+
+runCrawl(url, options)
   .then((results) => {
-    console.log(JSON.stringify({ status: "success", results }, null, 2));
+    const hasErrors = results.some(r => r.error);
+    const allEmpty = results.every(r => !r.markdown || r.markdown.trim().length < 50);
+    
+    const output: any = { 
+      status: "success", 
+      count: results.length,
+      results 
+    };
+
+    if (allEmpty && results.length > 0) {
+      output.recommendation = "Content seems empty or blocked. Consider using full Playwright mode or disabling robots.txt.";
+    }
+
+    console.log(JSON.stringify(output, null, 2));
   })
   .catch((error) => {
     console.error(JSON.stringify({ status: "error", message: error.message }));

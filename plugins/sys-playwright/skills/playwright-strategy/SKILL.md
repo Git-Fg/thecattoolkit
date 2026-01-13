@@ -8,14 +8,20 @@ When using Playwright through an MCP-based client, always choose one primary evi
 ## Fast Extraction Protocol (LIGHTWEIGHT)
 Before using full Playwright automation, evaluate if the task can be completed using the high-speed conversion script.
 
-**Criteria for Fast Extraction:**
-- Target is a public article, documentation, or static page.
-- No interaction (login, clicks) is required.
-- You need clean Markdown for LLM consumption.
+**Decision Matrix:**
+| Requirement | Recommended Tool | Mode |
+|:------------|:-----------------|:-----|
+| Static docs, articles, blogs | `/crawl` | Fast |
+| Save/Archive URL to file | `/save-page` | Fast |
+| JS-heavy apps (React/Vue/SPA) | `Skill(playwright-strategy)` | Mode 2 |
+| Auth, Login, Cookies | `Skill(playwright-strategy)` | Mode 2 |
+| Visual layouts, Canvas, Maps | `Skill(playwright-strategy)` | Mode 1 |
 
 **Action:**
-Execute `npx/bunx run scripts/url-to-md.ts <url>`.
-See [references/fast-extraction.md](references/fast-extraction.md) for details.
+- For fast extraction: Execute `bun run scripts/url-to-md.ts <url> [options]`.
+- For multi-page extraction: Use the `/crawl` command.
+- For saving a page to disk: Use the `/save-page` command.
+- See [references/fast-extraction.md](references/fast-extraction.md) for advanced parameters.
 
 ## Mode 1 — Image-first (primary: pixels; fallback: structure)
 Use when visual rendering matters: layout differences, styling regressions, charts, maps, canvases, complex widgets, or when semantics are unreliable.
