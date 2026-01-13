@@ -509,3 +509,53 @@ npm run lighthouse && npm run bundle-analyzer
 - **Security:** npm audit, bandit, semgrep
 - **Performance:** Lighthouse, web-vitals
 - **Coverage:** Istanbul, coverage.py
+
+## Self-Verification Pattern
+
+**Automated Verification:**
+
+```python
+def verify_task_completion(task, execution_report):
+    """Verify task was completed successfully"""
+
+    # Check 1: Expected files created
+    expected_files = task.get('expected_files', [])
+    for file in expected_files:
+        assert os.path.exists(file), f"Expected file {file} not found"
+
+    # Check 2: Tests passing
+    if task.get('run_tests'):
+        result = run_command('npm test')
+        assert result.returncode == 0, "Tests failed"
+
+    # Check 3: Success criteria
+    success_criteria = task.get('success_criteria', [])
+    for criteria in success_criteria:
+        assert verify_criteria(criteria), f"Criteria not met: {criteria}"
+
+    return True
+```
+
+**Verification Checklist:**
+
+```markdown
+For Each Task:
+- [ ] Files created as expected
+- [ ] Code changes applied correctly
+- [ ] Tests passing
+- [ ] Success criteria met
+- [ ] No errors in execution
+- [ ] State updated correctly
+
+For Each Phase:
+- [ ] All tasks complete
+- [ ] Phase summary created
+- [ ] ROADMAP.md updated
+- [ ] Next phase ready
+
+For Plan:
+- [ ] All phases complete
+- [ ] Deliverables produced
+- [ ] Final verification passed
+- [ ] Success criteria met
+```

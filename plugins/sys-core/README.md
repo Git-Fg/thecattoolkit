@@ -9,7 +9,6 @@ Provides the essential infrastructure for the Cat Toolkit: security auditing, su
 ## Agents
 
 - **security-auditor** - Read-only security vulnerability scanner (secrets, OWASP violations)
-- **plugin-expert** - Infrastructure guardian for component creation and standardization
 
 ## Skills
 
@@ -40,4 +39,4 @@ Provides the essential infrastructure for the Cat Toolkit: security auditing, su
 
 ## Usage
 
-All security operations run in `plan` mode (read-only). Component management uses the plugin-expert with full toolkit documentation access. Hooks provide automatic logging and protocol injection.
+All security operations run in `plan` mode (read-only). Component management uses meta-skills directly (meta-skill, meta-commands, meta-hooks) with full toolkit documentation access. Hooks provide automatic logging and protocol injection.

@@ -1,6 +1,6 @@
 ---
 name: manage-healing
-description: "Performs forensic investigation and applies permanent fixes. MUST USE when diagnosing component failures, hallucinations, or instruction drift."
+description: "Performs forensic investigation and applies permanent fixes. MUST USE when diagnosing component failures, hallucinations, or instruction drift. Do not use for routine tasks, standard debugging, or preventive maintenance."
 context: fork
 allowed-tools: [Task, Read, Write, Edit, Glob, Grep]
 ---

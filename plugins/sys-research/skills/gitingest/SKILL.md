@@ -12,30 +12,18 @@ GitIngest is an AI agent integration tool that turns any Git repository into a p
 
 ## Quick Start
 
-**Install CLI:**
+**Execute via Script:**
 ```bash
-pipx install gitingest
-gitingest --version
+uv run --with gitingest scripts/ingest.py <url_or_path> [options]
 ```
 
-**Basic Usage:**
+**Examples:**
 ```bash
-# Ingest a repository
-gitingest https://github.com/user/repo -o digest.txt
+# Ingest remote repo
+uv run --with gitingest scripts/ingest.py https://github.com/user/repo
 
-# Stream to AI processor
-gitingest https://github.com/user/repo -o - | your_ai_processor
-```
-
-**Python Usage:**
-```python
-from gitingest import ingest
-
-# Ingest repository
-summary, tree, content = ingest("https://github.com/user/repo")
-
-# Process results
-analyze_code(content)
+# Ingest with filtering
+uv run --with gitingest scripts/ingest.py . -i "*.py" -e "tests/*"
 ```
 
 ## Output Format

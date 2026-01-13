@@ -1,6 +1,6 @@
 ---
 name: meta-mcp
-description: "Provides comprehensive MCP integration guidance for Claude Code plugins. MUST Use when integrating databases via MCP, setting up MCP servers, or configuring connections."
+description: "Provides comprehensive MCP integration guidance for Claude Code plugins. MUST Use when integrating databases via MCP, setting up MCP servers, or configuring connections. Do not use for API integration, web services, or general database access."
 ---
 
 # MCP Integration for Claude Code Plugins

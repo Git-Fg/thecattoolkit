@@ -2,7 +2,7 @@
 name: worker
 description: "Execution agent that reads .cattoolkit/plan files and implements code. NON-INTERACTIVE."
 tools: [Read, Write, Edit, Bash, Glob, Grep]
-skills: [plan-manager, software-engineering, execution-core]
+skills: [managing-project-plans, software-engineering, execution-core]
 ---
 
 # Role: Worker (Builder)

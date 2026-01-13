@@ -20,14 +20,7 @@ Optimizes AI models for deployment on mobile devices and edge environments throu
 
 ## Skills
 
-### gitingest
-**Git repository ingestion for AI analysis**
 
-- Transform repositories into AI-readable digests
-- CLI and Python package support
-- File filtering and size limits
-- Private repository authentication
-- Structured output for LLM consumption
 
 ### edge-ai-management
 **Model management for resource-constrained environments**
@@ -102,12 +95,7 @@ result = mobile_opt.run_inference(
 
 ## Commands
 
-### /ingest
-**Shortcut for gitingest skill**
 
-- Zero-token invocation of repository ingestion
-- Pass repository URL and options as arguments
-- Example: `/ingest https://github.com/user/repo -i "*.py"`
 
 ## Usage
 

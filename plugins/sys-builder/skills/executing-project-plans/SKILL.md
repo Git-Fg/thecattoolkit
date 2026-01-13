@@ -1,7 +1,8 @@
 ---
 name: executing-project-plans
-description: "Orchestrates plan execution, manages state transitions, and handles verification workflows. Use when executing project phases and managing state transitions."
+description: "Orchestrates plan execution, manages state transitions, and handles verification workflows. PROACTIVELY Use when executing project phases and managing state transitions."
 context: fork
+allowed-tools: [Task]
 ---
 
 # Executing Project Plans: Orchestration Layer
@@ -432,55 +433,37 @@ ETA: {estimated completion time}
 
 ## Quick Reference
 
-### Execution Checklist
+### 1. State Management
+How to track progress and handle transitions.
+- **State Management**: [references/state-management.md](references/state-management.md)
+
+### 2. Execution & Orchestration
+How to dispatch tasks to workers.
+- **Handoff Protocols**: [references/handoff-protocols.md](references/handoff-protocols.md)
+
+### 3. Verification
+How to verify success at Task, Phase, and Plan levels.
+- **Verification Workflows**: [references/verification-workflows.md](references/verification-workflows.md)
+
+### 4. Handoffs
+How to handle blockers and transfer context.
+- **Template**: [assets/handoff-template.md](assets/handoff-template.md)
+- **Protocols**: [references/handoff-protocols.md](references/handoff-protocols.md)
+
+## Execution Checklist (Summary)
 
 **Phase Start:**
-- [ ] Check ROADMAP.md
-- [ ] Verify dependencies
+- [ ] Check ROADMAP.md & Dependencies
 - [ ] Update status [ ] → [~]
-- [ ] Read phase plan
-- [ ] Prepare execution context
 
 **Task Execution:**
-- [ ] Dispatch to worker
-- [ ] Monitor execution
-- [ ] Verify completion
-- [ ] Update status [~] → [x]
-- [ ] Check phase completion
+- [ ] Dispatch to worker (Non-interactive)
+- [ ] Monitor & Verify
 
 **Phase Complete:**
 - [ ] All tasks [x]
-- [ ] Create summary
-- [ ] Update ROADMAP.md [~] → [x]
-- [ ] Check next phase
+- [ ] Create summary & Update ROADMAP.md
 
 **Handoff Required:**
-- [ ] Identify blocker
-- [ ] Create HANDOFF.md
-- [ ] Update status [~] → [!]
+- [ ] Identify blocker & Create HANDOFF.md
 - [ ] Pause execution
-- [ ] Resume after fix
-
-### State Transition Rules
-
-```markdown
-Valid Transitions:
-[ ] → [~] (start phase)
-[~] → [x] (complete phase)
-[~] → [!] (block phase)
-[!] → [~] (resume after handoff)
-
-Invalid Transitions:
-[ ] → [x] (skip phase)
-[x] → [~] (reopen phase)
-[~] → [~] (already in progress)
-```
-
-## References
-
-**See:**
-- `references/state-management.md` - State transition patterns
-- `references/verification-workflows.md` - Verification protocols
-- `references/handoff-protocols.md` - Standard handoff formats
-- `managing-project-plans` skill - Handoff template
-- `execution-core` skill - Behavioral standards

@@ -493,6 +493,88 @@ DECISION     - Business decision needed
 [x] - Complete (finished successfully)
 ```
 
+## Execution Orchestration Protocols
+
+### Worker Agent Orchestration
+
+**Protocol:**
+
+1. **Prepare Context**
+   ```markdown
+   Phase plan content
+   + BRIEF.md context
+   + Current state
+   = Full execution context
+   ```
+
+2. **Dispatch to Worker**
+   ```markdown
+   Task: {Full context}
+   Agent: Worker
+   Constraint: Non-interactive execution
+   Tools: [Read, Write, Edit, Bash, Glob, Grep]
+   Skills: [managing-project-plans, software-engineering, execution-core]
+   ```
+
+3. **Monitor Execution**
+   - Check for completion
+   - Monitor for errors
+   - Detect handoff creation
+   - Verify state updates
+
+4. **Handle Completion**
+   - Read execution report
+   - Verify task completion
+   - Update state
+   - Continue or pause
+
+### Task Execution Loop
+
+**For Each Task:**
+
+```markdown
+Step 1: Execute
+- Dispatch to worker
+- Pass full context
+- Monitor execution
+
+Step 2: Verify
+- Check execution report
+- Run verification commands
+- Confirm success criteria
+
+Step 3: Update State
+- Mark task [x] complete
+- Update progress metrics
+- Check phase completion
+
+Step 4: Continue
+- Next task OR
+- Phase complete OR
+- Handoff required
+```
+
+### Execution Monitoring
+
+**Progress Tracking:**
+
+**Phase Progress:**
+```markdown
+Phase: {name} [~]
+Progress: {X}/{Y} tasks complete
+
+Completed:
+- [x] Task 1 (completed at {time})
+- [x] Task 2 (completed at {time})
+
+In Progress:
+- [~] Task 3 (started at {time})
+
+Remaining:
+- [ ] Task 4
+- [ ] Task 5
+```
+
 ### Recovery Commands
 
 ```bash

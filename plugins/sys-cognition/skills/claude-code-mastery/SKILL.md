@@ -1,6 +1,6 @@
 ---
 name: claude-code-mastery
-description: "Provides comprehensive guide for mastering Claude Code including plan mode workflows, context optimization, and advanced skills/subagents/MCP patterns. Use when building with Claude Code, optimizing workflows, or implementing advanced features."
+description: "Provides comprehensive guide for mastering Claude Code including plan mode workflows, context optimization, and advanced skills/subagents/MCP patterns. Use when building with Claude Code, optimizing workflows, or implementing advanced features. Do not use for skill authoring, plugin development, or system design."
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 

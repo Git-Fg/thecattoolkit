@@ -6,7 +6,7 @@ The Bootstrap Protocol is the Emergency Safe Mode for the Cat Toolkit. It is des
 
 Invoke `/bootstrap` when:
 1. `/heal` or `/build` fails with a Python traceback (e.g., in `hook-tester.py`).
-2. The `plugin-expert` agent is hallucinating or looping.
+2. Meta-skills are hallucinating or looping.
 3. Core management skills (like `manage-hooks`) are corrupted.
 4. You need to reset the system to a last known good state without agent interference.
 

@@ -1,6 +1,6 @@
 ---
 name: create-hooks
-description: "Expert guidance for creating, configuring, and using Claude Code hooks. MUST Use when setting up event listeners, validating commands, automating workflows, or implementing hook-based automation."
+description: "Expert guidance for creating, configuring, and using Claude Code hooks. MUST Use when setting up event listeners, validating commands, automating workflows, or implementing hook-based automation. Do not use for skill creation, command development, or plugin configuration."
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash(mkdir:-p), Bash(ls:*), Bash(cat:*), Bash(jq:*)]
 ---
 

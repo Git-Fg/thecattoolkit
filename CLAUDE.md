@@ -402,19 +402,68 @@ The Cat Toolkit organizes capabilities into domain-specific plugins:
 | **Agents** | Background Tasks, High Volume | [🤖 Agents](docs/guides/agents.md) |
 | **Hooks/MCP** | Infrastructure, Integration | [🔌 Infrastructure](docs/guides/infrastructure.md) |
 
-## 3.3 The "Min Core" Pattern (Brain + Button)
+## 3.3 The 3-Tier Loading Model
+
+**Every Skill follows a filesystem-based architecture:**
+
+| Tier | Trigger | Context Cost | Content | Purpose |
+|:-----|:--------|:-------------|:--------|:--------|
+| **1. Metadata** | Startup | ~100 tokens | Name + Description | Discovery routing |
+| **2. Instructions** | Activation | Size of `SKILL.md` | Core procedures | The "Brain" |
+| **3. Resources** | On-Demand | Size of accessed file | `references/`, `scripts/` | Unlimited knowledge |
+
+**The Delta Standard**: Only add context Claude doesn't already have. Question every instruction:
+- "Does Claude need this explanation?"
+- "Can Claude infer this?"
+- "Does this justify its token cost?"
+
+## 3.4 The "Min Core" Pattern (Brain + Button)
 Structure capabilities using the **Brain (Skill)** + **Button (Command)** approach.
 1.  **Skill**: Contains the methodology (auto-discovered).
 2.  **Command**: Invocable trigger. Two modes:
     *   `/plugin:run`: Batch mode (Assumptions).
     *   `/plugin:run-interactive`: Interactive mode (AskUserQuestion).
 
-## 3.4 Skill Architecture Standards
+## 3.5 Skill Autonomy Levels
+
+Match specificity to task fragility and variability:
+
+| Level | Use Case | Pattern | Examples |
+|:-------|:---------|:--------|:---------|
+| **Protocol (Low Freedom)** | Exact steps, no deviation | Critical operations | Database migrations, security validations, compliance checks |
+| **Guided (Medium Freedom)** | Pattern-based with adaptation | Best practices | Code reviews, architectural guidance, analysis tasks |
+| **Heuristic (High Freedom)** | Broad principles, maximum flexibility | Creative tasks | Creative work, brainstorming, innovation |
+
+## 3.6 The Four Universal Skill Archetypes
+
+### 1. Procedural Skill
+**Purpose:** Deterministic, repeatable processes
+- **Pattern:** Exact steps, validation gates, idempotent operations
+- **Examples:** Migrations, security scans, compliance checks
+
+### 2. Advisory Skill
+**Purpose:** Provide expertise and recommendations
+- **Pattern:** Heuristic principles, contextual adaptation, domain knowledge
+- **Examples:** Code reviews, architectural guidance, best practices
+
+### 3. Generator Skill
+**Purpose:** Create structured outputs from inputs
+- **Pattern:** Template-driven, validation-enhanced, iterative refinement
+- **Examples:** Document generation, test creation, report formatting
+
+### 4. Orchestrator Skill
+**Purpose:** Coordinate multiple capabilities and workflows
+- **Pattern:** Explicit dependencies, pipeline sequencing, state management
+- **Examples:** Multi-step analysis, compound workflows, cross-domain tasks
+
+## 3.7 Skill Architecture Standards
 1.  **Progressive Disclosure**: Keep `SKILL.md` < 500 lines. Move details to `references/`.
 2.  **Flat Hierarchy**: `SKILL.md` must link directly to resources. No nesting.
 3.  **Zero-Context Scripts**: Use `scripts/` for logic. Only stdout assumes tokens.
+4.  **Hub-and-Spoke**: SKILL.md is central hub, all references one level deep.
+5.  **Atomic Boundaries**: One domain per Skill, users think of it as single operation.
 
-## 3.5 Decision Matrix
+## 3.8 Decision Matrix
 | Need | Use |
 |:---|:---|
 | Single capability | **SKILL** |
@@ -422,7 +471,47 @@ Structure capabilities using the **Brain (Skill)** + **Button (Command)** approa
 | User interaction | **COMMAND** |
 | Isolation (>10 files) | **AGENT** |
 
-## 3.6 File Structure Standards ("Where things go")
+## 3.9 State Anchoring & Validation-First Architecture
+
+### State Anchoring
+**Problem:** Context windows are temporary.
+
+**Solution:** Explicit checkpoints and progress tracking.
+```markdown
+# State
+- [x] Step 1: Backup
+- [ ] Step 2: Transform
+**Last Checkpoint:** SUCCESS
+```
+
+**Requirements:**
+1. Atomic checkpoints
+2. Idempotent operations
+3. Progress visibility
+4. Failure isolation
+
+### Validation-First Workflow
+**Three-Phase Validation:**
+1. **Plan:** Verify plan is well-formed
+2. **Pre-execution:** Check prerequisites
+3. **Post-execution:** Verify outputs
+
+**Example:**
+```markdown
+## Document Processing Workflow
+1. **Plan**: Create changes.json
+2. **Validate**: Run scripts/validate_changes.py
+3. **Execute**: Apply changes if validation passes
+4. **Verify**: Run scripts/verify_output.py
+```
+
+**Use for:**
+- Batch operations
+- Destructive operations
+- Complex workflows
+- High-stakes tasks
+
+## 3.10 File Structure Standards ("Where things go")
 Avoid redundant READMEs. Follow this strict mapping:
 | Component | Location | Purpose |
 |---|---|---|
@@ -432,14 +521,46 @@ Avoid redundant READMEs. Follow this strict mapping:
 | **Logic** | `scripts/*.py` | Deterministic execution (Python/Bash). |
 | **Isolation** | `agents/*.md` | High-volume tasks requiring separate context. |
 
-## 3.7 The Validator Pattern (Self-Healing)
+## 3.11 Trigger Optimization (The SEO Formula)
+
+**Format:** Capability + Trigger + Negative Constraint
+
+**Example:**
+```yaml
+description: Extracts raw text and tabular data from .pdf files. Use when user mentions parsing, scraping, or converting PDF invoices. Do not use for PDF generation, editing, or image-to-PDF conversion.
+```
+
+**Optimization Rules:**
+1. Use specific triggers: "parsing PDF invoices" > "working with PDFs"
+2. Use gerunds: "parsing", "analyzing", "extracting"
+3. Include context anchoring: specific file types, use cases
+4. State clear exclusions: what NOT to use it for
+5. Third-person voice only: "Extracts data..." never "I can help..."
+
+## 3.12 The Validator Pattern (Self-Healing)
 1. **EXECUTE** → Perform task.
 2. **VALIDATE** → Run `toolkit-analyzer` or lint/test.
 3. **CORRECT** → If error, analyze and fix.
 4. **RE-VALIDATE** → Repeat (max 3 iterations).
 5. **RETURN** → Only when clean.
 
-## 3.8 Skill Archetypes
+## 3.13 The 12-Point QA Checklist
+
+Before deploying any skill, verify:
+- [ ] Description contains 3rd person Capability + Trigger?
+- [ ] Negative constraints defined?
+- [ ] Name excludes "anthropic" and "claude"?
+- [ ] References are 1-level deep (Hub-and-Spoke)?
+- [ ] TOC present for long reference files?
+- [ ] `user-invocable` set for utility skills?
+- [ ] `_state.md` artifact mandated for persistence?
+- [ ] Scripts return JSON-over-Stdout?
+- [ ] All file outputs directed to CWD/Tmp (not Skill dir)?
+- [ ] `allowed-tools` set to minimum required set?
+- [ ] Checksums included for critical assets?
+- [ ] Sub-agent forks specify an agent type?
+
+## 3.14 Skill Archetypes (Legacy - Use Universal Archetypes Above)
 ### 1. Task-Oriented (Workflows)
 - **Purpose:** Execute sequential processes.
 - **Trigger:** Gerund verbs (`deploying-app`, `reviewing-code`).
@@ -450,7 +571,7 @@ Avoid redundant READMEs. Follow this strict mapping:
 - **Trigger:** Domain nouns (`prompt-engineering`, `security-audit`).
 - **Pattern:** Query → Load → Synthesize.
 
-## 3.9 Permissions & Security
+## 3.15 Permissions & Security
 **The Permission Cascade:**
 ```
 Main Agent → Subagent (override) → Skill (temporary)

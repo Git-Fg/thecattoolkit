@@ -1,6 +1,6 @@
 ---
 name: agent-best-practices
-description: "Provides comprehensive best practices for building effective AI agents based on Cursor's Universal Agentic Runtime principles. Use when developing agent systems, designing agent workflows, or optimizing agent performance."
+description: "Provides comprehensive best practices for building effective AI agents based on Cursor's Universal Agentic Runtime principles. Use when developing agent systems, designing agent workflows, or optimizing agent performance. Do not use for skill development, command creation, or plugin configuration."
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 

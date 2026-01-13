@@ -243,7 +243,37 @@ See [references/spec.md](references/spec.md)
 | **Medium** | Preferred pattern exists | Report generation |
 | **Low** | Fragile operations | Database migrations, deployments |
 
-## 3.4 Design Patterns
+## 3.4 The Four Universal Skill Archetypes
+
+### 1. Procedural Skill
+**Purpose:** Deterministic, repeatable processes
+- **Pattern:** Exact steps, validation gates, idempotent operations
+- **Criticality:** High error cost, low context variation
+- **Autonomy:** Protocol (Low Freedom)
+- **Examples:** Migrations, security scans, compliance checks
+
+### 2. Advisory Skill
+**Purpose:** Provide expertise and recommendations
+- **Pattern:** Heuristic principles, contextual adaptation, domain knowledge
+- **Criticality:** Medium, requires judgment
+- **Autonomy:** Guided (Medium Freedom)
+- **Examples:** Code reviews, architectural guidance, best practices
+
+### 3. Generator Skill
+**Purpose:** Create structured outputs from inputs
+- **Pattern:** Template-driven, validation-enhanced, iterative refinement
+- **Criticality:** Medium, requires consistency
+- **Autonomy:** Guided (Medium Freedom)
+- **Examples:** Document generation, test creation, report formatting
+
+### 4. Orchestrator Skill
+**Purpose:** Coordinate multiple capabilities and workflows
+- **Pattern:** Explicit dependencies, pipeline sequencing, state management
+- **Criticality:** High complexity, multiple domains
+- **Autonomy:** Protocol to Guided (varies by component)
+- **Examples:** Multi-step analysis, compound workflows, cross-domain tasks
+
+## 3.5 Design Patterns
 
 ### Pattern A: "Brain + Button" (The Sys-Builder Model)
 Use this for complex workflows (Build, Audit, Refactor).
@@ -262,7 +292,7 @@ Use this to protect Main Context from massive logs or file reads.
     *   *Crucial*: Sub-agents do **not** inherit parent Skills automatically.
     *   *Config*: Must explicitly list `skills: ["parent-skill-core"]` in frontmatter.
 
-## 3.5 Progressive Disclosure Mechanics
+## 3.6 Progressive Disclosure Mechanics
 
 Understanding how Claude loads Skills is critical for token optimization. It is a filesystem-based architecture.
 
@@ -273,7 +303,7 @@ Understanding how Claude loads Skills is critical for token optimization. It is 
 | **3. Resources** | On-Demand | Size of accessed file | `references/*.md`. Static knowledge loaded *only* if referenced. |
 | **4. Execution** | Script Run | **Size of STDOUT only** | `scripts/*.py`. Deterministic tasks. The source code remains on disk (0 tokens). |
 
-## 3.6 Scripting Best Practices
+## 3.7 Scripting Best Practices
 
 Use the `scripts/` folder to offload cognitive load from the model to deterministic code.
 
@@ -293,7 +323,54 @@ Use the `scripts/` folder to offload cognitive load from the model to determinis
 - **Rule**: If a task is repeatable (e.g., "Find all unused variables"), write a `scripts/find_unused.py` utility.
 - **Why**: Running a pre-written script is faster, cheaper, and safer than asking Claude to "write a bash command to find unused variables" every time.
 
-## 3.7 Commands & Permissions
+## 3.8 State Anchoring & Validation
+
+### State Anchoring Strategy
+**Problem:** Context windows are temporary.
+
+**Solution:** Explicit checkpoints and progress tracking.
+```markdown
+# State
+- [x] Step 1: Backup
+- [ ] Step 2: Transform
+**Last Checkpoint:** SUCCESS
+```
+
+**Requirements:**
+1. Atomic checkpoints
+2. Idempotent operations
+3. Progress visibility
+4. Failure isolation
+
+### Validation-First Workflow
+**Three-Phase Validation:**
+1. **Plan:** Verify plan is well-formed
+2. **Pre-execution:** Check prerequisites
+3. **Post-execution:** Verify outputs
+
+**Use for:**
+- Batch operations
+- Destructive operations
+- Complex workflows
+- High-stakes tasks
+
+## 3.9 The 12-Point QA Checklist
+
+Before deploying any skill, verify:
+- [ ] Description contains 3rd person Capability + Trigger?
+- [ ] Negative constraints defined?
+- [ ] Name excludes "anthropic" and "claude"?
+- [ ] References are 1-level deep (Hub-and-Spoke)?
+- [ ] TOC present for long reference files?
+- [ ] `user-invocable` set for utility skills?
+- [ ] `_state.md` artifact mandated for persistence?
+- [ ] Scripts return JSON-over-Stdout?
+- [ ] All file outputs directed to CWD/Tmp (not Skill dir)?
+- [ ] `allowed-tools` set to minimum required set?
+- [ ] Checksums included for critical assets?
+- [ ] Sub-agent forks specify an agent type?
+
+## 3.10 Commands & Permissions
 
 ### Command Advanced Patterns
 
@@ -323,7 +400,7 @@ allowed-tools: [Skill(analyzer), Skill(builder), Skill(tester), Bash]
 ---
 ```
 
-### 3.4.1 Execution Protocols (Batch vs Interactive)
+### 3.10.1 Execution Protocols (Batch vs Interactive)
 
 | Feature | **Batch Mode** (`/run`) | **Interactive Mode** (`/run-interactive`) |
 |:---|:---|:---|
@@ -331,7 +408,7 @@ allowed-tools: [Skill(analyzer), Skill(builder), Skill(tester), Bash]
 | **Routing** | Direct delegation to `Worker` | **Router Command** → Questions → `Skill` |
 | **Output** | `ASSUMPTIONS.md` | Validated Plan |
 
-### 3.4.2 Sub-agent Skill Injection
+### 3.10.2 Sub-agent Skill Injection
 Sub-agents **do not** inherit the Main Agent's skills. You MUST explicitly bind them:
 ```yaml
 ---

@@ -68,10 +68,10 @@ pptx.writeFile({ fileName: "presentation.pptx" });
 6. Validate with thumbnail grids
 
 **Key Scripts**:
-- `rearrange.py`: Duplicate and reorder slides
-- `inventory.py`: Extract all text shapes
-- `replace.py`: Apply text replacements
-- `thumbnail.py`: Visual validation
+- `scripts/rearrange.py`: Duplicate and reorder slides
+- `scripts/inventory.py`: Extract all text shapes
+- `scripts/replace.py`: Apply text replacements
+- `scripts/thumbnail.py`: Visual validation
 
 ## Design Principles for Scientific Presentations
 

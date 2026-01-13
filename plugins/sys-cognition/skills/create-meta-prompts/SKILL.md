@@ -1,6 +1,6 @@
 ---
 name: create-meta-prompts
-description: "Creates optimized prompts for Claude-to-Claude pipelines with research, planning, and execution stages. Use when building prompts that produce structured outputs for other prompts to consume, or when running multi-stage workflows."
+description: "Creates optimized prompts for Claude-to-Claude pipelines with research, planning, and execution stages. Use when building prompts that produce structured outputs for other prompts to consume, or when running multi-stage workflows. Do not use for simple prompts, single-step tasks, or basic conversational AI."
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 

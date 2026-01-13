@@ -1,7 +1,7 @@
 ---
 description: "Interactive skill creation wizard with step-by-step guidance."
 argument-hint: "[skill-name] [plugin]"
-allowed-tools: [Skill(addskill), AskUserQuestion, Read, Write, Edit, Bash, Bash(mkdir:-p), Bash(ls:*), Bash(cat:*)]
+allowed-tools: [Skill(scaffold-component), AskUserQuestion, Read, Write, Edit, Bash, Bash(mkdir:-p), Bash(ls:*), Bash(cat:*)]
 disable-model-invocation: true
 ---
 
@@ -44,13 +44,13 @@ If skill name is empty, use `AskUserQuestion` to gather:
       "multiSelect": false
     },
     {
-      "question": "What type of skill are you creating?",
-      "header": "Skill Type",
+      "question": "What archetype is your skill?",
+      "header": "Skill Archetype",
       "options": [
-        {"label": "Procedural", "description": "Step-by-step workflow with checklists"},
-        {"label": "Qualitative", "description": "Design, style, or patterns"},
-        {"label": "Migration", "description": "API translation or format conversion"},
-        {"label": "Zero-Context", "description": "Tool wrapper that runs scripts"}
+        {"label": "Procedural", "description": "Deterministic, repeatable processes (Protocol autonomy)"},
+        {"label": "Advisory", "description": "Expertise and recommendations (Guided autonomy)"},
+        {"label": "Generator", "description": "Create structured outputs (Guided autonomy)"},
+        {"label": "Orchestrator", "description": "Coordinate multiple capabilities"}
       ],
       "multiSelect": false
     }
@@ -60,7 +60,7 @@ If skill name is empty, use `AskUserQuestion` to gather:
 
 ## Execution
 
-Invoke `Skill(addskill)` with gathered information:
+Invoke `Skill(scaffold-component)` with gathered information:
 
 1. **Documentation Research** - Read guides in `docs/`
 2. **Meta-Skill Investigation** - Study `meta-skill` standards
@@ -78,9 +78,9 @@ Invoke `Skill(addskill)` with gathered information:
 ```
 Created: <skill-name>
 Location: plugins/<plugin>/skills/<skill-name>/SKILL.md
-Type: <Procedural/Qualitative/Migration/Zero-Context>
-Description: <description text>
-Command: /sys-core:addskill (if created)
+Archetype: <Procedural/Advisory/Generator/Orchestrator>
+Autonomy: <Protocol/Guided/Heuristic>
+Description: <SEO-optimized description>
 
 Files created:
 - SKILL.md (<n> lines)
@@ -92,7 +92,8 @@ Validation: PASSED
 Next steps:
 1. Test: /sys-core:<skill-name> <test-case>
 2. Review: docs/guides/skills.md
-3. Iterate based on usage
+3. Verify 12-Point QA Checklist
+4. Iterate based on usage
 ```
 
 ## Quick Start

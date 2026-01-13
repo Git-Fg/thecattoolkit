@@ -63,5 +63,7 @@ Report includes:
 ## See Also
 
 - `Skill(software-engineering)` - Full engineering standards reference
-- `references/static-analysis-workflow.md` - Detailed analysis protocol
-- `references/review-workflow.md` - Manual review checklist
+- `Skill(software-engineering)` - Full engineering standards reference
+- See `software-engineering` references for:
+  - `static-analysis-workflow.md`
+  - `review-workflow.md`

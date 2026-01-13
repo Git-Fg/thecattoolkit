@@ -1,6 +1,6 @@
 ---
 name: prompt-engineering
-description: "Applies 2026 Complexity-Based Guidance standards with Attention Management, Sycophancy Prevention, and XML/Markdown decision matrix. Use when designing, optimizing, or auditing AI prompts, system instructions, or multi-step chains."
+description: "Applies 2026 Complexity-Based Guidance standards with Attention Management, Sycophancy Prevention, and XML/Markdown decision matrix. Use when designing, optimizing, or auditing AI prompts, system instructions, or multi-stage chains. Do not use for simple tasks, basic conversational AI, or single-step interactions."
 allowed-tools: [Read, Write, Edit, Glob, Grep]
 ---
 

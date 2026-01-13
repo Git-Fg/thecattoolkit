@@ -256,10 +256,10 @@
       "strict": true
     },
     {
-      "name": "sys-playwright",
-      "source": "./plugins/sys-playwright",
-      "description": "Browser automation strategy. PROACTIVELY Use when handling any browser-related tasks including automation, crawling, scraping, research, QA, testing, and debugging.",
-      "version": "1.0.0",
+      "name": "sys-browser",
+      "source": "./plugins/sys-browser",
+      "description": "The complete web interaction suite. Features a unified 'browser-automation' skill that intelligently orchestrates between lightweight high-speed crawling (@just-every/crawl) and complex structure-based automation (Playwright MCP).",
+      "version": "2.0.0",
       "author": {
         "name": "Git-Fg"
       },

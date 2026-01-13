@@ -1,0 +1,19 @@
+{
+  "name": "sys-browser",
+  "version": "2.0.0",
+  "description": "The complete web interaction suite. Features a unified 'browser-automation' skill that intelligently orchestrates between lightweight high-speed crawling (@just-every/crawl) and complex structure-based automation (Playwright MCP).",
+  "license": "Apache-2.0",
+  "author": {
+    "name": "Git-Fg"
+  },
+  "repository": "https://github.com/Git-Fg/thecattoolkit",
+  "homepage": "https://github.com/Git-Fg/thecattoolkit/tree/main/plugins/sys-browser",
+  "keywords": [
+    "mcp",
+    "playwright",
+    "crawler",
+    "scraping",
+    "automation",
+    "testing"
+  ]
+}

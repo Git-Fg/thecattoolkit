@@ -1,6 +1,6 @@
 ---
 name: meta-hooks
-description: "Provides comprehensive hook development guidance for Claude Code plugins. MUST Use when creating hooks, implementing PreToolUse/PostToolUse/Stop hooks, or configuring event-driven automation."
+description: "Provides comprehensive hook development guidance for Claude Code plugins. MUST Use when creating hooks, implementing PreToolUse/PostToolUse/Stop hooks, or configuring event-driven automation. Do not use for general automation, workflow management, or task execution."
 ---
 
 # Hook Development for Claude Code Plugins

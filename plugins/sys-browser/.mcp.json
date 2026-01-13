@@ -1,0 +1,43 @@
+{
+  "mcpServers": {
+    "pw-structure": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@playwright/mcp@0.0.55",
+        "--snapshot-mode",
+        "incremental",
+        "--image-responses",
+        "omit",
+        "--console-level",
+        "error",
+        "--block-service-workers",
+        "--timeout-action",
+        "3000",
+        "--output-dir",
+        "${CLAUDE_PLUGIN_ROOT}/.playwright-output",
+        "--isolated"
+      ]
+    },
+    "pw-image": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@playwright/mcp@0.0.55",
+        "--snapshot-mode",
+        "incremental",
+        "--image-responses",
+        "allow",
+        "--caps",
+        "vision",
+        "--console-level",
+        "error",
+        "--block-service-workers",
+        "--timeout-action",
+        "3000",
+        "--output-dir",
+        "${CLAUDE_PLUGIN_ROOT}/.playwright-output"
+      ]
+    }
+  }
+}
