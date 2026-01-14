@@ -92,7 +92,7 @@ def generate_summary(plan_file: Path, phase_num: str, phase_name: str) -> str:
     summary = f"""# Phase {phase_num} Summary: {phase_name}
 
 **Date:** {today}
-**Status:** ✅ Complete
+**Status:** GOOD Complete
 
 ## Completed Tasks
 """
@@ -226,7 +226,7 @@ def main():
     summary_path.write_text(summary)
 
     print(f"\n{'='*60}")
-    print(f"✅ Summary generated: {summary_path}")
+    print(f"GOOD Summary generated: {summary_path}")
     print(f"{'='*60}\n")
 
     print("Summary preview:")

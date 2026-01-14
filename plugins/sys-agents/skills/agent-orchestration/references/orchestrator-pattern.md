@@ -14,14 +14,14 @@ The orchestrator maintains the big picture, decomposes tasks, delegates to speci
 
 ## When to Use
 
-✅ **Ideal for:**
+**Ideal for:**
 - Single complex task requiring different expertise areas
 - Need to prevent main agent context saturation
 - Tasks with clear sub-components
 - Centralized planning with distributed execution
 - Quality control at synthesis point
 
-❌ **Not suitable for:**
+**Not suitable for:**
 - Simple, linear tasks
 - When parallel execution isn't beneficial
 - Small scope tasks
@@ -188,44 +188,44 @@ Main Agent
 
 ## Benefits
 
-✅ **Clear Task Decomposition**
+**Clear Task Decomposition**
 - Complex tasks broken into manageable pieces
 - Each agent focuses on one area
 - Easier to understand and maintain
 
-✅ **Global View Maintained**
+**Global View Maintained**
 - Orchestrator sees entire task
 - Can make global decisions
 - Coordinates effectively
 
-✅ **Specialized Expertise**
+**Specialized Expertise**
 - Each agent is expert in its domain
 - Higher quality output
 - Better problem-solving
 
-✅ **Context Isolation**
+**Context Isolation**
 - Prevents context saturation
 - Agents have focused context
 - Scalable to large tasks
 
 ## Limitations
 
-❌ **Single Point of Coordination**
+**Single Point of Coordination**
 - Orchestrator can become bottleneck
 - Failure affects entire task
 - Must handle orchestrator reliability
 
-❌ **Coordination Overhead**
+**Coordination Overhead**
 - Communication between agents
 - Result merging complexity
 - Timing and sequencing
 
-❌ **Complex Planning Required**
+**Complex Planning Required**
 - Must decompose tasks well
 - Requires understanding of problem space
 - Planning effort significant
 
-❌ **Error Propagation**
+**Error Propagation**
 - Errors must be handled at orchestrator
 - Retry logic complex
 - Partial failure management

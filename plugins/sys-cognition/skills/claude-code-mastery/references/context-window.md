@@ -47,9 +47,9 @@ Every interaction adds to context:
 **Why**: Contexts bleed together and Claude gets confused.
 
 **Examples**:
-- ✅ Conversation 1: Build authentication system
-- ✅ Conversation 2: Refactor database layer
-- ❌ Don't do both in the same conversation
+- GOOD Conversation 1: Build authentication system
+- GOOD Conversation 2: Refactor database layer
+- BAD Don't do both in the same conversation
 
 **Practical application**:
 ```
@@ -517,7 +517,7 @@ Total: ~40,000 tokens (20% of 200K)
 
 ## Context Anti-Patterns
 
-### ❌ Don't Do This
+### BAD Don't Do This
 
 1. **Let it ride** - Ignore context until it breaks
 2. **Copy-paste entire files** - Load only what's needed
@@ -525,7 +525,7 @@ Total: ~40,000 tokens (20% of 200K)
 4. **All in one conversation** - Scope your tasks
 5. **Ignore the indicator** - The percentage matters
 
-### ✅ Do This Instead
+### GOOD Do This Instead
 
 1. **Monitor proactively** - Watch the percentage
 2. **Use external memory** - Write plans to files

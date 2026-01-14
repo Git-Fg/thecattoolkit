@@ -1032,6 +1032,14 @@ class ToolkitAnalyzer:
         # Phase 11: Architecture Validation
         self.validate_architecture()
 
+        # Phase 13-15: 2026 Security & Quality Validators
+        self.validate_agent_security()
+        self.validate_thin_wrappers()
+        self.validate_persona_language()
+
+        # Phase 16: Emoji Usage Validation
+        self.validate_emoji_usage()
+
         # Phase 12: Claude Plugin Validation
         self.validate_claude_plugin()
 
@@ -2197,6 +2205,321 @@ class ToolkitAnalyzer:
 
             except Exception as e:
                 result.errors.append(f"{cmd_file}: Error processing: {e}")
+
+        print()
+        self.log_result(result)
+
+    def validate_agent_security(self) -> None:
+        """Phase 13: Validate agents have explicit security boundaries"""
+        result = ValidationResult("Agent Security Validation", True)
+
+        print("Phase 13: Agent Security Validation (2026 Standard)")
+        print("-" * 70)
+
+        agent_files = filter_excluded_paths(list(self.plugins_dir.rglob("agents/*.md")))
+        print(f"  Checking {len(agent_files)} agents...")
+
+        for agent_file in agent_files:
+            try:
+                content = agent_file.read_text()
+                if not content.startswith("---"):
+                    continue
+
+                end_match = re.search(r"^---$", content[3:], re.MULTILINE)
+                if not end_match:
+                    continue
+
+                fm_text = content[3 : 3 + end_match.start()]
+                frontmatter = yaml.safe_load(fm_text)
+
+                if not isinstance(frontmatter, dict):
+                    continue
+
+                agent_name = frontmatter.get("name", agent_file.stem)
+                has_tools = "tools" in frontmatter
+                has_disallowed = "disallowedTools" in frontmatter
+
+                # Check for security boundaries
+                if not has_tools and not has_disallowed:
+                    result.errors.append(
+                        f"{agent_file}: Agent '{agent_name}' lacks explicit security boundaries. "
+                        f"Agent inherits ALL tools from parent (CRITICAL security risk). "
+                        f"2026 Standard: Specify 'tools' allowlist or 'disallowedTools' blocklist."
+                    )
+                elif has_tools:
+                    tools = frontmatter.get("tools", [])
+                    if not tools or (isinstance(tools, list) and len(tools) == 0):
+                        result.errors.append(
+                            f"{agent_file}: Agent '{agent_name}' has empty 'tools' allowlist. "
+                            f"Empty allowlist = no tools available. "
+                            f"2026 Standard: Specify explicit tools or use disallowedTools."
+                        )
+
+                # Check for READ-ONLY claims without enforcement
+                body_lower = content[end_match.end() + 6 :].lower()
+                if "read-only" in body_lower or "read only" in body_lower:
+                    dangerous_tools = ["Write", "Edit", "Bash"]
+                    has_restriction = has_disallowed or (
+                        has_tools
+                        and any(
+                            tool not in frontmatter["tools"]
+                            for tool in dangerous_tools
+                        )
+                    )
+                    if not has_restriction:
+                        result.errors.append(
+                            f"{agent_file}: Agent '{agent_name}' claims 'READ-ONLY' but lacks enforcement. "
+                            f"Add 'disallowedTools: [Write, Edit, Bash]' to enforce read-only operation."
+                        )
+
+            except Exception as e:
+                result.errors.append(f"{agent_file}: Error processing: {e}")
+
+        print()
+        self.log_result(result)
+
+    def validate_thin_wrappers(self) -> None:
+        """Phase 14: Validate commands add unique value beyond skill invocation"""
+        result = ValidationResult("Thin Wrapper Detection", True)
+
+        print("Phase 14: Thin Wrapper Detection (2026 Standard)")
+        print("-" * 70)
+
+        command_files = filter_excluded_paths(
+            list(self.plugins_dir.rglob("commands/*.md"))
+        )
+        print(f"  Checking {len(command_files)} commands...")
+
+        skill_pattern = re.compile(r"use the \w+ skill", re.IGNORECASE)
+        invoke_pattern = re.compile(r"Skill\(['\"]", re.IGNORECASE)
+
+        for cmd_file in command_files:
+            try:
+                content = cmd_file.read_text()
+                if not content.startswith("---"):
+                    continue
+
+                end_match = re.search(r"^---$", content[3:], re.MULTILINE)
+                if not end_match:
+                    continue
+
+                body = content[end_match.end() + 6 :]
+
+                # Check for simple skill wrapper patterns
+                skill_matches = skill_pattern.findall(body)
+                invoke_matches = invoke_pattern.findall(body)
+
+                # Count lines in body (excluding frontmatter)
+                body_lines = [line for line in body.split("\n") if line.strip() and not line.strip().startswith("#")]
+                line_count = len(body_lines)
+
+                # Thin wrapper indicators:
+                # 1. Single "Use the X skill" pattern
+                # 2. Single Skill() invocation
+                # 3. Less than 5 lines of actual content
+                # 4. No bash/env injection (!` or $)
+                has_bash_injection = "!`" in body or "$" in body
+                has_questions = "AskUserQuestion" in body
+
+                is_thin_wrapper = (
+                    (skill_matches or invoke_matches)
+                    and line_count < 5
+                    and not has_bash_injection
+                    and not has_questions
+                )
+
+                if is_thin_wrapper:
+                    cmd_name = cmd_file.stem
+                    result.warnings.append(
+                        f"{cmd_file}: Command '{cmd_name}' appears to be a thin skill wrapper. "
+                        f"2026 Standard: Commands should add unique value (bash injection, interactivity, batch processing). "
+                        f"Consider deleting this command - the skill is auto-discoverable."
+                    )
+
+            except Exception as e:
+                result.errors.append(f"{cmd_file}: Error processing: {e}")
+
+        print()
+        self.log_result(result)
+
+    def validate_persona_language(self) -> None:
+        """Phase 15: Validate skills and agents use protocol format, not persona"""
+        result = ValidationResult("Persona Language Detection", True)
+
+        print("Phase 15: Persona Language Detection (2026 Standard)")
+        print("-" * 70)
+
+        # Persona language patterns to detect
+        persona_patterns = [
+            (r"You are an?\s+\w+", "You are a/an [role]"),
+            (r"I am an?\s+\w+", "I am a/an [role]"),
+            (r"Act as an?\s+\w+", "Act as a/an [role]"),
+            (r"Your role is?", "Your role"),
+            (r"You are an?\s+\*\*Elite\*\*", "You are an **Elite**"),
+            (r"You are an?\s+\*\*Senior\*\*", "You are a **Senior**"),
+            (r"You specialize in", "You specialize in"),
+        ]
+
+        # Check skills
+        skill_files = list(self.plugins_dir.rglob("SKILL.md")) + list(
+            self.plugins_dir.rglob("skill.md")
+        )
+        print(f"  Checking {len(skill_files)} skills...")
+
+        for skill_file in skill_files:
+            try:
+                content = skill_file.read_text()
+                if not content.startswith("---"):
+                    continue
+
+                end_match = re.search(r"^---$", content[3:], re.MULTILINE)
+                if not end_match:
+                    continue
+
+                body = content[end_match.end() + 6 :]
+
+                for pattern, description in persona_patterns:
+                    if re.search(pattern, body, re.IGNORECASE):
+                        result.warnings.append(
+                            f"{skill_file}: Detected persona language ({description}). "
+                            f"2026 Standard: Use protocol format ('Follow this X-step process') "
+                            f"instead of persona format ('You are an expert...'). "
+                            f"See docs/guides/skills.md Section 1.6 for migration guide."
+                        )
+                        break  # Only report first persona pattern per file
+
+            except Exception as e:
+                result.errors.append(f"{skill_file}: Error processing: {e}")
+
+        # Check agents (persona language less critical in agents, but still worth flagging)
+        agent_files = filter_excluded_paths(list(self.plugins_dir.rglob("agents/*.md")))
+        print(f"  Checking {len(agent_files)} agents...")
+
+        for agent_file in agent_files:
+            try:
+                content = agent_file.read_text()
+                if not content.startswith("---"):
+                    continue
+
+                end_match = re.search(r"^---$", content[3:], re.MULTILINE)
+                if not end_match:
+                    continue
+
+                body = content[end_match.end() + 6 :]
+
+                # More strict for agents - they should be config-only
+                # Flag "You are" patterns as warnings (acceptable for minimal setup, but avoid narrative)
+                if re.search(r"You are an?\s+\*\*[A-Z]\w+\*\*", body):
+                    result.info.append(
+                        f"{agent_file}: Agent uses elaborate persona (**Elite**, **Senior**, etc.). "
+                        f"2026 Standard: Agents should be config-only. "
+                        f"Keep agent body minimal (Core Purpose, Tool Access, Preloaded Skills)."
+                    )
+
+            except Exception as e:
+                result.errors.append(f"{agent_file}: Error processing: {e}")
+
+        print()
+        self.log_result(result)
+
+    def validate_emoji_usage(self) -> None:
+        """Phase 16: Validate no emojis in documentation and code files"""
+        result = ValidationResult("Emoji Usage Validation", True)
+
+        print("Phase 16: Emoji Usage Detection (2026 Standard)")
+        print("-" * 70)
+
+        # Decorative emojis to detect (excludes text-like symbols)
+        # Exclude: ✓ ✗ ✷ (commonly used as text markers)
+        decorative_emoji_ranges = [
+            r'[\U0001F300-\U0001F9FF]',        # Emoticons and picture emojis
+            r'[\U0001F600-\U0001F64F]',        # Emoticons (smileys, people)
+            r'[\U0001F300-\U0001F5FF]',        # Symbols & pictographs
+            r'[\U0001F680-\U0001F6FF]',        # Transport & map symbols
+            r'[\U0001F1E0-\U0001F1FF]',        # Flags
+            r'[\u2600-\u26FF\u2700-\u27BF]',   # Misc symbols (excluding some)
+        ]
+
+        # Combined emoji regex pattern
+        emoji_regex = '|'.join(f'({pattern})' for pattern in decorative_emoji_ranges)
+
+        # Text-like symbols to exclude from emoji detection
+        exclude_pattern = r'[✓✗√−×+•▪▫◼◻]'
+
+        # Files to check
+        file_patterns = [
+            "SKILL.md",
+            "skill.md",
+            "*.md",
+        ]
+
+        files_checked = 0
+        files_with_emojis = 0
+
+        for pattern in file_patterns:
+            for md_file in self.plugins_dir.rglob(pattern):
+                # Skip attic
+                if ".attic" in str(md_file):
+                    continue
+
+                try:
+                    content = md_file.read_text(encoding="utf-8")
+
+                    # Check for decorative emojis
+                    matches = re.findall(emoji_regex, content, re.UNICODE)
+
+                    # Filter out text-like symbols
+                    decorative_emojis = []
+                    for match in matches:
+                        if isinstance(match, tuple):
+                            # Check each captured group
+                            for m in match:
+                                if m and not re.search(exclude_pattern, m):
+                                    decorative_emojis.append(m)
+                        elif match and not re.search(exclude_pattern, match):
+                            decorative_emojis.append(match)
+
+                    if decorative_emojis:
+                        files_with_emojis += 1
+                        # Find line numbers
+                        lines = content.split("\n")
+                        emoji_lines = []
+                        for i, line in enumerate(lines, 1):
+                            # Check for emojis in this line (excluding text-like symbols)
+                            line_matches = re.findall(emoji_regex, line, re.UNICODE)
+                            line_emojis = []
+                            for match in line_matches:
+                                if isinstance(match, tuple):
+                                    for m in match:
+                                        if m and not re.search(exclude_pattern, m):
+                                            line_emojis.append(m)
+                                elif match and not re.search(exclude_pattern, match):
+                                    line_emojis.append(match)
+
+                            if line_emojis:
+                                # Truncate line for display
+                                display_line = line[:80] + "..." if len(line) > 80 else line
+                                emoji_lines.append(
+                                    f"  Line {i}: {', '.join(set(line_emojis))} in '{display_line}'"
+                                )
+
+                        if emoji_lines:
+                            result.errors.append(
+                                f"{md_file}: Contains {len(set(decorative_emojis))} decorative emoji(s).\n"
+                                f"2026 Standard: Use text labels instead (e.g., 'BAD:', 'GOOD:', 'WARNING:', 'PREFERRED').\n"
+                                f"Found at:\n" + "\n".join(emoji_lines[:5])  # Show first 5 occurrences
+                            )
+
+                    files_checked += 1
+
+                except Exception as e:
+                    result.errors.append(f"{md_file}: Error processing: {e}")
+
+        print(f"  Checked {files_checked} markdown files")
+        if files_with_emojis > 0:
+            print(f"  Found decorative emojis in {files_with_emojis} file(s)")
+        else:
+            print(f"  No decorative emojis found")
 
         print()
         self.log_result(result)

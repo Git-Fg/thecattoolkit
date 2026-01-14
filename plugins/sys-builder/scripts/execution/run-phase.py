@@ -179,10 +179,10 @@ def run_phase(plan_dir: str, phase_num: str) -> bool:
 
             # Update status
             update_task_status(phase_plan['plan_file'], i, '[x]')
-            print(f"\n✅ Task completed: {task['name']}")
+            print(f"\nGOOD Task completed: {task['name']}")
 
         print(f"\n{'='*60}")
-        print(f"✅ Phase completed: {phase_num}")
+        print(f"GOOD Phase completed: {phase_num}")
         print(f"{'='*60}\n")
 
         return True

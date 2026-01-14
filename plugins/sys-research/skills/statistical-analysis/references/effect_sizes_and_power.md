@@ -483,7 +483,7 @@ n_required = power_corr(r=0.30, power=0.80, alpha=0.05)
 
 ### Post Hoc Power Analysis (After Study)
 
-**⚠️ CAUTION**: Post hoc power is controversial and often not recommended
+**WARNING CAUTION**: Post hoc power is controversial and often not recommended
 
 **Why it's problematic**:
 - Observed power is a direct function of p-value

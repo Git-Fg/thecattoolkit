@@ -16,7 +16,19 @@ Claude Code offers two extension modes. Choosing the right one is the first arch
 | **Usage** | Prototyping, Project scripts | Distribution, Reusable tools |
 
 **The Winning Strategy:** Always start in Standalone to iterate quickly. Migrate to a Plugin only when the tool is stable and ready for distribution.
-
+ 
+## 1.5 Provider Agnosticism (Z.AI & Anthropic)
+ 
+Claude Code is provider-agnostic. While it defaults to Anthropic, it supports Z.AI Routing for enterprise features.
+ 
+**Key Distinctions:**
+- **Z.AI Routing:** Subscription-based, "Prompt" quota (1 Prompt = ~15-20 turns), Exclusive MCPs (Vision, Web Search).
+- **Anthropic Direct:** Token-based, Per-request billing.
+ 
+**Configuration:**
+Controlled via `ANTHROPIC_BASE_URL` and `ANTHROPIC_AUTH_TOKEN`.
+See `CLAUDE.md` Section 1.5 for detailed setup.
+ 
 ## 2. Installation Model (The Cache)
 
 Unlike a classic project, **Claude Code does not execute your plugin "in place"**.
@@ -24,8 +36,8 @@ Unlike a classic project, **Claude Code does not execute your plugin "in place"*
 1.  **Copy:** Upon installation, all plugin content is recursively copied into a **secure cache** (e.g., `~/.claude/plugins/cache/v1/...`).
 2.  **Execution:** The runtime executes from this cache.
 3.  **Read-Only:** This cache folder must be considered **read-only**.
-    *   ❌ `echo "log" >> ./logs.txt` (High risk: overwritten on update, unpredictable permissions).
-    *   ✅ `echo "log" >> /tmp/my-plugin.log` or `${CLAUDE_PROJECT_DIR}/.claude/tmp/`.
+    *   BAD `echo "log" >> ./logs.txt` (High risk: overwritten on update, unpredictable permissions).
+    *   GOOD `echo "log" >> /tmp/my-plugin.log` or `${CLAUDE_PROJECT_DIR}/.claude/tmp/`.
 
 ### Implications for Paths (`../`)
 Any relative reference going up to a parent (`../libs`) will fail because the parent folder does not exist in the cache.
@@ -100,3 +112,12 @@ Since plugins are cached, changes aren't always immediate.
 ### Multi-Plugin Loading
 To test interactions between two local plugins:
 `claude --plugin-dir ./plugin-a --plugin-dir ./plugin-b`
+ 
+## 6. Core Primitives (2026)
+ 
+| Primitive | Function |
+|:---|:---|
+| **Skill** | Domain expertise (Standard) |
+| **Fork** | Isolated execution (`context: fork`) |
+| **Command** | Bash/Env injection only |
+| **Agent** | Tool configuration/scoping only |

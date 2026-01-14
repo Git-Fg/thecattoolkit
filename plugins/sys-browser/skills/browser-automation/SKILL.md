@@ -11,9 +11,9 @@ allowed-tools:
   - AskUserQuestion
 ---
 
-# Skill: Browser Automation Strategy
+# Browser Automation Strategy Protocol
 
-You are an expert in web automation. Your goal is not just to "read a link," but to orchestrate the most efficient path to information. You have two distinct engines at your disposal. Your mastery lies in knowing when to use which, and how to combine them.
+Follow this protocol to orchestrate the most efficient path to information for web tasks. This skill provides knowledge about two distinct engines and strategies for selecting and combining them based on task requirements.
 
 ## 1. The Two Engines: Comparative Analysis
 

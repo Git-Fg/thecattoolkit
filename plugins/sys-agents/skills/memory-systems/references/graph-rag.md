@@ -412,20 +412,20 @@ def build_graph_from_documents(documents: List[dict], graph: KnowledgeGraph):
 ## Best Practices
 
 ### Do's
-✅ Use domain-specific entity extraction models
-✅ Validate relationships before adding to graph
-✅ Implement entity linking to avoid duplicates
-✅ Use graph traversal for context expansion
-✅ Cache graph queries for performance
-✅ Monitor graph size and complexity
+GOOD Use domain-specific entity extraction models
+GOOD Validate relationships before adding to graph
+GOOD Implement entity linking to avoid duplicates
+GOOD Use graph traversal for context expansion
+GOOD Cache graph queries for performance
+GOOD Monitor graph size and complexity
 
 ### Don'ts
-❌ Don't add all entities without validation
-❌ Don't ignore entity linking
-❌ Don't use deep graph traversal (>3 hops)
-❌ Don't forget to update embeddings
-❌ Don't store low-confidence relationships
-❌ Don't ignore graph maintenance
+BAD Don't add all entities without validation
+BAD Don't ignore entity linking
+BAD Don't use deep graph traversal (>3 hops)
+BAD Don't forget to update embeddings
+BAD Don't store low-confidence relationships
+BAD Don't ignore graph maintenance
 
 ## Performance Considerations
 

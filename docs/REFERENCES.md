@@ -1,35 +1,18 @@
-# Cat Toolkit: Complete Technical Reference
+# Cat Toolkit: Technical Reference Index
 
-> **📘 Quick Start:** [CLAUDE.md](../CLAUDE.md) - Summary of the Tiered Authority.
->
-> **Deep Dive Guides (Learning Path):**
-> *   [🏛 Architecture & Structure](guides/architecture.md) - Cache, Config, Filesystem.
-> *   [⚡️ Commands](guides/commands.md) - Syntax, Archetypes, Interactivity.
-> *   [🧠 Skills](guides/skills.md) - Progressive Disclosure, Isolation.
-> *   [🤖 Agents](guides/agents.md) - Anatomy, Triggering, Memory.
-> *   [🔌 Infrastructure](guides/infrastructure.md) - Hooks, MCP, LSP.
-> *   [💾 Persistence](guides/persistence.md) - Sessions, Save/Restore Patterns.
-> *   [🐞 Debugging](guides/debugging.md) - Audit and Troubleshooting.
+> **📘 Context:** This document contains **Technical Specifications, Tables, and Configuration References**.
+> For narrative guides and "How-to", see:
+> *   [🏛 Architecture](guides/architecture.md)
+> *   [⚡️ Commands](guides/commands.md)
+> *   [🧠 Skills](guides/skills.md)
+> *   [🤖 Agents](guides/agents.md)
+> *   [🔌 Infrastructure](guides/infrastructure.md)
 
 ---
 
-# 📋 TABLE OF CONTENTS
+# 1. Configuration Specifications
 
-1. [Tier 1: Engine Rules (Strict Constraints)](#1-tier-1-engine-rules-strict-constraints)
-2. [Tier 2: Marketplace Conventions (Guidelines)](#2-tier-2-marketplace-conventions-guidelines)
-3. [Tier 3: Engineering Patterns (Best Practices)](#3-tier-3-engineering-patterns-best-practices)
-4. [Infrastructure Reference (Hooks, MCP, LSP)](#4-infrastructure-reference-hooks-mcp-lsp)
-5. [Development & Troubleshooting](#5-development--troubleshooting)
-
----
-
-# 1. TIER 1: ENGINE RULES (STRICT CONSTRAINTS)
-
-*Fundamental rules from official Claude Code. Failure results in crashes or non-loading components.*
-
-## 1.1 Marketplace Configuration
-
-**Location:** `.claude-plugin/marketplace.json` at repository root
+## 1.1 Marketplace Configuration (`marketplace.json`)
 
 | Field | Required | Description |
 |:------|:---------|:------------|
@@ -50,12 +33,7 @@
 | `category` | string | Organization category |
 | `tags` | array | Searchable tags |
 
-### Strict Mode & Source Types
-
-| Mode | Behavior | Use Case |
-|:-----|:---------|:---------|
-| `strict: true` | Requires plugin.json | Complete plugin manifests |
-| `strict: false` | No plugin.json needed | Simple marketplace-defined plugins |
+### Source Types
 
 | Source Type | Format | Use When |
 |:------------|:-------|:---------|
@@ -63,7 +41,7 @@
 | GitHub | `{"source": "github", "repo": "user/repo"}` | Separate repositories |
 | Git URL | `{"source": "url", "url": "https://..."}` | GitLab, Bitbucket |
 
-## 1.2 Frontmatter Validation
+## 1.2 Frontmatter Specs
 
 | Primitive | Required Fields | Whitelisted Optional |
 |:----------|:----------------|:---------------------|
@@ -71,15 +49,13 @@
 | **Agent** | `name` | `tools`, `skills`, `disallowedTools`, `hooks` |
 | **Command** | `description` | `allowed-tools`, `disable-model-invocation`, `argument-hint`, `hooks` |
 
-### Naming & Identity
-- **Skill Name Regex**: `^[a-z][a-z0-9-]{2,49}$` (Lowercase, start with letter, hyphens/numbers allowed).
-- **Directory Match**: The `name` field in `SKILL.md` MUST match its containing directory exactly.
-- **Description**: 1-1024 chars, single line (newline breaks parsing).
+### Validation Rules
+- **Skill Name Regex**: `^[a-z][a-z0-9-]{2,49}$`
+- **Directory Match**: `name` field MUST match directory name.
+- **Description**: 1-1024 chars, 3rd person only.
 
-## 1.3 Syntax & Directory Structure
+## 1.3 Directory Structure
 
-### Directory Structure Reference
-**Plugin Distribution:**
 ```
 plugins/my-plugin/
 ├── .claude-plugin/
@@ -89,429 +65,128 @@ plugins/my-plugin/
 └── agents/             # Global Agents
 ```
 
-### Tool Syntax Rules
-**Use `Tool(specifier)` with parentheses:**
-- ✓ `Bash(git add:*)`, `Bash(npm:*)`
-- ✗ `Bash[python, npm]` (Bracket syntax causes tool selection errors)
+## 1.4 Syntax Rules
 
-### Path Standards
-- ✓ Unix-style forward slashes (`scripts/helper.py`)
-- ✗ Windows-style paths (`scripts\helper.py`)
+| Rule | Correct Syntax | Incorrect |
+|:-----|:---------------|:----------|
+| **Tool Specifier** | `Bash(git:*)`, `Skill(name)` | `Bash[git]`, `Bash:git` |
+| **Paths** | `scripts/helper.py` (Forward slash) | `scripts\helper.py` |
 
 ---
 
-# 2. TIER 2: MARKETPLACE CONVENTIONS (GUIDELINES)
-
-*Conventions specific to The Cat Toolkit for portability and security.*
+# 2. Standards & Constraints
 
 ## 2.1 Forbidden Patterns
 
 | Field | Constraint | Rationale |
 |:------|:-----------|:----------|
-| `permissionMode` | **NEVER** in frontmatter | Runtime-controlled. Users must retain security sovereignty. |
-| `model` | **NEVER** in frontmatter | Runtime-controlled. Prevents breakage on model deprecation. |
+| `permissionMode` | **NEVER** in frontmatter | Runtime-controlled Security Sovereignty |
+| `model` | **NEVER** in frontmatter | User Model Choice |
 
 ## 2.2 Description Patterns
 
-### Unified Strategy: Standard + Enhanced
-
 | Pattern | Format | Use Case |
 |:--------|:-------|:---------|
-| **Standard** | `{CAPABILITY}. Use when {TRIGGERS}.` | Public/Portable skills, user-facing tools |
-| **Enhanced** | `{CAPABILITY}. {MODAL} Use when {TRIGGERS}.` | Internal metrics, orchestration, compliance |
+| **Standard** | `{CAPABILITY}. Use when {TRIGGERS}.` | Public/Portable skills |
+| **Enhanced** | `{CAPABILITY}. {MODAL} Use when {TRIGGERS}.` | Internal metrics, orchestration |
 
-**Enhanced Modals Table:**
-| Modal | Use When | Example |
-|:------|:---------|:---------|
-| **MUST** | Critical internal standards | `"Enforces coding standards. MUST Use when committing code."` |
-| **PROACTIVELY** | Primary orchestration | `"Routes requests intelligently. PROACTIVELY Use when handling queries."` |
-| **SHOULD** | Recommended practices | `"Validates inputs. SHOULD Use when processing user data."` |
+### Enhanced Modals
 
-## 2.3 Environment & Tooling
-
-- **Python**: Always use `uv run`/`uvx`. NEVER `python`/`pip`.
-- **JS/TS**: Always use `bun run`.
-- **Plugin Root**: Use `${CLAUDE_PLUGIN_ROOT}` for all intra-plugin references.
-- **Validation**: `uv run scripts/toolkit-analyzer.py` is mandatory after every edit.
+| Modal | Meaning | Example |
+|:------|:--------|:---------|
+| **MUST** | Critical Standard | `"MUST Use when committing code."` |
+| **PROACTIVELY** | Primary Orchestration | `"PROACTIVELY Use when handling queries."` |
+| **SHOULD** | Recommendation | `"SHOULD Use when processing user data."` |
 
 ---
 
-# 3. TIER 3: ENGINEERING PATTERNS (BEST PRACTICES)
+# 3. Component & Resource Metrics
 
-*Architectural principles for peak performance and context window efficiency.*
+## 3.1 Component Selection
 
-## 3.1 Component Selection Guide
-
-| Component | Best For | Token Mechanics | Auto-Invokable? |
+| Component | best For | Token Retention | Auto-Invokable? |
 |:----------|:---------|:----------------|:----------------|
-| **Skill** | Knowledge, Frameworks, Protocols | High Retention (loaded text) | ✅ Yes (unless disabled) |
-| **Command** | Workflows, Orchestration triggers | **0 Indexing / High Execution** | ❌ No (if disabled) |
-| **Agent** | High Volume, Isolation, specific Tools | Isolated Context (fork) | ❌ No (via orchestration only) |
+| **Skill** | Knowledge, Protocols | High (Text loaded) | GOOD Yes |
+| **Command** | Orchestration | Zero (Indexing only) | BAD No |
+| **Agent** | High Volume | Isolated Context | BAD No |
 
-### Token Economy & Resource Costs
+## 3.2 Token Economy
 
-| Primitive | Use Case | RAM Cost | Implementation |
-|:----------|:---------|:---------|:----------------|
-| **Skill (Inline)** | Single capability, domain expertise | 1 | `skills/*/SKILL.md` |
-| **Command** | Multi-skill orchestration, user interaction | 0* | `commands/*.md` |
-| **Agent (Task)** | Parallel/Background execution | 2×N | `agents/*.md` |
-| **Skill (Fork)** | Massive files (>10) | 3 | `context: fork` |
+| Primitive | Prominence | RAM Cost | Implementation |
+|:----------|:----------|:---------|:---------------|
+| **Skill (Inline)** | ⭐⭐⭐ | 1× | `skills/*/SKILL.md` |
+| **Skill (Fork)** | ⭐⭐ | 3× | `context: fork` |
+| **Agent** | ⭐ | 2×N | `agents/*.md` |
+| **Command** | WARNING DEPRECATED | 0* | `commands/*.md` |
 
-*\*`0*` means "not indexed for model invocation" when `disable-model-invocation: true`. It does NOT mean "free at runtime".*
+*\*0 = Not indexed for model invocation usage (use only for bash/env injection)*
 
-### 3.1.1 The Three Pillars of Context Cost
+### Cost-Optimized Patterns (2026)
 
-1. **Indexing (The Catalog)**:
-   - Claude sees the `name` and `description` of all available tools.
-   - **Optimization**: Use `disable-model-invocation: true` to shrink this catalog.
+**Fork (3×) vs Agent (2×N) Decision Matrix:**
 
-2. **Execution (The Injection)**:
-   - When you type `/cmd` or Claude triggers a Skill, the **full text** of that file enters the context window.
-   - **Optimization**: Keep entry-point files small. Use `scripts/` (only stdout is taxed).
+| Scenario | Recommendation | Cost Comparison |
+|:---------|:---------------|:----------------|
+| **Simple isolation** | Fork Skill | 3× vs 2×N (N=1+: Fork wins) |
+| **Heavy processing** (>10 files) | Fork Skill | 3× vs 2×N (N=2+: Fork wins) |
+| **Permission scoping only** | Agent with explicit tools | 2×N (necessary evil) |
+| **Complex orchestration** | Orchestrator Skill (fork) | 3× vs 2×N×M (fork wins) |
 
-3. **Retention (The Memory)**:
-   - Skills stay in context until the task is done. Commands vanish immediately.
-   - **Optimization**: Use Commands for one-off actions to keep the context window "clean".
+**Key Insight:**
+- Fork costs **3×** regardless of task complexity
+- Agent costs **2×N** where N = number of invocations
+- For single-call agents: **Fork (3×) < Agent (2×)**
+- For multi-call agents: **Fork wins even harder**
 
-## 3.2 Progressive Disclosure (The 100-Line Rule)
+**2026 Rule of Thumb:**
+> Use Fork for isolation. Use Agents ONLY for explicit tool/permission scoping that cannot be achieved with `allowed-tools` in Skills.
 
-| Content Type | Location | Rationale |
-|:-------------|:---------|:----------|
-| **Core instructions** (< 100 lines) | `SKILL.md` | Always loaded |
-| **Deep theory** (> 100 lines) | `references/` | Loaded on-demand |
-| **Examples** (> 3) | `examples/` | Load specific example |
-| **Templates** | `assets/` | Copy when instantiating |
+**Token Budget Impact (5-Hour Rule):**
+- Session budget: ~200,000 tokens
+- Spawning agent: ~20,000-25,000 tokens (10-12% overhead)
+- Forking skill: ~15,000 tokens (7.5% overhead)
+- Inline skill: ~5,000 tokens (2.5% overhead)
 
-## 3.3 Skill Architecture
+## 3.3 Progressive Disclosure Rules
 
-### Resource Discovery Rules
-**Critical:** Claude does NOT automatically open shared resources. Must be **explicitly referenced**.
-
-**Valid Pattern:**
-```markdown
-## Quick start
-Use pdfplumber for basic extraction.
-**For form filling:** See [references/forms.md](references/forms.md)
-```
-
-**Invalid Pattern:**
-```markdown
-## Quick start
-Use pdfplumber for extraction.
-```
-
-### Skill Portability (Shared-Nothing)
-1. **Isolation**: A Skill should contain all its own `references/`, `scripts/`, and `assets/`.
-2. **Referencing**: Orchestrators load multiple skills; Skills do not hard-link to each other.
-3. **Path Traversal**: Any use of `../` is a validation failure.
-
-## 3.4 Orchestration Rules
-
-### ✅ Correct: Orchestration (Sequential)
-A Command or Agent acts as the conductor, calling Skills sequentially.
-- **Pattern**: `Command` → invokes `Skill(Planner)` → invokes `Skill(Executor)`.
-- **Why**: Keeps Skills atomic and "shared-nothing".
-
-**Example:**
-```yaml
----
-description: "End-to-end workflow"
-allowed-tools: [Skill(planner), Skill(designer), Skill(worker), Bash]
----
-```
-
-### ❌ Incorrect: Deep Linking (Dependency)
-A Skill directly referencing another Skill's file path.
-- **Anti-Pattern**: `skills/A/SKILL.md` links to `../B/references/doc.md`.
-- **Why**: Breaks portability and context isolation.
-
-**Forbidden:**
-```markdown
-See ../skills/other-skill/references/spec.md
-```
-
-### ✅ Correct: Self-Contained References
-A Skill references only its own packaged resources:
-```markdown
-See [references/spec.md](references/spec.md)
-```
-
-### Degrees of Freedom
-| Freedom Level | When to Use | Example |
-|:--------------|:------------|:--------|
-| **High** | Multiple valid approaches | Code review, analysis |
-| **Medium** | Preferred pattern exists | Report generation |
-| **Low** | Fragile operations | Database migrations, deployments |
-
-## 3.4 The Four Universal Skill Archetypes
-
-### 1. Procedural Skill
-**Purpose:** Deterministic, repeatable processes
-- **Pattern:** Exact steps, validation gates, idempotent operations
-- **Criticality:** High error cost, low context variation
-- **Autonomy:** Protocol (Low Freedom)
-- **Examples:** Migrations, security scans, compliance checks
-
-### 2. Advisory Skill
-**Purpose:** Provide expertise and recommendations
-- **Pattern:** Heuristic principles, contextual adaptation, domain knowledge
-- **Criticality:** Medium, requires judgment
-- **Autonomy:** Guided (Medium Freedom)
-- **Examples:** Code reviews, architectural guidance, best practices
-
-### 3. Generator Skill
-**Purpose:** Create structured outputs from inputs
-- **Pattern:** Template-driven, validation-enhanced, iterative refinement
-- **Criticality:** Medium, requires consistency
-- **Autonomy:** Guided (Medium Freedom)
-- **Examples:** Document generation, test creation, report formatting
-
-### 4. Orchestrator Skill
-**Purpose:** Coordinate multiple capabilities and workflows
-- **Pattern:** Explicit dependencies, pipeline sequencing, state management
-- **Criticality:** High complexity, multiple domains
-- **Autonomy:** Protocol to Guided (varies by component)
-- **Examples:** Multi-step analysis, compound workflows, cross-domain tasks
-
-## 3.5 Design Patterns
-
-### Pattern A: "Brain + Button" (The Sys-Builder Model)
-Use this for complex workflows (Build, Audit, Refactor).
-1.  **The Brain (Skill)**: Auto-activable. Contains the *methodology* and *decision tree*.
-    *   *Role*: Analyzes the request, determines the plan, tells the user *which* button to push.
-2.  **The Button (Command)**: Human-invocable (`disable-model-invocation: true`).
-    *   *Role*: Executes the heavy workflow (Batch or Interactive) defined by the Brain.
-    *   *Two Modes*:
-        *   `run` (Batch): No questions, use defaults, log assumptions.
-        *   `run-interactive` (HITL): Ask validation questions at critical gates.
-
-### Pattern B: "Fork & Delegate"
-Use this to protect Main Context from massive logs or file reads.
-1.  **Command/Skill**: Initiates the task.
-2.  **Sub-agent**: Defined in `agents/`.
-    *   *Crucial*: Sub-agents do **not** inherit parent Skills automatically.
-    *   *Config*: Must explicitly list `skills: ["parent-skill-core"]` in frontmatter.
-
-## 3.6 Progressive Disclosure Mechanics
-
-Understanding how Claude loads Skills is critical for token optimization. It is a filesystem-based architecture.
-
-| Stage | Trigger | Context Cost | Best Use For |
-|:------|:--------|:-------------|:-------------|
-| **1. Metadata** | Startup | ~100 tokens (Name + Description) | Routing. Claude decides *if* the skill is relevant. |
-| **2. Instructions** | Activation | Size of `SKILL.md` | "The Brain". Methodologies and links to resources. |
-| **3. Resources** | On-Demand | Size of accessed file | `references/*.md`. Static knowledge loaded *only* if referenced. |
-| **4. Execution** | Script Run | **Size of STDOUT only** | `scripts/*.py`. Deterministic tasks. The source code remains on disk (0 tokens). |
-
-## 3.7 Scripting Best Practices
-
-Use the `scripts/` folder to offload cognitive load from the model to deterministic code.
-
-### 1. "Solve, Don't Punt"
-- **Bad**: A script that fails silently or returns raw errors, forcing Claude to "guess" the fix.
-- **Good**: Handle exceptions (`try/except`) in Python. Print clear, actionable error messages to stdout.
-- **Why**: Reduces the "fix-it" loops in conversation.
-
-### 2. Machine-Verifiable Outputs
-- **Pattern**: `Plan -> Validate -> Execute`.
-- **Implementation**:
-    1. Agent generates a JSON plan.
-    2. Agent runs `scripts/validate_plan.py` to check inputs/paths.
-    3. Only if `stdout == "OK"`, Agent runs `scripts/execute.py`.
-
-### 3. Utility Scripts vs Generated Code
-- **Rule**: If a task is repeatable (e.g., "Find all unused variables"), write a `scripts/find_unused.py` utility.
-- **Why**: Running a pre-written script is faster, cheaper, and safer than asking Claude to "write a bash command to find unused variables" every time.
-
-## 3.8 State Anchoring & Validation
-
-### State Anchoring Strategy
-**Problem:** Context windows are temporary.
-
-**Solution:** Explicit checkpoints and progress tracking.
-```markdown
-# State
-- [x] Step 1: Backup
-- [ ] Step 2: Transform
-**Last Checkpoint:** SUCCESS
-```
-
-**Requirements:**
-1. Atomic checkpoints
-2. Idempotent operations
-3. Progress visibility
-4. Failure isolation
-
-### Validation-First Workflow
-**Three-Phase Validation:**
-1. **Plan:** Verify plan is well-formed
-2. **Pre-execution:** Check prerequisites
-3. **Post-execution:** Verify outputs
-
-**Use for:**
-- Batch operations
-- Destructive operations
-- Complex workflows
-- High-stakes tasks
-
-## 3.9 The 12-Point QA Checklist
-
-Before deploying any skill, verify:
-- [ ] Description contains 3rd person Capability + Trigger?
-- [ ] Negative constraints defined?
-- [ ] Name excludes "anthropic" and "claude"?
-- [ ] References are 1-level deep (Hub-and-Spoke)?
-- [ ] TOC present for long reference files?
-- [ ] `user-invocable` set for utility skills?
-- [ ] `_state.md` artifact mandated for persistence?
-- [ ] Scripts return JSON-over-Stdout?
-- [ ] All file outputs directed to CWD/Tmp (not Skill dir)?
-- [ ] `allowed-tools` set to minimum required set?
-- [ ] Checksums included for critical assets?
-- [ ] Sub-agent forks specify an agent type?
-
-## 3.10 Commands & Permissions
-
-### Command Advanced Patterns
-
-**Read-Only Command:**
-```yaml
----
-description: "Analyze codebase without modifications"
-argument-hint: Optional analysis scope
-allowed-tools: [Read, Grep, Glob]
----
-```
-
-**Interactive Wizard:**
-```yaml
----
-description: "Interactive project setup wizard"
-argument-hint: Optional configuration preset
-disable-model-invocation: true
----
-```
-
-**Multi-Skill Orchestration:**
-```yaml
----
-description: "Complete development workflow"
-allowed-tools: [Skill(analyzer), Skill(builder), Skill(tester), Bash]
----
-```
-
-### 3.10.1 Execution Protocols (Batch vs Interactive)
-
-| Feature | **Batch Mode** (`/run`) | **Interactive Mode** (`/run-interactive`) |
-|:---|:---|:---|
-| **AskUserQuestion** | ❌ Forbidden (Make assumptions) | ✅ Mandatory (Triage/Clarify) |
-| **Routing** | Direct delegation to `Worker` | **Router Command** → Questions → `Skill` |
-| **Output** | `ASSUMPTIONS.md` | Validated Plan |
-
-### 3.10.2 Sub-agent Skill Injection
-Sub-agents **do not** inherit the Main Agent's skills. You MUST explicitly bind them:
-```yaml
----
-name: specialized-worker
-skills: [core-standards, git-workflow]
----
-```
-
-### Permission Modes (Runtime Configuration)
-
-| Mode | Behavior | Security | Use Case |
-|:-----|:---------|:---------|:---------|
-| `default` | Prompts per tool | High | Uncertain operations |
-| `acceptEdits` | Auto-approves file ops | Medium | Trusted refactoring |
-| `dontAsk` | Auto-denies prompts | High | CI/CD, automation |
-| `plan` | Read-only | High | Exploration |
-| `bypassPermissions` | All approved | Very Low | ⚠️ Dangerous |
-
-### Skills vs Agents Security
-
-| Aspect | Skills (`allowed-tools`) | Agents (`tools`) |
-|:-------|:-------------------------|:-----------------|
-| **Purpose** | Temporary restriction | Persistent allowlist |
-| **If omitted** | No restriction | **Inherits ALL tools** (security risk) |
-| **Security model** | Least privilege during task | Least privilege by default |
-
-### 3.4.2 Plugin-first packaging (no CLAUDE.md dependency)
-If distributing via plugin, treat the plugin as the "container":
-- Put global workflow entrypoints in `commands/`.
-- Put reusable expertise + references + scripts in `skills/<skill>/`.
-- Put specialized long-running contexts in `agents/` and explicitly list `skills:` for each agent.
-
-This avoids reliance on repository-level `CLAUDE.md` while keeping the system fully portable.
+| Content Type | Location | Limit/Rule |
+|:-------------|:---------|:-----------|
+| **Instructions** | `SKILL.md` | < 100 lines |
+| **Details** | `references/*.md` | Loaded on-demand |
+| **Examples** | `examples/` | Specific files |
+| **Logic** | `scripts/*.py` | JSON-over-Stdout |
 
 ---
 
-# 4. INFRASTRUCTURE REFERENCE (HOOKS, MCP, LSP)
+# 4. Infrastructure Specifications
 
 ## 4.1 Hooks
 
 ### Hook Events
-| Event | When Fired | Use Case |
-|:------|:----------|:---------|
-| `SessionStart` | Claude starts/resumes | Setup, validation |
-| `SessionEnd` | Session ends | Cleanup, persistence |
-| `UserPromptSubmit` | Before processing | Input validation |
-| `PreToolUse` | Before tool call | Safety checks |
-| `PostToolUse` | After tool completes | Logging, validation |
-| `PostToolUseFailure` | After tool execution fails | Error handling |
-| `PermissionRequest` | When permission dialog shown | Custom validation |
-| `Notification` | When Claude Code sends notifications | Custom responses |
-| `SubagentStart` | Subagent initializes | Resource setup (DB connection) |
-| `SubagentStop` | Subagent finishes | Resource cleanup |
-| `Stop` | Main agent finishes | Cleanup |
-| `PreCompact` | Before conversation history compacted | Data preservation |
+
+| Event | Trigger |
+|:------|:--------|
+| `SessionStart` | Claude starts/resumes |
+| `SessionEnd` | Session ends |
+| `UserPromptSubmit` | Before processing |
+| `PreToolUse` | Before tool call |
+| `PostToolUse` | After tool completes |
+| `PostToolUseFailure` | After failure |
+| `PermissionRequest` | Dialog shown |
+| `SubagentStart`/`Stop` | Subagent lifecycle |
+| `Stop` | Main agent finishes |
 
 ### Hook Types
 
-| Type | Description | Use Case |
-|:-----|:-----------|:---------|
-| **command** | Execute shell commands or scripts | Deterministic operations, linting, formatting |
-| **prompt** | Evaluate a prompt with an LLM (uses `$ARGUMENTS` placeholder for context) | Context-aware validation, intelligent decisions |
-| **agent** | Run an agentic verifier with tools for complex verification tasks | Multi-step verification, complex analysis |
+| Type | Description |
+|:-----|:------------|
+| **command** | Execute shell script |
+| **prompt** | Evaluate LLM prompt |
+| **agent** | Run verification agent |
 
-**Note**: Prompt-based hooks are currently only supported for `Stop` and `SubagentStop` events.
+## 4.2 MCP Configuration
 
-### Configuration Example
-```json
-{
-  "hooks": {
-    "PreToolUse": [
-      {
-        "matcher": "Bash",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/scripts/safety-check.sh",
-            "timeout": 30,
-            "once": false
-          }
-        ]
-      }
-    ]
-  }
-}
-
-### Local Hooks (Scoped)
-Hooks can be defined directly in `SKILL.md` or `AGENT.md` frontmatter. Use `once: true` for initialization scripts.
-```yaml
-hooks:
-  PreToolUse:
-    - matcher: "Bash"
-      hooks:
-        - type: command
-          command: "${CLAUDE_PLUGIN_ROOT}/scripts/init.sh"
-          once: true
-```
-```
-
-## 4.2 MCP (Model Context Protocol)
-
-### Transport Types & Env Vars
-**HTTP (Recommended):**
+**HTTP Transport (Recommended)**:
 ```json
 {
   "mcpServers": {
@@ -524,63 +199,36 @@ hooks:
 }
 ```
 
-**Stdio (Local):**
-```json
-{
-  "mcpServers": {
-    "local": {
-      "command": "node",
-      "args": ["server.js"]
-    }
-  }
-}
-```
+## 4.3 LSP Configuration
 
-## 4.3 LSP (Language Server Protocol)
-
-### Common configurations
-**TypeScript:**
+**TypeScript**:
 ```json
 {
   "lspServers": {
     "typescript": {
       "command": "typescript-language-server",
       "args": ["--stdio"],
-      "extensionToLanguage": { ".ts": "typescript", ".tsx": "typescript" }
+      "extensionToLanguage": { ".ts": "typescript" }
     }
   }
 }
 ```
 
-**Python:**
-```json
-{
-  "lspServers": {
-    "python": {
-      "command": "pyright-langserver",
-      "args": ["--stdio"]
-    }
-  }
-}
-```
+## 4.4 Runtime Configuration Scopes
 
-## 4.4 Runtime Configuration
+| Scope | Location | Shared? |
+|:------|:---------|:--------|
+| **Managed** | System directories | Yes |
+| **Line** | CLI arguments | No |
+| **Local** | `.claude/*.local.*` | No |
+| **Project** | `.claude/settings.json` | Yes |
+| **User** | `~/.claude/settings.json` | No |
+| **Plugin** | `plugins/*/Settings` | Yes |
 
-### Configuration Scopes
-**Precedence:** Managed > Command line > Local > Project > User
+## 4.5 Model Aliases
 
-| Scope | Location | Affects | Shared |
-|:------|:---------|:--------|:-------|
-| **Managed** | System directories | All users | Yes |
-| **Command line** | CLI arguments | Current session | No |
-| **Local** | `.claude/*.local.*` | You (project) | No |
-| **Project** | `.claude/settings.json` | All collaborators | Yes |
-| **User** | `~/.claude/settings.json` | You (all projects) | No |
-| **Plugin** | `plugins/*/Settings` | Plugin-specific | Yes |
-
-### Model Aliases
-| Alias | Purpose |
-|:------|:--------|
+| Alias | Target |
+|:------|:-------|
 | `sonnet` | Latest Sonnet (4.5) |
 | `opus` | Latest Opus (4.5) |
 | `haiku` | Fast, efficient |
@@ -588,65 +236,21 @@ hooks:
 
 ---
 
-# 5. DEVELOPMENT & TROUBLESHOOTING
+# 5. Troubleshooting Reference
 
-## 5.1 Development Methodology
+## 5.1 Common Issues
 
-### Evaluation-Driven Development (Claude A/B)
-```
-STEP 1: CLAUDE A (Pattern Extraction)
-  • Complete task manually | Document what worked | Extract repeatable pattern
+| Component | Issue | Fix |
+|:----------|:------|:----|
+| **Command** | Runs unexpectedly | Add `disable-model-invocation: true` |
+| **Permissions** | Tool not available | Check `allowed-tools` |
+| **Permissions** | Hook blocking | Check hook exit codes |
+| **Infra** | Hook not firing | Check matcher, use `${CLAUDE_PLUGIN_ROOT}` |
+| **Infra** | MCP no connect | Verify URL/Headers |
 
-STEP 2: CREATE SKILL
-  • Encode pattern in SKILL.md | Add validation scripts | Structure references/
+## 5.2 Validation Scripts
 
-STEP 3: CLAUDE B (Fresh Testing)
-  • New session (no context) | Invoke skill | Verify quality matches Claude A
-```
-
-## 5.2 Validator Pattern (Self-Healing)
-1. **EXECUTE** → Perform task.
-2. **VALIDATE** → Run checks (lint, test).
-3. **CORRECT** → If error, apply fix.
-4. **RE-VALIDATE** → Verify (max 3 iterations).
-
-## 5.3 Troubleshooting Guide
-
-### Commands
-| Problem | Fix |
-|:--------|:----|
-| Missing `argument-hint` | Always include for interactive |
-| Scattered questions | Consolidate at beginning |
-| Vague orchestration | List skills explicitly |
-| Over-restricting tools | Balance security/functionality |
-| Command runs unexpectedly | Add `disable-model-invocation: true` (prevents model invocation + removes metadata visibility) |
-
-### Permissions
-| Problem | Solution |
-|:--------|:---------|
-| Tool not available | Check `allowed-tools` or `tools` list |
-| Permission mode issues | Verify Runtime config (NOT frontmatter) |
-| Over-permissive | Review `tools` list for unnecessary |
-| Hook blocking | Check hook exit codes (2 = Block) |
-
-### Infrastructure
-| Issue | Resolution |
-|:------|:----------|
-| Hook not firing | Check matcher, use `${CLAUDE_PLUGIN_ROOT}` |
-| Hook timeout | Increase timeout, optimize script |
-| MCP no connect | Verify URL, check transport type |
-| No LSP diagnostics | Verify server installation |
-
-## 5.4 Validation Scripts & Best Practices
-
-| Script | Purpose |
-|:-------|:--------|
-| `uv run scripts/toolkit-analyzer.py` | Comprehensive lint suite |
-| `claude plugin validate .` | Marketplace validation |
-
-**Summary:**
-1. Always use `${CLAUDE_PLUGIN_ROOT}`.
-2. Validate before deployment.
-3. Test hooks with minimal configs.
-4. Explicit tool lists for security.
-5. Zero-token retention for heavy workflows.
+| Script | Usage |
+|:-------|:------|
+| `toolkit-analyzer` | `uv run scripts/toolkit-analyzer.py` |
+| `marketplace-validate` | `claude plugin validate .` |

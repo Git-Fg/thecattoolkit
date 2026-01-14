@@ -204,7 +204,7 @@ def lint_plan_directory(plan_dir: Path) -> bool:
                 print(f"  ✗ {issue}")
             all_valid = False
         else:
-            print(f"  ✅ BRIEF.md valid")
+            print(f"  GOOD BRIEF.md valid")
     else:
         print(f"  ⚠ BRIEF.md not found")
 
@@ -218,7 +218,7 @@ def lint_plan_directory(plan_dir: Path) -> bool:
                 print(f"  ✗ {issue}")
             all_valid = False
         else:
-            print(f"  ✅ ROADMAP.md valid")
+            print(f"  GOOD ROADMAP.md valid")
     else:
         print(f"  ⚠ ROADMAP.md not found")
 
@@ -239,7 +239,7 @@ def lint_plan_directory(plan_dir: Path) -> bool:
                         print(f"    ✗ {issue}")
                     all_valid = False
                 else:
-                    print(f"    ✅ Valid")
+                    print(f"    GOOD Valid")
 
     # Lint summaries
     print("\n4. Linting phase summaries...")
@@ -257,14 +257,14 @@ def lint_plan_directory(plan_dir: Path) -> bool:
                         print(f"    ✗ {issue}")
                     all_valid = False
                 else:
-                    print(f"    ✅ Valid")
+                    print(f"    GOOD Valid")
 
     # Summary
     print(f"\n{'='*60}")
     if all_valid:
-        print("✅ Linting PASSED: All files valid")
+        print("GOOD Linting PASSED: All files valid")
     else:
-        print("❌ Linting FAILED: Issues found")
+        print("BAD Linting FAILED: Issues found")
     print(f"{'='*60}\n")
 
     return all_valid

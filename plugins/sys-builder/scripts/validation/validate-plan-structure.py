@@ -2,7 +2,7 @@
 """
 Validate Plan Structure
 
-Validates BRIEF, ROADMAP, and PHASE files against managing-project-plans standards.
+Validates BRIEF, ROADMAP, and PHASE files against project-lifecycle standards.
 """
 
 import os
@@ -188,9 +188,9 @@ def validate_plan_structure(plan_dir: str) -> bool:
     # Summary
     print(f"\n{'='*60}")
     if all_valid:
-        print("✅ Validation PASSED: Plan structure is valid")
+        print("GOOD Validation PASSED: Plan structure is valid")
     else:
-        print("❌ Validation FAILED: Plan structure has issues")
+        print("BAD Validation FAILED: Plan structure has issues")
     print(f"{'='*60}\n")
 
     return all_valid

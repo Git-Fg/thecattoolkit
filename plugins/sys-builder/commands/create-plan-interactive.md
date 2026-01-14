@@ -1,7 +1,7 @@
 ---
 description: "Collaboratively architect a plan with deep requirements gathering."
 argument-hint: "<project description>"
-allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Task, Skill(managing-project-plans), Skill(architecting-project-plans), AskUserQuestion]
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Task, Skill(project-lifecycle), AskUserQuestion]
 disable-model-invocation: true
 ---
 
@@ -38,8 +38,7 @@ This command achieves **100% clarity** on requirements before writing any plan f
 - Ideal for complex projects where ambiguity could derail execution
 
 **Uses Skills:**
-- `managing-project-plans` - Templates and standards
-- `architecting-project-plans` - Investigation and synthesis methodology
+- `project-lifecycle` - Templates, standards, and investigation methodology
 
 ## Quick Start
 
@@ -109,7 +108,7 @@ This command achieves **100% clarity** on requirements before writing any plan f
 
 **Example Question Burst:**
 ```
-🔍 Clarification Needed: Tech Stack
+Clarification Needed: Tech Stack
 You said "build a web app" but I found package.json with React.
 
 [RECOMMENDED] React + TypeScript + Vite
@@ -138,8 +137,8 @@ You said "build a web app" but I found package.json with React.
    - Technical constraints identified
 
 2. **Create Plan Files**
-   - Use `managing-project-plans` templates
-   - Apply `architecting-project-plans` methodology
+   - Use `project-lifecycle` templates
+   - Apply `project-lifecycle` methodology
    - Generate BRIEF.md, ROADMAP.md
 
 3. **STOP for Validation**
@@ -169,7 +168,7 @@ You said "build a web app" but I found package.json with React.
 **When:** User mentions technology without specificity
 **Example:**
 ```
-🔍 Clarification Needed: Frontend Framework
+Clarification Needed: Frontend Framework
 You mentioned "frontend" but didn't specify framework.
 
 [RECOMMENDED] Continue with {existing_framework}
@@ -192,7 +191,7 @@ You mentioned "frontend" but didn't specify framework.
 **When:** Unclear about system design
 **Example:**
 ```
-🔍 Clarification Needed: System Architecture
+Clarification Needed: System Architecture
 You mentioned "API" but unclear about scope.
 
 [RECOMMENDED] REST API with Express.js
@@ -215,7 +214,7 @@ You mentioned "API" but unclear about scope.
 **When:** Data storage requirements unclear
 **Example:**
 ```
-🔍 Clarification Needed: Database
+Clarification Needed: Database
 You mentioned "store user data" but didn't specify database.
 
 [RECOMMENDED] Continue with {existing_db}
@@ -238,7 +237,7 @@ You mentioned "store user data" but didn't specify database.
 **When:** Security requirements need clarification
 **Example:**
 ```
-🔍 Clarification Needed: Authentication Method
+Clarification Needed: Authentication Method
 You mentioned "login" but didn't specify authentication.
 
 [RECOMMENDED] Email/Password + JWT
@@ -261,7 +260,7 @@ You mentioned "login" but didn't specify authentication.
 **When:** Deployment strategy unclear
 **Example:**
 ```
-🔍 Clarification Needed: Deployment Platform
+Clarification Needed: Deployment Platform
 You mentioned "deploy" but didn't specify platform.
 
 [RECOMMENDED] Continue with {existing_platform}
@@ -284,7 +283,7 @@ You mentioned "deploy" but didn't specify platform.
 
 **Structure:**
 ```markdown
-🔍 Clarification Needed: {Category}
+Clarification Needed: {Category}
 {description of ambiguity>
 
 [RECOMMENDED] {Recommended Option}

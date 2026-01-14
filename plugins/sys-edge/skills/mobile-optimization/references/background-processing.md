@@ -405,22 +405,22 @@ class ResourceConstrainedProcessor:
 ## Best Practices
 
 ### Do's
-✅ Classify tasks by criticality automatically
-✅ Defer non-critical tasks during low battery
-✅ Process background tasks during idle periods
-✅ Queue synchronization items intelligently
-✅ Learn usage patterns for predictive scheduling
-✅ Monitor resource availability before processing
-✅ Implement exponential backoff for retries
+GOOD Classify tasks by criticality automatically
+GOOD Defer non-critical tasks during low battery
+GOOD Process background tasks during idle periods
+GOOD Queue synchronization items intelligently
+GOOD Learn usage patterns for predictive scheduling
+GOOD Monitor resource availability before processing
+GOOD Implement exponential backoff for retries
 
 ### Don'ts
-❌ Don't process heavy tasks on low battery
-❌ Don't ignore device idleness signals
-❌ Don't queue too many background tasks
-❌ Don't retry failed tasks indefinitely
-❌ Don't process during active user interaction
-❌ Don't forget to clean up completed tasks
-❌ Don't defer critical user-initiated tasks
+BAD Don't process heavy tasks on low battery
+BAD Don't ignore device idleness signals
+BAD Don't queue too many background tasks
+BAD Don't retry failed tasks indefinitely
+BAD Don't process during active user interaction
+BAD Don't forget to clean up completed tasks
+BAD Don't defer critical user-initiated tasks
 
 ### Optimization Strategies
 

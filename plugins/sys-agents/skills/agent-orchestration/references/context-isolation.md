@@ -606,56 +606,56 @@ class ContextMetrics {
 
 ## Best Practices Summary
 
-### Do's ✅
+### Do's GOOD
 
-✅ **Keep contexts minimal**
+GOOD **Keep contexts minimal**
 - Only include necessary information
 - Filter irrelevant data
 - Use focused contexts
 
-✅ **Use file-based coordination**
+GOOD **Use file-based coordination**
 - Write to files, not memory
 - Agents read/write files
 - Clear separation
 
-✅ **Return results, not context**
+GOOD **Return results, not context**
 - Artifacts, not ongoing state
 - Structured outputs
 - Metadata only
 
-✅ **Validate contexts**
+GOOD **Validate contexts**
 - Check size limits
 - Verify relevance
 - Ensure isolation
 
-✅ **Monitor context usage**
+GOOD **Monitor context usage**
 - Track token counts
 - Measure isolation
 - Optimize regularly
 
-### Don'ts ❌
+### Don'ts BAD
 
-❌ **Don't share full context**
+BAD **Don't share full context**
 - Never pass conversation history
 - Don't include irrelevant data
 - Maintain isolation
 
-❌ **Don't accumulate state**
+BAD **Don't accumulate state**
 - Use stateless agents
 - Don't modify shared context
 - Immutable data structures
 
-❌ **Don't leak context**
+BAD **Don't leak context**
 - Agents should only access their data
 - No cross-agent context access
 - Clear boundaries
 
-❌ **Don't exceed limits**
+BAD **Don't exceed limits**
 - Monitor token counts
 - Trim when necessary
 - Respect agent limits
 
-❌ **Don't over-engineer**
+BAD **Don't over-engineer**
 - Start with simple isolation
 - Add complexity as needed
 - Measure before optimizing

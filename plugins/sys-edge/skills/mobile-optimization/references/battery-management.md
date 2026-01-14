@@ -148,18 +148,18 @@ class BatteryAwareScheduler:
 ## Best Practices
 
 ### Do's
-✅ Monitor battery level continuously
-✅ Adjust processing intensity based on battery
-✅ Defer non-critical tasks when battery is low
-✅ Cache frequently used data to reduce computation
-✅ Use batch processing to minimize wake cycles
+GOOD Monitor battery level continuously
+GOOD Adjust processing intensity based on battery
+GOOD Defer non-critical tasks when battery is low
+GOOD Cache frequently used data to reduce computation
+GOOD Use batch processing to minimize wake cycles
 
 ### Don'ts
-❌ Don't ignore battery state in processing decisions
-❌ Don't run heavy computations when battery <20%
-❌ Don't forget to restore settings when charging
-❌ Don't process background tasks on low battery
-❌ Don't assume AC power is always available
+BAD Don't ignore battery state in processing decisions
+BAD Don't run heavy computations when battery <20%
+BAD Don't forget to restore settings when charging
+BAD Don't process background tasks on low battery
+BAD Don't assume AC power is always available
 
 ### Power Optimization Strategies
 

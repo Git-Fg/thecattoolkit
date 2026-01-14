@@ -63,11 +63,11 @@ Design and implement multi-agent architectures that solve the fundamental proble
 
 | Use Case | Orchestrator | Swarm | Hierarchical |
 |----------|--------------|-------|--------------|
-| **Task Decomposition** | ✅ Best | ⚠️ Possible | ✅ Good |
-| **Parallel Execution** | ⚠️ Limited | ✅ Best | ⚠️ Possible |
-| **Quality Control** | ⚠️ Limited | ❌ No | ✅ Best |
-| **Scalability** | ⚠️ Medium | ✅ High | ✅ High |
-| **Complexity** | ⚠️ Medium | ✅ Low | ❌ High |
+| **Task Decomposition** | Best | Possible | Good |
+| **Parallel Execution** | Limited | Best | Possible |
+| **Quality Control** | Limited | No | Best |
+| **Scalability** | Medium | High | High |
+| **Complexity** | Medium | Low | High |
 
 ### Selection Criteria
 
@@ -165,33 +165,33 @@ Use plan mode for complex, multi-phase tasks:
 
 ## Best Practices
 
-### Do's
+### Recommended Practices
 
-✅ **Define Clear Interfaces** - Specify input/output formats, use structured data, document expectations
+**Define Clear Interfaces** - Specify input/output formats, use structured data, document expectations
 
-✅ **Minimize Context Sharing** - Pass only necessary data, avoid conversation history, use file-based coordination
+**Minimize Context Sharing** - Pass only necessary data, avoid conversation history, use file-based coordination
 
-✅ **Isolate Agent Contexts** - Each agent focused on specific task, no cross-contamination, specialized expertise
+**Isolate Agent Contexts** - Each agent focused on specific task, no cross-contamination, specialized expertise
 
-✅ **Return Results, Not Context** - Agents produce artifacts, structured outputs, central synthesis
+**Return Results, Not Context** - Agents produce artifacts, structured outputs, central synthesis
 
-✅ **Test Isolation** - Verify agents don't share context, check result quality, validate coordination
+**Test Isolation** - Verify agents don't share context, check result quality, validate coordination
 
-✅ **Use Progressive Context Loading** - Load only what's needed when needed
+**Use Progressive Context Loading** - Load only what's needed when needed
 
-✅ **Apply Attention Management** - Use TodoWrite, reminders, and plan mode strategically
+**Apply Attention Management** - Use TodoWrite, reminders, and plan mode strategically
 
-### Don'ts
+### Practices to Avoid
 
-❌ **Don't Share Full Context** - Never pass conversation history, don't share unrelated information, maintain isolation
+**Sharing Full Context** - Never pass conversation history, don't share unrelated information, maintain isolation
 
-❌ **Don't Over-Complicate** - Start simple, add complexity incrementally, use appropriate pattern
+**Over-Complicating** - Start simple, add complexity incrementally, use appropriate pattern
 
-❌ **Don't Ignore Coordination** - Plan result merging, handle conflicts, manage dependencies
+**Ignoring Coordination** - Plan result merging, handle conflicts, manage dependencies
 
-❌ **Don't Violate Isolation** - Keep contexts separate, use file-based coordination, respect boundaries
+**Violating Isolation** - Keep contexts separate, use file-based coordination, respect boundaries
 
-❌ **Don't Ignore Degradation** - Monitor context utilization, apply compression early
+**Ignoring Degradation** - Monitor context utilization, apply compression early
 
 ## Reference Materials
 

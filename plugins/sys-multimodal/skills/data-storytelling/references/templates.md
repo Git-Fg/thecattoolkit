@@ -117,10 +117,10 @@ CPC up 35% while conversion flat.
 - NPS: 68 (↑ 5 points)
 
 ## Quarter Highlights
-🏆 **Major Win:** Enterprise tier launched
-📈 **Growth:** 3 largest deals closed
-🚀 **Launch:** Self-serve product catalog
-👥 **Team:** Hired VP of Sales
+**Major Win:** Enterprise tier launched
+**Growth:** 3 largest deals closed
+**Launch:** Self-serve product catalog
+**Team:** Hired VP of Sales
 
 ## Performance vs Goals
 
@@ -189,12 +189,12 @@ Pipeline velocity up 35% after sales process changes
 - Expansion MRR: $18K (↑ $3K)
 - Churn: 2 customers (-$2.4K)
 
-## Wins 🎉
+## Key Achievements
 - Closed largest deal ever ($125K ARR)
 - Beta program: 45 companies, 92% active
 - Partnership with [Company] announced
 
-## Watch List 👀
+## Watch List
 - Trial → Paid conversion down 2%
 - Support ticket volume up 15%
 - 3 enterprise deals in legal review

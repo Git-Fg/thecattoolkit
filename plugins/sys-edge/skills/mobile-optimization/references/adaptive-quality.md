@@ -329,20 +329,20 @@ class QualityMetricsDashboard:
 ## Best Practices
 
 ### Do's
-✅ Use smooth transitions between quality levels
-✅ Consider context (charging, user activity) in decisions
-✅ Monitor long-term performance trends
-✅ Implement hysteresis to prevent oscillation
-✅ Log quality adjustments for analysis
-✅ Test quality changes under various conditions
+GOOD Use smooth transitions between quality levels
+GOOD Consider context (charging, user activity) in decisions
+GOOD Monitor long-term performance trends
+GOOD Implement hysteresis to prevent oscillation
+GOOD Log quality adjustments for analysis
+GOOD Test quality changes under various conditions
 
 ### Don'ts
-❌ Don't change quality too frequently
-❌ Don't ignore battery and thermal context
-❌ Don't jump between distant quality levels
-❌ Don't forget to restore quality when conditions improve
-❌ Don't use only CPU metrics - include battery and thermal
-❌ Don't transition quality during critical operations
+BAD Don't change quality too frequently
+BAD Don't ignore battery and thermal context
+BAD Don't jump between distant quality levels
+BAD Don't forget to restore quality when conditions improve
+BAD Don't use only CPU metrics - include battery and thermal
+BAD Don't transition quality during critical operations
 
 ### Optimization Tips
 

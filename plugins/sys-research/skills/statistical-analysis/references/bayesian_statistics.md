@@ -103,7 +103,7 @@ Where:
 
 **Example**: Uniform(-∞, ∞) for any value
 
-**⚠️ Caution**:
+**WARNING Caution**:
 - Can lead to improper posteriors
 - May produce non-sensible results
 - Not truly "non-informative" (still makes assumptions)

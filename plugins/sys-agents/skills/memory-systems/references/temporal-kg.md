@@ -502,20 +502,20 @@ class TemporalGraphRAG:
 ## Best Practices
 
 ### Do's
-✅ Use proper time representations (datetime objects)
-✅ Index temporal information for fast retrieval
-✅ Validate temporal consistency
-✅ Handle time zones appropriately
-✅ Support both instantaneous events and time periods
-✅ Use temporal reasoning for better context
+GOOD Use proper time representations (datetime objects)
+GOOD Index temporal information for fast retrieval
+GOOD Validate temporal consistency
+GOOD Handle time zones appropriately
+GOOD Support both instantaneous events and time periods
+GOOD Use temporal reasoning for better context
 
 ### Don'ts
-❌ Don't ignore time zones
-❌ Don't use string representations for time
-❌ Don't store all events without indexing
-❌ Don't forget temporal consistency checks
-❌ Don't assume time flows linearly
-❌ Don't ignore uncertainty in temporal data
+BAD Don't ignore time zones
+BAD Don't use string representations for time
+BAD Don't store all events without indexing
+BAD Don't forget temporal consistency checks
+BAD Don't assume time flows linearly
+BAD Don't ignore uncertainty in temporal data
 
 ## Applications
 

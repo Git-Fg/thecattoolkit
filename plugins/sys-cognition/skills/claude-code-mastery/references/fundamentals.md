@@ -51,7 +51,7 @@ Claude can reliably follow ~150-200 instructions. The system prompt already uses
 
 ### What Makes a Good CLAUDE.md
 
-#### ✅ Do This
+#### GOOD Do This
 
 **Keep it short**:
 - Focus on the essential workflows
@@ -78,7 +78,7 @@ We use TypeScript.
 - Every time you correct Claude twice, add it to CLAUDE.md
 - It becomes a living document of how your codebase works
 
-#### ❌ Don't Do This
+#### BAD Don't Do This
 
 - **Don't make it a novel** (Claude will ignore things)
 - **Don't include generic documentation** (Claude knows what components are)
@@ -156,7 +156,7 @@ This matters for large codebases where you need Claude to understand interconnec
 **Example**:
 - Conversation 1: Build authentication system
 - Conversation 2: Refactor database layer
-- ❌ Don't do both in the same conversation
+- BAD Don't do both in the same conversation
 
 #### 2. External Memory
 
@@ -331,11 +331,11 @@ Try different framing:
 
 ## Summary: The Fundamentals
 
-1. ✅ **Think first** → Use plan mode before typing
-2. ✅ **Optimize CLAUDE.md** → Keep it short, specific, updated
-3. ✅ **Manage context** → Proactive, not reactive
-4. ✅ **Prompt well** → Specific, constrained, with examples
-5. ✅ **Choose models wisely** → Opus for planning, Sonnet for execution
-6. ✅ **Recognize when stuck** → Change approach, don't loop
+1. GOOD **Think first** → Use plan mode before typing
+2. GOOD **Optimize CLAUDE.md** → Keep it short, specific, updated
+3. GOOD **Manage context** → Proactive, not reactive
+4. GOOD **Prompt well** → Specific, constrained, with examples
+5. GOOD **Choose models wisely** → Opus for planning, Sonnet for execution
+6. GOOD **Recognize when stuck** → Change approach, don't loop
 
 Next: See [advanced-features.md](advanced-features.md) for skills, subagents, and MCP connectors.

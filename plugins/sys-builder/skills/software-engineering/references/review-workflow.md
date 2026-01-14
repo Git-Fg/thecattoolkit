@@ -161,7 +161,7 @@ await db.query(query, [userId]);
 - npm audit: 1 high vulnerability (lodash@4.17.15)
 
 ## Approval Status
-🔄 **Changes Requested** - Please address critical and warning issues
+**Changes Requested** - Please address critical and warning issues
 ```
 
 ## Success Criteria

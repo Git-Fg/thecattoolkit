@@ -227,7 +227,7 @@ def check_frontmatter(file_path: Path, file_type: str) -> bool:
         print(f"  ⚠ No frontmatter found")
 
     if all_valid and has_frontmatter:
-        print(f"  ✅ Frontmatter valid")
+        print(f"  GOOD Frontmatter valid")
 
     return all_valid
 
@@ -278,9 +278,9 @@ def main():
     print(f"  Commands checked: {stats['command']}")
 
     if all_valid:
-        print(f"\n✅ All frontmatter valid")
+        print(f"\nGOOD All frontmatter valid")
     else:
-        print(f"\n❌ Some frontmatter has issues")
+        print(f"\nBAD Some frontmatter has issues")
 
     print(f"{'='*60}\n")
 

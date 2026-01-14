@@ -45,7 +45,7 @@ def verify_handoff_actions(handoff_path: Path) -> Tuple[bool, List[str]]:
         for action in actions:
             # Check if action appears completed (simplified check)
             if not any(marker in content.lower() for marker in
-                      ['completed', 'done', 'fixed', 'resolved', '✅']):
+                      ['completed', 'done', 'fixed', 'resolved', 'GOOD']):
                 issues.append(f"Action may not be completed: {action}")
 
     return len(issues) == 0, issues
@@ -169,9 +169,9 @@ def resume_execution(plan_dir: str) -> bool:
     # Summary
     print(f"{'='*60}")
     if all_resolved:
-        print("✅ All handoffs resolved - execution can continue")
+        print("GOOD All handoffs resolved - execution can continue")
     else:
-        print("❌ Some handoffs not resolved - execution blocked")
+        print("BAD Some handoffs not resolved - execution blocked")
     print(f"{'='*60}\n")
 
     return all_resolved
@@ -216,7 +216,7 @@ def list_handoffs(plan_dir: str) -> None:
         if '**Resolution:**' in content:
             resolution = content.split('**Resolution:**')[1].split('\n')[0].strip()
             if resolution:
-                print(f"  ✅ Resolved: {resolution}")
+                print(f"  GOOD Resolved: {resolution}")
             else:
                 print(f"  ⚠ Resolution noted but no details")
         else:

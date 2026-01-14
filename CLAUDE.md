@@ -1,11 +1,13 @@
 # CLAUDE.md: The Tiered Authority
 
-You are an **orchestration architect** specializing in the Cat Toolkit marketplace.
+You are an **orchestration architect** specializing in the Cat Toolkit marketplace. You always maintain the codebase clean and never add unecessary reports, temporary files or comments. 
 
 **Core expertise:**
 - Tiered compliance (Engine Rules vs. Marketplace Conventions)
 - Quota-optimized workflows (Context Window 150k-200k)
 - Intent-driven programming (Discovery vs. Procedural)
+
+ABSOLUTE CONSTRAINT : Before refining, refactoring or writing a Skill, Command, Subagent, MCP, LSP or any related elements from plugins, you HAVE to manually search throught the entire codebase the best practices + fetch informations from official documentation to make sure to have up to date and optimal informations. 
 
 ---
 
@@ -26,6 +28,7 @@ This document uses a few overloaded terms. These definitions are the canonical m
 ## Frontmatter Controls (high-impact)
 - `disable-model-invocation: true`: Prevents model invocation *and removes the item's metadata from the model’s catalog*, which also reduces unintended auto-selection.
 - `user-invocable: false` (Skills only): Hides the Skill from the `/` menu while keeping it usable by the model (unless model invocation is disabled).
+- `context: fork` (Skills only): Runs skill in isolated context without full subagent overhead. Preferred over spawning subagents. Optionally, specify `agent: <agent-name>` to assign a custom agent configuration.
 
 ---
 
@@ -64,6 +67,8 @@ The `.claude/` folder at the repository root is a **local workspace** for plugin
 # SECTION 1.5: PLATFORM AGNOSTICISM (CRITICAL)
 
 *Claude Code is provider-agnostic. Use this section to understand alternatives to direct Anthropic API access.*
+
+→ See [Infrastructure Guide](docs/guides/infrastructure.md) for MCP server configuration details.
 
 ## 1.5.1 Provider Options
 
@@ -343,6 +348,47 @@ claude
 
 ---
 
+# SECTION 1.6: COMMON DEVELOPMENT COMMANDS
+
+## Development Workflow
+
+```bash
+# Install dependencies (uses uv)
+uv sync
+
+# Validate all plugins (run after EVERY edit)
+uv run scripts/toolkit-analyzer.py
+
+# Auto-fix fixable validation issues
+uv run scripts/toolkit-analyzer.py --fix
+
+# Run multi-model test suite
+bash tests/multi-model/run-all-tests.sh
+
+# Load plugins for local development
+claude --plugin-dir ./plugins/sys-builder
+claude --plugin-dir ./plugins/sys-cognition
+claude --plugin-dir ./plugins/sys-core
+```
+
+## Plugin Architecture Quick Reference
+
+The Cat Toolkit is a **plugin marketplace** with domain-specific plugins:
+
+| Plugin | Domain | Focus |
+|:-------|:-------|:------|
+| **sys-core** | Infrastructure | Validation, scaffolding, hooks, MCP, security |
+| **sys-builder** | Engineering | Architecture, planning, execution, testing, TDD |
+| **sys-cognition** | Reasoning | Thinking frameworks, prompt engineering, analysis |
+| **sys-research** | Knowledge | Research tools, documentation, codebase analysis |
+| **sys-multimodal** | Media | Vision, audio, video processing |
+| **sys-edge** | Edge/Mobile | Optimization, offline-first, resource-constrained |
+| **sys-nodejs** | Node.js | JavaScript/TypeScript development, build tools |
+| **sys-agents** | Agent Development | Context engineering, memory systems, orchestration |
+| **sys-browser** | Browser Automation | Web interaction, crawling, testing |
+
+---
+
 # SECTION 2: MARKETPLACE CONVENTIONS (GUIDELINES)
 
 *The Cat Toolkit standards for portability and user-centric security.*
@@ -393,14 +439,15 @@ The Cat Toolkit organizes capabilities into domain-specific plugins:
 - **sys-cognition**: Skills that are **directly actionable** for any project (prompt patterns, reasoning frameworks, meta-prompts)
 - **sys-agents**: Skills that **require external frameworks or code implementation** (Vector DBs, GraphRAG, multi-agent architectures)
 
-## 3.2 Core Architecture Summary
+## 3.2 Core Architecture Summary (2026 Skills-First)
 
-| Component | Role | Reference Guide |
-|:----------|:-----|:----------------|
-| **Commands** | Orchestration, User Interaction | [⚡️ Commands](docs/guides/commands.md) |
-| **Skills** | Domain Knowledge, Procedures | [🧠 Skills](docs/guides/skills.md) |
-| **Agents** | Background Tasks, High Volume | [🤖 Agents](docs/guides/agents.md) |
-| **Hooks/MCP** | Infrastructure, Integration | [🔌 Infrastructure](docs/guides/infrastructure.md) |
+| Component | Role | Prominence | Reference Guide |
+|:----------|:-----|:-----------|:----------------|
+| **Skills** | **PRIMARY**: Domain Knowledge, Procedures | ⭐⭐⭐ | [🧠 Skills](docs/guides/skills.md) |
+| **Fork (Skills)** | **SECONDARY**: Isolation for heavy tasks | ⭐⭐ | [🧠 Skills](docs/guides/skills.md#context-forking) |
+| **Commands** | **DEPRECATED**: Dynamic context injection only | ⭐ | [⚡️ Commands](docs/guides/commands.md) |
+| **Agents** | **CONFIG ONLY**: Runtime tool configuration | ⭐ | [🤖 Agents](docs/guides/agents.md) |
+| **Hooks/MCP** | Infrastructure, Integration | ⭐⭐⭐ | [🔌 Infrastructure](docs/guides/infrastructure.md) |
 
 ## 3.3 The 3-Tier Loading Model
 
@@ -417,12 +464,62 @@ The Cat Toolkit organizes capabilities into domain-specific plugins:
 - "Can Claude infer this?"
 - "Does this justify its token cost?"
 
-## 3.4 The "Min Core" Pattern (Brain + Button)
-Structure capabilities using the **Brain (Skill)** + **Button (Command)** approach.
-1.  **Skill**: Contains the methodology (auto-discovered).
-2.  **Command**: Invocable trigger. Two modes:
-    *   `/plugin:run`: Batch mode (Assumptions).
-    *   `/plugin:run-interactive`: Interactive mode (AskUserQuestion).
+## 3.4 Skills-First Architecture (2026 Philosophy)
+
+**Principle:** Skills are the sovereign primitive for capability delivery.
+
+### Component Hierarchy
+
+1. **Skills (Primary)**
+   - Model-discoverable via description
+   - Auto-invoked based on intent matching
+   - Protocol-based (not persona-based)
+   - Use for: All domain knowledge and procedures
+
+2. **Fork (Isolation)**
+   - Lightweight alternative to agents
+   - Use `context: fork` in skills for isolation
+   - Cost: 3× inline (vs 20K+ tokens for full subagents)
+   - Use for: Heavy operations (>10 files), parallel processing
+   - **Custom Agents**: Optionally specify `agent: <agent-name>` to assign specialized rules. Default is usually sufficient.
+
+### ⚠️ Subagent Crisis & Token Cost Evidence (January 2026)
+
+**CRITICAL:** Subagents are almost always a mistake within standard plan constraints.
+
+**Startup Overhead**: 20K-25K tokens per subagent spawn
+- Full system prompt reinstantiated (not cached)
+- CLAUDE.md re-read in each subagent
+- MCP/project context duplicated
+
+**Real-World Impact**:
+- User task: Refactor >1000 LOC script
+- Subagent spawning: Created >40 parallel agents (one per package)
+- Result: Each re-read entire script → "Cost-wise and speed-wise it was mayhem"
+- Session exhaustion: Limit hit in 30-90 minutes instead of 5 hours
+
+**Official Recommendation**: Use main conversation when frequent back-and-forth needed. Use subagents ONLY when parallelization benefit clearly exceeds 20K token startup cost AND the "hidden cost" for 5-hour timeframe related subscription of consuming one "prompts" per subagent -as a subagent is not considered as a tool call that is free for one prompt-.
+
+3. **Commands (Deprecated)**
+   - Only for dynamic context injection
+   - Bash execution or environment variable parsing
+   - Delete simple skill wrappers
+   - Use for: Auto-resolution logic that Skills cannot provide
+
+4. **Agents (Config Only)**
+   - No persona content in agent files
+   - Pure configuration (tools, skills, hooks)
+   - Use for: Permission/tool scoping only
+   - Avoid for: 95% of use cases (over-engineering)
+
+### Updated Decision Matrix
+
+| Need | Solution | Why |
+|:---|:---|:---|
+| Domain knowledge/procedures | **SKILL** | Model-discoverable, auto-invoked |
+| Isolation for heavy tasks | **SKILL with `context: fork`** | Lighter than agent (3 vs 2×N) |
+| Dynamic bash/env injection | **COMMAND** | Skills cannot parse bash/env |
+| Permission/tool scoping | **AGENT (config only)** | Runtime configuration |
 
 ## 3.5 Skill Autonomy Levels
 
@@ -463,18 +560,21 @@ Match specificity to task fragility and variability:
 4.  **Hub-and-Spoke**: SKILL.md is central hub, all references one level deep.
 5.  **Atomic Boundaries**: One domain per Skill, users think of it as single operation.
 
-## 3.8 Decision Matrix
+## 3.8 Decision Matrix (Updated for 2026)
+
 | Need | Use |
 |:---|:---|
-| Single capability | **SKILL** |
-| Multi-skill orchestration | **COMMAND** |
-| User interaction | **COMMAND** |
-| Isolation (>10 files) | **AGENT** |
+| Domain knowledge/procedures | **SKILL** (model-discoverable) |
+| Isolation for heavy tasks | **SKILL with `context: fork`** |
+| Dynamic bash/env injection | **COMMAND** (deprecated, use sparingly) |
+| Permission/tool scoping | **AGENT** (config only, 95% avoid) |
 
 ## 3.9 State Anchoring & Validation-First Architecture
 
 ### State Anchoring
 **Problem:** Context windows are temporary.
+
+→ See [Persistence Guide](docs/guides/persistence.md) for advanced patterns.
 
 **Solution:** Explicit checkpoints and progress tracking.
 ```markdown
@@ -560,16 +660,74 @@ Before deploying any skill, verify:
 - [ ] Checksums included for critical assets?
 - [ ] Sub-agent forks specify an agent type?
 
-## 3.14 Skill Archetypes (Legacy - Use Universal Archetypes Above)
-### 1. Task-Oriented (Workflows)
-- **Purpose:** Execute sequential processes.
-- **Trigger:** Gerund verbs (`deploying-app`, `reviewing-code`).
-- **Pattern:** Execute → Validate → Report.
+## 3.14 Protocol-Based vs Persona-Based Skills
 
-### 2. Knowledge-Oriented (Expertise)
-- **Purpose:** Provide domain knowledge.
-- **Trigger:** Domain nouns (`prompt-engineering`, `security-audit`).
-- **Pattern:** Query → Load → Synthesize.
+**2026 Philosophy:** Skills define protocols (procedures), not personas (identities).
+
+→ See [Skills Guide Section 1.6](docs/guides/skills.md#16-protocol-based-skills-2026-standard) for migration examples.
+
+### Protocol-Based (Preferred)
+
+**Structure:** Here's how to do X.
+
+```markdown
+## PDF Invoice Extraction Protocol
+
+1. Validate file is text-based PDF
+2. Extract using pdfplumber: `with pdfplumber.open(file) as pdf: ...`
+3. Validate output has required fields
+4. Return structured data
+```
+
+**Characteristics:**
+- ✅ Direct procedures
+- ✅ Clear validation criteria
+- ✅ No role-playing
+- ✅ Token-efficient
+
+### Persona-Based (Avoid)
+
+**Structure:** "You are a PDF expert who..."
+
+```markdown
+# You are a PDF extraction specialist with years of experience...
+
+Your expertise includes:
+- Deep knowledge of PDF formats
+- Advanced extraction techniques...
+```
+
+**Problems:**
+- ❌ Token-heavy (narrative fluff)
+- ❌ Ambiguous instructions ("carefully", "best judgment")
+- ❌ Poor model invocation (capability not clear)
+- ❌ Hard to maintain
+
+### Migration Path
+
+**Convert Persona to Protocol:**
+
+❌ **BAD:** "You are a senior security analyst who reviews code for vulnerabilities..."
+✅ **GOOD:** "Security Review Protocol
+
+1. Scan for: SQL injection, XSS, command injection
+2. Validate: Input sanitization, output encoding
+3. Check: Authentication, authorization patterns
+4. Report: Findings by severity (Critical/Warning/Info)"
+
+### When Personas Are Acceptable
+
+Only in **Agents (CONFIG ONLY)** for tool/permission scoping:
+
+```yaml
+---
+name: security-auditor
+description: "Config-only agent for security audit tool scoping"
+tools: [Read, Grep]
+skills: [security-protocols]
+---
+# No persona content - pure configuration
+```
 
 ## 3.15 Permissions & Security
 **The Permission Cascade:**
@@ -601,6 +759,9 @@ Main Agent → Subagent (override) → Skill (temporary)
 - **NO DEEP LINKING**: Skills MUST NOT link to other Skills via file paths. Every downstream document should link back through the skill entry point (e.g., `references/xyz.md`, `scripts/foo.py`) so Claude starts at `SKILL.md` and navigates downwards without needing `../`.
 - **NO RELATIVE PATH TRAVERSAL**: Never use `../` to access other skill directories.
 - **ZERO GLUE**: Avoid pass-through functions; call implementation directly.
+- **FILE MIGRATION SAFETY**: When migrating content from a file, ONLY delete the source file AFTER all content has been migrated AND triple verified. This means: (1) verify migration is complete, (2) verify migrated content is correct, (3) verify nothing was lost in translation.
+- **DOCUMENTATION SYNC**: ALWAYS keep CLAUDE.md and README.md up to date after any change. These files are the single source of truth for developers.
+- **READ BEFORE CHANGE**: ALWAYS read the entire docs content before making any changes. This includes all files in docs/, CLAUDE.md, README.md, and any relevant documentation files.
 
 ### Clarifying examples (prevents common mistakes)
 ✅ Allowed: orchestration via Command/Agent using tool calls

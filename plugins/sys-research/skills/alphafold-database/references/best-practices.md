@@ -1,65 +1,65 @@
 # Best Practices
 
-## Do's
+## Recommended Practices
 
-✅ **Check pLDDT scores**
+**Check pLDDT scores**
 - Verify regions of interest have high confidence
 - Focus on pLDDT > 70 for reliable regions
 - Be cautious with pLDDT < 50 regions
 - Document confidence levels in analysis
 
-✅ **Validate with experimental data**
+**Validate with experimental data**
 - Compare with PDB structures when available
 - Use PAE to identify potentially unreliable regions
 - Consider crystal packing effects in experimental structures
 - Cross-reference multiple experimental sources
 
-✅ **Use appropriate file formats**
+**Use appropriate file formats**
 - Use mmCIF for structural analysis
 - Use JSON for programmatic analysis
 - Keep metadata for reproducibility
 - Document file versions used
 
-✅ **Cite AlphaFold**
+**Cite AlphaFold**
 - Acknowledge DeepMind and EMBL-EBI
 - Include database version in publications
 - Cite relevant papers:
   - Jumper et al. (2021)
   - Tunyasuvunakool et al. (2021)
 
-✅ **Document confidence thresholds**
+**Document confidence thresholds**
 - Define confidence criteria upfront
 - Report confidence ranges in results
 - Include confidence metrics in visualizations
 - Explain limitations clearly
 
-## Don'ts
+## Practices to Avoid
 
-❌ **Don't rely on low-confidence regions**
+**Relying on low-confidence regions**
 - Avoid pLDDT < 50 for critical analysis
 - Be cautious with PAE > 20 regions
 - Validate important findings experimentally
-- Don't make definitive structural claims
+- Do not make definitive structural claims
 
-❌ **Don't ignore experimental context**
+**Ignoring experimental context**
 - Crystal structures may have packing artifacts
 - Solution structures may differ from cellular context
 - Compare multiple experimental structures
 - Consider biological environment effects
 
-❌ **Don't use outdated versions**
+**Using outdated versions**
 - Check for latest AlphaFold version
 - Update predictions when new versions released
 - Version differences can affect coordinates
 - Keep version records in documentation
 
-❌ **Don't skip validation**
+**Skipping validation**
 - Always validate critical findings
 - Use multiple confidence metrics
 - Cross-check with experimental data
 - Report uncertainty levels
 
-❌ **Don't overlook PAE matrix**
+**Overlooking PAE matrix**
 - PAE provides domain boundary information
 - Useful for assessing relative positioning
 - Can identify flexible linkers

@@ -248,11 +248,11 @@ echo "All checks passed!"
 
 ## Anti-Patterns to Avoid
 
-- ❌ Ignoring tool outputs without review
-- ❌ Over-suppressing warnings (reduces tool effectiveness)
-- ❌ Running analysis manually only (automate in CI)
-- ❌ Using tools without custom rules for your domain
-- ❌ Treating all findings equally (prioritize by risk)
+- BAD Ignoring tool outputs without review
+- BAD Over-suppressing warnings (reduces tool effectiveness)
+- BAD Running analysis manually only (automate in CI)
+- BAD Using tools without custom rules for your domain
+- BAD Treating all findings equally (prioritize by risk)
 
 ## Success Criteria
 

@@ -1,7 +1,7 @@
 ---
 description: "Architect a project plan based on autonomous codebase investigation."
 argument-hint: "<project description>"
-allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Task, Skill(managing-project-plans), Skill(architecting-project-plans)]
+allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Task, Skill(project-lifecycle)]
 disable-model-invocation: true
 ---
 
@@ -34,8 +34,7 @@ This command creates a `.cattoolkit/plan/` structure based on:
 4. **Presentation** → Ask user how to proceed
 
 **Uses Skills:**
-- `managing-project-plans` - Templates and standards
-- `architecting-project-plans` - Investigation and synthesis methodology
+- `project-lifecycle` - Templates, standards, and investigation methodology
 
 ## Quick Start
 
@@ -265,10 +264,10 @@ This command creates a `.cattoolkit/plan/` structure based on:
 - Dependencies must be explicit
 
 ### Templates Used
-All templates sourced from `managing-project-plans/assets/templates/`:
+All templates sourced from `project-lifecycle/assets/templates/`:
 - `brief.md` - Project definition template
 - `roadmap.md` - Phase overview template
-- `phase-plan.md` - Task list template
+- `handoff.md` - Handoff template
 
 ### Common Patterns
 **Greenfield (New Project):**

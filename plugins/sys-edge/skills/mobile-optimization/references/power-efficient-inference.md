@@ -391,20 +391,20 @@ class InferencePerformanceMonitor:
 ## Best Practices
 
 ### Do's
-✅ Batch requests to reduce wake cycles
-✅ Use appropriate batch sizes for your use case
-✅ Implement priority queues for urgent requests
-✅ Acquire wake locks before batch processing
-✅ Combine compatible requests (same model, similar inputs)
-✅ Monitor batch efficiency and adjust parameters
+GOOD Batch requests to reduce wake cycles
+GOOD Use appropriate batch sizes for your use case
+GOOD Implement priority queues for urgent requests
+GOOD Acquire wake locks before batch processing
+GOOD Combine compatible requests (same model, similar inputs)
+GOOD Monitor batch efficiency and adjust parameters
 
 ### Don'ts
-❌ Don't create batches too large (memory constraints)
-❌ Don't delay high-priority requests
-❌ Don't forget to release wake locks
-❌ Don't combine incompatible request types
-❌ Don't ignore latency requirements
-❌ Don't batch requests with vastly different priorities
+BAD Don't create batches too large (memory constraints)
+BAD Don't delay high-priority requests
+BAD Don't forget to release wake locks
+BAD Don't combine incompatible request types
+BAD Don't ignore latency requirements
+BAD Don't batch requests with vastly different priorities
 
 ### Optimization Strategies
 

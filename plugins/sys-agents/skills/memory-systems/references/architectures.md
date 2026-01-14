@@ -68,16 +68,16 @@ class SimpleQASystem:
 ```
 
 ### Pros
-- ✅ Simple to implement
-- ✅ Fast semantic search
-- ✅ Good for FAQ-style questions
-- ✅ Minimal infrastructure
+- GOOD Simple to implement
+- GOOD Fast semantic search
+- GOOD Good for FAQ-style questions
+- GOOD Minimal infrastructure
 
 ### Cons
-- ❌ No relationship modeling
-- ❌ No temporal awareness
-- ❌ Limited context window
-- ❌ Cannot handle complex queries
+- BAD No relationship modeling
+- BAD No temporal awareness
+- BAD Limited context window
+- BAD Cannot handle complex queries
 
 ### When to Use
 - FAQ systems
@@ -198,16 +198,16 @@ class EntityCentricSystem:
 ```
 
 ### Pros
-- ✅ Models relationships
-- ✅ Multi-hop reasoning
-- ✅ Preserves document structure
-- ✅ Better for complex queries
+- GOOD Models relationships
+- GOOD Multi-hop reasoning
+- GOOD Preserves document structure
+- GOOD Better for complex queries
 
 ### Cons
-- ❌ More complex implementation
-- ❌ Requires entity extraction
-- ❌ Graph maintenance overhead
-- ❌ Slower than simple Vector RAG
+- BAD More complex implementation
+- BAD Requires entity extraction
+- BAD Graph maintenance overhead
+- BAD Slower than simple Vector RAG
 
 ### When to Use
 - Research and analysis
@@ -355,16 +355,16 @@ class TemporalAnalyticsSystem:
 ```
 
 ### Pros
-- ✅ Temporal reasoning
-- ✅ Pattern detection
-- ✅ Predictive capabilities
-- ✅ Historical context
+- GOOD Temporal reasoning
+- GOOD Pattern detection
+- GOOD Predictive capabilities
+- GOOD Historical context
 
 ### Cons
-- ❌ Most complex implementation
-- ❌ Requires temporal data
-- ❌ Complex queries
-- ❌ Higher storage costs
+- BAD Most complex implementation
+- BAD Requires temporal data
+- BAD Complex queries
+- BAD Higher storage costs
 
 ### When to Use
 - Event tracking systems
@@ -561,17 +561,17 @@ Simple Q&A ──────► Entity-Centric ──────► Temporal A
 ## Best Practices
 
 ### Do's
-✅ Start with simplest architecture that meets needs
-✅ Plan migration path from simple to complex
-✅ Validate retrieval quality at each stage
-✅ Monitor performance and costs
-✅ Use appropriate technology stack
-✅ Design for scalability from the beginning
+GOOD Start with simplest architecture that meets needs
+GOOD Plan migration path from simple to complex
+GOOD Validate retrieval quality at each stage
+GOOD Monitor performance and costs
+GOOD Use appropriate technology stack
+GOOD Design for scalability from the beginning
 
 ### Don'ts
-❌ Don't over-engineer (start simple)
-❌ Don't skip evaluation
-❌ Don't ignore maintenance costs
-❌ Don't forget to monitor
-❌ Don't ignore user feedback
-❌ Don't skip testing at each stage
+BAD Don't over-engineer (start simple)
+BAD Don't skip evaluation
+BAD Don't ignore maintenance costs
+BAD Don't forget to monitor
+BAD Don't ignore user feedback
+BAD Don't skip testing at each stage

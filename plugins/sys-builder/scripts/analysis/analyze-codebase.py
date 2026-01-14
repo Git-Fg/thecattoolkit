@@ -322,7 +322,7 @@ def generate_discovery_report(project_root: str) -> Dict:
 def save_report(report: Dict, output_path: Path) -> None:
     """Save discovery report to file."""
     output_path.write_text(json.dumps(report, indent=2))
-    print(f"\n✅ Report saved to: {output_path}")
+    print(f"\nGOOD Report saved to: {output_path}")
 
 
 def main():

@@ -1,7 +1,7 @@
 ---
 description: "Execute the next pending phase in the roadmap."
 argument-hint: "[optional: phase number]"
-allowed-tools: [Read, Write, Edit, Task, Skill(executing-project-plans), Skill(managing-project-plans)]
+allowed-tools: [Read, Write, Edit, Task, Skill(project-lifecycle)]
 disable-model-invocation: true
 ---
 
@@ -38,8 +38,7 @@ This command drives the execution of project phases using the `@worker` agent.
 - Progress tracking
 
 **Uses Skills:**
-- `executing-project-plans` - Execution orchestration methodology
-- `managing-project-plans` - Standards and handoff format
+- `project-lifecycle` - Consolidated execution orchestration, state management, and standards
 
 ## Quick Start
 
@@ -102,7 +101,7 @@ This command drives the execution of project phases using the `@worker` agent.
    ```bash
    Task: @worker
    Tools: [Read, Write, Edit, Bash, Glob, Grep]
-   Skills: [managing-project-plans, software-engineering, execution-core]
+   Skills: [project-lifecycle, software-engineering, execution-core]
    Constraint: NON-INTERACTIVE (no AskUserQuestion)
    ```
 
@@ -133,7 +132,7 @@ This command drives the execution of project phases using the `@worker` agent.
 
 3. **If Failed:**
    ```bash
-   - Create HANDOFF.md (using managing-project-plans template)
+   - Create HANDOFF.md (using project-lifecycle template)
    - Mark phase [!] in ROADMAP.md
    - Ask user for intervention
    - Pause execution
@@ -160,7 +159,7 @@ This command drives the execution of project phases using the `@worker` agent.
 
 3. **If All Complete**
    ```
-   Plan fully executed! 🎉
+   Plan fully executed. All objectives achieved.
 
    All phases [x] complete
    Summary: {link to final summary}
@@ -270,14 +269,13 @@ Continue Execution
 ### Skills Used
 | Skill | Purpose | When |
 |-------|---------|------|
-| executing-project-plans | Execution orchestration | State management |
-| managing-project-plans | Standards, handoff format | Creating summaries |
+| project-lifecycle | Consolidated execution, state management, and standards | All phases |
 
 ### Worker Agent Configuration
 ```yaml
 Agent: @worker
 Tools: [Read, Write, Edit, Bash, Glob, Grep]
-Skills: [managing-project-plans, software-engineering, execution-core]
+Skills: [project-lifecycle, software-engineering, execution-core]
 Constraint: NON-INTERACTIVE
 ```
 
@@ -297,7 +295,7 @@ Constraint: NON-INTERACTIVE
 - Ambiguous requirements
 
 **Hand off Format:**
-- Use `managing-project-plans` handoff template
+- Use `project-lifecycle` handoff template (see skill assets/templates/handoff.md)
 - Include: Reason, What Happened, Actions Required, Verification
 - Save in phase directory as `HANDOFF.md`
 

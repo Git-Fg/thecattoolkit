@@ -20,7 +20,7 @@ Each level adds supervision, quality control, and progressive refinement.
 
 ## When to Use
 
-✅ **Ideal for:**
+**Ideal for:**
 - Large, complex tasks with hierarchy
 - Need for quality control at each level
 - Multi-level task decomposition
@@ -28,7 +28,7 @@ Each level adds supervision, quality control, and progressive refinement.
 - Compliance and review processes
 - Progressive refinement
 
-❌ **Not suitable for:**
+**Not suitable for:**
 - Simple, small tasks
 - When latency is critical
 - Limited resources for supervision
@@ -246,31 +246,31 @@ Enterprise App Task
 
 ## Benefits
 
-✅ **Quality Control at Each Level**
+**Quality Control at Each Level**
 - Review at every level
 - Catch errors early
 - Progressive refinement
 - High confidence in output
 
-✅ **Scalable Hierarchy**
+**Scalable Hierarchy**
 - Add levels for complexity
 - Add width for parallel work
 - Handle large tasks
 - Modular structure
 
-✅ **Progressive Context Isolation**
+**Progressive Context Isolation**
 - Each level isolates context
 - Prevents saturation
 - Focused supervision
 - Manageable complexity
 
-✅ **Error Detection and Correction**
+**Error Detection and Correction**
 - Catch errors at multiple levels
 - Self-correcting at lower levels
 - Escalation mechanisms
 - Robust error handling
 
-✅ **Compliance and Review**
+**Compliance and Review**
 - Built-in review process
 - Audit trail at each level
 - Quality gates
@@ -278,31 +278,31 @@ Enterprise App Task
 
 ## Limitations
 
-❌ **More Complex Coordination**
+**More Complex Coordination**
 - Multiple levels to coordinate
 - Complex communication patterns
 - Synthesis overhead
 - Coordination bottlenecks
 
-❌ **Potential Latency**
+**Potential Latency**
 - Sequential quality checks
 - Multiple review stages
 - Time for synthesis
 - May be slower than simpler patterns
 
-❌ **Manager Agent Overhead**
+**Manager Agent Overhead**
 - Each level adds overhead
 - Supervision costs resources
 - Quality gates take time
 - May be overkill for simple tasks
 
-❌ **Complex Error Handling**
+**Complex Error Handling**
 - Errors at multiple levels
 - Complex escalation
 - Recovery strategies needed
 - Debugging is harder
 
-❌ **Resource Intensive**
+**Resource Intensive**
 - Multiple agents per task
 - Higher computational cost
 - More memory usage

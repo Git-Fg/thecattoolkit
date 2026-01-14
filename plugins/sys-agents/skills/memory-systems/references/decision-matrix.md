@@ -4,12 +4,12 @@
 
 | Use Case | Vector RAG | GraphRAG | Temporal KG |
 |----------|-----------|----------|-------------|
-| **Document Search** | ✅ Best | ⚠️ Overkill | ❌ Unnecessary |
-| **Q&A Systems** | ✅ Good | ✅ Better | ⚠️ Complex |
-| **Entity Relationships** | ❌ No | ✅ Yes | ✅ Yes |
-| **Multi-hop Reasoning** | ❌ Limited | ✅ Yes | ✅ Yes |
-| **Time-sensitive** | ❌ No | ⚠️ Limited | ✅ Best |
-| **Simple Implementation** | ✅ Easy | ⚠️ Medium | ❌ Hard |
+| **Document Search** | GOOD Best | WARNING Overkill | BAD Unnecessary |
+| **Q&A Systems** | GOOD Good | GOOD Better | WARNING Complex |
+| **Entity Relationships** | BAD No | GOOD Yes | GOOD Yes |
+| **Multi-hop Reasoning** | BAD Limited | GOOD Yes | GOOD Yes |
+| **Time-sensitive** | BAD No | WARNING Limited | GOOD Best |
+| **Simple Implementation** | GOOD Easy | WARNING Medium | BAD Hard |
 
 ## Selection Criteria
 

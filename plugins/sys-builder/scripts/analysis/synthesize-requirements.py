@@ -220,7 +220,7 @@ def synthesize_requirements(user_requirements: str, discovery_report: Path) -> D
 def save_synthesis(synthesis: Dict, output_path: Path) -> None:
     """Save synthesis to file."""
     output_path.write_text(json.dumps(synthesis, indent=2))
-    print(f"\n✅ Synthesis saved to: {output_path}")
+    print(f"\nGOOD Synthesis saved to: {output_path}")
 
 
 def print_summary(synthesis: Dict) -> None:

@@ -269,19 +269,19 @@ class ThermalLogger:
 ## Best Practices
 
 ### Do's
-✅ Monitor temperature continuously during processing
-✅ Implement gradual throttling before emergency shutdown
-✅ Save state before critical temperature
-✅ Log all thermal events for analysis
-✅ Predict temperature based on load and history
-✅ Use multiple temperature sensors if available
+GOOD Monitor temperature continuously during processing
+GOOD Implement gradual throttling before emergency shutdown
+GOOD Save state before critical temperature
+GOOD Log all thermal events for analysis
+GOOD Predict temperature based on load and history
+GOOD Use multiple temperature sensors if available
 
 ### Don'ts
-❌ Don't wait for critical temperature before acting
-❌ Don't disable thermal management to maintain performance
-❌ Don't ignore temperature spikes during intensive tasks
-❌ Don't resume full processing immediately after cooling
-❌ Don't rely on a single temperature reading
+BAD Don't wait for critical temperature before acting
+BAD Don't disable thermal management to maintain performance
+BAD Don't ignore temperature spikes during intensive tasks
+BAD Don't resume full processing immediately after cooling
+BAD Don't rely on a single temperature reading
 
 ### Optimization Tips
 

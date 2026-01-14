@@ -750,56 +750,56 @@ class CoordinationMetrics {
 
 ## Best Practices
 
-### Do's ✅
+### Do's GOOD
 
-✅ **Define clear interfaces**
+GOOD **Define clear interfaces**
 - Specify message formats
 - Document protocols
 - Version interfaces
 
-✅ **Use structured communication**
+GOOD **Use structured communication**
 - JSON, XML, Protocol Buffers
 - Consistent schemas
 - Type safety
 
-✅ **Handle errors gracefully**
+GOOD **Handle errors gracefully**
 - Implement retries
 - Use circuit breakers
 - Log failures
 
-✅ **Monitor coordination**
+GOOD **Monitor coordination**
 - Track metrics
 - Detect bottlenecks
 - Alert on issues
 
-✅ **Design for failure**
+GOOD **Design for failure**
 - Assume agents will fail
 - Implement timeouts
 - Have fallback plans
 
-### Don'ts ❌
+### Don'ts BAD
 
-❌ **Don't tight couple agents**
+BAD **Don't tight couple agents**
 - Use mediators
 - Avoid direct dependencies
 - Keep interfaces abstract
 
-❌ **Don't block on slow agents**
+BAD **Don't block on slow agents**
 - Use async/await
 - Implement timeouts
 - Consider cancellation
 
-❌ **Don't ignore scalability**
+BAD **Don't ignore scalability**
 - Plan for many agents
 - Avoid single coordinator bottlenecks
 - Use load balancing
 
-❌ **Don't skip testing**
+BAD **Don't skip testing**
 - Test coordination logic
 - Simulate failures
 - Test under load
 
-❌ **Don't hardcode delays**
+BAD **Don't hardcode delays**
 - Use adaptive timeouts
 - Monitor performance
 - Adjust based on metrics

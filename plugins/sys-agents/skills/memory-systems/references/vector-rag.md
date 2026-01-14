@@ -264,20 +264,20 @@ def evaluate_retrieval(queries: list, relevant_docs: dict, retrieved_docs: dict)
 ## Best Practices
 
 ### Do's
-✅ Use appropriate chunk sizes (500-1000 tokens)
-✅ Add overlap between chunks to preserve context
-✅ Store metadata for filtering
-✅ Use domain-specific embedding models when available
-✅ Implement query expansion for better recall
-✅ Monitor and evaluate retrieval quality regularly
+GOOD Use appropriate chunk sizes (500-1000 tokens)
+GOOD Add overlap between chunks to preserve context
+GOOD Store metadata for filtering
+GOOD Use domain-specific embedding models when available
+GOOD Implement query expansion for better recall
+GOOD Monitor and evaluate retrieval quality regularly
 
 ### Don'ts
-❌ Don't use chunks that are too large
-❌ Don't ignore metadata
-❌ Don't rely solely on semantic similarity
-❌ Don't forget to update embeddings when models improve
-❌ Don't use generic embeddings for specialized domains
-❌ Don't skip evaluation
+BAD Don't use chunks that are too large
+BAD Don't ignore metadata
+BAD Don't rely solely on semantic similarity
+BAD Don't forget to update embeddings when models improve
+BAD Don't use generic embeddings for specialized domains
+BAD Don't skip evaluation
 
 ## Common Issues
 

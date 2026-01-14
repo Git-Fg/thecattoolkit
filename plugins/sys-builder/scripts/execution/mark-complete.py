@@ -32,7 +32,7 @@ def mark_task_complete(plan_file: Path, task_index: int) -> bool:
                         lines.insert(i+1, "**Status:** [x]")
 
                     plan_file.write_text('\n'.join(lines))
-                    print(f"✅ Task {task_index + 1} marked as complete")
+                    print(f"GOOD Task {task_index + 1} marked as complete")
                     return True
 
                 task_count += 1
@@ -65,7 +65,7 @@ def mark_phase_complete(roadmap_path: Path, phase_num: str) -> bool:
                     lines[i] = '|'.join(parts)
 
                     roadmap_path.write_text('\n'.join(lines))
-                    print(f"✅ Phase {phase_num} marked as complete")
+                    print(f"GOOD Phase {phase_num} marked as complete")
                     return True
 
         print(f"✗ Phase {phase_num} not found in ROADMAP.md")
@@ -100,7 +100,7 @@ def mark_all_tasks_complete(phase_dir: Path) -> bool:
 
         if updated:
             plan_file.write_text('\n'.join(lines))
-            print(f"✅ All tasks marked as complete in {plan_file.name}")
+            print(f"GOOD All tasks marked as complete in {plan_file.name}")
             return True
         else:
             print(f"ℹ All tasks already complete")

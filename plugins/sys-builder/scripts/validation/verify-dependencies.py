@@ -188,7 +188,7 @@ def verify_dependencies(plan_dir: str) -> bool:
         status_icon = {
             '[ ]': '⏳',
             '[~]': '🔄',
-            '[x]': '✅',
+            '[x]': 'GOOD',
             '[!]': '⛔'
         }.get(status, '?')
 
@@ -204,9 +204,9 @@ def verify_dependencies(plan_dir: str) -> bool:
     # Summary
     print(f"\n{'='*60}")
     if all_valid:
-        print("✅ Verification PASSED: All dependencies valid")
+        print("GOOD Verification PASSED: All dependencies valid")
     else:
-        print("❌ Verification FAILED: Dependency issues found")
+        print("BAD Verification FAILED: Dependency issues found")
     print(f"{'='*60}\n")
 
     return all_valid

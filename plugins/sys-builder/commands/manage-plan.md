@@ -1,7 +1,7 @@
 ---
 description: "Update or modify existing plans."
 argument-hint: "<status update or change request>"
-allowed-tools: [Read, Write, Edit, Skill(managing-project-plans)]
+allowed-tools: [Read, Write, Edit, Skill(project-lifecycle)]
 disable-model-invocation: true
 ---
 
@@ -39,7 +39,7 @@ This command updates or modifies existing plans in `.cattoolkit/plan/`.
 - Structure updates
 
 **Uses Skills:**
-- `managing-project-plans` - Templates, schemas, validation rules
+- `project-lifecycle` - Templates, schemas, validation rules
 
 ## Quick Start
 

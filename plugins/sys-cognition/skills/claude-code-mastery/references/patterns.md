@@ -540,13 +540,13 @@ System that multiplies productivity
 
 ### Core Principles
 
-1. ✅ **Think first** - Plan mode before typing
-2. ✅ **Specific prompts** - Clear, constrained instructions
-3. ✅ **Manage context** - Proactive, not reactive
-4. ✅ **Build skills** - For patterns you repeat
-5. ✅ **Use subagents** - For complex tasks
-6. ✅ **Connect MCP** - Eliminate context switching
-7. ✅ **Build systems** - Beyond one-off tasks
+1. GOOD **Think first** - Plan mode before typing
+2. GOOD **Specific prompts** - Clear, constrained instructions
+3. GOOD **Manage context** - Proactive, not reactive
+4. GOOD **Build skills** - For patterns you repeat
+5. GOOD **Use subagents** - For complex tasks
+6. GOOD **Connect MCP** - Eliminate context switching
+7. GOOD **Build systems** - Beyond one-off tasks
 
 ### The Mindset
 

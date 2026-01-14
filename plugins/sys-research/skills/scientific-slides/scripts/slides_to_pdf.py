@@ -18,13 +18,23 @@ Usage:
 
 import argparse
 import sys
+import os
 from pathlib import Path
 from typing import List
 
+# Add the toolkit plugin path to sys.path to allow importing from other plugins
+# This is a bit of a hack but ensures portability across different environments
+toolkit_root = Path(__file__).resolve().parents[4]
+multimodal_utils = toolkit_root / "plugins" / "sys-multimodal"
+if multimodal_utils.exists() and str(multimodal_utils) not in sys.path:
+    sys.path.append(str(multimodal_utils))
+
 try:
-    from PIL import Image
+    from utils.rendering import combine_images_to_pdf
 except ImportError:
-    print("Error: Pillow library not found. Install with: pip install Pillow")
+    # Fallback to local implementation if multimodal plugin is not available
+    # but we want to encourage using the shared one
+    print("Warning: Could not import from sys-multimodal. Ensure sys-multimodal utility is present.")
     sys.exit(1)
 
 
@@ -70,93 +80,6 @@ def get_image_files(paths: List[str]) -> List[Path]:
     
     return image_files
 
-
-def combine_images_to_pdf(image_paths: List[Path], output_path: Path, 
-                         dpi: int = 150, verbose: bool = False) -> bool:
-    """
-    Combine multiple images into a single PDF.
-    
-    Args:
-        image_paths: List of image file paths
-        output_path: Output PDF path
-        dpi: Resolution for the PDF (default: 150)
-        verbose: Print progress information
-        
-    Returns:
-        True if successful, False otherwise
-    """
-    if not image_paths:
-        print("Error: No image files found")
-        return False
-    
-    if verbose:
-        print(f"Combining {len(image_paths)} images into PDF...")
-    
-    # Load all images
-    images = []
-    for i, img_path in enumerate(image_paths):
-        try:
-            img = Image.open(img_path)
-            # Convert to RGB if necessary (PDF doesn't support RGBA)
-            if img.mode in ('RGBA', 'P'):
-                # Create white background
-                background = Image.new('RGB', img.size, (255, 255, 255))
-                if img.mode == 'P':
-                    img = img.convert('RGBA')
-                background.paste(img, mask=img.split()[-1] if img.mode == 'RGBA' else None)
-                img = background
-            elif img.mode != 'RGB':
-                img = img.convert('RGB')
-            
-            images.append(img)
-            
-            if verbose:
-                print(f"  [{i+1}/{len(image_paths)}] Loaded: {img_path.name} ({img.size[0]}x{img.size[1]})")
-        except Exception as e:
-            print(f"Error loading {img_path}: {e}")
-            return False
-    
-    if not images:
-        print("Error: No images could be loaded")
-        return False
-    
-    # Create output directory if needed
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    
-    # Save as PDF
-    try:
-        # First image
-        first_image = images[0]
-        
-        # Remaining images (if any)
-        remaining_images = images[1:] if len(images) > 1 else []
-        
-        # Save to PDF
-        first_image.save(
-            output_path,
-            "PDF",
-            resolution=dpi,
-            save_all=True,
-            append_images=remaining_images
-        )
-        
-        if verbose:
-            print(f"\n✓ PDF created: {output_path}")
-            print(f"  Total slides: {len(images)}")
-            file_size = output_path.stat().st_size
-            if file_size > 1024 * 1024:
-                print(f"  File size: {file_size / (1024 * 1024):.1f} MB")
-            else:
-                print(f"  File size: {file_size / 1024:.1f} KB")
-        
-        return True
-    except Exception as e:
-        print(f"Error creating PDF: {e}")
-        return False
-    finally:
-        # Close all images
-        for img in images:
-            img.close()
 
 
 def main():

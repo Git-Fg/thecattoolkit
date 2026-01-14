@@ -686,20 +686,20 @@ class CrewAIMemorySystem:
 ## Best Practices
 
 ### Do's
-✅ Use appropriate memory tier for content type
-✅ Consolidate long-term memory regularly
-✅ Track entity evolution over time
-✅ Implement proper indexing for retrieval
-✅ Consider memory decay for short-term context
-✅ Use entity linking to avoid duplicates
+GOOD Use appropriate memory tier for content type
+GOOD Consolidate long-term memory regularly
+GOOD Track entity evolution over time
+GOOD Implement proper indexing for retrieval
+GOOD Consider memory decay for short-term context
+GOOD Use entity linking to avoid duplicates
 
 ### Don'ts
-❌ Don't store everything in short-term memory
-❌ Don't forget to consolidate long-term memory
-❌ Don't ignore entity relationships
-❌ Don't use same representation for all memory types
-❌ Don't forget to clean up old short-term memories
-❌ Don't overcomplicate entity tracking
+BAD Don't store everything in short-term memory
+BAD Don't forget to consolidate long-term memory
+BAD Don't ignore entity relationships
+BAD Don't use same representation for all memory types
+BAD Don't forget to clean up old short-term memories
+BAD Don't overcomplicate entity tracking
 
 ### Memory Tier Selection
 

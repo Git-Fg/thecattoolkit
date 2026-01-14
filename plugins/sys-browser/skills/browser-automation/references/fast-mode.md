@@ -6,10 +6,10 @@
 
 | Capability | Status | Note |
 |:--- |:--- |:--- |
-| **Speed** | 🚀 High | Fetches raw HTML, no rendering. |
-| **JavaScript** | ❌ None | Will see `<noscript>` content only. |
-| **Auth** | ❌ None | Public pages only. |
-| **Batching** | ✅ Yes | Can crawl multiple URLs concurrently. |
+| **Speed** | High | Fetches raw HTML, no rendering. |
+| **JavaScript** | None | Will see `<noscript>` content only. |
+| **Auth** | None | Public pages only. |
+| **Batching** | Yes | Can crawl multiple URLs concurrently. |
 
 ## Execution Patterns
 

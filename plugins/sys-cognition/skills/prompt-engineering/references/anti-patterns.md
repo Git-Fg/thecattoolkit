@@ -46,10 +46,10 @@ A catalog of known pitfalls, mistakes, and red flags to avoid.
 
 ## Red Flags in AI Outputs
 
-- **🚩 100% Success**: Every investigation perfectly succeeds (suspiciously clean).
-- **🚩 Zero Citations**: Claims made without URLs or documentation references.
-- **🚩 Binary Thinking**: "It is impossible" vs "It is the only way" without evidence.
-- **🚩 Role Redefinition**: Forgetting the primary agent role in favor of a local prompt instruction.
+- **Red Flag: 100% Success**: Every investigation perfectly succeeds (suspiciously clean).
+- **Red Flag: Zero Citations**: Claims made without URLs or documentation references.
+- **Red Flag: Binary Thinking**: "It is impossible" vs "It is the only way" without evidence.
+- **Red Flag: Role Redefinition**: Forgetting the primary agent role in favor of a local prompt instruction.
 
 ## Concrete Anti-Pattern Examples
 

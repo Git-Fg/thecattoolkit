@@ -315,24 +315,24 @@ def print_results(results: Dict):
     
     # Print warnings
     if results['warnings']:
-        print("\n⚠️  Warnings:")
+        print("\nWARNING  Warnings:")
         for item in results['warnings']:
             print(f"  • {item}")
     
     # Print issues
     if results['issues']:
-        print("\n❌ Issues:")
+        print("\nBAD Issues:")
         for item in results['issues']:
             print(f"  • {item}")
     
     # Overall status
     print("\n" + "=" * 60)
     if results['valid']:
-        print("✅ Validation PASSED")
+        print("GOOD Validation PASSED")
         if results['warnings']:
             print(f"   ({len(results['warnings'])} warning(s) found)")
     else:
-        print("❌ Validation FAILED")
+        print("BAD Validation FAILED")
         print(f"   ({len(results['issues'])} issue(s) found)")
     print("=" * 60)
 
@@ -390,7 +390,7 @@ Validation checks:
         if results['warnings'] or results['issues']:
             print_results(results)
         else:
-            print("✅ No issues found")
+            print("GOOD No issues found")
     else:
         print_results(results)
     

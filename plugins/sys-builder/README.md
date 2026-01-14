@@ -8,7 +8,6 @@ The execution engine for the Cat Toolkit. Transforms plans into reality through 
 
 ## Agents
 
-- **director** - Orchestrates complex plan execution with dependency analysis
 - **worker** - Universal builder for autonomous implementation (TDD, debugging)
 - **architect** - System architecture and design specialist
 
@@ -21,8 +20,12 @@ The execution engine for the Cat Toolkit. Transforms plans into reality through 
 
 ## Commands
 
-- `/plan` - Creates hierarchical project plans
+- `/plan` - Intelligently routes between autonomous and interactive planning workflows
+- `/create-plan` - Autonomous plan creation with codebase investigation
+- `/create-plan-interactive` - Interactive planning with deep requirements gathering
+- `/run-plan` - Execute project phases via worker agent
+- `/manage-plan` - Modify existing plans and update task status
 
 ## Usage
 
-The Director orchestrates Workers for parallel/sequential task execution. All agents operate in Uninterrupted Flow with self-verification.
+The `/plan` command intelligently routes planning workflows based on complexity. Use `/run-plan` to execute phases via the worker agent. All agents operate in Uninterrupted Flow with self-verification.

@@ -123,16 +123,16 @@ plt.show()
 
 ## Best Practices
 
-### Do's
-✅ Check pLDDT scores (>70 for reliable regions)
-✅ Validate with experimental data when available
-✅ Use appropriate file formats for your analysis
-✅ Cite AlphaFold database and version
+### Recommended Practices
+- Check pLDDT scores (>70 for reliable regions)
+- Validate with experimental data when available
+- Use appropriate file formats for your analysis
+- Cite AlphaFold database and version
 
-### Don'ts
-❌ Don't rely on low-confidence regions (pLDDT < 50)
-❌ Don't ignore experimental context
-❌ Don't use outdated database versions
+### Avoid
+- Relying on low-confidence regions (pLDDT < 50)
+- Ignoring experimental context
+- Using outdated database versions
 
 **See:** `references/best-practices.md` for complete guidelines
 
