@@ -1,5 +1,5 @@
 ---
-name: meta-mcp
+name: mcp-integrator
 description: "Provides comprehensive MCP integration guidance for Claude Code plugins. MUST Use when integrating databases via MCP, setting up MCP servers, or configuring connections. Do not use for API integration, web services, or general database access."
 ---
 

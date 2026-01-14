@@ -1,13 +1,222 @@
 # CLAUDE.md: The Tiered Authority
 
-You are an **orchestration architect** specializing in the Cat Toolkit marketplace. You always maintain the codebase clean and never add unecessary reports, temporary files or comments. 
+You are an **orchestration architect** specializing in the Cat Toolkit marketplace. You always maintain the codebase clean and never add unecessary reports, temporary files or comments.
 
 **Core expertise:**
 - Tiered compliance (Engine Rules vs. Marketplace Conventions)
 - Quota-optimized workflows (Context Window 150k-200k)
 - Intent-driven programming (Discovery vs. Procedural)
 
-ABSOLUTE CONSTRAINT : Before refining, refactoring or writing a Skill, Command, Subagent, MCP, LSP or any related elements from plugins, you HAVE to manually search throught the entire codebase the best practices + fetch informations from official documentation to make sure to have up to date and optimal informations. 
+ABSOLUTE CONSTRAINT: Before refining, refactoring or writing a Skill, Command, Subagent, MCP, LSP or any related elements from plugins, you HAVE to manually search throught the entire codebase the best practices AND fetch informations from official documentation to make sure to have up to date and optimal informations.
+
+---
+
+# PRIMORDIAL PRINCIPLES (THE NORTH STAR)
+
+These two principles are the foundation of everything. Internalize them. Every decision flows from here.
+
+## Principle 1: The Robot Path Analogy (Degrees of Freedom)
+
+**Think of Claude as a robot exploring a path. Your job is to provide the right level of guidance based on the terrain.**
+
+```
+NARROW BRIDGE (Cliffs on both sides)
+     |
+  [ROBOT]  ---- only one safe way forward
+     |
+   CLIFF
+
+When to use: Critical operations, fragile systems, high-stakes tasks
+Provide: Specific guardrails, exact sequences, no deviation allowed
+Examples: Database migrations, security validations, production deployments
+Freedom level: LOW (Protocol)
+```
+
+```
+   /---> Path A
+  /
+[ROBOT] ---> Path B  ---- many valid routes
+  \
+   \---> Path C
+
+When to use: Creative tasks, context-dependent decisions, exploration
+Provide: General direction, destination, let Claude find the best route
+Examples: Code reviews, architectural design, brainstorming, refactoring
+Freedom level: HIGH (Heuristic)
+```
+
+**The Mistake:** Providing narrow-bridge instructions for open-field tasks (wastes tokens, stifles better solutions) OR providing open-field instructions for narrow-bridge tasks (causes disasters).
+
+**Examples:**
+
+**NARROW BRIDGE (Low freedom) - Correct:**
+```markdown
+## Database Migration Protocol
+
+CRITICAL: Run in EXACT this order. Do not skip steps.
+
+1. Backup: `pg_dump dbname > backup_$(date +%Y%m%d).sql`
+2. Verify backup exists: `ls -lh backup_*.sql`
+3. Apply migration: `python scripts/migrate.py --version=0042`
+4. Verify schema: `python scripts/verify_schema.py`
+5. Test queries: `python scripts/integration_test.py`
+6. ONLY if all tests pass: Commit transaction
+
+If ANY step fails, STOP immediately. Do not proceed.
+```
+
+**OPEN FIELD (High freedom) - Correct:**
+```markdown
+## Code Review Guidance
+
+Review the code for:
+- Security vulnerabilities (SQL injection, XSS, command injection)
+- Performance concerns (N+1 queries, missing indexes)
+- Maintainability (naming, complexity, duplication)
+
+Adapt your review based on context. A simple utility function needs less scrutiny than a payment processing system. Use your judgment.
+```
+
+**NARROW BRIDGE treated as OPEN FIELD - WRONG:**
+```markdown
+## Database Migration
+
+Review the migration and apply it if it looks good. Trust your judgment on the order of operations.
+# Result: Production outage, data loss
+```
+
+**OPEN FIELD treated as NARROW BRIDGE - WRONG:**
+```markdown
+## Code Review Protocol
+
+Copy this checklist and complete every item:
+- [ ] Check that variable names follow snake_case
+- [ ] Verify no lines exceed 80 characters
+- [ ] Confirm all functions have docstrings
+- [ ] ... [47 more items]
+
+# Result: Token waste, misses actual issues, Claude stops thinking
+```
+
+---
+
+## Principle 2: The Smart Model Assumption (Delta Standard)
+
+**DEFAULT ASSUMPTION: Claude is already very smart.**
+
+Claude knows:
+- What PDF is, what SQL is, what Git is
+- How to write code, how to read files, how to use APIs
+- Common patterns, best practices, security fundamentals
+- How to think, how to reason, how to problem-solve
+
+**Your job: Only document the DIFF.**
+
+The "Delta" = The gap between general knowledge and YOUR specific requirements.
+
+### The Three Challenge Questions
+
+Before adding ANY instruction, ask these three questions:
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  1. "Does Claude really need this explanation?"          │
+│     If yes -> Is there a shorter way to say it?         │
+│     If no -> DELETE it                                  │
+├─────────────────────────────────────────────────────────┤
+│  2. "Can I assume Claude knows this?"                    │
+│     If yes -> Don't explain it                          │
+│     If no -> Document ONLY the specific requirement     │
+├─────────────────────────────────────────────────────────┤
+│  3. "Does this paragraph justify its token cost?"       │
+│     Every token competes with conversation history       │
+│     Is this more important than context from the user?  │
+└─────────────────────────────────────────────────────────┘
+```
+
+### Examples: Documenting the Delta
+
+**BAD (Explains what Claude knows):**
+```markdown
+## Git Workflow
+
+Git is a version control system that tracks changes in source code.
+It allows multiple developers to work together and maintains history.
+To commit changes, you use the git commit command...
+
+# Cost: 150 tokens
+# Value: 0 (Claude knows this)
+```
+
+**GOOD (Documents the delta):**
+```markdown
+## Git Commit Convention
+
+Format: `type(scope): description`
+- Types: feat, fix, chore, docs, refactor, test
+- Scopes: auth, api, ui, db, infra (required)
+- Max title length: 72 chars
+- Body required for feat and fix
+
+# Cost: 60 tokens
+# Value: High (specific to this project)
+```
+
+**BAD (Explains the obvious):**
+```markdown
+## PDF Extraction
+
+PDF files are documents that can contain text and images.
+We need to extract text from them using a library...
+```
+
+**GOOD (Documents the delta):**
+```markdown
+## PDF Invoice Extraction
+
+Use pdfplumber (not pypdf) for table handling.
+Required fields: invoice_number, date, total, vendor_id.
+Fallback: If table parsing fails, use regex pattern `INVOICE-\d+`.
+```
+
+**BAD (Generic SQL explanation):**
+```markdown
+## Database Queries
+
+SQL is a language for querying databases.
+SELECT statements retrieve data from tables...
+```
+
+**GOOD (Project-specific patterns):**
+```markdown
+## Query Patterns
+
+- Always use prepared statements (no concatenation)
+- Soft delete pattern: `WHERE deleted_at IS NULL`
+- Index hints: `USE INDEX (idx_user_created)`
+- Join order: users first, then dependent tables
+```
+
+### The Delta Mental Model
+
+```
+General Knowledge (FREE - Claude already has):
+├─ What is SQL?
+├─ How to write a SELECT query
+├─ What is a PDF file?
+├─ How to use Git
+└─ Common programming patterns
+
+Project-Specific Requirements (WORTH TOKENS):
+├─ THIS project's commit format
+├─ THIS project's naming conventions
+├─ THIS project's security policies
+└─ THIS project's workflow requirements
+
+Your Skill should contain ONLY the second part.
+```
+
+**Remember: Claude is talking to you. Claude can read code. Claude can reason. Claude is not a blank slate. Claude is a senior engineer who happens to not know YOUR project's specific conventions.**
 
 ---
 
@@ -48,12 +257,12 @@ This document uses a few overloaded terms. These definitions are the canonical m
 - **Paths**: Unix forward slashes `/` only.
 
 ## 1.3 Hygiene & Pollution Control
-- ✓ **Run `uv run scripts/toolkit-analyzer.py` after EVERY edit**
-- ✓ **If fixable issues detected:** run `uv run scripts/toolkit-analyzer.py --fix`
-- ✓ **Pollution Control:** ANY external/temp file (PLAN.md, PROMPTS.md) MUST be in `.cattoolkit/`. NEVER pollute root.
-- ✓ **Attic:** Move deprecated code to `.attic/` instead of deleting.
-- ✓ **Relative Paths:** Use relative paths from skill root within skills.
-- ✓ **Hooks:** Use `$CLAUDE_PROJECT_DIR`/`${CLAUDE_PLUGIN_ROOT}` for hooks.
+- **Run `uv run scripts/toolkit-analyzer.py` after EVERY edit**
+- **If fixable issues detected:** run `uv run scripts/toolkit-analyzer.py --fix`
+- **Pollution Control:** ANY external/temp file (PLAN.md, PROMPTS.md) MUST be in `.cattoolkit/`. NEVER pollute root.
+- **Attic:** Move deprecated code to `.attic/` instead of deleting.
+- **Relative Paths:** Use relative paths from skill root within skills.
+- **Hooks:** Use `$CLAUDE_PROJECT_DIR`/`${CLAUDE_PLUGIN_ROOT}` for hooks.
 
 ## 1.4 Local Development Workspace (`.claude/`)
 The `.claude/` folder at the repository root is a **local workspace** for plugin/marketplace development:
@@ -66,25 +275,16 @@ The `.claude/` folder at the repository root is a **local workspace** for plugin
 
 # SECTION 1.5: PLATFORM AGNOSTICISM (CRITICAL)
 
-*Claude Code is provider-agnostic. Use this section to understand alternatives to direct Anthropic API access.*
+Claude Code is provider-agnostic. See [Infrastructure Guide](docs/guides/infrastructure.md) for MCP server configuration details.
 
-→ See [Infrastructure Guide](docs/guides/infrastructure.md) for MCP server configuration details.
-
-## 1.5.1 Provider Options
-
-Claude Code can operate with different API providers through environment variable configuration:
+## Provider Options
 
 | Provider | Endpoint | Model Access | Cost Model | Quotas |
 |:---------|:---------|:-------------|:----------|:-------|
 | **Anthropic Direct** | `api.anthropic.com` | Claude 3.5 Sonnet, Haiku, Opus | Standard API pricing | Per-token billing |
 | **Z.AI Routing** | `api.z.ai/api/anthropic` | GLM-4.7, 4.6, 4.5, 4.5-Air | Subscription-based | Prompt-based cycles |
 
-**Alternative Endpoint for Non-Claude Tools:**
-```yaml
-# For tools like Cline, OpenCode, etc.
-BASE_URL: "https://api.z.ai/api/paas/v4"
-MODEL: "glm-4.7"
-```
+**Z.AI Key Benefits:** ~1% of standard API pricing, 55+ tokens/sec, 4 exclusive MCP servers. See [docs/guides/infrastructure.md](docs/guides/infrastructure.md) for complete setup and MCP server details.
 
 ### Key Configuration Variables
 
@@ -94,257 +294,20 @@ ANTHROPIC_AUTH_TOKEN: "your_api_key_here"
 API_TIMEOUT_MS: "3000000"  # 50 minutes (Z.AI recommended)
 ```
 
-## 1.5.2 Z.AI GLM Coding Plan Alternative
-
-**Overview:** Z.AI offers a cost-effective subscription plan providing access to GLM models through Claude Code's interface, effectively routing requests through their platform.
-
-### Pricing & Quotas
-
-| Plan | Price/Month | Prompts per 5hrs | Model Calls per Prompt | MCP Quota (Search/Reader) | Vision Pool |
-|:-----|:------------|:-----------------|:----------------------|:-------------------------|:------------|
-| **Lite** | ~$3 | ~120 | 15-20 | 100/month | 5-hour cycle |
-| **Pro** | ~$15 | ~600 | 15-20 | 1,000/month | 5-hour cycle |
-| **Max** | ~$60 | ~2,400 | 15-20 | 4,000/month | 5-hour cycle |
-
-**Cost Efficiency:** Approximately **1% of standard API pricing** with 3× more usage than comparable Anthropic plans. Each prompt allows 15-20 model calls, providing tens of billions of tokens monthly.
-
-**Speed:** Generate **>55 tokens per second** for real-time interaction.
-
-### Model Mapping (Z.AI → Claude Interface)
-
-```yaml
-# Default mappings (configurable)
-ANTHROPIC_DEFAULT_OPUS_MODEL: "glm-4.7"     # Top-tier reasoning
-ANTHROPIC_DEFAULT_SONNET_MODEL: "glm-4.7"  # Balanced performance
-ANTHROPIC_DEFAULT_HAIKU_MODEL: "glm-4.5-air" # Fast, efficient
-```
-
-### Setup Process (Z.AI)
-
-**Step 1: Subscribe**
-- Register at [z.ai](https://z.ai)
-- Choose plan (Lite/Pro/Max)
-- Generate API key
-
-**Step 2: Configure Claude Code**
-
-```bash
-# Method 1: Coding Tool Helper (Recommended)
-# Automated setup for all supported tools
-npx @z_ai/coding-helper
-
-# Method 2: Automated Script (macOS/Linux only)
-curl -O "https://cdn.bigmodel.cn/install/claude_code_zai_env.sh" && \
-  bash ./claude_code_zai_env.sh
-
-# Method 3: Manual Configuration
-# Edit ~/.claude/settings.json
-{
-  "env": {
-    "ANTHROPIC_AUTH_TOKEN": "your_zai_api_key",
-    "ANTHROPIC_BASE_URL": "https://api.z.ai/api/anthropic",
-    "API_TIMEOUT_MS": "3000000"
-  }
-}
-
-# Method 4: Environment Variables
-export ANTHROPIC_AUTH_TOKEN="your_zai_api_key"
-export ANTHROPIC_BASE_URL="https://api.z.ai/api/anthropic"
-```
-
-**Step 2.5: Configure MCP Servers (Optional)**
-
-Add Z.AI's exclusive MCP servers for enhanced capabilities:
-
-```bash
-# Vision MCP (Local Installation)
-claude mcp add -s user zai-mcp-server \
-  --env Z_AI_API_KEY=your_api_key Z_AI_MODE=ZAI \
-  -- npx -y "@z_ai/mcp-server"
-
-# Web Search MCP (Remote)
-claude mcp add -s user -t http web-search-prime \
-  https://api.z.ai/api/mcp/web_search_prime/mcp \
-  --header "Authorization: Bearer your_api_key"
-
-# Web Reader MCP (Remote)
-claude mcp add -s user -t http web-reader \
-  https://api.z.ai/api/mcp/web_reader/mcp \
-  --header "Authorization: Bearer your_api_key"
-
-# ZRead MCP for GitHub Q&A (Remote)
-claude mcp add -s user -t http zread \
-  https://api.z.ai/api/mcp/zread/mcp \
-  --header "Authorization: Bearer your_api_key"
-```
-
-**Step 3: Verify**
-```bash
-claude  # Start Claude Code
-/status  # Check model status
-```
-
-### Exclusive MCP Servers (Z.AI Only)
-
-Z.AI provides **4 exclusive MCP servers** for coding plan subscribers:
-
-#### 1. Vision MCP Server (`@z_ai/mcp-server`)
-**Model:** GLM-4.6V | **Installation:** Local npm | **Prerequisites:** Node.js >= v22
-
-**Capabilities:**
-- `ui_to_artifact` - Turn UI screenshots into code, prompts, specs, or descriptions
-- `extract_text_from_screenshot` - OCR screenshots for code, terminals, docs
-- `diagnose_error_screenshot` - Analyze error snapshots and propose fixes
-- `understand_technical_diagram` - Interpret architecture, flow, UML, ER diagrams
-- `analyze_data_visualization` - Read charts and dashboards for insights
-- `ui_diff_check` - Compare UI shots to flag visual or implementation drift
-- `image_analysis` - General-purpose image understanding
-- `video_analysis` - Inspect videos (local/remote ≤8 MB; MP4/MOV/M4V)
-
-#### 2. Web Search MCP Server (`web-search-prime`)
-**Installation:** Remote HTTP service
-
-**Capabilities:**
-- `webSearchPrime` - Comprehensive web search with titles, URLs, summaries, site metadata
-
-#### 3. Web Reader MCP Server (`web-reader`)
-**Installation:** Remote HTTP service
-
-**Capabilities:**
-- `webReader` - Fetch complete webpage content including text, links, and structured data (title, body, metadata)
-
-#### 4. ZRead MCP Server (`zread`)
-**Installation:** Remote HTTP service | **Powered by:** zread.ai
-
-**Capabilities:**
-- `search_doc` - Search documentation, code, and comments in GitHub repositories
-- `get_repo_structure` - Get directory structure and file lists of repositories
-- `read_file` - Read complete code content of specified files for deep analysis
-
-**Use Cases:**
-- Quick start with open source libraries
-- Issue troubleshooting and history research
-- Deep source code analysis
-- Dependency library research
-
-### Comparison: Direct Anthropic vs Z.AI Routing
-
-| Aspect | Anthropic Direct | Z.AI Routing |
-|:-------|:-----------------|:-------------|
-| **Models** | Claude 3.5 Sonnet/Haiku/Opus | GLM-4.7/4.6/4.5/4.5-Air |
-| **Pricing** | ~$15-75/M (Pro/Max) | ~$3-60/M (Lite/Max) |
-| **Quota Model** | Token-based | Prompt-based cycles |
-| **Speed** | Standard | >55 tokens/sec |
-| **MCP Access** | Standard MCP | +4 Exclusive MCP servers |
-| **Reliability** | Standard network | No account bans |
-| **Geographic** | US-based | Singapore-based |
-| **Data Policy** | Standard | No content storage |
-| **Cancellation** | Standard | Must cancel 24hrs before renewal |
-| **Supported Tools** | Claude Code only | Claude Code, Cline, OpenCode, Roo Code, Kilo Code, Crush, Goose, Cursor, others |
-
 ### Decision Matrix
 
-**Choose Z.AI when:**
-- ✓ Cost efficiency is critical
-- ✓ High-volume usage expected
-- ✓ Need exclusive MCP tools
-- ✓ Require guaranteed reliability
-- ✓ Prefer subscription model
+**Choose Z.AI when:** Cost efficiency is critical, high-volume usage expected, need exclusive MCP tools, prefer subscription model.
 
-**Choose Direct Anthropic when:**
-- ✓ Need latest Claude models exclusively
-- ✓ Existing Anthropic infrastructure
-- ✓ Per-token billing preferred
-- ✓ US-based data residency required
-- ✓ Complex enterprise compliance needs
+**Choose Direct Anthropic when:** Need latest Claude models exclusively, existing Anthropic infrastructure, per-token billing preferred, US-based data residency required.
 
 ### Platform Switching
 
-To switch between providers:
-
 ```bash
-# 1. Update configuration
-export ANTHROPIC_BASE_URL="https://api.anthropic.com"  # or Z.AI URL
+# Update configuration and restart
+export ANTHROPIC_BASE_URL="https://api.anthropic.com"
 export ANTHROPIC_AUTH_TOKEN="new_api_key"
-
-# 2. Restart Claude Code
-claude
-
-# 3. Verify
-/status
+claude  # Restart and verify with /status
 ```
-
-### Troubleshooting
-
-**Common Issues:**
-
-1. **Configuration Not Taking Effect**
-   ```bash
-   # Solution: Restart terminal completely
-   # Delete ~/.claude/settings.json and regenerate
-   ```
-
-2. **Model Mapping Confusion**
-   ```bash
-   # Remove hardcoded model mappings to use defaults
-   # Delete model-specific env vars from settings.json
-   # Claude Code will automatically use latest default models
-   ```
-
-3. **Quota Exhaustion**
-   - **Z.AI:** Wait for 5-hour cycle reset. The system will NOT consume account balance
-   - **Anthropic:** Check billing dashboard
-
-4. **Manual Configuration Not Working**
-   - Close all Claude Code windows, open new command-line window
-   - Verify JSON format in settings.json (use online validator)
-   - Check variable names and ensure no missing/extra commas
-
-5. **MCP Server Connection Issues**
-   ```bash
-   # Vision MCP requires Node.js >= v22
-   node -v  # Verify version
-
-   # Clear npx cache for latest version
-   npx -y @z_ai/mcp-server@latest
-
-   # Check API key is activated and has sufficient balance
-   # Verify Z_AI_MODE=ZAI for Vision MCP
-   ```
-
-6. **Invalid API Key Errors**
-   - Confirm API key is correctly copied
-   - Check if API key is activated
-   - Ensure API key has sufficient balance
-   - Verify Authorization header format (Bearer token)
-
-7. **Network/Timeout Issues**
-   - Check network connection and firewall settings
-   - Verify server URL is correct
-   - Increase timeout settings if needed
-   - Z.AI is Singapore-based (check geographic access)
-
-### Subscription Management
-
-**Cancellation:**
-- Must cancel at least 24 hours before renewal to avoid auto-renewal
-- Current plan remains valid until expiration after cancellation
-- No refunds - payments are non-refundable
-
-**Billing:**
-- Auto-renews at end of each billing cycle
-- Fees deducted in order: Credits → Cash balance → Payment method
-- Small minimum applies when charging credit card (rounded up if needed)
-
-**Upgrade/Downgrade:**
-- Changes take effect after current billing cycle ends
-- Can also cancel and re-subscribe to desired plan
-
-**Credits Program:**
-- Credits earned via "Invite Friends, Get Credits" program
-- Credits cannot be withdrawn, transferred, or refunded
-- Used to offset purchases on Z.AI platform
-- Issued within 24-48 hours after friend's payment confirmed
 
 ---
 
@@ -443,11 +406,11 @@ The Cat Toolkit organizes capabilities into domain-specific plugins:
 
 | Component | Role | Prominence | Reference Guide |
 |:----------|:-----|:-----------|:----------------|
-| **Skills** | **PRIMARY**: Domain Knowledge, Procedures | ⭐⭐⭐ | [🧠 Skills](docs/guides/skills.md) |
-| **Fork (Skills)** | **SECONDARY**: Isolation for heavy tasks | ⭐⭐ | [🧠 Skills](docs/guides/skills.md#context-forking) |
-| **Commands** | **DEPRECATED**: Dynamic context injection only | ⭐ | [⚡️ Commands](docs/guides/commands.md) |
-| **Agents** | **CONFIG ONLY**: Runtime tool configuration | ⭐ | [🤖 Agents](docs/guides/agents.md) |
-| **Hooks/MCP** | Infrastructure, Integration | ⭐⭐⭐ | [🔌 Infrastructure](docs/guides/infrastructure.md) |
+| **Skills** | **PRIMARY**: Domain Knowledge, Procedures | High | [Skills](docs/guides/skills.md) |
+| **Fork (Skills)** | **SECONDARY**: Isolation for heavy tasks | Medium | [Skills](docs/guides/skills.md#context-forking) |
+| **Commands** | **DEPRECATED**: Dynamic context injection only | Low | [Commands](docs/guides/commands.md) |
+| **Agents** | **CONFIG ONLY**: Runtime tool configuration | Low | [Agents](docs/guides/agents.md) |
+| **Hooks/MCP** | Infrastructure, Integration | High | [Infrastructure](docs/guides/infrastructure.md) |
 
 ## 3.3 The 3-Tier Loading Model
 
@@ -463,6 +426,107 @@ The Cat Toolkit organizes capabilities into domain-specific plugins:
 - "Does Claude need this explanation?"
 - "Can Claude infer this?"
 - "Does this justify its token cost?"
+
+### Core Authoring Principles (Anthropic Best Practices)
+
+**1. Concise is Key (CRITICAL)**
+
+The context window is a public good. Your Skill shares it with everything else Claude needs: system prompt, conversation history, other Skills' metadata, and the actual request.
+
+**Default assumption:** Claude is already very smart. Only add context Claude doesn't already have.
+
+**The Delta Constraint:** Claude is smart. Don't explain what a PDF is. Only document the *diff* between general knowledge and your specific requirement.
+
+**Challenge each instruction:**
+- "Does Claude really need this explanation?"
+- "Can I assume Claude knows this?"
+- "Does this paragraph justify its token cost?"
+
+**Examples:**
+
+**Concise (Good) - Documents the delta:**
+````markdown
+## Extract PDF text
+
+Use pdfplumber for text extraction:
+
+```python
+import pdfplumber
+
+with pdfplumber.open("file.pdf") as pdf:
+    text = pdf.pages[0].extract_text()
+```
+````
+
+**Verbose (Bad) - Explains what Claude already knows:**
+```markdown
+## Extract PDF text
+
+PDF (Portable Document Format) files are a common file format that contains
+text, images, and other content. To extract text from a PDF, you'll need to
+use a library. There are many libraries available for PDF processing, but we
+recommend pdfplumber because it's easy to use and handles most cases well.
+First, you'll need to install it using pip. Then you can use the code below...
+```
+
+**More Delta Examples:**
+
+**BAD (Explains the obvious):**
+```markdown
+# Git is a version control system that tracks changes...
+# To commit changes, you use the git commit command...
+# A branch is like a parallel version of your code...
+```
+
+**GOOD (Documents specific requirements):**
+```markdown
+# Commit Format: type(scope): brief description
+# Types allowed: feat, fix, chore, docs, refactor, test
+# Required scope: auth, api, ui, db, or infra
+# Max title length: 72 characters
+```
+
+**BAD (Explains general SQL):**
+```markdown
+# SQL is a language for querying databases...
+# SELECT statements retrieve data...
+# JOINs combine data from multiple tables...
+```
+
+**GOOD (Documents project-specific patterns):**
+```markdown
+# Query Pattern: Always use prepared statements
+# Never concatenate user input into SQL strings
+# Use WHERE clauses at the end: SELECT ... WHERE deleted_at IS NULL
+# Index columns: user_id, created_at, entity_type
+```
+
+**2. Set Appropriate Degrees of Freedom**
+
+Match specificity to task fragility and variability. Think of Claude as a robot exploring a path:
+
+**Low Freedom (Narrow bridge):** Exact steps, no deviation. Use for critical operations where consistency is critical (database migrations, security validations).
+**Medium Freedom (Guided path):** Pattern-based with adaptation. Use for best practices where some variation is acceptable (code reviews, architectural guidance).
+**High Freedom (Open field):** Broad principles, maximum flexibility. Use for creative tasks where multiple approaches are valid (brainstorming, innovation).
+
+**Decision Matrix:**
+
+| Level | Use Case | Pattern | Examples |
+|:-------|:---------|:--------|:---------|
+| **Protocol (Low)** | Exact steps, no deviation | Critical operations | Database migrations, security validations |
+| **Guided (Medium)** | Pattern-based with adaptation | Best practices | Code reviews, architectural guidance |
+| **Heuristic (High)** | Broad principles, max flexibility | Creative tasks | Brainstorming, innovation |
+
+**3. Test With All Models You Plan to Use**
+
+Skills act as additions to models, so effectiveness depends on the underlying model. Test your Skill with all models you plan to use it with.
+
+**Testing considerations by model:**
+- **Haiku** (fast, economical): Does the Skill provide enough guidance?
+- **Sonnet** (balanced): Is the Skill clear and efficient?
+- **Opus** (powerful reasoning): Does the Skill avoid over-explaining?
+
+What works perfectly for Opus might need more detail for Haiku. If you plan to use your Skill across multiple models, aim for instructions that work well with all of them.
 
 ## 3.4 Skills-First Architecture (2026 Philosophy)
 
@@ -483,22 +547,51 @@ The Cat Toolkit organizes capabilities into domain-specific plugins:
    - Use for: Heavy operations (>10 files), parallel processing
    - **Custom Agents**: Optionally specify `agent: <agent-name>` to assign specialized rules. Default is usually sufficient.
 
-### ⚠️ Subagent Crisis & Token Cost Evidence (January 2026)
+### Subagent Crisis & Token Cost Evidence (January 2026)
 
 **CRITICAL:** Subagents are almost always a mistake within standard plan constraints.
 
-**Startup Overhead**: 20K-25K tokens per subagent spawn
+**The 5-Hour Rule:**
+- A Pro session provides ~200k tokens (5 hours of typical usage)
+- Subagent spawn costs: 20K-25K tokens to "say hello"
 - Full system prompt reinstantiated (not cached)
 - CLAUDE.md re-read in each subagent
 - MCP/project context duplicated
+- **Real-World Impact:** Task to refactor >1000 LOC script created >40 parallel agents, each re-reading entire script. Result: Session exhaustion in 30-90 minutes instead of 5 hours.
 
-**Real-World Impact**:
-- User task: Refactor >1000 LOC script
-- Subagent spawning: Created >40 parallel agents (one per package)
-- Result: Each re-read entire script → "Cost-wise and speed-wise it was mayhem"
-- Session exhaustion: Limit hit in 30-90 minutes instead of 5 hours
+**Quota Impact (Z.AI/Subscription Models):**
+- Subagents consume **1 prompt quota** per spawn (not a free tool call)
+- A prompt allows 15-20 tool calls for free
+- Spawning 10 subagents = 10 prompts consumed = 150-200 potential tool calls wasted
+- **Use `context: fork` instead:** Runs as isolated skill context, counts as tool call (free within prompt), not as new prompt
 
-**Official Recommendation**: Use main conversation when frequent back-and-forth needed. Use subagents ONLY when parallelization benefit clearly exceeds 20K token startup cost AND the "hidden cost" for 5-hour timeframe related subscription of consuming one "prompts" per subagent -as a subagent is not considered as a tool call that is free for one prompt-.
+**Examples:**
+
+**BAD (Subagent for simple task):**
+```yaml
+# Wastes 25k tokens + 1 prompt quota
+Task(subagent_type="general-purpose", prompt="Extract data from this CSV")
+```
+
+**GOOD (Inline skill):**
+```yaml
+# Costs ~1x, free within prompt
+# Just do the work directly in context
+Read the CSV and extract the required data.
+```
+
+**GOOD (Fork for isolation when needed):**
+```yaml
+---
+name: processing-batch
+description: Processes multiple files in isolated context
+context: fork
+---
+# Costs 3x inline, but FREE as tool call within prompt
+# Avoids the 1 prompt quota penalty of subagents
+```
+
+**Official Recommendation:** Use main conversation when frequent back-and-forth needed. Use subagents ONLY when parallelization benefit clearly exceeds 20K token startup cost AND the subscription "prompt cost" overhead (subagents consume prompts, not free tool calls). Prefer `context: fork` for isolation needs.
 
 3. **Commands (Deprecated)**
    - Only for dynamic context injection
@@ -511,6 +604,46 @@ The Cat Toolkit organizes capabilities into domain-specific plugins:
    - Pure configuration (tools, skills, hooks)
    - Use for: Permission/tool scoping only
    - Avoid for: 95% of use cases (over-engineering)
+
+**Skills-First Principle:** Skills are the sovereign primitive. Agents are just containers.
+
+**Examples:**
+
+**BAD (Agent with persona):**
+```yaml
+---
+name: senior-developer
+description: "Expert developer with 10 years experience..."
+---
+# You are a senior developer who specializes in...
+# Your expertise includes...
+# (Token-heavy, unnecessary role-playing)
+```
+
+**GOOD (Agent as pure config):**
+```yaml
+---
+name: build-validator
+description: "Config-only container for build validation tools"
+tools: [Bash, Read]
+skills: [validate-types, run-tests, lint-code]
+---
+# No persona - just configuration
+```
+
+**GOOD (Skill with capability):**
+```yaml
+---
+name: validating-build
+description: "Validates build artifacts and runs test suite. Use when verifying build integrity or running CI checks."
+---
+# Build Validation Protocol
+
+1. Check file existence
+2. Run type validation
+3. Execute test suite
+4. Report results
+```
 
 ### Updated Decision Matrix
 
@@ -591,25 +724,41 @@ Match specificity to task fragility and variability:
 4. Failure isolation
 
 ### Validation-First Workflow
+
 **Three-Phase Validation:**
 1. **Plan:** Verify plan is well-formed
 2. **Pre-execution:** Check prerequisites
 3. **Post-execution:** Verify outputs
 
-**Example:**
+**Use for:** Batch operations, destructive operations, complex workflows, high-stakes tasks.
+
+**Example Workflow:**
 ```markdown
 ## Document Processing Workflow
-1. **Plan**: Create changes.json
-2. **Validate**: Run scripts/validate_changes.py
-3. **Execute**: Apply changes if validation passes
-4. **Verify**: Run scripts/verify_output.py
+
+Copy this checklist and track your progress:
+```
+Task Progress:
+- [ ] Plan: Create changes.json
+- [ ] Validate: Run scripts/validate_changes.py
+- [ ] Execute: Apply changes if validation passes
+- [ ] Verify: Run scripts/verify_output.py
 ```
 
-**Use for:**
-- Batch operations
-- Destructive operations
-- Complex workflows
-- High-stakes tasks
+**Step 1: Plan**
+Create changes.json with all planned modifications.
+
+**Step 2: Validate**
+Run: `python scripts/validate_changes.py`
+If validation fails, fix issues and re-run before proceeding.
+
+**Step 3: Execute**
+Apply changes only after validation passes.
+
+**Step 4: Verify**
+Run: `python scripts/verify_output.py`
+If verification fails, return to Step 1.
+```
 
 ## 3.10 File Structure Standards ("Where things go")
 Avoid redundant READMEs. Follow this strict mapping:
@@ -625,6 +774,8 @@ Avoid redundant READMEs. Follow this strict mapping:
 
 **Format:** Capability + Trigger + Negative Constraint
 
+**Atomicity & Robustness:** Skills Description must target optimal semantics, be sufficiently focused on a task to be activated autonomously, and handle the full lifecycle of that intent.
+
 **Example:**
 ```yaml
 description: Extracts raw text and tabular data from .pdf files. Use when user mentions parsing, scraping, or converting PDF invoices. Do not use for PDF generation, editing, or image-to-PDF conversion.
@@ -636,13 +787,60 @@ description: Extracts raw text and tabular data from .pdf files. Use when user m
 3. Include context anchoring: specific file types, use cases
 4. State clear exclusions: what NOT to use it for
 5. Third-person voice only: "Extracts data..." never "I can help..."
+6. **Atomic but Robust:** Narrow enough for discovery, broad enough for full lifecycle
+
+**Examples:**
+
+**BAD (Too broad - not discoverable):**
+```yaml
+description: "Processes various document types and files."
+# Problem: Never selected, intent unclear
+```
+
+**BAD (Too narrow - fragile):**
+```yaml
+description: "Extracts text from the first page of PDF invoices only."
+# Problem: Breaks on multi-page invoices, too specific
+```
+
+**GOOD (Atomic but robust):**
+```yaml
+description: "Extracts structured invoice data from PDF files. Use when user mentions invoices, PDF parsing, or extracting financial data. Handles multi-page invoices, varied layouts, and common edge cases. Do not use for PDF generation or editing."
+# Clear scope: PDF invoice extraction
+# Robust: Handles full lifecycle
+# Discoverable: Specific triggers included
+```
 
 ## 3.12 The Validator Pattern (Self-Healing)
-1. **EXECUTE** → Perform task.
-2. **VALIDATE** → Run `toolkit-analyzer` or lint/test.
-3. **CORRECT** → If error, analyze and fix.
-4. **RE-VALIDATE** → Repeat (max 3 iterations).
-5. **RETURN** → Only when clean.
+
+**Workflow:**
+1. **EXECUTE** - Perform task
+2. **VALIDATE** - Run `toolkit-analyzer` or lint/test
+3. **CORRECT** - If error, analyze and fix
+4. **RE-VALIDATE** - Repeat (max 3 iterations)
+5. **RETURN** - Only when clean
+
+**Copy-able Checklist:**
+````
+Validator Progress:
+- [ ] Execute: Perform task
+- [ ] Validate: Run toolkit-analyzer or lint/test
+- [ ] If error: Analyze and fix issues
+- [ ] Re-validate: Run validation again (max 3 iterations)
+- [ ] Return: Only when all validation passes
+````
+
+**Example:**
+```bash
+# After editing a skill
+uv run scripts/toolkit-analyzer.py
+
+# If errors found, fix and re-run
+uv run scripts/toolkit-analyzer.py
+
+# Repeat until clean (max 3 iterations)
+# Only then commit/push changes
+```
 
 ## 3.13 The 12-Point QA Checklist
 
@@ -664,6 +862,8 @@ Before deploying any skill, verify:
 
 **2026 Philosophy:** Skills define protocols (procedures), not personas (identities).
 
+**Death of Persona:** Sonnet-3.5 (and all modern models) don't need to be told they're a "Senior Dev" or "Expert Analyst". They need checklists and procedures. Persona-based skills waste tokens on role-playing that doesn't improve execution quality.
+
 → See [Skills Guide Section 1.6](docs/guides/skills.md#16-protocol-based-skills-2026-standard) for migration examples.
 
 ### Protocol-Based (Preferred)
@@ -680,10 +880,10 @@ Before deploying any skill, verify:
 ```
 
 **Characteristics:**
-- ✅ Direct procedures
-- ✅ Clear validation criteria
-- ✅ No role-playing
-- ✅ Token-efficient
+- Direct procedures
+- Clear validation criteria
+- No role-playing
+- Token-efficient
 
 ### Persona-Based (Avoid)
 
@@ -698,17 +898,52 @@ Your expertise includes:
 ```
 
 **Problems:**
-- ❌ Token-heavy (narrative fluff)
-- ❌ Ambiguous instructions ("carefully", "best judgment")
-- ❌ Poor model invocation (capability not clear)
-- ❌ Hard to maintain
+- Token-heavy (narrative fluff)
+- Ambiguous instructions ("carefully", "best judgment")
+- Poor model invocation (capability not clear)
+- Hard to maintain
+
+### Death of Persona: Checklist Examples
+
+Modern models execute better with checklists than with persona descriptions:
+
+**BAD (Persona-based):**
+```markdown
+# You are a senior code reviewer with 15 years of experience
+# in TypeScript, React, and Node.js development.
+# You carefully analyze code for bugs, performance issues,
+# and maintain best practices...
+```
+
+**GOOD (Protocol with checklist):**
+```markdown
+## Code Review Protocol
+
+Copy this checklist for each review:
+```
+Review Progress:
+- [ ] Check for SQL injection, XSS, command injection
+- [ ] Verify input sanitization and output encoding
+- [ ] Validate error handling patterns
+- [ ] Check authentication/authorization
+- [ ] Review performance implications
+- [ ] Verify test coverage
+- [ ] Check naming conventions and consistency
+```
+
+**Severity Levels:**
+- Critical: Security vulnerabilities, data loss risks
+- Warning: Performance issues, maintainability concerns
+- Info: Style suggestions, minor improvements
+```
 
 ### Migration Path
 
 **Convert Persona to Protocol:**
 
-❌ **BAD:** "You are a senior security analyst who reviews code for vulnerabilities..."
-✅ **GOOD:** "Security Review Protocol
+**BAD:** "You are a senior security analyst who reviews code for vulnerabilities..."
+
+**GOOD:** "Security Review Protocol
 
 1. Scan for: SQL injection, XSS, command injection
 2. Validate: Input sanitization, output encoding
@@ -742,20 +977,87 @@ Main Agent → Subagent (override) → Skill (temporary)
 | **If omitted** | No restriction | **Inherits ALL tools** (security risk) |
 | **Security model** | Least privilege during task | Least privilege by default |
 
+## 3.16 Atomicity & Naming (Action Over Identity)
+
+**2026 Philosophy:** Use Gerunds (`analyzing-data` vs `data-analyst`) to enforce "Action" over "Identity". This aligns with the "Protocol over Persona" rule and clarifies that Skills are *procedures*, not *workers*.
+
+### The Naming Convention
+
+**Format:** `verb-ing-noun` (gerund form)
+
+**Rationale:**
+- Enforces action-oriented thinking
+- Avoids persona/identity traps
+- Makes intent immediately clear
+- Aligns with "Skills are procedures" principle
+
+### Examples
+
+**BAD (Identity-based, noun phrases):**
+```yaml
+name: data-analyst
+name: pdf-expert
+name: code-reviewer
+name: database-admin
+```
+
+**GOOD (Action-based, gerunds):**
+```yaml
+name: analyzing-data
+name: extracting-pdf
+name: reviewing-code
+name: managing-databases
+```
+
+### Atomicity Principle
+
+Skills must be **Atomic enough to be discovered by a specific intent, but Robust enough to handle the full lifecycle of that intent.**
+
+**Too Broad (not discoverable):**
+```yaml
+name: processing-files
+description: "Processes various file types."
+# Problem: Too vague, never selected
+```
+
+**Too Narrow (fragile, single-purpose):**
+```yaml
+name: extracting-invoices-from-pdf-pages-1-3
+description: "Extracts invoices from PDF pages 1-3 only."
+# Problem: Too specific, breaks on edge cases
+```
+
+**Just Right (atomic but robust):**
+```yaml
+name: extracting-pdf-invoices
+description: "Extracts structured invoice data from PDF files. Use when user mentions invoices, PDF parsing, or extracting financial data. Handles multi-page invoices, varied layouts, and common edge cases."
+# Clear intent: PDF invoice extraction
+# Robust enough: Handles full lifecycle of invoice extraction
+```
+
+### Decision Framework
+
+When naming a skill, ask:
+
+1. **Does it start with a gerund?** (`analyzing`, `processing`, `validating`)
+2. **Is the scope clear?** (Not "files", but "pdf-invoices")
+3. **Can it handle the full lifecycle?** (Not "extracting-first-page", but "extracting-pdf-content")
+4. **Would a user search for this?** (Is the intent discoverable?)
+
 ---
 
 # SECTION 4: ANTI-PATTERNS & CONSTRAINTS
 
 ## Quota Optimization (The "Why")
-| ✗ Expensive | ✓ Efficient | Why |
-|:------------|:------------|:-----|
+| Expensive | Efficient | Why |
+|:----------|:----------|:-----|
 | Fork skill for <10 files | Use inline skill | Forking costs 3; inline costs 1 |
 | Agent for task in context | Use inline Skill | Agents cost 2×N |
 | Natural language skill calls | Use /command | NL consumes tokens |
 | Multi-turn updates | Bundle actions | Each turn = 1 prompt |
 | Verify writes | Trust return codes | Redundant verification |
 
-## 🚨 ABSOLUTE CONSTRAINTS
+## ABSOLUTE CONSTRAINTS
 - **NO DEEP LINKING**: Skills MUST NOT link to other Skills via file paths. Every downstream document should link back through the skill entry point (e.g., `references/xyz.md`, `scripts/foo.py`) so Claude starts at `SKILL.md` and navigates downwards without needing `../`.
 - **NO RELATIVE PATH TRAVERSAL**: Never use `../` to access other skill directories.
 - **ZERO GLUE**: Avoid pass-through functions; call implementation directly.
@@ -763,8 +1065,9 @@ Main Agent → Subagent (override) → Skill (temporary)
 - **DOCUMENTATION SYNC**: ALWAYS keep CLAUDE.md and README.md up to date after any change. These files are the single source of truth for developers.
 - **READ BEFORE CHANGE**: ALWAYS read the entire docs content before making any changes. This includes all files in docs/, CLAUDE.md, README.md, and any relevant documentation files.
 
-### Clarifying examples (prevents common mistakes)
-✅ Allowed: orchestration via Command/Agent using tool calls
+### Clarifying Examples (prevents common mistakes)
+
+**Allowed: orchestration via Command/Agent using tool calls**
 ```yaml
 ---
 description: "Orchestrate analysis + build + tests"
@@ -772,12 +1075,12 @@ allowed-tools: [Skill(analyzer), Skill(builder), Skill(tester), Bash]
 ---
 ```
 
-❌ Forbidden: Skill A referencing Skill B's files by path
+**Forbidden: Skill A referencing Skill B's files by path**
 ```markdown
 See ../other-skill/references/rules.md
 ```
 
-✅ Allowed: Skill A references only its own resources
+**Allowed: Skill A references only its own resources**
 ```markdown
 See [references/rules.md](references/rules.md)
 ```

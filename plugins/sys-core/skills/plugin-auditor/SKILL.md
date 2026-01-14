@@ -1,5 +1,5 @@
 ---
-name: audit-plugins
+name: plugin-auditor
 description: "Comprehensive plugin auditing for compliance with marketplace best practices. MUST Use when validating, refactoring, or improving plugin quality. Do not use for creating new plugins, scaffolding components, or development tasks."
 allowed-tools: [Read, Grep, Glob, Bash]
 ---
