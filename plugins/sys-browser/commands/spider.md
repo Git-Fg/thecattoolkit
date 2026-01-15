@@ -3,6 +3,7 @@ name: spider
 description: "Deep crawl (depth=20) to map a documentation site structure."
 argument-hint: "<url>"
 allowed-tools: Bash
+disable-model-invocation: true
 ---
 
 # Command: /spider

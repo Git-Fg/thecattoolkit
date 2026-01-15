@@ -6,9 +6,9 @@
 
 This plugin follows 2026 Universal Agentic Runtime standards:
 
-- **[Toolkit Registry Standards](../sys-core/skills/toolkit-registry/SKILL.md)** - Component management
-- **[Execution Core](../sys-builder/skills/execution-core/SKILL.md)** - Behavioral protocols
-- **[Security Standards](../sys-core/skills/audit-security/SKILL.md)** - Security patterns
+- **[Toolkit Registry Standards](../sys-core/skills/adhering-standards/SKILL.md)** - Component management
+- **[Execution Core](../sys-builder/skills/adhering-execution-standard/SKILL.md)** - Behavioral protocols
+- **[Security Standards](../sys-core/skills/auditing-security/SKILL.md)** - Security patterns
 
 For component creation, use:
 - `use sys-core` → `toolkit-registry` skill
@@ -20,9 +20,7 @@ Optimizes AI models for deployment on mobile devices and edge environments throu
 
 ## Skills
 
-
-
-### edge-ai-management
+### experimenting-edge
 **Model management for resource-constrained environments**
 
 - Lazy loading models on-demand
@@ -30,17 +28,9 @@ Optimizes AI models for deployment on mobile devices and edge environments throu
 - Memory pressure detection and LRU eviction
 - Sliding window with semantic chunking
 - Battery-optimized batch inference
-
-### mobile-optimization
-**Battery-aware and thermal-optimized processing**
-
-- Battery state monitoring and power plans
-- Adaptive quality settings based on performance
 - Thermal management and throttling
-- Power-efficient batch processing
-- Background task deferral
 
-### offline-sync
+### synchronizing-data
 **Encrypted offline-first synchronization**
 
 - User-key encrypted local storage
@@ -53,11 +43,10 @@ Optimizes AI models for deployment on mobile devices and edge environments throu
 
 ```python
 # Optimize AI model for mobile deployment
-from edge_ai import EdgeAIManager, MobileOptimizer, OfflineSync
+from edge_ai import EdgeAIManager
 
 # Initialize edge optimization
 manager = EdgeAIManager()
-mobile_opt = MobileOptimizer()
 
 # Load model with mobile optimization
 model = manager.load_model(
@@ -70,10 +59,7 @@ model = manager.load_model(
 )
 
 # Run with battery awareness
-result = mobile_opt.run_inference(
-    input_data=data,
-    quality_adaptive=True
-)
+result = model.generate(input_data)
 ```
 
 ## Roadmap Alignment
@@ -99,23 +85,14 @@ result = mobile_opt.run_inference(
 
 ## Usage
 
-Use `/ingest` or `gitingest` for:
-- Repository analysis for AI consumption
-- Code review automation
-- Documentation generation
-- Vulnerability scanning
-
-Use `edge-ai-management` for:
+Use `experimenting-edge` for:
 - Mobile AI application optimization
 - Edge device deployment
 - Resource-constrained environments
-
-Use `mobile-optimization` for:
 - Battery-aware processing
 - Thermal management
-- Performance optimization
 
-Use `offline-sync` for:
+Use `synchronizing-data` for:
 - Offline-first data storage
 - Encrypted local databases
 - Conflict-free sync

@@ -3,6 +3,7 @@ name: crawl
 description: "Advanced crawling with configuration options (depth, format, etc)."
 argument-hint: "<url> [options]"
 allowed-tools: Bash
+disable-model-invocation: true
 ---
 
 # Command: /crawl

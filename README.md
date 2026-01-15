@@ -6,18 +6,24 @@ Plugin marketplace for **The Cat Toolkit** - Vibecoding plugins for autonomous A
 
 ---
 
-## Available Plugins
+## Plugin Architecture
 
-| Plugin | Purpose |
-|--------|---------|
-| **sys-core** | Infrastructure and Safety layer for plugin management, security auditing, and toolkit maintenance |
-| **sys-builder** | Development & Engineering domain for software development, architecture design, planning, execution, and testing |
-| **sys-cognition** | AI/ML & Cognitive domain for context engineering, memory systems, reasoning, and prompt engineering |
-| **sys-research** | Research & Knowledge domain for research tools, knowledge retrieval, codebase analysis, and gitingest |
-| **sys-edge** | Edge & Tooling domain for edge AI, mobile optimization, offline-first systems, and Python tooling |
-| **sys-multimodal** | Media & Multimodal domain for video editing, media processing, multimodal AI, and data visualization |
-| **sys-nodejs** | Node.js domain for JavaScript/TypeScript development, build tools, and package management |
-| **llm-application-dev** | LLM Applications domain for RAG systems, vector databases, hybrid search, and semantic retrieval |
+The Cat Toolkit organizes capabilities into domain-specific plugins:
+
+| Plugin | Domain | Focus |
+|:-------|:-------|:------|
+| **sys-core** | Infrastructure | Validation, scaffolding, hooks, MCP, security |
+| **sys-builder** | Engineering | Architecture, planning, execution, testing, TDD |
+| **sys-cognition** | Reasoning | Thinking frameworks, prompt engineering, analysis (directly actionable) |
+| **sys-agents** | Agent Development | Context engineering, memory systems, orchestration (requires implementation) |
+| **sys-research** | Knowledge | Research tools, documentation, codebase analysis |
+| **sys-multimodal** | Media | Vision, audio, video processing |
+| **sys-edge** | Edge/Mobile | Optimization, offline-first, resource-constrained environments |
+| **sys-nodejs** | Node.js | JavaScript/TypeScript development, build tools |
+| **sys-browser** | Browser Automation | Web interaction, crawling, testing |
+| **llm-application-dev** | LLM Applications | RAG systems, vector databases, hybrid search, semantic retrieval |
+
+**Key Distinction:** `sys-cognition` provides directly actionable skills (prompt patterns, reasoning frameworks), while `sys-agents` covers skills requiring external frameworks (Vector DBs, GraphRAG, multi-agent architectures).
 
 ---
 

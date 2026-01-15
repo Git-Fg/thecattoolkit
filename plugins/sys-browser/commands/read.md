@@ -3,6 +3,7 @@ name: read
 description: "Instant readout of a web page URL. Zero-latency context fetching."
 argument-hint: "<url>"
 allowed-tools: Bash
+disable-model-invocation: true
 ---
 
 # Command: /read

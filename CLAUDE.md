@@ -17,39 +17,25 @@ These two principles are the foundation of everything. Internalize them. Every d
 
 ## Principle 1: The Robot Path Analogy (Degrees of Freedom)
 
-**Think of Claude as a robot exploring a path. Your job is to provide the right level of guidance based on the terrain.**
+**Think of Claude as a robot exploring a path. Match guidance specificity to terrain fragility.**
 
-```
-NARROW BRIDGE (Cliffs on both sides)
-     |
-  [ROBOT]  ---- only one safe way forward
-     |
-   CLIFF
+**Low Freedom (Narrow Bridge):** Critical operations, fragile systems, high-stakes tasks. Provide specific guardrails, exact sequences, no deviation allowed.
 
-When to use: Critical operations, fragile systems, high-stakes tasks
-Provide: Specific guardrails, exact sequences, no deviation allowed
-Examples: Database migrations, security validations, production deployments
-Freedom level: LOW (Protocol)
-```
+**High Freedom (Open Field):** Creative tasks, context-dependent decisions, exploration. Provide general direction and destination, let Claude find the best route.
 
-```
-   /---> Path A
-  /
-[ROBOT] ---> Path B  ---- many valid routes
-  \
-   \---> Path C
+| Level | Use Case | Pattern | Examples |
+|:-------|:---------|:--------|:---------|
+| **Protocol (Low)** | Exact steps, no deviation | Critical operations | Database migrations, security validations |
+| **Guided (Medium)** | Pattern-based with adaptation | Best practices | Code reviews, architectural guidance |
+| **Heuristic (High)** | Broad principles, max flexibility | Creative tasks | Brainstorming, innovation |
 
-When to use: Creative tasks, context-dependent decisions, exploration
-Provide: General direction, destination, let Claude find the best route
-Examples: Code reviews, architectural design, brainstorming, refactoring
-Freedom level: HIGH (Heuristic)
-```
+**The Mistake:** Narrow-bridge instructions for open-field tasks (wastes tokens, stifles solutions) OR open-field instructions for narrow-bridge tasks (causes disasters).
 
-**The Mistake:** Providing narrow-bridge instructions for open-field tasks (wastes tokens, stifles better solutions) OR providing open-field instructions for narrow-bridge tasks (causes disasters).
+---
 
-**Examples:**
+### Examples
 
-**NARROW BRIDGE (Low freedom) - Correct:**
+**NARROW BRIDGE (Low Freedom) - Correct:**
 ```markdown
 ## Database Migration Protocol
 
@@ -65,7 +51,7 @@ CRITICAL: Run in EXACT this order. Do not skip steps.
 If ANY step fails, STOP immediately. Do not proceed.
 ```
 
-**OPEN FIELD (High freedom) - Correct:**
+**OPEN FIELD (High Freedom) - Correct:**
 ```markdown
 ## Code Review Guidance
 
@@ -118,21 +104,17 @@ The "Delta" = The gap between general knowledge and YOUR specific requirements.
 
 Before adding ANY instruction, ask these three questions:
 
-```
-┌─────────────────────────────────────────────────────────┐
-│  1. "Does Claude really need this explanation?"          │
-│     If yes -> Is there a shorter way to say it?         │
-│     If no -> DELETE it                                  │
-├─────────────────────────────────────────────────────────┤
-│  2. "Can I assume Claude knows this?"                    │
-│     If yes -> Don't explain it                          │
-│     If no -> Document ONLY the specific requirement     │
-├─────────────────────────────────────────────────────────┤
-│  3. "Does this paragraph justify its token cost?"       │
-│     Every token competes with conversation history       │
-│     Is this more important than context from the user?  │
-└─────────────────────────────────────────────────────────┘
-```
+1. **"Does Claude really need this explanation?"**
+   - If yes: Is there a shorter way to say it?
+   - If no: DELETE it
+
+2. **"Can I assume Claude knows this?"**
+   - If yes: Don't explain it
+   - If no: Document ONLY the specific requirement
+
+3. **"Does this paragraph justify its token cost?"**
+   - Every token competes with conversation history
+   - Is this more important than context from the user?
 
 ### Examples: Documenting the Delta
 
@@ -199,45 +181,35 @@ SELECT statements retrieve data from tables...
 
 ### The Delta Mental Model
 
-```
-General Knowledge (FREE - Claude already has):
-├─ What is SQL?
-├─ How to write a SELECT query
-├─ What is a PDF file?
-├─ How to use Git
-└─ Common programming patterns
+**General Knowledge (FREE - Claude already has):**
+- What is SQL? How to write a SELECT query
+- What is a PDF file? How to use Git
+- Common programming patterns
 
-Project-Specific Requirements (WORTH TOKENS):
-├─ THIS project's commit format
-├─ THIS project's naming conventions
-├─ THIS project's security policies
-└─ THIS project's workflow requirements
+**Project-Specific Requirements (WORTH TOKENS):**
+- THIS project's commit format
+- THIS project's naming conventions
+- THIS project's security policies
+- THIS project's workflow requirements
 
-Your Skill should contain ONLY the second part.
-```
+**Your Skill should contain ONLY the second part.**
 
 **Remember: Claude is talking to you. Claude can read code. Claude can reason. Claude is not a blank slate. Claude is a senior engineer who happens to not know YOUR project's specific conventions.**
 
 ---
 
-# TERMINOLOGY (TOKEN, INDEXING, INVOCATION)
+# TERMINOLOGY (PROJECT-SPECIFIC TERMS)
 
-This document uses a few overloaded terms. These definitions are the canonical meaning.
-
-## Token / Context Concepts
-- **Indexing cost**: Tokens included at startup to *describe what exists* (e.g., metadata such as `name` + `description`). This affects discovery/selection.
-- **Execution cost**: Tokens consumed when a component actually runs (a command prompt is injected; a Skill's `SKILL.md` is read/loaded; scripts produce output).
-- **Retention**: Whether something remains present/visible for later selection without re-reading (practically: whether metadata stays in the "available tool catalog").
-
-## Invocation Concepts
-- **Manual invocation**: User explicitly runs something via the `/` menu.
-- **Model invocation**: Claude triggers a command/skill programmatically via the `Skill(...)` tool.
-- **Auto-discovery**: Claude selects a Skill/Command based on metadata keywords in `description` (when allowed and visible).
+This document uses a few project-specific terms. These definitions are the canonical meaning.
 
 ## Frontmatter Controls (high-impact)
-- `disable-model-invocation: true`: Prevents model invocation *and removes the item's metadata from the model’s catalog*, which also reduces unintended auto-selection.
-- `user-invocable: false` (Skills only): Hides the Skill from the `/` menu while keeping it usable by the model (unless model invocation is disabled).
-- `context: fork` (Skills only): Runs skill in isolated context without full subagent overhead. Preferred over spawning subagents. Optionally, specify `agent: <agent-name>` to assign a custom agent configuration.
+- `disable-model-invocation: true`: Prevents model invocation *and removes from catalog*, reducing unintended auto-selection.
+- `user-invocable: false` (Skills only): Hides from `/` menu while keeping usable by model.
+- `context: fork` (Skills only): Runs in isolated context without subagent overhead. Optionally specify `agent: <agent-name>`.
+
+## Discovery & Selection
+- **Auto-discovery**: Claude selects Skills based on `description` keywords (when allowed and visible).
+- **Model invocation**: Claude triggers via `Skill(...)` tool programmatically.
 
 ---
 
@@ -334,21 +306,7 @@ claude --plugin-dir ./plugins/sys-cognition
 claude --plugin-dir ./plugins/sys-core
 ```
 
-## Plugin Architecture Quick Reference
-
-The Cat Toolkit is a **plugin marketplace** with domain-specific plugins:
-
-| Plugin | Domain | Focus |
-|:-------|:-------|:------|
-| **sys-core** | Infrastructure | Validation, scaffolding, hooks, MCP, security |
-| **sys-builder** | Engineering | Architecture, planning, execution, testing, TDD |
-| **sys-cognition** | Reasoning | Thinking frameworks, prompt engineering, analysis |
-| **sys-research** | Knowledge | Research tools, documentation, codebase analysis |
-| **sys-multimodal** | Media | Vision, audio, video processing |
-| **sys-edge** | Edge/Mobile | Optimization, offline-first, resource-constrained |
-| **sys-nodejs** | Node.js | JavaScript/TypeScript development, build tools |
-| **sys-agents** | Agent Development | Context engineering, memory systems, orchestration |
-| **sys-browser** | Browser Automation | Web interaction, crawling, testing |
+> See [README.md](README.md#plugin-architecture) for complete plugin architecture reference.
 
 ---
 
@@ -384,25 +342,9 @@ The Cat Toolkit is a **plugin marketplace** with domain-specific plugins:
 
 *For deep architectural details, consult the [Deep Dive Guides](docs/REFERENCES.md).*
 
-## 3.1 Plugin Architecture
+> See [README.md](README.md#plugin-architecture) for complete plugin architecture reference.
 
-The Cat Toolkit organizes capabilities into domain-specific plugins:
-
-| Plugin | Domain | Focus |
-|:-------|:-------|:------|
-| **sys-core** | Infrastructure | Validation, scaffolding, hooks, MCP, security |
-| **sys-builder** | Engineering | Architecture, planning, execution, testing, TDD |
-| **sys-cognition** | Reasoning | Thinking frameworks, prompt engineering, analysis (directly actionable) |
-| **sys-agents** | Agent Development | Context engineering, memory systems, orchestration (requires implementation) |
-| **sys-research** | Knowledge | Research tools, documentation, codebase analysis |
-| **sys-multimodal** | Media | Vision, audio, video processing |
-| **sys-edge** | Edge/Mobile | Optimization, offline-first, resource-constrained environments |
-
-### sys-cognition vs sys-agents (Key Distinction)
-- **sys-cognition**: Skills that are **directly actionable** for any project (prompt patterns, reasoning frameworks, meta-prompts)
-- **sys-agents**: Skills that **require external frameworks or code implementation** (Vector DBs, GraphRAG, multi-agent architectures)
-
-## 3.2 Core Architecture Summary (2026 Skills-First)
+## 3.1 Core Architecture Summary (2026 Skills-First)
 
 | Component | Role | Prominence | Reference Guide |
 |:----------|:-----|:-----------|:----------------|
@@ -541,57 +483,10 @@ What works perfectly for Opus might need more detail for Haiku. If you plan to u
    - Use for: All domain knowledge and procedures
 
 2. **Fork (Isolation)**
-   - Lightweight alternative to agents
    - Use `context: fork` in skills for isolation
-   - Cost: 3× inline (vs 20K+ tokens for full subagents)
+   - Cost: 3× inline, free as tool call (vs 20K+ tokens + 1 prompt quota for subagents)
    - Use for: Heavy operations (>10 files), parallel processing
-   - **Custom Agents**: Optionally specify `agent: <agent-name>` to assign specialized rules. Default is usually sufficient.
-
-### Subagent Crisis & Token Cost Evidence (January 2026)
-
-**CRITICAL:** Subagents are almost always a mistake within standard plan constraints.
-
-**The 5-Hour Rule:**
-- A Pro session provides ~200k tokens (5 hours of typical usage)
-- Subagent spawn costs: 20K-25K tokens to "say hello"
-- Full system prompt reinstantiated (not cached)
-- CLAUDE.md re-read in each subagent
-- MCP/project context duplicated
-- **Real-World Impact:** Task to refactor >1000 LOC script created >40 parallel agents, each re-reading entire script. Result: Session exhaustion in 30-90 minutes instead of 5 hours.
-
-**Quota Impact (Z.AI/Subscription Models):**
-- Subagents consume **1 prompt quota** per spawn (not a free tool call)
-- A prompt allows 15-20 tool calls for free
-- Spawning 10 subagents = 10 prompts consumed = 150-200 potential tool calls wasted
-- **Use `context: fork` instead:** Runs as isolated skill context, counts as tool call (free within prompt), not as new prompt
-
-**Examples:**
-
-**BAD (Subagent for simple task):**
-```yaml
-# Wastes 25k tokens + 1 prompt quota
-Task(subagent_type="general-purpose", prompt="Extract data from this CSV")
-```
-
-**GOOD (Inline skill):**
-```yaml
-# Costs ~1x, free within prompt
-# Just do the work directly in context
-Read the CSV and extract the required data.
-```
-
-**GOOD (Fork for isolation when needed):**
-```yaml
----
-name: processing-batch
-description: Processes multiple files in isolated context
-context: fork
----
-# Costs 3x inline, but FREE as tool call within prompt
-# Avoids the 1 prompt quota penalty of subagents
-```
-
-**Official Recommendation:** Use main conversation when frequent back-and-forth needed. Use subagents ONLY when parallelization benefit clearly exceeds 20K token startup cost AND the subscription "prompt cost" overhead (subagents consume prompts, not free tool calls). Prefer `context: fork` for isolation needs.
+   - **CRITICAL:** Subagents waste 25k tokens + 1 prompt quota per spawn. → See [Subagent Crisis Evidence](docs/SUBAGENT_CRISIS.md)
 
 3. **Commands (Deprecated)**
    - Only for dynamic context injection

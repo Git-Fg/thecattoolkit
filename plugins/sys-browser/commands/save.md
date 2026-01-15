@@ -3,6 +3,7 @@ name: save
 description: "Downloads a web page and saves it as a clean Markdown file."
 argument-hint: "<url> <path>"
 allowed-tools: Bash, Write
+disable-model-invocation: true
 ---
 
 # Command: /save
