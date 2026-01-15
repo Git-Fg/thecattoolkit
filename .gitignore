@@ -13,3 +13,5 @@
 # Archive
 .attic/
 .cattoolkitscripts/__pycache__/
+
+__pycache__
