@@ -229,8 +229,8 @@ This document uses a few project-specific terms. These definitions are the canon
 - **Paths**: Unix forward slashes `/` only.
 
 ## 1.3 Hygiene & Pollution Control
-- **Run `uv run scripts/toolkit-analyzer.py` after EVERY edit**
-- **If fixable issues detected:** run `uv run scripts/toolkit-analyzer.py --fix`
+- **Run `uv run scripts/toolkit.py` after EVERY edit**
+- **If fixable issues detected:** run `uv run scripts/toolkit.py --fix`
 - **Pollution Control:** ANY external/temp file (PLAN.md, PROMPTS.md) MUST be in `.cattoolkit/`. NEVER pollute root.
 - **Attic:** Move deprecated code to `.attic/` instead of deleting.
 - **Relative Paths:** Use relative paths from skill root within skills.
@@ -239,7 +239,7 @@ This document uses a few project-specific terms. These definitions are the canon
 ## 1.4 Local Development Workspace (`.claude/`)
 The `.claude/` folder at the repository root is a **local workspace** for plugin/marketplace development:
 - Contains local settings, rules, and temporary development files
-- **Excluded from validation** by `toolkit-analyzer.py`
+- **Excluded from validation** by `toolkit.py`
 - NOT part of the distributed marketplace - kept in `.gitignore`
 - Use for: local `settings.json`, `rules/*.md`, scratch files during development
 
@@ -292,10 +292,10 @@ claude  # Restart and verify with /status
 uv sync
 
 # Validate all plugins (run after EVERY edit)
-uv run scripts/toolkit-analyzer.py
+uv run scripts/toolkit.py
 
 # Auto-fix fixable validation issues
-uv run scripts/toolkit-analyzer.py --fix
+uv run scripts/toolkit.py --fix
 
 # Run multi-model test suite
 bash tests/multi-model/run-all-tests.sh
@@ -368,6 +368,8 @@ claude --plugin-dir ./plugins/sys-core
 - "Does Claude need this explanation?"
 - "Can Claude infer this?"
 - "Does this justify its token cost?"
+
+> **TDD for Skills**: See [docs/guides/skills.md#52-test-driven-development-for-skills](docs/guides/skills.md#52-test-driven-development-for-skills) for the Test-Driven Development methodology specifically for skill authoring (distinct from code testing TDD).
 
 ### Core Authoring Principles (Anthropic Best Practices)
 
@@ -669,6 +671,8 @@ Avoid redundant READMEs. Follow this strict mapping:
 
 **Format:** Capability + Trigger + Negative Constraint
 
+> **CRITICAL**: See [docs/guides/skills.md#62-the-workflow-summarization-trap-critical](docs/guides/skills.md#62-the-workflow-summarization-trap-critical) for the critical warning about descriptions that summarize workflow (causes agents to skip reading the full skill).
+
 **Atomicity & Robustness:** Skills Description must target optimal semantics, be sufficiently focused on a task to be activated autonomously, and handle the full lifecycle of that intent.
 
 **Example:**
@@ -710,7 +714,7 @@ description: "Extracts structured invoice data from PDF files. Use when user men
 
 **Workflow:**
 1. **EXECUTE** - Perform task
-2. **VALIDATE** - Run `toolkit-analyzer` or lint/test
+2. **VALIDATE** - Run `toolkit` or lint/test
 3. **CORRECT** - If error, analyze and fix
 4. **RE-VALIDATE** - Repeat (max 3 iterations)
 5. **RETURN** - Only when clean
@@ -719,7 +723,7 @@ description: "Extracts structured invoice data from PDF files. Use when user men
 ````
 Validator Progress:
 - [ ] Execute: Perform task
-- [ ] Validate: Run toolkit-analyzer or lint/test
+- [ ] Validate: Run toolkit or lint/test
 - [ ] If error: Analyze and fix issues
 - [ ] Re-validate: Run validation again (max 3 iterations)
 - [ ] Return: Only when all validation passes
@@ -728,10 +732,10 @@ Validator Progress:
 **Example:**
 ```bash
 # After editing a skill
-uv run scripts/toolkit-analyzer.py
+uv run scripts/toolkit.py
 
 # If errors found, fix and re-run
-uv run scripts/toolkit-analyzer.py
+uv run scripts/toolkit.py
 
 # Repeat until clean (max 3 iterations)
 # Only then commit/push changes
@@ -955,6 +959,7 @@ When naming a skill, ask:
 ## ABSOLUTE CONSTRAINTS
 - **NO DEEP LINKING**: Skills MUST NOT link to other Skills via file paths. Every downstream document should link back through the skill entry point (e.g., `references/xyz.md`, `scripts/foo.py`) so Claude starts at `SKILL.md` and navigates downwards without needing `../`.
 - **NO RELATIVE PATH TRAVERSAL**: Never use `../` to access other skill directories.
+- **NO CROSS-PLUGIN IMPORTS**: Python scripts MUST NOT import from sibling plugins via `sys.path` manipulation. This violates Claude Code's plugin architecture and breaks marketplace distribution. See [Cross-Plugin Import Anti-Pattern](#cross-plugin-import-anti-pattern-critical) below.
 - **ZERO GLUE**: Avoid pass-through functions; call implementation directly.
 - **FILE MIGRATION SAFETY**: When migrating content from a file, ONLY delete the source file AFTER all content has been migrated AND triple verified. This means: (1) verify migration is complete, (2) verify migrated content is correct, (3) verify nothing was lost in translation.
 - **DOCUMENTATION SYNC**: ALWAYS keep CLAUDE.md and README.md up to date after any change. These files are the single source of truth for developers.
@@ -985,6 +990,88 @@ See [references/rules.md](references/rules.md)
 - **Interactive Intake**: "Ask the user..." → Infer from context/files first.
 - **Redundant README**: Use `SKILL.md` (passively indexed) instead of `README.md` for skills.
 
+## Cross-Plugin Import Anti-Pattern (CRITICAL)
+
+**Violation:** Cross-plugin Python imports via `sys.path` manipulation.
+
+**Why This Is Forbidden:**
+1. **Breaks Plugin Architecture**: Claude Code plugins are designed to be self-contained, independently installable units
+2. **Violates Path Traversal Limitations**: Official docs state: "Plugins cannot reference files outside their copied directory structure. Paths that traverse outside the plugin root will not work after installation."
+3. **Marketplace Distribution Fails**: Cross-plugin imports break when plugins are installed via marketplace
+4. **Brittle Directory Assumptions**: Assumes specific directory structure (e.g., 4 levels up)
+
+### FORBIDDEN: Cross-Plugin Import Pattern
+
+```python
+# ❌ WRONG - Violates plugin architecture
+import sys
+from pathlib import Path
+
+# Climbing directory tree to import from sibling plugin
+toolkit_root = Path(__file__).resolve().parents[4]
+multimodal_utils = toolkit_root / "plugins" / "sys-multimodal"
+sys.path.append(str(multimodal_utils))
+
+from utils.rendering import PDFToImagesConverter
+```
+
+**Why This Fails:**
+- Breaks when plugins are cached (external files not copied)
+- Brittle directory assumptions (4 levels up)
+- Not used in any official plugin
+- Violates "Path Traversal Limitations"
+
+### CORRECT: Plugin Independence Pattern
+
+```python
+# ✅ CORRECT - Self-contained implementation
+# In plugins/sys-research/skills/architecting-slides/scripts/rendering.py
+# (Copy the shared class into each plugin that needs it)
+
+from pathlib import Path
+from typing import List, Optional
+
+class PDFToImagesConverter:
+    """Converts PDF presentations to images."""
+    # Full implementation here...
+```
+
+```python
+# In plugins/sys-research/skills/architecting-slides/scripts/pdf_to_images.py
+from .rendering import PDFToImagesConverter
+```
+
+### ALTERNATIVE: Symlink Pattern (Development Only)
+
+If you must share code during development:
+
+```bash
+# In sys-research plugin
+cd plugins/sys-research/skills/architecting-slides/scripts/
+ln -s ../../sys-multimodal/utils/rendering.py ./rendering.py
+```
+
+```python
+# Symlinked file is followed during plugin caching
+from rendering import PDFToImagesConverter
+```
+
+**Note:** Symlinks are honored during plugin caching, so shared code gets copied into each plugin's cache.
+
+### Decision Matrix
+
+| Need | Solution | Why |
+|:---|:---|:---|
+| Marketplace distribution | **Full Independence** | Each plugin self-contained |
+| Development environment | **Symlinks** | Shared code copied during caching |
+| Complex shared utilities | **Separate Package** | Proper Python package with `uv add` |
+
+### Verification
+
+Official documentation confirms this pattern:
+- [Plugins Reference - Path Traversal Limitations](https://code.claude.com/docs/en/plugins-reference#path-traversal-limitations)
+- [Official Plugins Repository](https://github.com/anthropics/claude-plugins-official) - No cross-plugin imports found
+
 ---
 
 # REFERENCES
@@ -1000,4 +1087,4 @@ See [references/rules.md](references/rules.md)
 
 ---
 
-**Validation:** Run `uv run scripts/toolkit-analyzer.py` after changes.
+**Validation:** Run `uv run scripts/toolkit.py` after changes.

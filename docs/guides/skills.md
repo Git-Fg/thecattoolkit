@@ -321,6 +321,104 @@ Every instruction you add displaces something else. Optimize for:
 **The "Assumption Test":**
 If you can reasonably assume Claude knows it from training, don't include it. If it's specific to your domain, do include it.
 
+## 2.1 The Evidence-First Principle
+
+### The Golden Rule
+
+**NEVER claim without file reference or shell output evidence.**
+
+### Why This Matters
+
+**Bad Pattern** (Unsubstantiated claims):
+```markdown
+## Code Analysis
+
+The codebase has several issues:
+- Poor error handling in many files
+- Inconsistent naming throughout
+- Missing tests in critical modules
+
+# Problem: Claude must search entire codebase to verify
+```
+
+**Good Pattern** (Evidence-backed):
+```markdown
+## Code Analysis
+
+Issues found (with evidence):
+
+**Error Handling** (3 files):
+- `src/auth.py:45` - No error handling for network failures
+- `src/db.py:120` - Missing exception for connection timeout
+- `src/api.py:78` - Uncaught KeyError in user lookup
+
+**Naming Inconsistency** (2 instances):
+- `utils/helper.py` vs `utils/helpers.py` (duplicate modules)
+- `getUserData()` vs `get_user_data()` (inconsistent convention)
+
+**Test Coverage** (shell output):
+```bash
+$ pytest --cov=src
+---------- coverage: platform darwin ----------
+src/auth.py: 45% (missing: 23, 45, 67)
+src/db.py: 30% (missing: 12, 45, 78, 120)
+```
+```
+
+### Evidence Types
+
+**1. File References** (Primary evidence):
+```markdown
+Issue found in `src/main.py:123`:
+```python
+def process_data(data):
+    return data.split(',')  # No validation
+```
+Fix: Add input validation
+```
+
+**2. Shell Output** (Validation evidence):
+```markdown
+Ran type check:
+```bash
+$ mypy src/
+src/main.py:45: error: Argument 1 has incompatible type
+```
+```
+
+**3. Grep Results** (Search evidence):
+```markdown
+Found 5 instances of deprecated pattern:
+```bash
+$ grep -r "os.system(" src/
+src/auth.py:23
+src/db.py:45
+...
+```
+```
+
+### When Evidence Isn't Possible
+
+**Acceptable exceptions**:
+- Architectural recommendations (forward-looking)
+- Best practices guidance (general principles)
+- Design proposals (not yet implemented)
+
+**In these cases, use qualifiers**:
+- "Consider adding..." (not "Add...")
+- "May benefit from..." (not "Requires...")
+- "Pattern suggests..." (not "Code shows...")
+
+### The Evidence Test
+
+Before making any claim, ask:
+1. **Can I point to a specific file?** → Provide line reference
+2. **Can I show command output?** → Paste shell results
+3. **Can I grep for it?** → Show search results
+4. **None of the above?** → Use qualifying language
+
+**Remember**: Claims without evidence waste Claude's verification tokens. Provide evidence upfront.
+
 ## 3. Autonomy Levels
 
 Match specificity to task fragility and variability using the **Criticality + Variability Framework**:
@@ -722,11 +820,86 @@ What works for Opus might need more detail for Haiku. Aim for instructions that 
 **Automated Validation:**
 ```bash
 # Run toolkit analyzer
-uv run scripts/toolkit-analyzer.py
+uv run scripts/toolkit.py
 
 # Fix common issues
-uv run scripts/toolkit-analyzer.py --fix
+uv run scripts/toolkit.py --fix
 ```
+
+## 5.2 Test-Driven Development for Skills
+
+### What is TDD for Skills?
+
+**Traditional TDD** (for code): Write test → Write code → Refactor
+**TDD for Skills**: Write usage scenario → Write skill → Test activation
+
+**Core Principle:** If you didn't watch an agent fail without the skill, you don't know if the skill teaches the right thing.
+
+This methodology was developed from obra/superpowers research and is distinct from code testing TDD.
+
+### The TDD-Skills Cycle
+
+**Phase 1: RED - Define Usage Scenario**
+1. Write example user request that should trigger this skill
+2. Document expected behavior/output
+3. Identify edge cases and constraints
+
+**Phase 2: GREEN - Implement Skill**
+1. Create frontmatter with optimized description
+2. Write protocol-based instructions
+3. Add validation checkpoints
+
+**Phase 3: REFACTOR - Optimize**
+1. Test activation across models (Haiku/Sonnet/Opus)
+2. Optimize description for discoverability
+3. Move details to references/ if >500 lines
+
+### Example: Building a PDF Parser Skill
+
+**RED Phase** (Usage Scenario):
+```
+User: "Can you extract data from these PDF invoices?"
+Expected: Skill activates, extracts text + tables, returns structured data
+Constraints: Text-based PDFs only, not scanned images
+```
+
+**GREEN Phase** (Implementation):
+```yaml
+---
+name: extracting-pdf-invoices
+description: "Extracts structured invoice data from PDF files. Use when user mentions invoices, PDF parsing, or extracting financial data. Handles multi-page invoices and varied layouts. Do not use for PDF generation or editing."
+allowed-tools: [Read, Bash, Write]
+---
+```
+
+```markdown
+## PDF Invoice Extraction Protocol
+
+1. Validate PDF is text-based (not scanned)
+2. Extract text using pdfplumber
+3. Parse tables into structured data
+4. Validate output has required fields
+5. Return structured JSON
+```
+
+**REFACTOR Phase** (Optimization):
+- Test: Does description trigger correctly? ✅
+- Optimize: Add "Do not use for image-only PDFs" constraint
+- Move: Table parsing details to `references/table-methods.md`
+
+### Success Criteria
+- [ ] Written usage scenario before implementation
+- [ ] Description triggers on scenario input
+- [ ] Tested across 3+ different user phrasings
+- [ ] Edge cases documented and constrained
+- [ ] Instructions follow Delta Standard
+- [ ] Validation checkpoints implemented
+
+### Related Methodologies
+
+**For CODE testing**: See [Test-Driven Development](../../plugins/sys-builder/skills/applying-code-standards/references/test-driven-development.md)
+
+**For SKILL authoring**: This section
 
 ## 6. Trigger Optimization (The SEO Formula)
 
@@ -858,7 +1031,120 @@ description: "Extracts raw text and tabular data from PDF invoices. Use when use
 - Does this skill compete with others unnecessarily?
 - Are boundaries clearly defined?
 
-## 6.1 Security & Safety Patterns
+## 6.2 The Workflow Summarization Trap (CRITICAL)
+
+### The Discovery
+
+Research from obra/superpowers revealed: **descriptions summarizing workflow cause agents to skip reading the full skill.**
+
+**The Problem:** When a description said "code review between tasks", Claude did ONE review even though the skill's flowchart clearly showed TWO reviews.
+
+**The Solution:** When changed to just triggering conditions, Claude correctly read the flowchart.
+
+### The Anti-Pattern
+
+**BAD** - Summarizes workflow:
+```yaml
+description: "Analyzes codebase by first scanning files, then checking dependencies, then reviewing quality, and finally generating reports."
+```
+
+**GOOD** - Capability only:
+```yaml
+description: "Orchestrates comprehensive codebase analysis across multiple dimensions. Use when user mentions full code review or comprehensive analysis. Do not use for single-file analysis."
+```
+
+### The Rule
+
+**Description = When to Use (triggers), NEVER What the Process Is**
+
+- **Frontmatter**: What it does (capability)
+- **SKILL.md**: How to do it (procedures/workflow)
+- **references/**: Detailed workflows (>500 lines)
+
+### Examples
+
+**Orchestrator Skills** (Multi-step workflows):
+```yaml
+# BAD (Workflow in description)
+description: "First analyzes structure, then reviews dependencies, then scans quality, then audits security, then generates report"
+
+# GOOD (Capability only)
+description: "Orchestrates comprehensive codebase analysis. Use when user mentions full audit or multi-dimensional review. Do not use for single-file analysis."
+```
+
+**Procedural Skills** (Single operation):
+```yaml
+# Still good - single step
+description: "Extracts text from PDF invoices. Use when parsing invoice documents. Do not use for PDF creation."
+```
+
+### Decision Test
+
+**Ask yourself**: "Does Claude need to know the STEPS at startup?"
+
+- **YES** (e.g., for discovery routing): Keep in description
+- **NO** (procedural detail): Move to SKILL.md
+
+**Remember**: The 3-tier loading model exists for a reason. Metadata = discovery, Instructions = execution.
+
+### 6.2.1 Description Pattern Decision Guide
+
+### Two Valid Patterns
+
+**Pattern A: Cat Toolkit Standard** (with modality markers)
+```yaml
+description: "Provides Universal Standard for TDD. PROACTIVELY Use when writing code or debugging. Modes: debug, review, refactor."
+```
+
+**Pattern B: obra/superpowers Standard** (simple SEO)
+```yaml
+description: "Extracts structured data from PDF invoices. Use when parsing invoice documents. Do not use for PDF creation."
+```
+
+### When to Use Each
+
+**Use Cat Toolkit Pattern (A) when:**
+- Skill requires explicit invocation guidance
+- Multiple operational modes exist
+- Critical/compliance skills that MUST be used
+- Internal toolkit infrastructure
+
+**Use obra/superpowers Pattern (B) when:**
+- Skill is user-facing/portable
+- Single-mode operation
+- Marketplace-distributed skills
+- General-purpose tools
+
+### Modality Markers Reference
+
+| Marker | Meaning | Usage | % of skills |
+|:-------|:--------|:------|:------------|
+| MUST | Critical requirement | Security, compliance, safety | 5-10% |
+| PROACTIVELY | Primary orchestration | Core workflow skills | 10-15% |
+| SHOULD | Recommended practice | Quality assurance | 15-20% |
+| (none) | Standard discovery | General tools | 60-70% |
+
+### Both Patterns Are VALID
+
+Choose based on use case, not ideology. Cat Toolkit patterns work everywhere (Anthropic, Z.AI, custom platforms).
+
+### Pattern Decision Flowchart
+
+```
+Is this skill CRITICAL for security/safety?
+├─ YES → Use MUST marker
+│         Example: "MUST Use when verifying security"
+└─ NO → Is this a CORE orchestration skill?
+        ├─ YES → Use PROACTIVELY marker
+        │         Example: "PROACTIVELY Use when handling queries"
+        └─ NO → Is this RECOMMENDED but not required?
+                ├─ YES → Use SHOULD marker
+                │         Example: "SHOULD Use when reviewing PRs"
+                └─ NO → Use standard pattern (no marker)
+                          Example: "Extracts data from PDF files"
+```
+
+## 6.3 Security & Safety Patterns
 
 ### Permission Management
 
@@ -1085,10 +1371,10 @@ Before deploying any skill, verify:
 **Phase 2: Machine Validation**
 ```bash
 # Run automated checks
-uv run scripts/toolkit-analyzer.py
+uv run scripts/toolkit.py
 
 # Fix common issues
-uv run scripts/toolkit-analyzer.py --fix
+uv run scripts/toolkit.py --fix
 ```
 
 **Phase 3: Cross-Model Testing**
@@ -1177,6 +1463,139 @@ allowed-tools: [Read, Grep]  # minimal required
 - One domain per Skill
 - Users think of it as single operation
 - Example: "Analyze PDF invoices" (one Skill), not "Process PDFs and generate reports" (two Skills)
+
+## 9.5 Visual Documentation Standards
+
+### When to Use Diagrams
+
+**USE diagrams for:**
+- Complex workflows (>5 steps)
+- Multi-system interactions
+- State machines with branching
+- Decision trees
+- Architecture overviews
+
+**AVOID diagrams for:**
+- Simple linear processes (3-4 steps)
+- Single-file structures
+- Lists or tables
+- Obvious sequences
+
+### DOT Diagram Standard
+
+**Why Graphviz DOT?**
+- Text-based (version control friendly)
+- Tool-agnostic (works everywhere)
+- GitHub renders natively
+- Scalable to any complexity
+
+### Diagram Template Structure
+
+```dot
+digraph diagram_name {
+    // Layout settings
+    rankdir=TB;  // TB=Top-Bottom, LR=Left-Right
+    splines=ortho;
+    nodesep=0.5;
+    ranksep=0.7;
+
+    // Node styles
+    node [shape=box, style=rounded, fontname="Arial"];
+
+    // Edge styles
+    edge [fontname="Arial", fontsize=10];
+
+    // Nodes
+    START [shape=circle, style=filled, fillcolor=lightgreen];
+    STEP1 [label="Step 1\nDescription"];
+    STEP2 [label="Step 2\nDescription"];
+    END [shape=doublecircle, style=filled, fillcolor=lightcoral];
+
+    // Edges
+    START -> STEP1 [label="trigger"];
+    STEP1 -> STEP2 [label="condition"];
+    STEP2 -> END [label="complete"];
+}
+```
+
+### Rendering
+
+```bash
+# Generate PNG
+dot -Tpng docs/diagrams/skill-lifecycle.dot -o docs/diagrams/skill-lifecycle.png
+
+# Generate SVG (scalable)
+dot -Tsvg docs/diagrams/skill-lifecycle.dot -o docs/diagrams/skill-lifecycle.svg
+```
+
+See [docs/diagrams/README.md](../../diagrams/README.md) for full documentation and templates.
+
+### Linking Diagrams in Documentation
+
+```markdown
+## Skill Creation Process
+
+See [visual workflow](../../diagrams/skill-lifecycle.dot) for detailed process diagram.
+
+Key steps:
+1. Identify need
+2. Write scenario
+...
+```
+
+### Accessibility
+
+**Always provide text alternative**:
+```markdown
+## Skill Creation Process
+
+[Diagram: 6-step workflow showing scenario→frontmatter→protocol→validate→optimize→deploy]
+
+**Text-based alternative**:
+1. Identify need from user requirements
+2. Write usage scenario (TDD-Skills RED phase)
+3. Create frontmatter with optimized description
+4. Write protocol-based instructions
+5. Test activation across models
+6. Optimize description if activation fails
+7. Deploy when activation passes
+```
+
+### Common Diagram Patterns
+
+**Sequence Flow** (Linear):
+```dot
+digraph sequence {
+    rankdir=LR;
+    A -> B -> C -> D;
+}
+```
+
+**Decision Tree** (Branching):
+```dot
+digraph decision {
+    rankdir=TB;
+    START -> DECISION;
+    DECISION -> YES [label="true"];
+    DECISION -> NO [label="false"];
+}
+```
+
+**State Machine** (Cyclical):
+```dot
+digraph state_machine {
+    rankdir=TB;
+    RED -> GREEN -> REFACTOR -> RED;
+}
+```
+
+### Best Practices
+
+- **Keep it simple**: Maximum 10-15 nodes per diagram
+- **Use consistent styling**: Same colors, shapes across diagrams
+- **Label edges clearly**: Every edge should explain the transition
+- **Provide text alternatives**: Accessibility and quick reference
+- **Version control**: .dot files are text, diffs work perfectly
 
 ## 10. Concrete Examples & Use Cases
 
@@ -1552,6 +1971,30 @@ See [references/supported-formats.md](references/supported-formats.md) for detai
 - Progressive disclosure: Overview first, details on demand
 - Self-contained: All resources linked from hub
 - Validated: Scripts for quality assurance
+
+### Critical: Script Independence
+
+**CRITICAL:** Python scripts in `scripts/` MUST NOT import from sibling plugins via `sys.path` manipulation.
+
+**Forbidden Pattern:**
+```python
+# ❌ WRONG - Breaks plugin architecture
+import sys
+from pathlib import Path
+
+toolkit_root = Path(__file__).resolve().parents[4]
+multimodal_utils = toolkit_root / "plugins" / "sys-multimodal"
+sys.path.append(str(multimodal_utils))
+
+from utils.rendering import PDFToImagesConverter
+```
+
+**Correct Patterns:**
+
+1. **Plugin Independence (Recommended):** Copy shared utilities into each plugin
+2. **Internal Symlinks:** Use symlinks within the plugin (honored during caching)
+
+See [Architecture Guide - Cross-Plugin Imports](architecture.md#cross-plugin-imports-forbidden) for complete details.
 ```
 
 ### Common Patterns Summary

@@ -290,7 +290,7 @@ capabilities:
 
 **Documentation:** `/CLAUDE.md` in each plugin
 **Pattern:** Enhanced (MUST/SHOULD/PROACTIVELY)
-**Validator:** `toolkit-analyzer.py`
+**Validator:** `toolkit.py`
 **Size Limit:** <500 lines (progressive disclosure recommended)
 **Security:** Explicit Bash whitelisting required
 

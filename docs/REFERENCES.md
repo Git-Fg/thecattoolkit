@@ -252,5 +252,5 @@ plugins/my-plugin/
 
 | Script | Usage |
 |:-------|:------|
-| `toolkit-analyzer` | `uv run scripts/toolkit-analyzer.py` |
+| `toolkit` | `uv run scripts/toolkit.py` |
 | `marketplace-validate` | `claude plugin validate .` |
