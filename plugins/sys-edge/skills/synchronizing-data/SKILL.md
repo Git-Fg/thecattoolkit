@@ -1,14 +1,12 @@
 ---
 name: synchronizing-data
-description: "Manages encrypted local storage, conflict resolution, incremental sync, and privacy-first data synchronization. Use when implementing offline-first sync for mobile AI applications."
+description: "Implements offline-first synchronization with encrypted local storage and intelligent conflict resolution for mobile AI applications. Use when building offline-capable mobile apps, implementing sync with privacy requirements, or managing encrypted local data persistence. Do not use for cloud databases, real-time websocket sync, or server-side data management."
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 
 # Offline-First Sync Protocol
 
-## Purpose
 
-Implements robust offline-first synchronization for AI applications with encrypted local storage, intelligent conflict resolution, and privacy-preserving sync patterns.
 
 ## Core Responsibilities
 

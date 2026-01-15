@@ -1,8 +1,8 @@
 ---
-description: "Intelligently architect project plans. Auto-detects complexity to route between autonomous and interactive modes."
-argument-hint: "<project description> [--interactive] [--force-autonomous] [--skip-discovery] [--output-dir <path>]"
-allowed-tools: [Skill(creating-plans)]
+description: "Intelligently architect project plans. Auto-detects complexity."
+argument-hint: "<project description> [--interactive] [--force-autonomous]"
+allowed-tools: [Skill(managing-plans)]
 disable-model-invocation: true
 ---
 
-Invoke `Skill(creating-plans)` with user input: "$ARGUMENTS".
+Invoke `Skill(managing-plans)` with intent "Create Plan" and input: "$ARGUMENTS".

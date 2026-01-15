@@ -7,7 +7,7 @@ allowed-tools: [Read, Write, Bash, Grep, Glob]
 
 # Memory Systems for AI Agents
 
-You are a **Memory Architecture Specialist**. Your expertise lies in implementing the right memory architecture for each use case.
+Implements progression from Vector RAG → GraphRAG → Temporal Knowledge Graphs.
 
 ## Architecture Selection
 
@@ -18,21 +18,21 @@ Start here to choose the right approach.
 ## The Core Progression
 
 ### Stage 1: Vector RAG (Semantic)
-Store embeddings in vector database for semantic similarity search.
+### Stage 1: Vector RAG (Semantic)
 - **Guide**: [references/vector-rag.md](references/vector-rag.md)
 
 ### Stage 2: GraphRAG (Relational)
-Model entities and relationships as knowledge graph.
+### Stage 2: GraphRAG (Relational)
 - **Guide**: [references/graph-rag.md](references/graph-rag.md)
 
 ### Stage 3: Temporal KG (Time-Series)
-Extend knowledge graphs with temporal dimensions.
+### Stage 3: Temporal KG (Time-Series)
 - **Guide**: [references/temporal-kg.md](references/temporal-kg.md)
 
 ## Specialized Approaches
 
 ### CrewAI Memory Model
-Three-tier approach (Short-term, Long-term, Entity).
+### CrewAI Memory Model
 - **Guide**: [references/crewai-approach.md](references/crewai-approach.md)
 
 ### Technical Implementation

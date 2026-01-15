@@ -4,13 +4,11 @@ description: "Expertise in narrative structure, academic storytelling, and LaTeX
 allowed-tools: [Read, Write, Edit, Bash]
 ---
 
-# Scientific Slides
+# Architecting Slides Protocol
 
 ## Overview
 
-Expertise in narrative structure, academic storytelling, and LaTeX Beamer presentations. Use when designing the flow of research talks and building technical slide decks with a focus on scientific rigor and narrative clarity.
 
-**CRITICAL DESIGN PHILOSOPHY**: Scientific presentations should be **NARRATIVELY COHERENT** and **RESEARCH-BACKED**. Focus on the story arc of the science.
 
 ## Quick Start
 
@@ -49,50 +47,15 @@ See `references/beamer_workflow.md` for documentation.
 
 ## Reference Library
 
-### Core Resources
-- **Structure**: `references/presentation_structure.md` - Story arcs, talk types, timing
-- **Design**: `references/slide_design_principles.md` - Typography, color, layout, accessibility
-- **Visualization**: `references/data_visualization_slides.md` - Chart types, simplification, recreation
+### Base Templates
+- **Structure**: [Presentation Structure](references/presentation_structure.md) - Story arcs, talk types, timing
+- **Design**: [Slide Design Principles](references/slide_design_principles.md) - Typography, color, layout, accessibility
+- **Visualization**: [Data Visualization](references/data_visualization_slides.md) - Chart types, simplification, recreation
 
 ### Advanced Guides
-- **Talk Types**: `references/talk_types_guide.md` - Conference, seminar, defense, grant, journal club specific guidance
-- **Beamer**: `references/beamer_guide.md` - LaTeX themes, customization, advanced features
-- **Visual Review**: `references/visual_review_workflow.md` - Validation, iteration, quality assurance
+- **Talk Types**: [Talk Types Guide](references/talk_types_guide.md) - Conference, seminar, defense, grant, journal club specific guidance
+- **Beamer**: [Beamer Guide](references/beamer_guide.md) - LaTeX themes, customization, advanced features
+- **Visual Review**: [Visual Review Workflow](references/visual_review_workflow.md) - Validation, iteration, quality assurance
 
-## Core Principles
 
-1. **Narrative-Driven**: Every talk must follow a clear story arc.
-2. **Research-Backed**: Use research-lookup to find 8-15 papers, cite properly.
-3. **Mathematical Precision**: Use LaTeX/Beamer for complex technical content.
-4. **Minimal Text**: 3-4 bullets, 4-6 words each, 24-28pt font minimum.
-5. **Structural Integrity**: Clear transitions between introduction, methods, results, and discussion.
-
-## Script Reference
-
-### scripts/slides_to_pdf.py
-Uses shared `sys-multimodal` utilities to combine images into a single PDF.
-```bash
-python scripts/slides_to_pdf.py slides/*.png -o presentation.pdf
-```
-
-### scripts/pdf_to_images.py
-Uses shared `sys-multimodal` utilities to convert PDF to images for review.
-```bash
-python scripts/pdf_to_images.py presentation.pdf slides
-```
-
-### scripts/validate_presentation.py
-Validates slide count, duration, and LaTeX compilation.
-```bash
-python scripts/validate_presentation.py presentation.pdf --duration 15
-```
-
-## Common Pitfalls
-
-- BAD **Lack of clear narrative arc** → GOOD **Follow established talk structures**
-- BAD **Dry, text-heavy slides** → GOOD **High-quality visuals from sys-multimodal**
-- BAD **Missing research context** → GOOD **Proper citations from research-lookup**
-- BAD **Inconsistent LaTeX formatting** → GOOD **Standard Beamer templates**
-
-**Remember**: A scientific talk is a story about discovery. Focus on the narrative flow as much as the data.
 

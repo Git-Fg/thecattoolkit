@@ -7,14 +7,6 @@ allowed-tools: Bash, Edit, Read, Write, Glob, Grep
 
 # Execution Core Standards
 
-## Core Purpose
-
-**This skill defines universal behavioral protocols for autonomous agent execution.**
-
-It answers: "HOW should agents behave?" (not "WHAT should they do").
-
-## Skill Contents
-
 **Behavioral Protocols:**
 - `references/observation-points.md` - Self-verification and evidence collection
 - `references/auth-gates.md` - Authentication error handling
@@ -24,9 +16,6 @@ It answers: "HOW should agents behave?" (not "WHAT should they do").
 ## Core Behavioral Standards
 
 ### 1. Uninterrupted Flow
-
-Agents execute autonomously without pausing for human input.
-
 **Protocol:** `references/observation-points.md`
 
 - Agents execute tasks sequentially
@@ -35,9 +24,6 @@ Agents execute autonomously without pausing for human input.
 - Continue to next task without waiting
 
 ### 2. Self-Verification
-
-Every task must be verified automatically.
-
 **Standard Pattern:**
 ```markdown
 **Self-Verification Results:**
@@ -48,9 +34,6 @@ Next: Continue to next task
 ```
 
 ### 3. Authentication Gates
-
-Authentication errors are NORMAL, not failures.
-
 **Protocol:** `references/auth-gates.md`
 
 1. **Recognize** auth gate (401, 403, "not authenticated")
@@ -102,13 +85,7 @@ Apply execution-core verification protocols during TDD
 Use execution-core handoff format for blockers
 ```
 
-## Key Principles
 
-1. **Behavioral Consistency:** All builder operations use same execution standards
-2. **Self-Sufficiency:** Agents verify own work programmatically
-3. **Evidence Collection:** All actions logged with verification
-4. **Non-Blocking:** No waiting loops or human checkpoints
-5. **Clear Handoffs:** Standard format when pausing execution
 
 ## 5. Human Interaction Policy (AskUserQuestion)
 
@@ -119,17 +96,4 @@ To ensure Uninterrupted Flow, the following policy applies to human interaction:
 
 This policy ensures that heavy implementation tasks are never interrupted, while initial discovery remains interactive.
 
-## Standards Hierarchy
 
-Execution-core sits at the BASE of the behavioral stack:
-
-```
-execution-core (HOW to behave)
-    ↓
-builder-core (WHAT documents to create + orchestration)
-software-engineering (WHAT code patterns to use)
-    ↓
-director/worker agents (Execute using these standards)
-```
-
-**Critical:** Execution-core is UNIVERSAL. All builder agents must follow these behavioral protocols.

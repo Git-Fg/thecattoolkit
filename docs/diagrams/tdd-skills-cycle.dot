@@ -1,0 +1,12 @@
+digraph tdd_skills {
+    rankdir=TB;
+    node [shape=box, style=filled, fontname="Arial-12"];
+
+    RED [fillcolor="#ffcccc", label="RED\nWrite Usage Scenario"];
+    GREEN [fillcolor="#ccffcc", label="GREEN\nImplement Skill"];
+    REFACTOR [fillcolor="#ccccff", label="REFACTOR\nOptimize"];
+
+    RED -> GREEN;
+    GREEN -> REFACTOR;
+    REFACTOR -> RED [label="new scenario"];
+}

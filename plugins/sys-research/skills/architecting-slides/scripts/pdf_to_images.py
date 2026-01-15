@@ -15,17 +15,7 @@ import os
 from pathlib import Path
 from typing import Optional, List
 
-# Add the toolkit plugin path to sys.path to allow importing from other plugins
-toolkit_root = Path(__file__).resolve().parents[4]
-multimodal_utils = toolkit_root / "plugins" / "sys-multimodal"
-if multimodal_utils.exists() and str(multimodal_utils) not in sys.path:
-    sys.path.append(str(multimodal_utils))
-
-try:
-    from utils.rendering import PDFToImagesConverter
-except ImportError:
-    print("Warning: Could not import from sys-multimodal. Ensure sys-multimodal utility is present.")
-    sys.exit(1)
+from rendering import PDFToImagesConverter
 
 
 

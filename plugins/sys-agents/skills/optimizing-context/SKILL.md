@@ -69,12 +69,7 @@ After:  "See /results/search_20260101.txt" (12 tokens)
 3. **Deterministic Serialization**: Same data = same tokens (sort JSON keys)
 4. **Explicit Breakpoints**: Mark cache boundaries
 
-**Cost Impact:**
-```
-Cached tokens:   $0.30 per 1M tokens
-Uncached tokens: $3.00 per 1M tokens
-Target hit rate: >80% = 70%+ cost savings
-```
+
 
 ## Session Management Summary
 
@@ -105,8 +100,6 @@ The **recitation technique** from Manus/Claude Code pushes objectives into recen
 3. **Recite objectives** - Rewrite todo to push global plan into model's recent attention
 
 ### Why It Works:
-- Typical task requires ~50 tool calls (long context loop)
-- LLMs drift off-topic or forget goals in long contexts
 - **Constant todo rewriting recites objectives into context end**
 - Avoids "lost-in-the-middle" issues without architectural changes
 

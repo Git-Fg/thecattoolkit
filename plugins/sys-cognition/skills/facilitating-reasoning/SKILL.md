@@ -6,9 +6,7 @@ allowed-tools: [Read, Skill(applying-reasoning), AskUserQuestion]
 
 # Reasoning Facilitation Protocol
 
-## Core Purpose
 
-Help users clarify their own thinking using structured frameworks BEFORE solving problems. This skill facilitates problem exploration, not solution execution.
 
 ## Process
 
@@ -24,10 +22,10 @@ Parse user's problem statement to identify:
 
 ### Phase 3: Select Frameworks
 Choose the most relevant frameworks from `applying-reasoning` skill:
-- **Pareto Principle**: Focus on vital few vs trivial many
-- **Inversion**: Avoid stupidity vs seeking brilliance
-- **First-Principles**: Question assumptions and rebuild from fundamentals
-- **Systems Thinking**: Understand interconnections and feedback loops
+- **Pareto Principle**
+- **Inversion**
+- **First-Principles**
+- **Systems Thinking**
 
 ### Phase 4: Targeted Questions
 Ask actionable questions based on selected frameworks to help users uncover:

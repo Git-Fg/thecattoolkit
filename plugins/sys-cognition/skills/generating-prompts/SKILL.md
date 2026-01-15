@@ -6,9 +6,7 @@ allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 
 # Create Meta-Prompts
 
-## Objective
 
-Create prompts optimized for Claude-to-Claude communication in multi-stage workflows. Outputs are structured with XML metadata for efficient parsing by subsequent prompts.
 
 ## Quick Start
 

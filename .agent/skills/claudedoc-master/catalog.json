@@ -1,0 +1,1426 @@
+{
+    "version": 1,
+    "sources": [
+        {
+            "key": "claude-code",
+            "label": "Claude Code Docs",
+            "base_url": "https://code.claude.com/docs/en"
+        },
+        {
+            "key": "platform",
+            "label": "Anthropic Platform Docs",
+            "base_url": "https://platform.claude.com/docs/en"
+        }
+    ],
+    "entries": [
+        {
+            "slug": "amazon-bedrock",
+            "title": "Claude Code on Amazon Bedrock",
+            "url": "https://code.claude.com/docs/en/amazon-bedrock.md",
+            "tags": [
+                "claude-code",
+                "amazon-bedrock",
+                "setup",
+                "iam",
+                "troubleshooting"
+            ]
+        },
+        {
+            "slug": "analytics",
+            "title": "Analytics",
+            "url": "https://code.claude.com/docs/en/analytics.md",
+            "tags": [
+                "claude-code",
+                "analytics",
+                "usage",
+                "metrics"
+            ]
+        },
+        {
+            "slug": "changelog",
+            "title": "Changelog",
+            "url": "https://code.claude.com/docs/en/changelog.md",
+            "tags": [
+                "claude-code",
+                "changelog",
+                "updates"
+            ]
+        },
+        {
+            "slug": "checkpointing",
+            "title": "Checkpointing",
+            "url": "https://code.claude.com/docs/en/checkpointing.md",
+            "tags": [
+                "claude-code",
+                "checkpointing",
+                "revert",
+                "edits"
+            ]
+        },
+        {
+            "slug": "chrome",
+            "title": "Use Claude Code with Chrome (beta)",
+            "url": "https://code.claude.com/docs/en/chrome.md",
+            "tags": [
+                "claude-code",
+                "chrome",
+                "browser",
+                "debug",
+                "automate"
+            ]
+        },
+        {
+            "slug": "claude-code-on-the-web",
+            "title": "Claude Code on the web",
+            "url": "https://code.claude.com/docs/en/claude-code-on-the-web.md",
+            "tags": [
+                "claude-code",
+                "web",
+                "cloud",
+                "asynchronous"
+            ]
+        },
+        {
+            "slug": "cli-reference",
+            "title": "CLI reference",
+            "url": "https://code.claude.com/docs/en/cli-reference.md",
+            "tags": [
+                "claude-code",
+                "cli",
+                "flags",
+                "commands"
+            ]
+        },
+        {
+            "slug": "common-workflows",
+            "title": "Common workflows",
+            "url": "https://code.claude.com/docs/en/common-workflows.md",
+            "tags": [
+                "claude-code",
+                "workflows"
+            ]
+        },
+        {
+            "slug": "costs",
+            "title": "Manage costs effectively",
+            "url": "https://code.claude.com/docs/en/costs.md",
+            "tags": [
+                "claude-code",
+                "costs",
+                "tokens",
+                "usage",
+                "optimize"
+            ]
+        },
+        {
+            "slug": "data-usage",
+            "title": "Data usage",
+            "url": "https://code.claude.com/docs/en/data-usage.md",
+            "tags": [
+                "claude-code",
+                "data-usage",
+                "privacy",
+                "policy"
+            ]
+        },
+        {
+            "slug": "desktop",
+            "title": "Claude Code on desktop",
+            "url": "https://code.claude.com/docs/en/desktop.md",
+            "tags": [
+                "claude-code",
+                "desktop",
+                "local",
+                "cloud"
+            ]
+        },
+        {
+            "slug": "devcontainer",
+            "title": "Development containers",
+            "url": "https://code.claude.com/docs/en/devcontainer.md",
+            "tags": [
+                "claude-code",
+                "devcontainer",
+                "docker",
+                "teams",
+                "environments"
+            ]
+        },
+        {
+            "slug": "discover-plugins",
+            "title": "Discover and install prebuilt plugins through marketplaces",
+            "url": "https://code.claude.com/docs/en/discover-plugins.md",
+            "tags": [
+                "claude-code",
+                "plugins",
+                "marketplaces",
+                "install"
+            ]
+        },
+        {
+            "slug": "github-actions",
+            "title": "Claude Code GitHub Actions",
+            "url": "https://code.claude.com/docs/en/github-actions.md",
+            "tags": [
+                "claude-code",
+                "github-actions",
+                "cicd",
+                "workflow"
+            ]
+        },
+        {
+            "slug": "gitlab-ci-cd",
+            "title": "Claude Code GitLab CI/CD",
+            "url": "https://code.claude.com/docs/en/gitlab-ci-cd.md",
+            "tags": [
+                "claude-code",
+                "gitlab",
+                "cicd",
+                "workflow"
+            ]
+        },
+        {
+            "slug": "google-vertex-ai",
+            "title": "Claude Code on Google Vertex AI",
+            "url": "https://code.claude.com/docs/en/google-vertex-ai.md",
+            "tags": [
+                "claude-code",
+                "google-vertex-ai",
+                "setup",
+                "iam",
+                "troubleshooting"
+            ]
+        },
+        {
+            "slug": "headless",
+            "title": "Run Claude Code programmatically",
+            "url": "https://code.claude.com/docs/en/headless.md",
+            "tags": [
+                "claude-code",
+                "programmatic",
+                "sdk",
+                "cli",
+                "python",
+                "typescript"
+            ]
+        },
+        {
+            "slug": "hooks",
+            "title": "Hooks reference",
+            "url": "https://code.claude.com/docs/en/hooks.md",
+            "tags": [
+                "claude-code",
+                "hooks",
+                "automation",
+                "policy"
+            ]
+        },
+        {
+            "slug": "hooks-guide",
+            "title": "Get started with Claude Code hooks",
+            "url": "https://code.claude.com/docs/en/hooks-guide.md",
+            "tags": [
+                "claude-code",
+                "hooks",
+                "guide",
+                "setup",
+                "shell"
+            ]
+        },
+        {
+            "slug": "iam",
+            "title": "Identity and Access Management",
+            "url": "https://code.claude.com/docs/en/iam.md",
+            "tags": [
+                "claude-code",
+                "iam",
+                "auth",
+                "security",
+                "teams"
+            ]
+        },
+        {
+            "slug": "interactive-mode",
+            "title": "Interactive mode",
+            "url": "https://code.claude.com/docs/en/interactive-mode.md",
+            "tags": [
+                "claude-code",
+                "interactive",
+                "shortcuts",
+                "modes"
+            ]
+        },
+        {
+            "slug": "jetbrains",
+            "title": "JetBrains IDEs",
+            "url": "https://code.claude.com/docs/en/jetbrains.md",
+            "tags": [
+                "claude-code",
+                "jetbrains",
+                "intellij",
+                "pycharm",
+                "webstorm"
+            ]
+        },
+        {
+            "slug": "legal-and-compliance",
+            "title": "Legal and compliance",
+            "url": "https://code.claude.com/docs/en/legal-and-compliance.md",
+            "tags": [
+                "claude-code",
+                "legal",
+                "compliance",
+                "security"
+            ]
+        },
+        {
+            "slug": "llm-gateway",
+            "title": "LLM gateway configuration",
+            "url": "https://code.claude.com/docs/en/llm-gateway.md",
+            "tags": [
+                "claude-code",
+                "llm-gateway",
+                "auth",
+                "model",
+                "provider"
+            ]
+        },
+        {
+            "slug": "mcp",
+            "title": "Connect Claude Code to tools via MCP",
+            "url": "https://code.claude.com/docs/en/mcp.md",
+            "tags": [
+                "claude-code",
+                "mcp",
+                "tools",
+                "integrations"
+            ]
+        },
+        {
+            "slug": "memory",
+            "title": "Manage Claude's memory",
+            "url": "https://code.claude.com/docs/en/memory.md",
+            "tags": [
+                "claude-code",
+                "memory",
+                "best-practices"
+            ]
+        },
+        {
+            "slug": "microsoft-foundry",
+            "title": "Claude Code on Microsoft Foundry",
+            "url": "https://code.claude.com/docs/en/microsoft-foundry.md",
+            "tags": [
+                "claude-code",
+                "microsoft-foundry",
+                "setup",
+                "troubleshooting"
+            ]
+        },
+        {
+            "slug": "model-config",
+            "title": "Model configuration",
+            "url": "https://code.claude.com/docs/en/model-config.md",
+            "tags": [
+                "claude-code",
+                "model-config",
+                "aliases",
+                "opusplan"
+            ]
+        },
+        {
+            "slug": "monitoring-usage",
+            "title": "Monitoring",
+            "url": "https://code.claude.com/docs/en/monitoring-usage.md",
+            "tags": [
+                "claude-code",
+                "monitoring",
+                "opentelemetry",
+                "metrics"
+            ]
+        },
+        {
+            "slug": "network-config",
+            "title": "Enterprise network configuration",
+            "url": "https://code.claude.com/docs/en/network-config.md",
+            "tags": [
+                "claude-code",
+                "network",
+                "proxy",
+                "ca",
+                "mtls"
+            ]
+        },
+        {
+            "slug": "output-styles",
+            "title": "Output styles",
+            "url": "https://code.claude.com/docs/en/output-styles.md",
+            "tags": [
+                "claude-code",
+                "output",
+                "display",
+                "styles"
+            ]
+        },
+        {
+            "slug": "overview",
+            "title": "Claude Code overview",
+            "url": "https://code.claude.com/docs/en/overview.md",
+            "tags": [
+                "claude-code",
+                "overview",
+                "getting-started"
+            ]
+        },
+        {
+            "slug": "platform-administration-api",
+            "title": "Admin API overview",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/administration-api.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-agent-sdk",
+            "title": "Overview (Agent SDK overview)",
+            "url": "https://platform.claude.com/docs/en/agent-sdk/overview.md",
+            "tags": [
+                "platform",
+                "agent-sdk"
+            ]
+        },
+        {
+            "slug": "platform-agent-sdk-mcp",
+            "title": "MCP in the SDK",
+            "url": "https://platform.claude.com/docs/en/agent-sdk/mcp",
+            "tags": [
+                "platform",
+                "agent-sdk",
+                "mcp"
+            ]
+        },
+        {
+            "slug": "platform-agent-sdk-overview",
+            "title": "Agent SDK overview",
+            "url": "https://platform.claude.com/docs/en/agent-sdk/overview",
+            "tags": [
+                "platform",
+                "agent-sdk",
+                "overview"
+            ]
+        },
+        {
+            "slug": "platform-agent-sdk-skills",
+            "title": "Agent Skills in the SDK",
+            "url": "https://platform.claude.com/docs/en/agent-sdk/skills",
+            "tags": [
+                "platform",
+                "agent-sdk",
+                "skills"
+            ]
+        },
+        {
+            "slug": "platform-agent-skills",
+            "title": "Overview (Agent Skills)",
+            "url": "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-bash-tool",
+            "title": "Bash tool",
+            "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/bash-tool.md",
+            "tags": [
+                "platform",
+                "tool-use"
+            ]
+        },
+        {
+            "slug": "platform-batch-processing",
+            "title": "Batch processing",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/batch-processing.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-be-clear-and-direct",
+            "title": "Be clear and direct (Be clear, direct, and detailed)",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/be-clear-and-direct.md",
+            "tags": [
+                "platform",
+                "prompt-engineering"
+            ]
+        },
+        {
+            "slug": "platform-best-practices",
+            "title": "Best practices (Skill authoring best practices)",
+            "url": "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-build-with-claude",
+            "title": "Features overview",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/overview.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-chain-of-thought",
+            "title": "Let Claude think (CoT) (Let Claude think (chain of thought prompting) to increase performance)",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/chain-of-thought.md",
+            "tags": [
+                "platform",
+                "prompt-engineering"
+            ]
+        },
+        {
+            "slug": "platform-chain-prompts",
+            "title": "Chain complex prompts (Chain complex prompts for stronger performance)",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/chain-prompts.md",
+            "tags": [
+                "platform",
+                "prompt-engineering"
+            ]
+        },
+        {
+            "slug": "platform-choosing-a-model",
+            "title": "Choosing a model (Choosing the right model)",
+            "url": "https://platform.claude.com/docs/en/about-claude/models/choosing-a-model.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-citations",
+            "title": "Citations",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/citations.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-claude-4-best-practices",
+            "title": "Prompting best practices",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-4-best-practices.md",
+            "tags": [
+                "platform",
+                "prompt-engineering"
+            ]
+        },
+        {
+            "slug": "platform-claude-code-analytics-api",
+            "title": "Claude Code Analytics API",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/claude-code-analytics-api.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-claude-in-microsoft-foundry",
+            "title": "Microsoft Foundry (Claude in Microsoft Foundry)",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/claude-in-microsoft-foundry.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-claude-on-amazon-bedrock",
+            "title": "Amazon Bedrock (Claude on Amazon Bedrock)",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/claude-on-amazon-bedrock.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-claude-on-vertex-ai",
+            "title": "Vertex AI (Claude on Vertex AI)",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/claude-on-vertex-ai.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-code-execution-tool",
+            "title": "Code execution tool",
+            "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/code-execution-tool.md",
+            "tags": [
+                "platform",
+                "tool-use"
+            ]
+        },
+        {
+            "slug": "platform-computer-use-tool",
+            "title": "Computer use tool",
+            "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/computer-use-tool.md",
+            "tags": [
+                "platform",
+                "tool-use"
+            ]
+        },
+        {
+            "slug": "platform-context-editing",
+            "title": "Context editing",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/context-editing.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-context-windows",
+            "title": "Context windows",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/context-windows.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-cost-tracking",
+            "title": "Tracking Costs and Usage",
+            "url": "https://platform.claude.com/docs/en/agent-sdk/cost-tracking.md",
+            "tags": [
+                "platform",
+                "agent-sdk"
+            ]
+        },
+        {
+            "slug": "platform-custom-tools",
+            "title": "Custom Tools",
+            "url": "https://platform.claude.com/docs/en/agent-sdk/custom-tools.md",
+            "tags": [
+                "platform",
+                "agent-sdk"
+            ]
+        },
+        {
+            "slug": "platform-define-success",
+            "title": "Define success criteria (Define your success criteria)",
+            "url": "https://platform.claude.com/docs/en/test-and-evaluate/define-success.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-develop-tests",
+            "title": "Develop test cases (Create strong empirical evaluations)",
+            "url": "https://platform.claude.com/docs/en/test-and-evaluate/develop-tests.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-effort",
+            "title": "Effort",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/effort.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-embeddings",
+            "title": "Embeddings",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/embeddings.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-eval-tool",
+            "title": "Using the Evaluation Tool",
+            "url": "https://platform.claude.com/docs/en/test-and-evaluate/eval-tool.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-extended-thinking",
+            "title": "Extended thinking (Building with extended thinking)",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/extended-thinking.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-extended-thinking-tips",
+            "title": "Extended thinking tips",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/extended-thinking-tips.md",
+            "tags": [
+                "platform",
+                "prompt-engineering"
+            ]
+        },
+        {
+            "slug": "platform-file-checkpointing",
+            "title": "File checkpointing (Rewind file changes with checkpointing)",
+            "url": "https://platform.claude.com/docs/en/agent-sdk/file-checkpointing.md",
+            "tags": [
+                "platform",
+                "agent-sdk"
+            ]
+        },
+        {
+            "slug": "platform-files",
+            "title": "Files API",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/files.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-fine-grained-tool-streaming",
+            "title": "Fine-grained tool streaming",
+            "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/fine-grained-tool-streaming.md",
+            "tags": [
+                "platform",
+                "tool-use"
+            ]
+        },
+        {
+            "slug": "platform-get-started",
+            "title": "Quickstart (Get started with Claude)",
+            "url": "https://platform.claude.com/docs/en/get-started.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-handle-streaming-refusals",
+            "title": "Streaming refusals",
+            "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/handle-streaming-refusals.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-hooks",
+            "title": "Control execution with hooks (Intercept and control agent behavior with hooks)",
+            "url": "https://platform.claude.com/docs/en/agent-sdk/hooks.md",
+            "tags": [
+                "platform",
+                "agent-sdk"
+            ]
+        },
+        {
+            "slug": "platform-hosting",
+            "title": "Hosting the Agent SDK",
+            "url": "https://platform.claude.com/docs/en/agent-sdk/hosting.md",
+            "tags": [
+                "platform",
+                "agent-sdk"
+            ]
+        },
+        {
+            "slug": "platform-implement-tool-use",
+            "title": "How to implement tool use",
+            "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/implement-tool-use.md",
+            "tags": [
+                "platform",
+                "tool-use"
+            ]
+        },
+        {
+            "slug": "platform-increase-consistency",
+            "title": "Increase output consistency",
+            "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/increase-consistency.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-intro",
+            "title": "Intro to Claude",
+            "url": "https://platform.claude.com/docs/en/intro.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-keep-claude-in-character",
+            "title": "Keep Claude in character (Keep Claude in character with role prompting and prefilling)",
+            "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/keep-claude-in-character.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-long-context-tips",
+            "title": "Long context tips (Long context prompting tips)",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/long-context-tips.md",
+            "tags": [
+                "platform",
+                "prompt-engineering"
+            ]
+        },
+        {
+            "slug": "platform-mcp",
+            "title": "MCP in the SDK",
+            "url": "https://platform.claude.com/docs/en/agent-sdk/mcp.md",
+            "tags": [
+                "platform",
+                "agent-sdk"
+            ]
+        },
+        {
+            "slug": "platform-mcp-connector",
+            "title": "MCP connector",
+            "url": "https://platform.claude.com/docs/en/agents-and-tools/mcp-connector.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-memory-tool",
+            "title": "Memory tool",
+            "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/memory-tool.md",
+            "tags": [
+                "platform",
+                "tool-use"
+            ]
+        },
+        {
+            "slug": "platform-migrating-to-claude-4",
+            "title": "Migrating to Claude 4.5",
+            "url": "https://platform.claude.com/docs/en/about-claude/models/migrating-to-claude-4.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-migration-guide",
+            "title": "Migration Guide (Migrate to Claude Agent SDK)",
+            "url": "https://platform.claude.com/docs/en/agent-sdk/migration-guide.md",
+            "tags": [
+                "platform",
+                "agent-sdk"
+            ]
+        },
+        {
+            "slug": "platform-mitigate-jailbreaks",
+            "title": "Mitigate jailbreaks (Mitigate jailbreaks and prompt injections)",
+            "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/mitigate-jailbreaks.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-model-deprecations",
+            "title": "Model deprecations",
+            "url": "https://platform.claude.com/docs/en/about-claude/model-deprecations.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-models",
+            "title": "Models overview",
+            "url": "https://platform.claude.com/docs/en/about-claude/models/overview.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-modifying-system-prompts",
+            "title": "Modifying system prompts",
+            "url": "https://platform.claude.com/docs/en/agent-sdk/modifying-system-prompts.md",
+            "tags": [
+                "platform",
+                "agent-sdk"
+            ]
+        },
+        {
+            "slug": "platform-multilingual-support",
+            "title": "Multilingual support",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/multilingual-support.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-multishot-prompting",
+            "title": "Use examples (multishot prompting) (Use examples (multishot prompting) to guide Claude's behavior)",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/multishot-prompting.md",
+            "tags": [
+                "platform",
+                "prompt-engineering"
+            ]
+        },
+        {
+            "slug": "platform-pdf-support",
+            "title": "PDF support",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/pdf-support.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-permissions",
+            "title": "Handling Permissions (Configure permissions)",
+            "url": "https://platform.claude.com/docs/en/agent-sdk/permissions.md",
+            "tags": [
+                "platform",
+                "agent-sdk"
+            ]
+        },
+        {
+            "slug": "platform-plugins",
+            "title": "Plugins in the SDK",
+            "url": "https://platform.claude.com/docs/en/agent-sdk/plugins.md",
+            "tags": [
+                "platform",
+                "agent-sdk"
+            ]
+        },
+        {
+            "slug": "platform-prefill-claudes-response",
+            "title": "Prefill Claude's response (Prefill Claude's response for greater output control)",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prefill-claudes-response.md",
+            "tags": [
+                "platform",
+                "prompt-engineering"
+            ]
+        },
+        {
+            "slug": "platform-pricing",
+            "title": "Pricing",
+            "url": "https://platform.claude.com/docs/en/about-claude/pricing.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-programmatic-tool-calling",
+            "title": "Programmatic tool calling",
+            "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/programmatic-tool-calling.md",
+            "tags": [
+                "platform",
+                "tool-use"
+            ]
+        },
+        {
+            "slug": "platform-prompt-caching",
+            "title": "Prompt caching",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-caching.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-prompt-engineering",
+            "title": "Overview (Prompt engineering overview)",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/overview.md",
+            "tags": [
+                "platform",
+                "prompt-engineering"
+            ]
+        },
+        {
+            "slug": "platform-prompt-generator",
+            "title": "Prompt generator (Automatically generate first draft prompt templates)",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompt-generator.md",
+            "tags": [
+                "platform",
+                "prompt-engineering"
+            ]
+        },
+        {
+            "slug": "platform-prompt-improver",
+            "title": "Prompt improver (Use our prompt improver to optimize your prompts)",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompt-improver.md",
+            "tags": [
+                "platform",
+                "prompt-engineering"
+            ]
+        },
+        {
+            "slug": "platform-prompt-templates-and-variables",
+            "title": "Use prompt templates (Use prompt templates and variables)",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompt-templates-and-variables.md",
+            "tags": [
+                "platform",
+                "prompt-engineering"
+            ]
+        },
+        {
+            "slug": "platform-python",
+            "title": "Python SDK (Agent SDK reference - Python)",
+            "url": "https://platform.claude.com/docs/en/agent-sdk/python.md",
+            "tags": [
+                "platform",
+                "agent-sdk"
+            ]
+        },
+        {
+            "slug": "platform-quickstart",
+            "title": "Quickstart (Get started with Agent Skills in the API)",
+            "url": "https://platform.claude.com/docs/en/agents-and-tools/agent-skills/quickstart.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-quickstart-1",
+            "title": "Quickstart",
+            "url": "https://platform.claude.com/docs/en/agent-sdk/quickstart.md",
+            "tags": [
+                "platform",
+                "agent-sdk"
+            ]
+        },
+        {
+            "slug": "platform-reduce-hallucinations",
+            "title": "Reduce hallucinations",
+            "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-reduce-latency",
+            "title": "Reducing latency",
+            "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-latency.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-reduce-prompt-leak",
+            "title": "Reduce prompt leak",
+            "url": "https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-prompt-leak.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-remote-mcp-servers",
+            "title": "Remote MCP servers",
+            "url": "https://platform.claude.com/docs/en/agents-and-tools/remote-mcp-servers.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-search-results",
+            "title": "Search results",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/search-results.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-secure-deployment",
+            "title": "Securely deploying AI agents",
+            "url": "https://platform.claude.com/docs/en/agent-sdk/secure-deployment.md",
+            "tags": [
+                "platform",
+                "agent-sdk"
+            ]
+        },
+        {
+            "slug": "platform-sessions",
+            "title": "Session Management",
+            "url": "https://platform.claude.com/docs/en/agent-sdk/sessions.md",
+            "tags": [
+                "platform",
+                "agent-sdk"
+            ]
+        },
+        {
+            "slug": "platform-skills",
+            "title": "Agent Skills in the SDK",
+            "url": "https://platform.claude.com/docs/en/agent-sdk/skills.md",
+            "tags": [
+                "platform",
+                "agent-sdk"
+            ]
+        },
+        {
+            "slug": "platform-skills-guide",
+            "title": "Using Skills with the API (Using Agent Skills with the API)",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/skills-guide.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-slash-commands",
+            "title": "Slash Commands in the SDK",
+            "url": "https://platform.claude.com/docs/en/agent-sdk/slash-commands.md",
+            "tags": [
+                "platform",
+                "agent-sdk"
+            ]
+        },
+        {
+            "slug": "platform-streaming",
+            "title": "Streaming Messages",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/streaming.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-streaming-vs-single-mode",
+            "title": "Streaming Input",
+            "url": "https://platform.claude.com/docs/en/agent-sdk/streaming-vs-single-mode.md",
+            "tags": [
+                "platform",
+                "agent-sdk"
+            ]
+        },
+        {
+            "slug": "platform-structured-outputs",
+            "title": "Structured outputs",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/structured-outputs.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-structured-outputs-1",
+            "title": "Structured outputs in the SDK",
+            "url": "https://platform.claude.com/docs/en/agent-sdk/structured-outputs.md",
+            "tags": [
+                "platform",
+                "agent-sdk"
+            ]
+        },
+        {
+            "slug": "platform-subagents",
+            "title": "Subagents in the SDK",
+            "url": "https://platform.claude.com/docs/en/agent-sdk/subagents.md",
+            "tags": [
+                "platform",
+                "agent-sdk"
+            ]
+        },
+        {
+            "slug": "platform-system-prompts",
+            "title": "Give Claude a role (system prompts) (Giving Claude a role with a system prompt)",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/system-prompts.md",
+            "tags": [
+                "platform",
+                "prompt-engineering"
+            ]
+        },
+        {
+            "slug": "platform-text-editor-tool",
+            "title": "Text editor tool",
+            "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/text-editor-tool.md",
+            "tags": [
+                "platform",
+                "tool-use"
+            ]
+        },
+        {
+            "slug": "platform-todo-tracking",
+            "title": "Todo Lists",
+            "url": "https://platform.claude.com/docs/en/agent-sdk/todo-tracking.md",
+            "tags": [
+                "platform",
+                "agent-sdk"
+            ]
+        },
+        {
+            "slug": "platform-token-counting",
+            "title": "Token counting",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/token-counting.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-tool-search-tool",
+            "title": "Tool search tool",
+            "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/tool-search-tool.md",
+            "tags": [
+                "platform",
+                "tool-use"
+            ]
+        },
+        {
+            "slug": "platform-tool-use",
+            "title": "Overview (Tool use with Claude)",
+            "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/overview.md",
+            "tags": [
+                "platform",
+                "tool-use"
+            ]
+        },
+        {
+            "slug": "platform-typescript",
+            "title": "TypeScript SDK (Agent SDK reference - TypeScript)",
+            "url": "https://platform.claude.com/docs/en/agent-sdk/typescript.md",
+            "tags": [
+                "platform",
+                "agent-sdk"
+            ]
+        },
+        {
+            "slug": "platform-typescript-v2-preview",
+            "title": "TypeScript V2 (preview) (TypeScript SDK V2 interface (preview))",
+            "url": "https://platform.claude.com/docs/en/agent-sdk/typescript-v2-preview.md",
+            "tags": [
+                "platform",
+                "agent-sdk"
+            ]
+        },
+        {
+            "slug": "platform-usage-cost-api",
+            "title": "Usage and Cost API",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/usage-cost-api.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-use-xml-tags",
+            "title": "Use XML tags (Use XML tags to structure your prompts)",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/use-xml-tags.md",
+            "tags": [
+                "platform",
+                "prompt-engineering"
+            ]
+        },
+        {
+            "slug": "platform-user-input",
+            "title": "User approvals and input (Handle approvals and user input)",
+            "url": "https://platform.claude.com/docs/en/agent-sdk/user-input.md",
+            "tags": [
+                "platform",
+                "agent-sdk"
+            ]
+        },
+        {
+            "slug": "platform-vision",
+            "title": "Vision",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/vision.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-web-fetch-tool",
+            "title": "Web fetch tool",
+            "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-fetch-tool.md",
+            "tags": [
+                "platform",
+                "tool-use"
+            ]
+        },
+        {
+            "slug": "platform-web-search-tool",
+            "title": "Web search tool",
+            "url": "https://platform.claude.com/docs/en/agents-and-tools/tool-use/web-search-tool.md",
+            "tags": [
+                "platform",
+                "tool-use"
+            ]
+        },
+        {
+            "slug": "platform-whats-new-claude-4-5",
+            "title": "What's new in Claude 4.5",
+            "url": "https://platform.claude.com/docs/en/about-claude/models/whats-new-claude-4-5.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-working-with-messages",
+            "title": "Using the Messages API",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/working-with-messages.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "platform-workspaces",
+            "title": "Workspaces",
+            "url": "https://platform.claude.com/docs/en/build-with-claude/workspaces.md",
+            "tags": [
+                "platform"
+            ]
+        },
+        {
+            "slug": "plugin-marketplaces",
+            "title": "Create and distribute a plugin marketplace",
+            "url": "https://code.claude.com/docs/en/plugin-marketplaces.md",
+            "tags": [
+                "claude-code",
+                "plugins",
+                "marketplaces",
+                "distribution"
+            ]
+        },
+        {
+            "slug": "plugins",
+            "title": "Create plugins",
+            "url": "https://code.claude.com/docs/en/plugins.md",
+            "tags": [
+                "claude-code",
+                "plugins",
+                "marketplace"
+            ]
+        },
+        {
+            "slug": "plugins-reference",
+            "title": "Plugins reference",
+            "url": "https://code.claude.com/docs/en/plugins-reference.md",
+            "tags": [
+                "claude-code",
+                "plugins",
+                "schema"
+            ]
+        },
+        {
+            "slug": "quickstart",
+            "title": "Quickstart",
+            "url": "https://code.claude.com/docs/en/quickstart.md",
+            "tags": [
+                "claude-code",
+                "setup",
+                "getting-started"
+            ]
+        },
+        {
+            "slug": "sandboxing",
+            "title": "Sandboxing",
+            "url": "https://code.claude.com/docs/en/sandboxing.md",
+            "tags": [
+                "claude-code",
+                "sandboxing",
+                "security",
+                "isolation"
+            ]
+        },
+        {
+            "slug": "security",
+            "title": "Security",
+            "url": "https://code.claude.com/docs/en/security.md",
+            "tags": [
+                "claude-code",
+                "security",
+                "safety"
+            ]
+        },
+        {
+            "slug": "settings",
+            "title": "Claude Code settings",
+            "url": "https://code.claude.com/docs/en/settings.md",
+            "tags": [
+                "claude-code",
+                "settings",
+                "config",
+                "permissions"
+            ]
+        },
+        {
+            "slug": "setup",
+            "title": "Set up Claude Code",
+            "url": "https://code.claude.com/docs/en/setup.md",
+            "tags": [
+                "claude-code",
+                "setup",
+                "install",
+                "auth"
+            ]
+        },
+        {
+            "slug": "skills",
+            "title": "Agent Skills",
+            "url": "https://code.claude.com/docs/en/skills.md",
+            "tags": [
+                "claude-code",
+                "skills",
+                "automation"
+            ]
+        },
+        {
+            "slug": "slack",
+            "title": "Claude Code in Slack",
+            "url": "https://code.claude.com/docs/en/slack.md",
+            "tags": [
+                "claude-code",
+                "slack",
+                "delegation"
+            ]
+        },
+        {
+            "slug": "slash-commands",
+            "title": "Slash commands",
+            "url": "https://code.claude.com/docs/en/slash-commands.md",
+            "tags": [
+                "claude-code",
+                "commands",
+                "slash"
+            ]
+        },
+        {
+            "slug": "statusline",
+            "title": "Status line configuration",
+            "url": "https://code.claude.com/docs/en/statusline.md",
+            "tags": [
+                "claude-code",
+                "statusline",
+                "config",
+                "ui"
+            ]
+        },
+        {
+            "slug": "sub-agents",
+            "title": "Create custom subagents",
+            "url": "https://code.claude.com/docs/en/sub-agents.md",
+            "tags": [
+                "claude-code",
+                "subagents",
+                "agents"
+            ]
+        },
+        {
+            "slug": "terminal-config",
+            "title": "Optimize your terminal setup",
+            "url": "https://code.claude.com/docs/en/terminal-config.md",
+            "tags": [
+                "claude-code",
+                "terminal",
+                "config",
+                "ui"
+            ]
+        },
+        {
+            "slug": "third-party-integrations",
+            "title": "Enterprise deployment overview",
+            "url": "https://code.claude.com/docs/en/third-party-integrations.md",
+            "tags": [
+                "claude-code",
+                "enterprise",
+                "integrations",
+                "third-party"
+            ]
+        },
+        {
+            "slug": "troubleshooting",
+            "title": "Troubleshooting",
+            "url": "https://code.claude.com/docs/en/troubleshooting.md",
+            "tags": [
+                "claude-code",
+                "troubleshooting",
+                "debug"
+            ]
+        },
+        {
+            "slug": "vs-code",
+            "title": "Use Claude Code in VS Code",
+            "url": "https://code.claude.com/docs/en/vs-code.md",
+            "tags": [
+                "claude-code",
+                "vscode",
+                "extension",
+                "setup"
+            ]
+        }
+    ]
+}

@@ -30,21 +30,7 @@ Use this skill when:
 - Improving compile times (incremental builds, project references)
 - Setting up separate TS/ESLint configs for tests
 
-## Operating Principles
 
-### A — Value-level correctness + light typing over deep magic
-- Use runtime validation for untrusted inputs (HTTP, env, user input)
-- Types model expected structure, not unsafe data pretending to be safe
-
-### B — Prefer `satisfies` to assertions and widenings
-- `satisfies` validates shape while keeping precise inference
-- Avoid `as SomeType` when it hides bugs
-
-### C — Consider the typechecker's workload
-Deep recursive types, huge unions, distributive conditionals, and template literal explosions can all be expensive
-
-### D — Make strictness explicit
-tsconfig flags, module settings, project structure, and ESLint configuration drive safety and compile-time behavior
 
 ## Default Workflow
 

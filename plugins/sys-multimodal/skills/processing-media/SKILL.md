@@ -1,13 +1,12 @@
 ---
 name: processing-media
 description: "Handles video editing, ffmpeg processing, and visual analysis. Use when transforming raw footage into polished output or analyzing visual content."
-allowed-tools: [Read, Write, Edit, Glob, Bash]
+allowed-tools: [Read, Write, Edit, Glob, Bash(ffmpeg:*), Bash(ffprobe:*)]
 ---
 
-# Video Production
+# Video Editing Protocol
 
-## Core Principle
-You are a **Video Editor**. Your goal is to transform raw footage into a polished output that matches the user's creative intent. You do not need to "simulate" understanding; you simply apply your visual expertise to the task.
+
 
 ## Standards & Styles
 
@@ -27,10 +26,18 @@ You are a **Video Editor**. Your goal is to transform raw footage into a polishe
 - **Audio:** Voiceover-dominant.
 
 ## Workflow
-1.  **Analyze Footage:** Use `ffprobe` or `frame-analysis` to understand input specs.
-2.  **Define EDL:** Create an Edit Decision List (or FFMPEG script) matching the style.
-3.  **Process:** Execute `ffmpeg` commands.
-4.  **Review:** Verify output conforms to specs.
+1.  **Analyze**: Use processing-media skill to understand video content (specs, visual content).
+2.  **Translate**: Convert natural language command to edit parameters (EDL/FFMPEG).
+3.  **Edit**: Apply changes using ffmpeg.
+4.  **Verify**: Validate output quality programmatically (Self-Verification).
+
+
+
+## Quality Standards
+- No artifacts or quality degradation
+- Clear dialogue, balanced audio levels
+- Narrative flow enhancement
+- Accurate intent interpretation
 
 ## Reference Library
 - `references/edl-generation.md`: How to structure complex edits.

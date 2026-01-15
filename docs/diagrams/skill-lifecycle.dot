@@ -1,0 +1,21 @@
+digraph skill_creation {
+    rankdir=TB;
+    splines=ortho;
+    node [shape=box, style=rounded, fontname="Arial-12"];
+
+    START [shape=circle, style=filled, fillcolor=lightgreen, label="Identify Need"];
+    SCENARIO [label="Write Usage Scenario\n(TDD-Skills RED)"];
+    FRONTMATTER [label="Create Frontmatter\n(description + metadata)"];
+    PROTOCOL [label="Write Protocol-Based\nInstructions"];
+    VALIDATE [label="Test Activation\n(Across models)"];
+    OPTIMIZE [label="Refine Description\n(Trigger Optimization)"];
+    DEPLOY [shape=doublecircle, style=filled, fillcolor=lightblue, label="Deploy"];
+
+    START -> SCENARIO;
+    SCENARIO -> FRONTMATTER;
+    FRONTMATTER -> PROTOCOL;
+    PROTOCOL -> VALIDATE;
+    VALIDATE -> OPTIMIZE [label="fails activation"];
+    OPTIMIZE -> VALIDATE [label="re-test"];
+    VALIDATE -> DEPLOY [label="passes"];
+}

@@ -7,7 +7,7 @@ allowed-tools: [Bash, Read, Write, Edit]
 
 # UV & Ruff: Modern Python Development
 
-Astral's blazing-fast Python tooling: **uv** for package management, **ruff** for code quality.
+
 
 ## Quick Decision Tree
 
@@ -198,7 +198,4 @@ Load these for comprehensive guidance:
 | `references/migration.md` | Migrating from pip, conda, poetry, Flake8, Black, isort |
 | `references/workflows.md` | Monorepos, Docker, CI/CD, production deployments |
 
-## Resources
 
-- [uv docs](https://docs.astral.sh/uv/) | [ruff docs](https://docs.astral.sh/ruff/)
-- [astral-sh/uv](https://github.com/astral-sh/uv) | [astral-sh/ruff](https://github.com/astral-sh/ruff)

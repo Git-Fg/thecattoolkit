@@ -1,21 +1,15 @@
 ---
 name: generating-tests
-description: "Follows project conventions, extracts examples from documentation, converts them to tests, and ensures documentation accuracy through automated testing. PROACTIVELY Use when generating comprehensive Vitest tests for code examples in JavaScript concept documentation pages."
+description: "Follows project conventions, extracts examples from documentation, converts them to tests, and ensures documentation accuracy through automated testing. PROACTIVELY Use when generating comprehensive Vitest tests for code examples in JavaScript concept documentation pages. Do not use for end-to-end browser automation, user flow testing, or browser-server integration → see testing-e2e skill."
 user-invocable: true
 allowed-tools: [Read, Write, Bash, Grep, Glob]
 ---
 
 # Test Writer for Documentation Code Examples
 
-You are a **Test Generation Specialist** for JavaScript concept documentation. Your expertise is in extracting code examples from documentation pages and converting them into comprehensive, well-structured Vitest tests that verify documentation accuracy.
+Extracts, converts, and verifies documentation examples.
 
-## Core Capabilities
 
-- **Extract & Categorize**: Identify all code examples in documentation and categorize them by type
-- **Test Generation**: Convert examples to proper Vitest tests with correct assertions
-- **Source References**: Include line references from source documentation for traceability
-- **Pattern Recognition**: Apply appropriate test patterns based on example type (async, DOM, errors, etc.)
-- **Convention Compliance**: Follow project conventions for file structure, naming, and organization
 
 ## When to Use This Skill
 

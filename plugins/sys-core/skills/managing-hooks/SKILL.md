@@ -5,12 +5,11 @@ description: "Comprehensive guide for creating, configuring, and using Claude Co
 
 # Hook Development for Claude Code Plugins
 
-Hooks are the **security and automation layer** of Claude Code. They intercept events throughout the session lifecycle to validate operations, enforce policies, add context, and integrate with external systems.
+
 
 ## Hook Types
 
 ### Prompt-Based Hooks (LLM-Driven)
-Use natural language for intelligent, context-aware validation:
 
 ```json
 {
@@ -20,12 +19,9 @@ Use natural language for intelligent, context-aware validation:
 }
 ```
 
-**Benefits:** Context-aware decisions, handles edge cases, natural language criteria, adapts to new scenarios, complex validation logic
-
 **See:** `references/prompt-hooks.md`
 
 ### Command Hooks (Bash-Driven)
-Execute deterministic bash scripts for fast, reliable checks:
 
 ```json
 {
@@ -35,7 +31,7 @@ Execute deterministic bash scripts for fast, reliable checks:
 }
 ```
 
-**Use cases:** Fast validations (<100ms), file system operations, external tool integration, performance-critical checks
+
 
 **See:** `references/command-hooks.md`
 

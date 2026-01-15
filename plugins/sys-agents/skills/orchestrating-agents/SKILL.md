@@ -7,17 +7,15 @@ allowed-tools: [Read, Write, Bash, Grep, Glob]
 
 # Multi-Agent Orchestration for Context Isolation
 
-You are a **Multi-Agent Orchestration Specialist** focused on designing agent systems that prevent context window saturation through intelligent isolation. Your expertise lies in applying the right orchestration pattern for each use case: orchestrator for delegation, swarm for parallelism, and hierarchical for supervision.
+Implements Orchestrator, Swarm, and Hierarchical patterns.
 
-## Core Capability
 
-Design and implement multi-agent architectures that solve the fundamental problem of context isolation. Multi-agent systems are not about anthropomorphizing roles—they're about preventing any single agent's context from becoming saturated while enabling specialized, focused execution.
 
 ## The Three Orchestration Patterns
 
 ### 1. Orchestrator Pattern (Task Delegation)
 
-**Definition:** Central planner delegates tasks to specialized executor agents, maintaining global context while sub-agents operate with isolated, focused contexts.
+### 1. Orchestrator Pattern (Task Delegation)
 
 **When to Use:**
 - Single complex task requiring different expertise areas
@@ -25,13 +23,11 @@ Design and implement multi-agent architectures that solve the fundamental proble
 - Tasks have clear sub-components that can be parallelized
 - Want centralized planning with distributed execution
 
-**Benefits:** Clear task decomposition, global view maintained, specialized agents, context isolation achieved
 
-**Limitations:** Single coordination point, potential bottleneck, complex planning
 
 ### 2. Swarm Pattern (Parallel Execution)
 
-**Definition:** Multiple agents work on identical or similar tasks in parallel, each with isolated context, combining results at the end.
+### 2. Swarm Pattern (Parallel Execution)
 
 **When to Use:**
 - Multiple independent tasks of same type
@@ -39,13 +35,11 @@ Design and implement multi-agent architectures that solve the fundamental proble
 - Different perspectives on same problem
 - Large-scale data processing
 
-**Benefits:** High parallelism, scalable execution, multiple perspectives, fault tolerance
 
-**Limitations:** Result coordination complexity, potential redundant work, resource intensive
 
 ### 3. Hierarchical Pattern (Supervision)
 
-**Definition:** Manager agents supervise worker agents, creating a tree of supervision with progressive context isolation at each level.
+### 3. Hierarchical Pattern (Supervision)
 
 **When to Use:**
 - Large, complex tasks with hierarchy
@@ -53,9 +47,7 @@ Design and implement multi-agent architectures that solve the fundamental proble
 - Multi-level task decomposition
 - Quality gates required
 
-**Benefits:** Quality control at each level, scalable hierarchy, progressive context isolation, error detection
 
-**Limitations:** More complex coordination, potential latency, manager overhead, complex error handling
 
 ## Pattern Selection Guide
 
@@ -79,12 +71,7 @@ Design and implement multi-agent architectures that solve the fundamental proble
 
 ## Context Isolation Principles
 
-### The Problem
-Context windows have limits:
-- 200K tokens (Claude 3.5)
-- Shared across entire task
-- Conversations grow over time
-- Tasks saturate context
+
 
 ### The Solution: Context Isolation
 
@@ -96,13 +83,7 @@ Context windows have limits:
 
 ## Advanced Context Isolation Strategies
 
-### The Context Window Problem
 
-Context windows have hard limits:
-- **200K tokens** (Claude 3.5)
-- **Shared across entire task**
-- **Conversations grow over time**
-- **Tasks saturate context**
 
 ### Context Degradation Patterns
 
@@ -128,8 +109,6 @@ Constantly rewrite todos to push objectives into recent attention span:
 ```
 
 **Why It Works:**
-- Typical task requires ~50 tool calls (long context loop)
-- LLMs drift off-topic or forget goals
 - **Todo rewriting recites objectives into context end**
 
 #### 2. System Reminders
@@ -196,14 +175,14 @@ Use plan mode for complex, multi-phase tasks:
 ## Reference Materials
 
 **Core Patterns:**
-- **See:** references/orchestrator-pattern.md - Complete orchestrator implementation guide
-- **See:** references/swarm-pattern.md - Complete swarm implementation guide
-- **See:** references/hierarchical-pattern.md - Complete hierarchical implementation guide
+- **See:** [orchestrator-pattern.md](references/orchestrator-pattern.md) - Complete orchestrator implementation guide
+- **See:** [swarm-pattern.md](references/swarm-pattern.md) - Complete swarm implementation guide
+- **See:** [hierarchical-pattern.md](references/hierarchical-pattern.md) - Complete hierarchical implementation guide
 
 **Implementation:**
-- **See:** references/implementation-guide.md - Step-by-step implementation
-- **See:** references/context-isolation.md - Context management strategies
-- **See:** references/coordination.md - Agent coordination patterns
+- **See:** [implementation-guide.md](references/implementation-guide.md) - Step-by-step implementation
+- **See:** [context-isolation.md](references/context-isolation.md) - Context management strategies
+- **See:** [coordination.md](references/coordination.md) - Agent coordination patterns
 
 ## Next Steps
 

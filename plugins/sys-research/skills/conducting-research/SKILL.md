@@ -1,6 +1,6 @@
 ---
 name: conducting-research
-description: "Automatically determines the optimal research tool based on query type and available information. Use when answering technical questions requiring external verification, documentation lookup, or library/repo research."
+description: "Automatically determines the optimal research tool based on query type and available information. Use when answering technical questions requiring external verification, documentation lookup, or library/repo research. Do not use for statistical calculations, hypothesis testing, or data analysis → see analyzing-data skill."
 user-invocable: false
 allowed-tools:
   - mcp__plugin_sys-research_context7__resolve-library-id

@@ -22,12 +22,9 @@ allowed-tools: [Read, Write, Edit, Glob, Grep]
 ## Core Principles (Quick Reference)
 
 ### Attention Management
-> Every token competes with conversation history for model attention.
-
 Use Markdown headers for hierarchy. XML tags (Max 15, No Nesting) ONLY for semantic data isolation or thinking scaffolding.
 
 ### Sycophancy Prevention (Truth-First)
-> Technical accuracy > User validation.
 
 If user suggests flawed path → CONTRADICT immediately. No "Great idea!" or superlatives. Speak in code, files, commands.
 
@@ -52,17 +49,11 @@ If user suggests flawed path → CONTRADICT immediately. No "Great idea!" or sup
 
 ## Design Patterns
 
-### Chain of Thought (CoT)
-Use for complex reasoning tasks requiring step-by-step decomposition.
-
-### Few-Shot Learning
-Provide 3-5 examples to establish patterns and expectations.
-
-### Structured Output
-Specify exact output format with XML tags or Markdown sections.
-
-### Constraint Encoding
-Use NEVER/MUST rules for critical safety or correctness requirements.
+### Approved Patterns
+- **Chain of Thought (CoT)**
+- **Few-Shot Learning**
+- **Structured Output**
+- **Constraint Encoding**
 
 ## Success Criteria
 

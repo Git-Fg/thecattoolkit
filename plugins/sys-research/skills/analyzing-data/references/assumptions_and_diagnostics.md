@@ -2,6 +2,12 @@
 
 This document provides comprehensive guidance on checking and validating statistical assumptions for various analyses.
 
+**Table of Contents**:
+- [1. Common Assumptions Across Tests](#1-common-assumptions-across-tests)
+- [2. Parametric Test Assumptions](#2-parametric-test-assumptions)
+- [3. Regression Assumptions](#3-regression-assumptions)
+- [4. Diagnostic Procedures](#4-diagnostic-procedures)
+
 ## General Principles
 
 1. **Always check assumptions before interpreting test results**

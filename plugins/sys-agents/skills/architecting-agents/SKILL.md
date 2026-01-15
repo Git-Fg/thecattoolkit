@@ -5,19 +5,21 @@ user-invocable: true
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 
-# Agent Design Patterns
+# Architecting Agents Protocol
 
-Comprehensive guide to agent design patterns distilled from production systems (Claude Code, Manus, Cursor) and research. Focuses on context management as the core challenge for effective agent design.
+# Architecting Agents Protocol
+
+Provides design patterns for agent context management.
 
 ## Cost Warning (CRITICAL)
 
 Before using sub-agents, understand the costs:
 
-| Approach | Token Cost | Quota Cost | When to Use |
-|:---------|:-----------|:-----------|:------------|
-| **Inline** | ~1x | Free (tool call) | Most tasks |
-| **Fork** | ~3x | Free (tool call) | Isolation needed |
-| **Subagent** | ~25k+ | 1 prompt per spawn | Parallelization only |
+| Approach | When to Use |
+|:---------|:------------|
+| **Inline** | Most tasks |
+| **Fork** | Isolation needed |
+| **Subagent** | Parallelization only (High Cost) |
 
 **Default Recommendation:** Use `context: fork` in skills for isolation. Subagents are ONLY appropriate when parallelization benefit clearly exceeds 20K token startup cost AND quota overhead.
 
@@ -25,11 +27,7 @@ See [references/subagent-risks.md](references/subagent-risks.md) for detailed ev
 
 ---
 
-## Core Principle
 
-> Context must be treated as a finite resource with diminishing marginal returns. Like humans with limited working memory, LLMs have an "attention budget." Every new token depletes it.
-
-**Context engineering is the delicate art and science of filling the context window with just the right information for the next step.**
 
 ## Pattern Index
 
@@ -47,18 +45,9 @@ See [references/subagent-risks.md](references/subagent-risks.md) for detailed ev
 
 ## 1. Computer Access
 
-**Principle:** Give agents access to a computer (filesystem + shell) for persistent context and action execution.
-
-**Key Insight:** The fundamental coding agent abstraction is the CLI, rooted in the fact that agents need access to the OS layer.
-
 **Components:**
 - **Filesystem**: Persistent context storage, state across sessions
 - **Shell**: Execute utilities, CLIs, scripts, or generated code
-
-**Production Examples:**
-- Claude Code: "Lives on your computer"
-- Manus: Virtual computer environment
-- Both use tools to control the computer primitives
 
 **Implementation:**
 ```
@@ -70,9 +59,7 @@ Agent → File Tools → Read / Write / Edit filesystem
 
 ## 2. Multi-Layer Action Space
 
-**Principle:** Use a small set of atomic tools that can execute broader actions on the computer.
 
-**Key Insight:** Popular agents use surprisingly few tools (Claude Code ~12, Manus <20). They push actions to the computer layer.
 
 **Action Hierarchy:**
 ```
@@ -83,20 +70,13 @@ Level 2: Shell Utilities / CLIs (computer-level)
 Level 3: Code Execution (generated scripts)
 ```
 
-**Benefits:**
-- Reduces tool definition token overhead
-- Agents chain actions by writing/executing code
-- Intermediate tool results stay on computer (not in context)
 
-**Reference:** See CodeAct paper for chaining actions via code execution.
 
 ---
 
 ## 3. Progressive Disclosure
 
-**Principle:** Show only essential information upfront; reveal details only when needed.
 
-**Key Insight:** Tool definitions overload context. The GitHub MCP server has 35 tools with ~26K tokens of definitions.
 
 **Strategies:**
 
@@ -118,10 +98,6 @@ Level 3: Code Execution (generated scripts)
 
 ## 4. Context Offloading
 
-**Principle:** Move context from the agent window to the filesystem.
-
-**Key Insight:** Summarization can lose useful information. Offloading preserves full fidelity with on-demand retrieval.
-
 **Approaches:**
 - Write old tool results to files
 - Store agent trajectories for later retrieval
@@ -130,23 +106,11 @@ Level 3: Code Execution (generated scripts)
 **Plan File Pattern:**
 Write plan to file → Read periodically to reinforce objectives → Verify work against plan
 
-**Production Examples:**
-- Manus: Writes tool results to files
-- Cursor: Offloads trajectories to filesystem
-
 ---
 
 ## 5. Context Caching
 
-**Principle:** Maximize prompt cache hit rate for cost and latency efficiency.
 
-**Key Insight:** Cache hit rate is the most important metric for production agents. A higher-capacity model with caching can be cheaper than a lower-cost model without it.
-
-**Cost Impact:**
-```
-Cached tokens:   ~10x cheaper than uncached
-Target hit rate: >80%
-```
 
 **Caching Requirements:**
 - Stable prefix (system prompt unchanged)
@@ -159,7 +123,7 @@ Target hit rate: >80%
 
 ## 6. Context Isolation
 
-**Principle:** Delegate tasks with isolated context windows.
+
 
 **Default Approach: Use `context: fork`**
 
@@ -203,10 +167,6 @@ ONLY when parallelization benefit > 20K token startup cost:
 
 ## 7. Context Evolution
 
-**Principle:** Update agent context with learnings over time (continual learning in token space).
-
-**Key Insight:** Agents that cannot adapt or learn often fail in production deployments.
-
 **Evolution Patterns:**
 
 | Type | Approach |
@@ -222,18 +182,7 @@ Session Log → Reflection → Memory/Skill Update → Context
 
 ---
 
-## Future Directions
 
-### Learned Context Management
-Models may learn to perform their own context management, absorbing scaffolding currently in agent harnesses. Related: Recursive Language Model (RLM) research.
-
-### Multi-Agent Coordination
-Swarms of concurrent agents need coordination for shared context, conflict resolution, and proactive discourse. Example: Gas Town uses git-backed work tracking with a "Mayor" agent.
-
-### Long-Running Agent Abstractions
-New infrastructure needed: observability, human review hooks, graceful degradation. No current standards exist for agent debugging interfaces or monitoring patterns.
-
----
 
 ## Quick Reference
 

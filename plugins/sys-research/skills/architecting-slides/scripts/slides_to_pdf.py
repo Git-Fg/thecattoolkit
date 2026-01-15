@@ -22,20 +22,7 @@ import os
 from pathlib import Path
 from typing import List
 
-# Add the toolkit plugin path to sys.path to allow importing from other plugins
-# This is a bit of a hack but ensures portability across different environments
-toolkit_root = Path(__file__).resolve().parents[4]
-multimodal_utils = toolkit_root / "plugins" / "sys-multimodal"
-if multimodal_utils.exists() and str(multimodal_utils) not in sys.path:
-    sys.path.append(str(multimodal_utils))
-
-try:
-    from utils.rendering import combine_images_to_pdf
-except ImportError:
-    # Fallback to local implementation if multimodal plugin is not available
-    # but we want to encourage using the shared one
-    print("Warning: Could not import from sys-multimodal. Ensure sys-multimodal utility is present.")
-    sys.exit(1)
+from rendering import combine_images_to_pdf
 
 
 def get_image_files(paths: List[str]) -> List[Path]:

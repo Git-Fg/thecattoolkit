@@ -1,7 +1,7 @@
 {
   "name": "sys-browser",
   "version": "2.0.0",
-  "description": "The complete web interaction suite. Features a unified 'browser-automation' skill that intelligently orchestrates between lightweight high-speed crawling (@just-every/crawl) and complex structure-based automation (Playwright MCP).",
+  "description": "The complete web interaction suite. Features 'browsing-web' for interactive automation (agent-browser) and 'crawling-content' for high-speed extraction (@just-every/crawl).",
   "license": "Apache-2.0",
   "author": {
     "name": "Git-Fg"

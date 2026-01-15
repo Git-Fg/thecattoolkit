@@ -1,26 +1,12 @@
 ---
 name: designing-architecture
-description: "Applies system architecture and design frameworks for software systems. Provides discovery protocols, system design workflows, architecture decision records (ADRs), and quality evaluation criteria. PROACTIVELY Use when designing new systems, analyzing existing architecture, or making architectural decisions. Do not use for project plan state management, task execution, or phase coordination."
+description: "Applies system architecture and design frameworks for software systems. Provides discovery protocols, system design workflows, architecture decision records (ADRs), and quality evaluation criteria. PROACTIVELY Use when designing new systems, analyzing existing architecture, or making architectural decisions. Do not use for project plan state management, task execution, or phase coordination → see managing-plans skill."
 allowed-tools: [Read, Write, Edit, Glob, Grep, TodoWrite]
 ---
 
 # Architecture Design & Analysis
 
-## Core Purpose
 
-Provides architectural methodology for system design and analysis:
-
-1. **Discovery**: Analyze existing systems and gather requirements
-2. **System Design**: Apply design frameworks for new systems
-3. **Architecture Patterns**: Select appropriate patterns based on requirements
-4. **Decision Records**: Document significant architectural decisions via ADRs
-5. **Quality Evaluation**: Assess architecture quality using comprehensive criteria
-
-## Core Principles
-
-1. **Requirements-First**: Understand functional and non-functional requirements before selecting patterns
-2. **Trade-off Awareness**: Every architectural decision has consequences; document them explicitly
-3. **Evolutionary Design**: Design for change and incremental improvement
 
 ## Protocol Reference Index
 

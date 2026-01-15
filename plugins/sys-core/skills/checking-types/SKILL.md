@@ -7,9 +7,8 @@ allowed-tools: [Read, Bash(pyrefly), Bash(mypy), Bash(python3:-m pyrefly), Bash(
 
 # Type Checking Standards
 
-## Capabilities
+## Active Hooks
 
-This skill provides automatic type checking via hooks:
 
 ### Automatic Type Check
 **Trigger:** `PostToolUse` (Edit/Write on .py files)
@@ -18,9 +17,7 @@ This skill provides automatic type checking via hooks:
 1. `tool.pyrefly` in pyproject.toml -> `uv run pyrefly`
 2. `tool.mypy` in pyproject.toml -> `uv run mypy`
 
-## Usage
 
-This skill functions **passively** via the runtime hook system. It communicates results back to the agent via hook output.
 
 ## Configuration
 

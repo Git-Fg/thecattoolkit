@@ -1,20 +1,13 @@
 ---
 name: managing-plans
-description: "Orchestrates project plan state management and execution. Manages ROADMAP.md state tracking, task dispatch, phase transitions, and handoff protocols. PROACTIVELY Use when managing project plans, executing phases, or coordinating task workflows. MUST Use for all plan-related operations (creation, modification, execution). Do not use for architecture design, system analysis, or creating new projects without a plan."
-context: fork
+description: "Orchestrates project plan state management and execution. Manages ROADMAP.md state tracking, task dispatch, phase transitions, and handoff protocols. PROACTIVELY Use when managing project plans, executing phases, or coordinating task workflows. MUST Use for all plan-related operations (creation, modification, execution). Do not use for architecture design, system analysis, or creating new projects without a plan → see designing-architecture skill."
+context: fork  # Required: Processes entire project directory (10+ files), coordinates task dispatch across multiple phases
 allowed-tools: [Read, Write, Edit, Glob, Bash, Task]
 ---
 
 # Project Plan State Management
 
-## Core Purpose
 
-Orchestrates project execution through state-based plan management:
-
-1. **State Management**: Track progress via ROADMAP.md phase files
-2. **Task Dispatch**: Execute tasks through worker agents
-3. **Phase Transitions**: Manage [ ] → [~] → [x] → [!] state flow
-4. **Handoff Protocols**: Document blockers and enable seamless transfers
 
 ## State Model
 
@@ -45,7 +38,17 @@ Orchestrates project execution through state-based plan management:
 - **Handoffs**: `references/handoff-protocols.md` - Handle blockers and transfers
 - **Verification**: `references/verification-workflows.md` - Success verification at task/phase/plan levels
 
-## Execution Checklist
+## Execution Protocol
+1. **Read State**: Read `.cattoolkit/plan/{project-slug}/ROADMAP.md` to find the active phase.
+2. **Read Tasks**: Read the active phase file (e.g., `phases/01-setup/01-01-PLAN.md`).
+3. **Execute Loop**:
+   - Pick next `[ ]` task
+   - **Execute**: Write code, run commands
+   - **Verify**: Run tests/checks (Self-Correction)
+   - **Mark Complete**: Edit phase file to `[x]`
+4. **Stop**: When phase is done or blocked.
+
+## Execution Checklist (Quick Reference)
 
 ### Phase Start
 - [ ] Read ROADMAP.md & verify dependencies
@@ -69,11 +72,7 @@ Orchestrates project execution through state-based plan management:
 
 ## Error Handling
 
-**Categories:**
-1. **Execution Errors**: Code errors, build failures
-2. **State Errors**: Inconsistent state, corrupted files
-3. **Dependency Errors**: Missing dependencies, version conflicts
-4. **Resource Errors**: Out of memory, disk full, timeout
+
 
 **Recovery Strategy:**
 - Level 1: Automatic recovery (retry, clear cache, restart)

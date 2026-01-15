@@ -1,18 +1,8 @@
 ---
-name: read
-description: "Instant readout of a web page URL. Zero-latency context fetching."
+description: "Instant read-only fetch of a URL. Uses fast crawler."
 argument-hint: "<url>"
-allowed-tools: Bash
+allowed-tools: [Skill(crawling-content)]
 disable-model-invocation: true
 ---
 
-# Command: /read
-
-Instantly fetches the content of a URL using the Fast Mode strategy.
-
-## Context
-!npx -y @just-every/crawl $1 --output markdown
-
-## Protocol
-1.  **Analyze**: The content is loaded above.
-2.  **Action**: Summarize or answer the user's specific question.
+Invoke `Skill(crawling-content)` to fetch "$1".

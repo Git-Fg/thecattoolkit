@@ -2,6 +2,12 @@
 
 This guide provides a decision tree for selecting appropriate statistical tests based on research questions, data types, and study designs.
 
+**Table of Contents**:
+- [1. Comparing Groups](#1-comparing-groups)
+- [2. Relationships Between Variables](#2-relationships-between-variables)
+- [3. Predictive Models](#3-predictive-models)
+- [4. Non-Parametric Alternatives](#4-non-parametric-alternatives)
+
 ## Decision Tree for Test Selection
 
 ### 1. Comparing Groups

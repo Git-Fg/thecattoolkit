@@ -1,0 +1,4 @@
+exclude:
+  - package-lock.json
+  - yarn.lock
+  - "*.svg"

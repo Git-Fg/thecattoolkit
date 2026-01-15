@@ -1,7 +1,7 @@
 ---
 description: "Migrate legacy Python (pip/conda/poetry) to modern UV standards. Auto-detects project type and converts configuration to UV with Ruff linting."
 argument-hint: "no args (detects automatically)"
-allowed-tools: [Skill(python-tools), Bash]
+allowed-tools: [Skill(managing-python), Bash]
 disable-model-invocation: true
 ---
 
@@ -16,4 +16,4 @@ Modernize your Python project with UV and Ruff for faster, cleaner development.
 4. Sets up Ruff for linting
 5. Deletes legacy artifacts (with confirmation)
 
-Invoke `python-tools` to perform the migration workflow.
+Invoke `Skill(managing-python)` to perform the migration workflow.

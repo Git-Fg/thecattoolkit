@@ -1,15 +1,14 @@
 ---
 name: testing-e2e
-description: "Orchestrates end-to-end testing workflows coordinating browser automation with server verification. Use when validating complete user flows, testing multi-step scenarios, or verifying browser-server integration. Do not use for unit testing, API testing, or isolated component testing."
-context: fork
+description: "Orchestrates end-to-end testing workflows coordinating browser automation with server verification. Use when validating complete user flows, testing multi-step scenarios, or verifying browser-server integration. Do not use for unit testing, API testing, isolated component testing, or documentation code examples → see generating-tests skill."
+context: fork  # Required: Coordinates browser automation with server-side verification, orchestrates complete test workflows
+user-invocable: false
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash, Task]
 ---
 
 # End-to-End Testing Orchestration
 
-## Core Purpose
 
-Orchestrates complete E2E test workflows by coordinating browser automation with server-side verification. Validates user flows across the full stack.
 
 ## Test Workflow
 
@@ -33,22 +32,7 @@ Orchestrates complete E2E test workflows by coordinating browser automation with
 - Generate test reports
 - Identify failures and root causes
 
-## Test Types
 
-### User Flow Testing
-- Multi-step user journeys
-- Critical paths (signup, checkout, etc.)
-- Cross-feature workflows
-
-### Integration Testing
-- Browser-server communication
-- Data flow validation
-- State management verification
-
-### Regression Testing
-- Prevent feature breaks
-- Validate existing functionality
-- Compare with baseline behavior
 
 ## Orchestration Pattern
 

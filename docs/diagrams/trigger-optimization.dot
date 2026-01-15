@@ -1,0 +1,15 @@
+digraph trigger_optimization {
+    rankdir=LR;
+    node [shape=box, style=rounded];
+
+    START [label="Start"];
+    IDENTIFY [label="Identify Capability"];
+    TRIGGERS [label="Define Triggers"];
+    NEGATIVE [label="Add Negative Constraints"];
+    TEST [label="Test Activation"];
+    OPTIMIZE [label="Optimize"];
+
+    START -> IDENTIFY -> TRIGGERS -> NEGATIVE -> TEST;
+    TEST -> OPTIMIZE [label="fails"];
+    OPTIMIZE -> TEST [label="re-test"];
+}

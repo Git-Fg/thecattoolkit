@@ -12,5 +12,4 @@
 
 # Archive
 .attic/
-.agent
-.claude
+.cattoolkit

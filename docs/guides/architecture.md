@@ -43,6 +43,56 @@ Unlike a classic project, **Claude Code does not execute your plugin "in place"*
 Any relative reference going up to a parent (`../libs`) will fail because the parent folder does not exist in the cache.
 *   **Solution:** Everything the plugin needs must be *inside* it. Use *internal* symlinks if necessary.
 
+### Cross-Plugin Imports (FORBIDDEN)
+
+**CRITICAL:** Python scripts MUST NOT import from sibling plugins via `sys.path` manipulation.
+
+#### Why This Fails
+
+1. **Plugin Cache Isolation:** Each plugin is copied to a separate cache directory. Sibling plugins are not accessible.
+2. **Path Traversal Violation:** Climbing the directory tree to reach other plugins breaks when plugins are cached.
+3. **Marketplace Distribution:** Cross-plugin imports fail when plugins are installed via marketplace.
+
+#### FORBIDDEN Pattern
+
+```python
+# ❌ WRONG - Breaks plugin architecture
+import sys
+from pathlib import Path
+
+toolkit_root = Path(__file__).resolve().parents[4]
+multimodal_utils = toolkit_root / "plugins" / "sys-multimodal"
+sys.path.append(str(multimodal_utils))
+
+from utils.rendering import PDFToImagesConverter
+```
+
+#### CORRECT Patterns
+
+**Option 1: Plugin Independence (Recommended)**
+```python
+# Copy shared utilities into each plugin that needs them
+# plugins/sys-research/skills/architecting-slides/scripts/rendering.py
+# (Full implementation here, not imported from elsewhere)
+
+from .rendering import PDFToImagesConverter
+```
+
+**Option 2: Internal Symlinks (Development Only)**
+```bash
+# Create symlink within plugin
+cd plugins/sys-research/skills/architecting-slides/scripts/
+ln -s ../../sys-multimodal/utils/rendering.py ./rendering.py
+```
+
+Symlinks are followed during plugin caching, so the shared code gets copied into each plugin's cache.
+
+#### Official Documentation
+
+See [Claude Code Plugins Reference - Path Traversal Limitations](https://code.claude.com/docs/en/plugins-reference#path-traversal-limitations):
+
+> "Plugins cannot reference files outside their copied directory structure. Paths that traverse outside the plugin root (such as `../shared-utils`) will not work after installation because those external files are not copied to the cache."
+
 ### Dependency Management
 There is no automatic `npm install` or `pip install`.
 *   **Zero-Dep Strategy (Recommended):** Standard Bash/Python scripts.

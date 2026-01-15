@@ -1,0 +1,14 @@
+{
+    "hooks": {
+        "SessionStart": [
+            {
+                "hooks": [
+                    {
+                        "type": "command",
+                        "command": "if ! command -v ffmpeg >/dev/null 2>&1; then echo '{\"systemMessage\": \"⚠️ sys-multimodal: FFmpeg binary not found. Video processing will fail. Please install ffmpeg.\"}'; fi"
+                    }
+                ]
+            }
+        ]
+    }
+}

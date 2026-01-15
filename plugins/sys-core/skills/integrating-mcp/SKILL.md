@@ -7,17 +7,7 @@ description: "Provides comprehensive MCP integration guidance for Claude Code pl
 
 Integrate external services into Claude Code plugins using Model Context Protocol (MCP). MCP servers provide secure, structured access to databases, APIs, and other services through a standardized interface.
 
-## Critical: Tool Definition Bloat Problem
 
-**As MCP usage scales, two common patterns increase cost and latency:**
-
-1. **Tool definitions overload the context window**
-2. **Intermediate tool results consume additional tokens**
-
-### The Problem:
-More MCP servers → More tool definitions bloating context → Higher costs and slower performance
-
-### Solutions:
 
 #### 1. Code Execution Pattern (Recommended)
 Instead of direct tool calls, **expose code APIs** rather than tool call definitions:
@@ -94,25 +84,7 @@ export POSTGRES_URL="postgresql://user:pass@host:5432/db?sslmode=require"
 
 ---
 
-## Context Optimization Best Practices
 
-### Token Management
-- **Cache tool definitions** when possible
-- **Batch operations** to reduce calls
-- **Stream results** for large datasets
-- **Compress** intermediate outputs
-
-### Performance Guidelines
-- **Connection pooling** for database servers
-- **Query optimization** - limit result sets
-- **Pagination** for large datasets
-- **Async operations** for non-blocking execution
-
-### Security Considerations
-- **Authentication** - use environment variables
-- **SSL/TLS** - encrypt all connections
-- **Access control** - limit permissions
-- **Input validation** - sanitize queries
 
 ---
 

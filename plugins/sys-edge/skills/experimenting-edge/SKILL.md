@@ -1,14 +1,12 @@
 ---
 name: experimenting-edge
-description: "Implements lazy loading, quantization strategies, memory pressure handling, and dynamic model management for resource-constrained environments. Use when managing AI models on mobile/edge devices."
+description: "Optimizes AI models for edge deployment through quantization, lazy loading, and memory management. Use when deploying models to resource-constrained environments, mobile devices, or edge computing scenarios. Do not use for cloud deployment, model training, or data preprocessing."
 allowed-tools: [Read, Write, Edit, Glob, Grep, Bash]
 ---
 
 # Edge AI Management Protocol
 
-## Purpose
 
-Optimizes AI model deployment and execution on resource-constrained edge devices through intelligent resource management and quantization strategies.
 
 ## Core Responsibilities
 

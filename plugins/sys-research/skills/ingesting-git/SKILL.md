@@ -6,9 +6,7 @@ allowed-tools: [Read, Write, Edit, Bash, Grep]
 
 # GitIngest Protocol
 
-## Purpose
 
-GitIngest is an AI agent integration tool that turns any Git repository into a prompt-ready text digest. It fetches, cleans, and formats source code so AI agents and Large Language Models can reason over complete projects programmatically.
 
 ## Quick Start
 
@@ -109,12 +107,7 @@ When executing the gitingest skill:
 For detailed integration examples, error handling patterns, and best practices:
 - **Integration Examples:** `references/integration-examples.md`
 
-## Support Resources
 
-- **Web UI:** https://gitingest.com (for human use, not AI agents)
-- **GitHub:** https://github.com/coderamp-labs/gitingest
-- **PyPI:** https://pypi.org/project/gitingest/
-- **Discord:** https://discord.gg/zerRaGK9EC
 
 ## Integration with CatToolkit
 

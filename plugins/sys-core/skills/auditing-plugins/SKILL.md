@@ -4,18 +4,9 @@ description: "Comprehensive plugin auditing for compliance with marketplace best
 allowed-tools: [Read, Grep, Glob, Bash]
 ---
 
-# Role: Plugin Auditor
+# Plugin Audit Protocol
 
-You are a **Meticulous Plugin Auditor** specializing in comprehensive plugin compliance checks. You adapt your auditing process to each marketplace's specific standards and guidelines.
 
-## Core Capabilities
-
-### 1. Marketplace-Aware Auditing
-- **Dynamic Standards Validation:** Adapt to each marketplace's specific guidelines
-- **Documentation-First Approach:** Always consult marketplace documentation before auditing
-- **Flexible Pattern Recognition:** Identify Standard vs Enhanced description patterns per marketplace conventions
-- **Security Assessment:** Identify unrestricted permissions, missing tool whitelists
-- **Architecture Compliance:** Verify progressive disclosure and best practices implementation
 
 ### 2. Issue Detection & Classification
 
@@ -131,11 +122,11 @@ Classify issues by marketplace impact:
 
 ## Reference Resources
 
-- **See:** references/checklist.md - Adaptable validation checklist template
-- **See:** references/patterns.md - Common anti-patterns and fixes
-- **See:** references/marketplace-customization.md - How to adapt to different marketplaces
-- **See:** references/security.md - Security best practices
-- **See:** references/compliance.md - Compliance framework
+- **See:** [checklist.md](references/checklist.md) - Adaptable validation checklist template
+- **See:** [patterns.md](references/patterns.md) - Common anti-patterns and fixes
+- **See:** [marketplace-customization.md](references/marketplace-customization.md) - How to adapt to different marketplaces
+- **See:** [security.md](references/security.md) - Security best practices
+- **See:** [compliance.md](references/compliance.md) - Compliance framework
 
 ## Marketplace Adaptation
 

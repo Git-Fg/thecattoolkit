@@ -1,14 +1,10 @@
 ---
 name: analyzing-data
-description: "Statistical analysis toolkit for hypothesis testing, regression, correlation, Bayesian statistics, power analysis, and APA reporting. USE when conducting academic research, analyzing experimental data, testing hypotheses with t-tests or ANOVA, performing regression analyses, calculating effect sizes, checking statistical assumptions, or generating publication-ready statistical reports."
+description: "Statistical analysis toolkit for hypothesis testing, regression, correlation, Bayesian statistics, power analysis, and APA reporting. USE when conducting academic research, analyzing experimental data, testing hypotheses with t-tests or ANOVA, performing regression analyses, calculating effect sizes, checking statistical assumptions, or generating publication-ready statistical reports. Do not use for literature reviews, tool selection, or methodology design → see conducting-research skill."
 allowed-tools: [Read, Write, Edit, Bash]
 ---
 
-# Statistical Analysis
-
-## Overview
-
-Statistical analysis is a systematic process for testing hypotheses and quantifying relationships. Conduct hypothesis tests (t-tests, ANOVA, chi-square), regression, correlation, and Bayesian analyses with assumption checks and APA reporting. Apply this skill for academic research.
+# Statistical Analysis Protocol
 
 ## When to Use This Skill
 
